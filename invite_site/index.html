@@ -112,6 +112,9 @@ nav.main a:hover{background:var(--surface2);color:var(--ink)}
 .hero .wrap{display:grid;grid-template-columns:minmax(0,1.08fr) minmax(0,.92fr);gap:48px;align-items:center;padding-block:64px 76px}
 .hero-copy{min-width:0}
 .hero h1 em{font-style:normal;color:var(--acc)}
+/* the Georgian headline carries one long word (შთაბეჭდილებად): size it so that word always fits its column */
+html[lang="ka"] .hero h1{font-size:clamp(34px,10.5vw,68px)}
+@media (min-width:901px){html[lang="ka"] .hero h1{font-size:clamp(40px,5.2vw,68px)}}
 .hero .lead{margin-top:22px}
 .ctas{display:flex;flex-wrap:wrap;gap:12px;margin-top:30px}
 .facts{display:flex;flex-wrap:wrap;gap:12px 26px;margin:34px 0 0;padding:0;list-style:none;font-size:var(--t-sm);color:var(--muted)}
@@ -1116,7 +1119,7 @@ ka:{
   brand:'პატიჟი',
   nav:{how:'როგორ მუშაობს', templates:'შაბლონები', custom:'ინდივიდუალური', pricing:'ფასები', faq:'კითხვები', cta:'მოთხოვნა'},
   ui:{theme:'თემის შეცვლა', menu:'მენიუ', close:'დახურვა', play:'დემო'},
-  hero:{eyebrow:'ინტერაქტიული მოსაწვევები რესტორნებისთვის', h1:'აქციეთ ჯავშანი <em>მოსაწვევად</em>',
+  hero:{eyebrow:'ინტერაქტიული მოსაწვევები რესტორნებისთვის', h1:'აქციეთ ყოველი მოსაწვევი <em>შთაბეჭდილებად</em>',
     lead:'სტუმარი ჯავშნის მაგიდას ორზე და იღებს მოსაწვევს თქვენი ბრენდით. უგზავნის მას, ვისაც ეპატიჟება: ის ხსნის მოსაწვევს, თანხმობას აჭერს, თქვენი ნამდვილი მენიუდან ირჩევს კერძებს და იღებს ბილეთს ჯავშნის დეტალებით.',
     cta1:'შაბლონების ნახვა', cta2:'ფასები', cap:'სცადეთ, ეს მუშა დემოა', sw:'სხვა სტილები',
     facts:[['layers','5 ინტერაქტიული ნაბიჯი'],['phone','იხსნება ბრაუზერში, აპლიკაციის გარეშე'],['globe','ქართულად და ინგლისურად']]},
@@ -1180,7 +1183,7 @@ en:{
   brand:'Patizhi',
   nav:{how:'How it works', templates:'Templates', custom:'Custom', pricing:'Pricing', faq:'FAQ', cta:'Request'},
   ui:{theme:'Switch theme', menu:'Menu', close:'Close', play:'Play demo'},
-  hero:{eyebrow:'Interactive invites for restaurants', h1:'Turn a reservation into an <em>invitation</em>',
+  hero:{eyebrow:'Interactive invites for restaurants', h1:'Make every invitation an <em>experience</em>',
     lead:'A guest books a table for two and gets an invite in your brand. They send it to the person they’re bringing, who opens it, says yes, picks dishes from your real menu and gets a ticket with the booking details.',
     cta1:'See the templates', cta2:'Pricing', cap:'Try it, this is a working demo', sw:'Other styles',
     facts:[['layers','5 interactive steps'],['phone','Opens in the browser, no app'],['globe','Georgian and English']]},
