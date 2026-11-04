@@ -40,6 +40,7 @@ plain data object in the `TPL` array. A template is:
 | `items`, `max` | step 3 menu: icon, name, description, portion, fill color |
 | `sp` | step 4 surprise: icon, big word, label, possible lines |
 | `tk` | step 5 ticket: venue, sub-line, time, extra fields, stamp text and shape |
+| `ui` | art direction: `align` (center/left), `head` (serif/light/sans/cond/geo), `caps`, `btn` (fill/outline/hard/glass), `card` (solid/line/hard/glass), `frame` (ornament/hairline/deco/gingham), `ask` (belt/trio/skyline/details/bigtype), `pick` (list/menu/grid/chips), `tk` ticket shape (stub/card/postcard/receipt/pass/badge/label/sticker) |
 
 All text fields take `{ka, en}`. Adding a restaurant means adding one object: its colors,
 menu and booking details. That is the asset to grow into a self-serve builder later.

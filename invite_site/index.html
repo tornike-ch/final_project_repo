@@ -8,7 +8,7 @@
 <meta name="description" content="აქციეთ ყოველი მოსაწვევი შთაბეჭდილებად. ინტერაქტიული მოსაწვევები რესტორნებისთვის: სტუმარი ჯავშნის მაგიდას ორზე და მოსაწვევს უგზავნის მას, ვისაც ეპატიჟება.">
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Google+Sans:wght@400..700&family=Noto+Sans+Georgian:wdth,wght@62.5..100,400..800&family=Noto+Serif+Georgian:wdth,wght@62.5..100,500..900&family=Shippori+Mincho:wght@800&display=swap">
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Google+Sans:wght@400..700&family=DM+Mono:wght@400;500&family=Playfair+Display:ital,wght@1,700&family=Noto+Sans+Georgian:wdth,wght@62.5..100,400..800&family=Noto+Serif+Georgian:wdth,wght@62.5..100,500..900&family=Shippori+Mincho:wght@800&display=swap">
 <style>
 :root{
   /* Layout: a poster, then the product told through its own five steps.
@@ -26,6 +26,7 @@
   --f-body:"Google Sans","Noto Sans Georgian",system-ui,-apple-system,"Segoe UI",sans-serif;
   --fi-serif:"Noto Serif Georgian",Georgia,"Times New Roman",serif;
   --fi-sans:"Noto Sans Georgian",system-ui,-apple-system,"Segoe UI",sans-serif;
+  --fi-geo:"Google Sans","Noto Sans Georgian",system-ui,sans-serif;
   --f-jp:"Shippori Mincho","Hiragino Mincho ProN","Yu Mincho",serif;
 }
 @media (prefers-color-scheme: dark){
@@ -511,6 +512,225 @@ dialog.stage::backdrop{background:transparent}
 .v-ring .bx-in{bottom:52px}
 .v-ring .bx-in .ico{width:70px;height:70px}
 
+/* ============ per-template art direction ============ */
+.scr{background-color:var(--ibg);background-image:var(--ibgimg);font-family:var(--ibf)}
+.scr::after{opacity:var(--iglow)}
+.i-h1,.i-h2{font-family:var(--ihf);font-weight:var(--ihw);font-stretch:var(--ihs);letter-spacing:var(--ihl)}
+.i-h1{font-size:var(--ih1);line-height:1.08}
+.caps .i-h1{letter-spacing:.015em}
+.i-btn{border-radius:var(--ibrad)}
+.i-item,.i-det{border-radius:var(--irad)}
+.i-card{border-radius:min(10px,var(--irad))}
+.al-left{text-align:left}
+.al-left .i-dots,.al-left .i-row,.al-left .i-tray,.al-left .i-cd{justify-content:flex-start}
+.al-left .op,.al-left .i-obj,.al-left .i-bigic{margin-left:0}
+.al-left .i-card{text-align:left}
+.al-center .pk-chips{justify-content:center}
+.al-left .i-cd div{text-align:center}
+
+/* small heading above the name */
+.k-rule .i-kick{display:flex;align-items:center;justify-content:center;gap:10px}
+.k-rule .i-kick::before,.k-rule .i-kick::after{content:"";width:22px;height:1px;background:currentColor;opacity:.7}
+.al-left.k-rule .i-kick{justify-content:flex-start}
+.al-left.k-rule .i-kick::before{display:none}
+.k-sticker .i-kick{display:inline-block;background:var(--iacc2);color:#fff;padding:5px 11px 4px;border:2.5px solid var(--iink);transform:rotate(-3deg);letter-spacing:.16em;box-shadow:3px 3px 0 var(--iink)}
+.k-latin .i-kick{font-family:"Playfair Display",var(--fi-serif);font-style:italic;font-size:18px;letter-spacing:.01em;font-weight:700}
+
+/* buttons */
+.b-outline .i-btn{background:transparent;color:var(--iout);border:1.5px solid var(--iout);box-shadow:none;letter-spacing:.03em}
+.b-outline .i-btn.i-no{color:var(--imut);border-color:var(--iline)}
+.b-outline .i-btn:disabled{opacity:.4}
+.b-hard .i-btn{border:2.5px solid var(--iink);box-shadow:4px 4px 0 var(--iink)}
+.b-hard .i-btn.i-no{background:var(--is)}
+.b-hard .i-btn:active{transform:translate(2px,2px);box-shadow:2px 2px 0 var(--iink)}
+.b-glass .i-btn{background:rgba(255,255,255,.94);color:#2a1d52;box-shadow:0 12px 26px -12px rgba(0,0,0,.55)}
+.b-glass .i-btn.i-no{background:rgba(255,255,255,.14);color:#fff;border:1px solid rgba(255,255,255,.4)}
+
+/* surfaces */
+.c-line .i-item{background:transparent;border:0;border-bottom:1px solid var(--iline);border-radius:0}
+.c-hard .i-item,.c-hard .i-det,.c-hard .i-card,.c-hard .i-obj{border:2.5px solid var(--iink);box-shadow:3px 3px 0 var(--iink)}
+.c-hard .i-item.sel{background:var(--iacc);color:var(--ion)}
+.c-hard .i-item.sel small{color:inherit;opacity:.8}
+.c-glass .i-item,.c-glass .i-det,.c-glass .i-obj{background:rgba(255,255,255,.12);border-color:rgba(255,255,255,.28);backdrop-filter:blur(8px);-webkit-backdrop-filter:blur(8px)}
+.c-glass .i-item .ic{background:rgba(255,255,255,.16)}
+.c-glass .i-item.sel{background:rgba(255,255,255,.28);border-color:var(--iacc)}
+
+/* pickers */
+.pk-menu{gap:0}
+.pk-menu .i-item{background:transparent;border:0;border-bottom:1px dashed var(--iline);border-radius:0;padding:10px 2px;box-shadow:none}
+.pk-menu .i-item .ic{width:30px;height:30px;background:none}
+.pk-menu .i-item .ic .ico{width:24px;height:24px}
+.pk-menu .i-item .ck{position:static;order:-1;display:grid;width:18px;height:18px;border:1.5px solid var(--iline);background:transparent;flex-shrink:0}
+.pk-menu .i-item .ck .ico{opacity:0}
+.pk-menu .i-item.sel{background:transparent}
+.pk-menu .i-item.sel .ck{background:var(--iout);border-color:var(--iout);color:var(--ibg)}
+.pk-menu .i-item.sel .ck .ico{opacity:1}
+.pk-menu .i-item.sel b{color:var(--iout)}
+.pk-menu .i-item .pc{background:none;font-weight:700;color:var(--iink);padding:0}
+.pk-grid{display:grid;grid-template-columns:1fr 1fr;gap:8px}
+.pk-grid .i-item{flex-direction:column;align-items:center;text-align:center;padding:14px 8px 10px;gap:6px}
+.pk-grid .i-item .ic{width:56px;height:56px;border-radius:50%}
+.pk-grid .i-item .ic .ico{width:32px;height:32px}
+.pk-grid .i-item b{font-size:13px}
+.pk-grid .i-item small{display:-webkit-box;-webkit-line-clamp:2;-webkit-box-orient:vertical;overflow:hidden}
+.pk-grid .i-item .pc{position:absolute;top:6px;left:6px;font-size:9.5px}
+.pk-chips{flex-direction:row;flex-wrap:wrap;gap:8px}
+.pk-chips .i-item{width:auto;padding:7px 13px 7px 7px;border-radius:var(--ibrad);gap:7px}
+.pk-chips .i-item .ic{width:26px;height:26px;border-radius:50%}
+.pk-chips .i-item .ic .ico{width:17px;height:17px}
+.pk-chips .i-item small,.pk-chips .i-item .pc,.pk-chips .i-item .ck{display:none!important}
+.pk-chips .i-item b{font-size:13px}
+.pk-chips .i-item.sel{background:var(--iacc);border-color:var(--iacc);color:var(--ion)}
+.pk-chips .i-item.sel .ic{background:rgba(255,255,255,.3);color:var(--ion)}
+.pk-menu ~ .i-tray,.pk-chips ~ .i-tray{display:none}
+
+/* question-screen art */
+.i-trio{position:relative;display:flex;justify-content:center;align-items:flex-end;gap:12px;margin:20px 0 0;padding-bottom:12px}
+.i-trio::after{content:"";position:absolute;left:-18px;right:-18px;bottom:0;height:12px;background:var(--itable);border-top:2px solid var(--iline);z-index:0}
+.i-trio span{position:relative;z-index:1;width:64px;height:64px;border-radius:50%;background:var(--ipaper);display:grid;place-items:center;color:var(--ipink);box-shadow:0 10px 16px -10px rgba(0,0,0,.55)}
+.i-trio span:nth-child(2){width:84px;height:84px}
+.i-trio .ico{width:34px;height:34px;stroke-width:1.4}
+.i-trio span:nth-child(2) .ico{width:46px;height:46px}
+.al-left .i-trio{justify-content:flex-start}
+.has-frame .i-trio::after{left:-8px;right:-8px}
+.i-sky{display:block;width:calc(100% + 36px);margin:16px -18px 0;height:auto}
+.i-det{margin:16px 0 0;border:1px solid var(--iline);background:var(--is);text-align:left;overflow:hidden}
+.i-det div{display:grid;grid-template-columns:92px minmax(0,1fr);gap:8px;padding:9px 12px;border-bottom:1px solid var(--iline)}
+.i-det div:last-child{border-bottom:0}
+.i-det dt{font-size:9.5px;letter-spacing:.12em;color:var(--imut);font-weight:700;align-self:center}
+.i-det dd{margin:0;font-size:13px;font-weight:700;font-family:var(--idisp);line-height:1.35}
+.i-bigic{width:62px;height:62px;margin:14px auto 2px;color:var(--iacc);display:grid;place-items:center}
+.i-bigic .ico{width:54px;height:54px;stroke-width:1.2;--f:color-mix(in srgb,var(--iacc) 25%,transparent)}
+.i-h2.i-big{font-size:34px;line-height:1.1;margin:10px 0 6px}
+
+/* frames drawn over the whole screen */
+.i-frame{position:absolute;pointer-events:none;z-index:3}
+.has-frame .scr-in{padding-left:30px;padding-right:30px}
+.fr-ornament{inset:12px;border:3px double var(--iacc2);border-radius:3px}
+.fr-ornament::before,.fr-ornament::after{content:"";position:absolute;left:calc(50% - 6px);width:12px;height:12px;background:var(--iacc2);transform:rotate(45deg)}
+.fr-ornament::before{top:-8px}
+.fr-ornament::after{bottom:-8px}
+.fr-hairline{inset:14px;border:1px solid color-mix(in srgb,var(--iacc2) 65%,transparent)}
+.fr-deco{inset:12px;border:1px solid var(--iacc);
+  background:radial-gradient(circle at 0 0,transparent 15px,var(--iacc) 15.5px 16.5px,transparent 17px) 0 0/36px 36px no-repeat,
+  radial-gradient(circle at 100% 0,transparent 15px,var(--iacc) 15.5px 16.5px,transparent 17px) 100% 0/36px 36px no-repeat,
+  radial-gradient(circle at 0 100%,transparent 15px,var(--iacc) 15.5px 16.5px,transparent 17px) 0 100%/36px 36px no-repeat,
+  radial-gradient(circle at 100% 100%,transparent 15px,var(--iacc) 15.5px 16.5px,transparent 17px) 100% 100%/36px 36px no-repeat}
+.fr-deco::before{content:"";position:absolute;inset:5px;border:1px solid color-mix(in srgb,var(--iacc) 45%,transparent)}
+.fr-gingham{inset:0}
+.fr-gingham::before,.fr-gingham::after{content:"";position:absolute;left:0;right:0;
+  background:repeating-linear-gradient(90deg,color-mix(in srgb,var(--iacc) 60%,transparent) 0 11px,transparent 11px 22px),
+  repeating-linear-gradient(0deg,color-mix(in srgb,var(--iacc) 60%,transparent) 0 11px,var(--ipaper) 11px 22px)}
+.fr-gingham::before{top:0;height:40px}
+.fr-gingham::after{bottom:0;height:30px}
+.frm-gingham .scr-in{padding:56px 18px 44px}
+
+/* tickets: one per art direction */
+.tk-card{border-radius:6px;padding:9px;text-align:center}
+.tkc-in{position:relative;padding:22px 16px 20px;border:1px solid color-mix(in srgb,var(--ipink) 25%,transparent)}
+.tf-ornament .tkc-in{border:3px double var(--iacc2)}
+.tf-deco .tkc-in{border:1px solid var(--iacc2);outline:1px solid var(--iacc2);outline-offset:-6px}
+.tf-hairline .tkc-in{border:1px solid color-mix(in srgb,var(--iacc2) 70%,transparent)}
+.tkc-sub,.tkc-picks label,.tkc-fields b{font-size:9px;letter-spacing:.18em;font-weight:700;color:color-mix(in srgb,var(--ipink) 58%,transparent)}
+.tkc-venue{font-family:var(--ihf);font-weight:var(--ihw);font-size:21px;line-height:1.2;margin:6px 0 10px}
+.tkc-rule{width:40px;height:1px;background:var(--iacc2);margin:0 auto 12px}
+.tkc-date{font-family:var(--ihf);font-size:15px;font-weight:700;color:var(--iaccp)}
+.tkc-time{font-family:var(--ihf);font-size:30px;font-weight:800;line-height:1.1;color:var(--iaccp)}
+.tkc-fields{display:grid;gap:3px;margin-top:12px;font-size:12px;font-weight:600}
+.tkc-fields b{margin-right:6px}
+.tkc-picks{margin-top:12px;padding-top:10px;border-top:1px solid color-mix(in srgb,var(--ipink) 15%,transparent);font-family:var(--ihf);font-size:12.5px;font-weight:700}
+.tkc-picks label{display:block;margin-bottom:3px;font-family:var(--ibf)}
+.tkc-luck{margin:10px 0 0;font-size:11.5px;line-height:1.5;color:color-mix(in srgb,var(--ipink) 78%,transparent)}
+.tk-card .i-stamp{right:10px;bottom:10px;top:auto;width:64px;height:64px}
+
+.tk-post{border-radius:3px;padding:14px}
+.tkp-top{display:flex;justify-content:space-between;align-items:flex-start;gap:10px;padding-bottom:10px;border-bottom:1px solid color-mix(in srgb,var(--ipink) 15%,transparent)}
+.tkp-brand{font-family:"Playfair Display",var(--fi-serif);font-style:italic;font-weight:700;font-size:23px;color:var(--iaccp);line-height:1.05}
+.tkp-brand small{display:block;font-family:var(--ibf);font-style:normal;font-size:8.5px;letter-spacing:.16em;font-weight:700;color:color-mix(in srgb,var(--ipink) 58%,transparent);margin-top:5px}
+.tkp-post{flex-shrink:0;width:58px;height:68px;padding:4px;background:radial-gradient(circle at 3.5px 3.5px,var(--ipaper) 2.2px,var(--iacc2) 2.7px) -3.5px -3.5px/7px 7px}
+.tkp-post i{display:grid;place-items:center;align-content:center;gap:2px;height:100%;background:var(--iacc2);color:#fff;font-style:normal;font-size:8px;font-weight:800;letter-spacing:.12em}
+.tkp-post .ico{width:26px;height:26px}
+.tkp-grid{display:grid;grid-template-columns:1fr 1fr;gap:10px;margin-top:10px}
+.tkp-msg{font-size:11px;line-height:1.5;padding-right:10px;border-right:1px solid color-mix(in srgb,var(--ipink) 15%,transparent)}
+.tkp-msg b{display:block;font-family:var(--ihf);font-size:12px;margin-top:8px;line-height:1.35}
+.tkp-addr .ln{border-bottom:1px solid color-mix(in srgb,var(--ipink) 25%,transparent);padding:3px 0 2px;font-family:var(--ihf);font-weight:700;font-size:11.5px;line-height:1.3}
+.tkp-addr label{display:block;font-family:var(--ibf);font-size:8px;letter-spacing:.14em;font-weight:700;color:color-mix(in srgb,var(--ipink) 58%,transparent)}
+.tk-post .i-stamp{top:30px;right:-2px;bottom:auto;width:56px;height:56px}
+
+.tk-rcpt{border-radius:0;background:#fbfaf6;color:#1c1a18;font-family:"DM Mono",var(--fi-sans);padding:16px 16px 26px;font-size:11px;line-height:1.55;
+  -webkit-mask:conic-gradient(from -45deg at bottom,#0000,#000 1deg 89deg,#0000 90deg) 50%/12px 100%;mask:conic-gradient(from -45deg at bottom,#0000,#000 1deg 89deg,#0000 90deg) 50%/12px 100%}
+.tkr-head{text-align:center;display:grid;gap:1px}
+.tkr-head b{font-family:var(--ihf);font-weight:900;font-stretch:var(--ihs);font-size:21px;letter-spacing:.06em;line-height:1.15}
+.tkr-head span{font-size:9.5px;letter-spacing:.08em}
+.tkr-sep{border-top:1.5px dashed rgba(28,26,24,.5);margin:9px 0}
+.tkr-row{display:flex;align-items:baseline;gap:6px}
+.tkr-row .dd{flex:1;min-width:8px;border-bottom:1px dotted rgba(28,26,24,.45);transform:translateY(-3px)}
+.tkr-luck{margin:0;font-size:10.5px;line-height:1.5}
+.tkr-bar{height:30px;margin-top:12px;background:repeating-linear-gradient(90deg,#1c1a18 0 2px,transparent 2px 4px,#1c1a18 4px 5px,transparent 5px 8px,#1c1a18 8px 11px,transparent 11px 13px)}
+.tkr-code{text-align:center;font-size:9.5px;letter-spacing:.3em;margin-top:3px}
+.tk-rcpt .i-stamp{top:90px;right:12px;bottom:auto;border-color:#c2441b;color:#c2441b}
+
+.tk-pass{border-radius:14px}
+.tkb-band{display:flex;justify-content:space-between;gap:8px;padding:9px 14px;background:var(--iaccp);color:#fff;font-size:9px;letter-spacing:.16em;font-weight:800}
+.tkb-route{display:flex;align-items:center;justify-content:space-between;gap:8px;padding:14px 14px 6px}
+.tkb-route b{display:block;font-family:var(--ihf);font-weight:800;font-size:32px;line-height:1;letter-spacing:.02em}
+.tkb-route small{font-size:9.5px;color:color-mix(in srgb,var(--ipink) 62%,transparent)}
+.tkb-route .ico{width:22px;height:22px;color:var(--iaccp)}
+.tkb-route div:last-child{text-align:right}
+.tkb-grid,.tkg-grid,.tks-grid{display:grid;grid-template-columns:1fr 1fr;gap:8px 10px}
+.tkb-grid{padding:8px 14px 10px}
+.tkb-grid label,.tkg-grid label,.tks-grid label,.tkl-picks label{display:block;font-size:8.5px;letter-spacing:.12em;font-weight:700;color:color-mix(in srgb,var(--ipink) 58%,transparent)}
+.tkb-grid>div>div,.tkg-grid>div>div,.tks-grid>div>div{font-family:var(--ihf);font-weight:800;font-size:12.5px;line-height:1.3}
+.tkb-picks{padding:0 14px 8px}
+.tkb-picks label{display:block;font-size:8.5px;letter-spacing:.12em;font-weight:700;color:color-mix(in srgb,var(--ipink) 58%,transparent);margin-bottom:5px}
+.tkb-luck,.tkg-luck,.tks-luck{margin:4px 14px 10px;font-size:11px;line-height:1.5;color:color-mix(in srgb,var(--ipink) 78%,transparent)}
+.tkb-tear{border-top:2px dashed color-mix(in srgb,var(--ipink) 25%,transparent);margin:0 10px}
+.tkb-stub{display:flex;align-items:center;gap:10px;padding:12px 14px}
+.tkb-bar{flex:1;height:26px;background:repeating-linear-gradient(90deg,var(--ipink) 0 2px,transparent 2px 4px,var(--ipink) 4px 5px,transparent 5px 8px,var(--ipink) 8px 11px,transparent 11px 13px)}
+.tkb-stub span{font-size:10px;letter-spacing:.1em;font-weight:800}
+.tk-pass .i-stamp{top:auto;bottom:4px;right:10px;width:62px;height:62px}
+
+.tk-badge{border-radius:16px;text-align:center;padding-top:14px;border:1px solid var(--iline)}
+.tkg-slot{width:46px;height:9px;border-radius:6px;background:var(--is2);margin:0 auto 12px;box-shadow:inset 0 1px 3px rgba(0,0,0,.3)}
+.tkg-head{font-family:var(--ihf);font-weight:800;font-size:15px;letter-spacing:.2em}
+.tkg-head span{display:block;font-family:var(--ibf);font-size:8.5px;letter-spacing:.14em;font-weight:700;color:color-mix(in srgb,var(--ipink) 58%,transparent);margin-top:2px}
+.tkg-ava{width:62px;height:62px;border-radius:50%;margin:14px auto 8px;display:grid;place-items:center;background:var(--iacc);color:var(--ion);font-family:var(--ihf);font-weight:800;font-size:28px}
+.tkg-name{font-family:var(--ihf);font-weight:800;font-size:22px;line-height:1.1}
+.tkg-role{font-size:11.5px;color:color-mix(in srgb,var(--ipink) 66%,transparent);margin-top:3px}
+.tkg-grid{text-align:left;margin:14px 14px 0;padding-top:10px;border-top:1px solid color-mix(in srgb,var(--ipink) 14%,transparent)}
+.tk-badge .i-picks{margin:10px 14px 0;text-align:left}
+.tkg-luck{text-align:left}
+.tkg-foot{display:flex;align-items:center;justify-content:space-between;margin-top:12px;padding:9px 14px;background:var(--iacc2);color:#fff;font-size:10px;letter-spacing:.18em;font-weight:800}
+.tkg-qr{width:30px;height:30px;padding:3px;background:#fff;fill:#0f172a}
+.tk-badge .i-stamp{top:118px;right:12px;bottom:auto;width:66px;height:66px}
+
+.tk-label{background:transparent;box-shadow:none;overflow:visible;padding:2px}
+.tkl-in{position:relative;background:var(--ipaper);color:var(--ipink);text-align:center;border-radius:130px 130px 8px 8px/66px 66px 8px 8px;padding:30px 18px 20px;box-shadow:0 22px 40px -18px rgba(0,0,0,.6)}
+.tkl-in::before{content:"";position:absolute;inset:6px;border:1px solid color-mix(in srgb,var(--iaccp) 55%,transparent);border-radius:inherit;pointer-events:none}
+.tkl-top{font-size:8.5px;letter-spacing:.24em;font-weight:700;color:var(--iaccp)}
+.tkl-name{font-family:var(--fi-serif);font-weight:800;font-size:27px;letter-spacing:.08em;margin:4px 0 2px}
+.tkl-orn{display:flex;align-items:center;justify-content:center;gap:8px;color:var(--iaccp)}
+.tkl-orn::before,.tkl-orn::after{content:"";width:34px;height:1px;background:currentColor}
+.tkl-orn .ico{width:10px;height:10px}
+.tkl-vint{font-family:var(--fi-serif);font-weight:500;font-size:36px;line-height:1.05;color:var(--iaccp);margin-top:4px}
+.tkl-date{font-size:11.5px;font-weight:700;margin-top:6px}
+.tkl-fields{font-size:10.5px;margin-top:4px;color:color-mix(in srgb,var(--ipink) 75%,transparent)}
+.tkl-picks{margin-top:10px;font-family:var(--fi-serif);font-weight:700;font-size:12.5px}
+.tkl-luck{margin:8px 0 0;font-size:11px;line-height:1.5;color:color-mix(in srgb,var(--ipink) 78%,transparent)}
+.tk-label .i-stamp{right:10px;bottom:10px;top:auto;width:60px;height:60px}
+
+.tk-stk{border:3px solid var(--iink);border-radius:var(--irad);box-shadow:6px 6px 0 var(--iink);background:#fff;color:#141414;overflow:visible;padding-bottom:12px;margin-top:22px}
+.tks-band{background:var(--iink);color:var(--ibg);padding:7px 12px;font-size:10px;font-weight:800;letter-spacing:.16em;border-radius:calc(var(--irad) - 4px) calc(var(--irad) - 4px) 0 0}
+.tks-big{position:absolute;right:-12px;top:-20px;width:76px;height:76px;border-radius:50%;background:var(--iacc);border:3px solid var(--iink);display:grid;place-items:center;font-family:var(--ihf);font-weight:800;font-size:32px;transform:rotate(12deg);box-shadow:3px 3px 0 var(--iink)}
+.tks-venue{font-family:var(--ihf);font-weight:800;font-size:25px;line-height:1.05;margin:14px 70px 3px 14px}
+.tks-sub{font-size:9.5px;letter-spacing:.12em;font-weight:700;margin:0 14px}
+.tks-grid{margin:12px 14px 0}
+.tk-stk .i-picks{margin:10px 14px 0;border-top:2px solid #141414}
+.tk-stk .i-chip{border:2px solid #141414;background:#fff}
+.tk-stk .i-stamp{right:12px;bottom:12px;top:auto;width:66px;height:66px}
+
+.v-pizza .bx-lid b{font-family:"Playfair Display",var(--fi-serif)}
+
 @media (prefers-reduced-motion: reduce){
   html{scroll-behavior:auto}
   *,*::before,*::after{animation-duration:.01ms!important;animation-iteration-count:1!important;transition-duration:.01ms!important}
@@ -913,10 +1133,10 @@ const TPL = [
       stamp:{big:L('確定'), jp:true, round:false}},
   sign:L('ჩაიცვი, როგორც მოგინდება. მთავარია, მშიერი მოხვიდე.','Wear whatever you like. Just come hungry.') },
 
-{ id:'supra', cat:'restaurant',
+{ id:'supra', cat:'restaurant', ui:{frame:'ornament', caps:true, kick:'rule', ask:'trio', pick:'menu', tk:'card', btn:'outline', rad:4, brad:3}, trio:[0,4,1],
   name:L('სუფრა','Supra'), kind:L('ქართული სამზარეულო','Georgian kitchen'),
   desc:L('ხის კარი ასომთავრულით, თამადის სადღეგრძელო და ბეჭედი, რომელზეც უბრალოდ წერია „კი“.','Carved doors with Asomtavruli letters, the tamada’s toast, and a seal that simply says yes.'),
-  c:{bg:'#1a0f12',s:'#27161b',s2:'#331d23',ink:'#f3e6d6',mut:'#b39a92',acc:'#b3283d',on:'#ffffff',acc2:'#d4a24c',paper:'#f5ead9',pink:'#2a1216',line:'#45293a',flap:'#5a3420',flapInk:'#f0d9a8',accp:'#9e2235'},
+  c:{bg:'#1a0f12',s:'#27161b',s2:'#331d23',ink:'#f3e6d6',mut:'#b39a92',acc:'#b3283d',on:'#ffffff',acc2:'#d4a24c',paper:'#f5ead9',pink:'#2a1216',line:'#45293a',flap:'#5a3420',flapInk:'#f0d9a8',accp:'#9e2235',table:'linear-gradient(#6b3d22,#3e2416)'},
   pat:'grapes', po:.07, fx:'dot',
   op:{type:'doors', l:'Ⴑ', r:'Ⴔ', ls:L('სუფ','SU'), rs:L('რა','PRA')},
   kick:L('ᲛᲝᲑᲠᲫᲐᲜᲓᲘᲗ','WELCOME TO THE TABLE'),
@@ -936,18 +1156,18 @@ const TPL = [
   ],
   sp:{ic:'horn', title:L('თამადის სადღეგრძელო','The tamada’s toast'), hint:L('შეეხე ყანწს.','Tap the drinking horn.'), big:L('გაუმარჯოს!','Gaumarjos!'), lbl:L('სადღეგრძელო','A toast'),
       lines:L(['შენს ღიმილს, რომელიც ამ სუფრას ყველაზე კარგად ამშვენებს.','იმ ხინკალს, რომელსაც ბოლოს დატოვებ და მაინც შეჭამ.','ჩვენს პირველ სუფრას და კიდევ ბევრს.'],['To your smile, the best thing on this table.','To the last khinkali, which you’ll leave and still eat.','To our first supra, and many more.'])},
-  tk:{venue:L('ხის აივანი','THE WOODEN BALCONY'), sub:L('ქართული სამზარეულო · ძველი თბილისი','GEORGIAN KITCHEN · OLD TBILISI'), days:3, time:'20:00',
+  tk:{cta:L('მოვდივარ','I’m coming'), venue:L('ხის აივანი','THE WOODEN BALCONY'), sub:L('ქართული სამზარეულო · ძველი თბილისი','GEORGIAN KITCHEN · OLD TBILISI'), days:3, time:'20:00',
       fields:[[L('სტუმრები','Guests'),L('ანი + ლუკა','Ani + Luka')],[L('ფორმატი','Format'),L('სუფრა ორზე','Supra for two')],[L('ჯავშანი','Booking'),L('WB-0711')]],
       stamp:{big:L('ᲙᲘ','YES'), round:true}},
   sign:L('მოდი მშიერი. დანარჩენს თამადა მიხედავს.','Come hungry. The tamada will handle the rest.') },
 
-{ id:'trattoria', cat:'restaurant',
+{ id:'trattoria', cat:'restaurant', ui:{frame:'gingham', head:'geo', body:'geo', kick:'latin', ask:'trio', pick:'grid', tk:'postcard', rad:12, brad:10, glow:0}, trio:[1,0,4],
   name:L('ტრატორია','Trattoria'), kind:L('იტალიური','Italian'),
   desc:L('ღია ფერის შაბლონი: პიცის ყუთი, რომელიც იხსნება, ტრევის მონეტა და მენიუ პასტით.','A light template: a pizza box that opens, a Trevi coin toss and a pasta menu.'),
-  c:{bg:'#f6efe4',s:'#ffffff',s2:'#efe4d3',ink:'#2a1d16',mut:'#76655a',acc:'#c23b22',on:'#ffffff',acc2:'#3f7a3a',paper:'#fffaf2',pink:'#2a1d16',line:'#e2d3bd',flap:'#ecd6ad',flapInk:'#c23b22',box:'#d9bb8c'},
+  c:{bg:'#f6efe4',s:'#ffffff',s2:'#efe4d3',ink:'#2a1d16',mut:'#76655a',acc:'#c23b22',on:'#ffffff',acc2:'#3f7a3a',paper:'#fffaf2',pink:'#2a1d16',line:'#e2d3bd',flap:'#ecd6ad',flapInk:'#c23b22',box:'#d9bb8c',table:'repeating-linear-gradient(90deg,rgba(194,59,34,.55) 0 8px,transparent 8px 16px),repeating-linear-gradient(0deg,rgba(194,59,34,.55) 0 6px,#fffaf2 6px 12px)'},
   pat:'gingham', po:.07, patc:'#c23b22', fx:'rect',
   op:{type:'box', v:'pizza', label:L('Casa Luce'), small:L('ცხელი, ღუმელიდან','HOT FROM THE OVEN'), inside:'pizza'},
-  kick:L('BUONASERA'),
+  kick:L('Buonasera'),
   to:L('ანი','Ani'), toGen:L('ანის','Ani’s'), from:L('ლუკა','Luka'),
   intro:L('ბოლო ნაჭერი შენთვის შევინახე. გახსენი.','I saved you the last slice. Open it.'),
   hint:L('გახსენი ყუთი','Open the box'),
@@ -964,15 +1184,15 @@ const TPL = [
   ],
   sp:{ic:'coin', title:L('ტრევის მონეტა','The Trevi coin'), hint:L('შეეხე მონეტას და ისურვე რამე.','Tap the coin and make a wish.'), big:L('Fortuna'), lbl:L('იტალიური იღბალი','Italian luck'),
       lines:L(['ეს მონეტა ნიშნავს, რომ აქ კიდევ დავბრუნდებით.','ბედი ამბობს: ორი დესერტი, ერთი კოვზი.','დღეს პასტა არ დაგესხმება. გარანტიას გაძლევ.'],['This coin means we’ll come back here.','Fortune says: two desserts, one spoon.','No pasta on your shirt tonight. Guaranteed.'])},
-  tk:{venue:L('CASA LUCE'), sub:L('ტრატორია · ვაკე','TRATTORIA · VAKE'), days:4, time:'20:30',
+  tk:{cta:L('Sì, მოვდივარ','Sì, I’m in'), post:L('ROMA'), venue:L('Casa Luce'), sub:L('ტრატორია · ვაკე','TRATTORIA · VAKE'), days:4, time:'20:30',
       fields:[[L('სტუმრები','Guests'),L('ანი + ლუკა','Ani + Luka')],[L('მაგიდა','Table'),L('ტერასა','Terrace')],[L('ჯავშანი','Booking'),L('CL-1402')]],
       stamp:{big:L('Sì'), round:true}},
   sign:L('მოდი მშიერი და ერთი სიტყვა ისწავლე: ancora.','Come hungry and learn one word: ancora.') },
 
-{ id:'qvevri', cat:'restaurant',
+{ id:'qvevri', cat:'restaurant', ui:{align:'left', head:'light', kick:'rule', ask:'trio', pick:'menu', tk:'label', btn:'outline', rad:2, brad:0}, trio:[1,0,3],
   name:L('ქარვა','Amber'), kind:L('ღვინის ბარი','Wine bar'),
   desc:L('დეგუსტაციის წერილი ცვილის ბეჭდით, ქართული ღვინის ბარათი და სომელიეს შენიშვნა.','A tasting letter with a wax seal, a Georgian wine list and a sommelier’s note.'),
-  c:{bg:'#191310',s:'#241b16',s2:'#2f241d',ink:'#f1e4d0',mut:'#ad9a83',acc:'#d98a2b',on:'#1b130e',acc2:'#e0b46a',paper:'#f3e8d6',pink:'#21160f',line:'#3c2f25',accp:'#8d2f3a'},
+  c:{bg:'#191310',s:'#241b16',s2:'#2f241d',ink:'#f1e4d0',mut:'#ad9a83',acc:'#d98a2b',on:'#1b130e',acc2:'#e0b46a',paper:'#f3e8d6',pink:'#21160f',line:'#3c2f25',accp:'#8d2f3a',out:'#e0a04e',table:'linear-gradient(#3a2b20,#241b16)'},
   pat:'rings', po:.09, patc:'#d98a2b', fx:'dot',
   op:{type:'env', glyph:'ქ', label:L('დეგუსტაციაზე მოწვევა','TASTING INVITATION')},
   kick:L('ქარვისფერი საღამო','AN AMBER EVENING'),
@@ -997,10 +1217,10 @@ const TPL = [
       stamp:{big:L('ქ','K'), round:true}},
   sign:L('ჭიქები უკვე გელოდება.','The glasses are already waiting.') },
 
-{ id:'embers', cat:'restaurant',
+{ id:'embers', cat:'restaurant', ui:{align:'left', head:'cond', caps:true, h1:58, ask:'trio', pick:'list', tk:'receipt', rad:0, brad:0}, trio:[0,5,2],
   name:L('ნაკვერჩხალი','Embers'), kind:L('სტეიკჰაუსი','Steakhouse'),
   desc:L('ვერცხლის ხუფი, რომლის ქვეშაც სტეიკი გელოდება, შეფის პროგნოზი და ბილეთი შეფის მაგიდაზე.','A silver cloche with a steak underneath, the chef’s forecast and a ticket to the chef’s counter.'),
-  c:{bg:'#141110',s:'#1f1a18',s2:'#29221f',ink:'#f2ebe4',mut:'#a4988f',acc:'#e2582a',on:'#160f0c',acc2:'#f0b04a',paper:'#efe7de',pink:'#181210',line:'#3a302b',accp:'#c2441b'},
+  c:{bg:'#141110',s:'#1f1a18',s2:'#29221f',ink:'#f2ebe4',mut:'#a4988f',acc:'#e2582a',on:'#160f0c',acc2:'#f0b04a',paper:'#efe7de',pink:'#181210',line:'#3a302b',accp:'#c2441b',table:'repeating-linear-gradient(90deg,#2b2422 0 7px,rgba(226,88,42,.4) 7px 9px)'},
   pat:'grill', po:.05, str:'78%', fx:'dot',
   op:{type:'box', v:'cloche', inside:'steak'},
   kick:L('ცეცხლი ანთია','THE FIRE IS LIT'),
@@ -1025,10 +1245,10 @@ const TPL = [
       stamp:{big:L('მზადაა','READY'), round:false}},
   sign:L('მოდი მშიერი. ძალიან მშიერი.','Come hungry. Very hungry.') },
 
-{ id:'golden', cat:'restaurant',
+{ id:'golden', cat:'restaurant', ui:{head:'geo', body:'geo', ask:'skyline', pick:'grid', card:'glass', tk:'pass', btn:'glass', rad:18, brad:999, glow:0},
   name:L('ოქროს საათი','Golden Hour'), kind:L('კოქტეილ ბარი','Rooftop bar'),
   desc:L('ლიფტის კარი მე-12 სართულზე, კოქტეილები თარხუნითა და ფეიჯოათი, ცის პროგნოზი.','Elevator doors to the 12th floor, cocktails with tarragon and feijoa, and a sky forecast.'),
-  c:{bg:'#16142b',s:'#211e3c',s2:'#2b274b',ink:'#f4eef8',mut:'#aca7c8',acc:'#f29a7a',on:'#16142b',acc2:'#f6c96b',paper:'#f8f2fb',pink:'#1b1833',line:'#383462',flap:'#4a4670',flapInk:'#f6c96b',accp:'#c4553a'},
+  c:{bg:'#2a1d52',bgImg:'linear-gradient(180deg,#1b1440 0%,#4a2a6e 34%,#b24f7c 68%,#f39c74 100%)',s:'rgba(255,255,255,.12)',s2:'rgba(255,255,255,.18)',ink:'#fff7f0',mut:'rgba(255,240,230,.8)',acc:'#ffd08a',on:'#2a1d52',acc2:'#ffe2b8',paper:'#fff8f1',pink:'#2a1d52',line:'rgba(255,255,255,.3)',flap:'#3d2f6b',flapInk:'#ffd08a',accp:'#c4547a',sil:'#170f33'},
   pat:'stars', po:.5, str:'85%', fx:'dot',
   op:{type:'doors', l:'1', r:'2', ls:L('სართ.','FLOOR'), rs:L('ზევით','UP')},
   kick:L('ოქროს საათი','GOLDEN HOUR'),
@@ -1048,16 +1268,16 @@ const TPL = [
   ],
   sp:{ic:'sunset', title:L('ცის პროგნოზი','Sky forecast'), hint:L('შეეხე მზეს.','Tap the sun.'), big:L('ოქროსფერი','Golden'), lbl:L('საღამოს ფერი','TONIGHT’S COLOR'),
       lines:L(['ცა ვარდისფერი იქნება. შენ კი, როგორც ყოველთვის, ლამაზი.','ბედი ამბობს: მეორე რაუნდს შენ ირჩევ.','ამ საღამოს ფოტოები ძალიან კარგი გამოვა.'],['The sky will be pink. And you, as always, gorgeous.','Fortune says: you pick the second round.','Tonight’s photos will turn out great.'])},
-  tk:{venue:L('FLOOR 12'), sub:L('სახურავის ბარი · მთაწმინდის ხედით','ROOFTOP BAR · MTATSMINDA VIEW'), days:2, time:'19:00',
+  tk:{cta:L('ზევით ავდივარ','Going up'), route:{a:'TBS', al:L('ქუჩის დონე','Street level'), b:'F12', bl:L('სახურავი','Rooftop')}, venue:L('FLOOR 12'), sub:L('სახურავის ბარი · მთაწმინდის ხედით','ROOFTOP BAR · MTATSMINDA VIEW'), days:2, time:'19:00',
       fields:[[L('სტუმრები','Guests'),L('ანი + ლუკა','Ani + Luka')],[L('მაგიდა','Table'),L('კიდესთან','By the edge')],[L('ჯავშანი','Booking'),L('F12-019')]],
       stamp:{big:L('12'), round:true}},
   sign:L('თბილად ჩაიცვი, ზემოთ ქარია.','Bring a jacket. It’s windy up there.') },
 
-{ id:'proposal', cat:'life',
+{ id:'proposal', cat:'life', ui:{head:'light', h1:46, kick:'rule', frame:'hairline', ask:'bigtype', pick:'chips', card:'line', tk:'card', btn:'outline', rad:10, brad:999, glow:0}, bigIc:'ring',
   name:L('ხელის თხოვნა','Proposal'), kind:L('პირადი · განსაკუთრებული საღამო','Personal · A special evening'),
   desc:L('ბეჭდის ყუთი, „არა“, რომელიც გარბის, და ზეიმის ვახშამი, რომელიც რესტორანში უკვე დაჯავშნილია.','A ring box, a No button that runs away, and a celebration dinner already booked at a restaurant.'),
-  c:{bg:'#0f1f28',s:'#162b36',s2:'#1e3643',ink:'#f6efe6',mut:'#a3b7bf',acc:'#e8b4a0',on:'#0f1f28',acc2:'#f3d9a4',paper:'#fbf6ef',pink:'#13242e',line:'#2b4552',flap:'#6e1f35',flapInk:'#f3d9a4',box:'#5a1a2c',accp:'#a85a48'},
-  pat:'diamond', po:.06, fx:'petal', fxc:['#f3d9a4','#e8b4a0','#fbf6ef'],
+  c:{bg:'#f6efe6',s:'#fffdf9',s2:'#efe5d8',ink:'#2b2220',mut:'#7a6a61',acc:'#9e3b4e',on:'#ffffff',acc2:'#b08d57',paper:'#fffdf9',pink:'#2b2220',line:'#e2d5c6',flap:'#5b1f2e',flapInk:'#e9d3a8',box:'#45161f',accp:'#9e3b4e',out:'#9e3b4e'},
+  pat:'diamond', po:.07, patc:'#b08d57', fx:'petal', fxc:['#9e3b4e','#b08d57','#e8b4a0'],
   op:{type:'box', v:'ring', inside:'ring'},
   kick:L('ერთი კითხვა','ONE QUESTION'),
   to:L('ანი','Ani'), toGen:L('ანის','Ani’s'), from:L('ლუკა','Luka'),
@@ -1080,11 +1300,11 @@ const TPL = [
       stamp:{big:L('ᲙᲘ','YES'), round:true}},
   sign:L('მიყვარხარ. ესეც დადასტურებულია.','I love you. That’s confirmed too.') },
 
-{ id:'birthday', cat:'life',
+{ id:'birthday', cat:'life', ui:{align:'left', head:'geo', body:'geo', caps:true, h1:46, kick:'sticker', ask:'bigtype', pick:'chips', card:'hard', tk:'sticker', btn:'hard', rad:14, brad:12, glow:0}, bigIc:'balloon', punct:'!',
   name:L('დაბადების დღე','Birthday'), kind:L('პირადი · სიურპრიზ წვეულება','Personal · Surprise party'),
   desc:L('საჩუქრის ყუთი, საიდუმლო წვეულება და როლები სტუმრებისთვის: ვინ შეიტანს ტორტს, ვინ ამბობს სადღეგრძელოს.','A gift box, a secret party and jobs for guests: who brings in the cake, who gives the toast.'),
-  c:{bg:'#2a1240',s:'#371a52',s2:'#43215f',ink:'#fff3e6',mut:'#cfb3de',acc:'#ffb020',on:'#2a1240',acc2:'#ff6f91',paper:'#fff6ea',pink:'#2a1240',line:'#562e72',flap:'#ffb020',flapInk:'#2a1240',box:'#ff6f91',accp:'#b0306a'},
-  pat:'confetti', po:.28, patc:'#ffb020', font:'sans', str:'80%', fx:'rect',
+  c:{bg:'#ffd23f',s:'#ffffff',s2:'#fff1b8',ink:'#141414',mut:'#3b382f',acc:'#ff4f8b',on:'#141414',acc2:'#2f5bff',paper:'#ffffff',pink:'#141414',line:'#141414',flap:'#141414',flapInk:'#ffd23f',box:'#ff4f8b',accp:'#e0306f'},
+  pat:'confetti', po:.5, patc:'#ff4f8b', fx:'rect', fxc:['#ff4f8b','#2f5bff','#141414'],
   op:{type:'box', v:'gift', label:L('30'), inside:'cake'},
   kick:L('ᲡᲐᲘᲓᲣᲛᲚᲝ','TOP SECRET'),
   to:L('მარიამ','Mariam'), toGen:L('მარიამის','Mariam’s'), from:L('ნიკა და ბანდა','Nika and the gang'),
@@ -1103,16 +1323,16 @@ const TPL = [
   ],
   sp:{ic:'candle', title:L('ჩაუბერე სანთელს','Blow out the candle'), hint:L('შეეხე სანთელს და ჩაიფიქრე.','Tap the candle and make a wish.'), big:L('+1'), lbl:L('იღბლიანი წელი','A LUCKY YEAR'),
       lines:L(['სურვილი აუცილებლად ახდება. თუ არავის ეტყვი.','წლევანდელი წვეულება შარშანდელს აჯობებს.','აქ ყველაზე კარგად შენ ცეკვავ. ეს ფაქტია.'],['Your wish will come true, as long as you tell no one.','This year’s party beats last year’s.','You’re the best dancer here. That’s a fact.'])},
-  tk:{title:L('შენი საშვი','Your pass'), venue:L('ლუკა 30','LUKA TURNS 30'), sub:L('სარდაფის ბარი · ძველი თბილისი','CELLAR BAR · OLD TBILISI'), days:4, time:'20:00',
+  tk:{cta:L('მოვდივარ!','I’m in!'), big:L('30'), title:L('შენი საშვი','Your pass'), venue:L('ლუკა 30','LUKA TURNS 30'), sub:L('სარდაფის ბარი · ძველი თბილისი','CELLAR BAR · OLD TBILISI'), days:4, time:'20:00',
       fields:[[L('დრესკოდი','Dress code'),L('რაიმე ოქროსფერი','Something gold')],[L('პაროლი','Password'),L('ტირამისუ','Tiramisu')]],
-      stamp:{big:L('30'), round:true}},
+      stamp:{big:L('ᲕᲐᲨᲐ!','YAY!'), round:true}},
   sign:L('ლუკას არაფერი უთხრა.','Not a word to Luka.') },
 
-{ id:'interview', cat:'work',
+{ id:'interview', cat:'work', ui:{align:'left', head:'geo', body:'geo', ask:'details', pick:'chips', tk:'badge', rad:8, brad:8, glow:0}, det:[[L('პოზიცია','Role'),L('Product Designer')],[L('გუნდი','Team'),L('პროდუქტი, 6 ადამიანი','Product, 6 people')],[L('ფორმატი','Format'),L('საუბარი და პორტფოლიო','Conversation and portfolio')],[L('ხანგრძლივობა','Length'),L('45 წუთი','45 minutes')]],
   name:L('გასაუბრება','Interview'), kind:L('ბიზნესი · HR','Business · HR'),
   desc:L('გასაუბრებაზე მოწვევა, რომელიც კომპანიის კულტურას აჩვენებს: ფორმატის არჩევა, რჩევა გუნდისგან და საშვი.','An interview invite that shows company culture: choose the format, get a tip from the team, receive a pass.'),
-  c:{bg:'#eef1f5',s:'#ffffff',s2:'#e3e9f1',ink:'#13233a',mut:'#56667b',acc:'#2f5bd3',on:'#ffffff',acc2:'#12866a',paper:'#ffffff',pink:'#13233a',line:'#d3dbe6'},
-  pat:'grid', po:.08, patc:'#2f5bd3', font:'sans', str:'90%', fx:'rect',
+  c:{bg:'#ffffff',s:'#f4f6f9',s2:'#e8edf4',ink:'#0f172a',mut:'#56657a',acc:'#2f5bd3',on:'#ffffff',acc2:'#0f8a6a',paper:'#ffffff',pink:'#0f172a',line:'#dbe2ec'},
+  pat:'grid', po:.07, patc:'#2f5bd3', fx:'rect',
   op:{type:'env', glyph:'O', label:L('პირადად','PERSONAL')},
   kick:L('მოსაწვევი','INVITATION'),
   to:L('გიორგი','Giorgi'), toGen:L('გიორგის','Giorgi’s'), from:L('ორბიტას გუნდი','The Orbita team'),
@@ -1131,15 +1351,15 @@ const TPL = [
   ],
   sp:{ic:'bulb', title:L('რჩევა გუნდისგან','A tip from the team'), hint:L('შეეხე ნათურას.','Tap the bulb.'), big:L('რჩევა','Tip'), lbl:L('რას ველით','WHAT TO EXPECT'),
       lines:L(['მოიტანე ერთი პროექტი, რომლითაც ამაყობ. სლაიდები საჭირო არ არის.','კითხვები ჩვენც გვიყვარს. მოამზადე სამი.','45 წუთი, ორი ადამიანი და არც ერთი ხრიკიანი კითხვა.'],['Bring one project you’re proud of. No slides needed.','We love questions too. Prepare three.','45 minutes, two people, zero trick questions.'])},
-  tk:{title:L('შენი საშვი','Your pass'), venue:L('ORBITA'), sub:L('პროდუქტის გუნდი · თბილისი','PRODUCT TEAM · TBILISI'), days:3, time:'11:00',
+  tk:{cta:L('მოვალ','I’ll be there'), title:L('შენი საშვი','Your pass'), venue:L('ORBITA'), sub:L('პროდუქტის გუნდი · თბილისი','PRODUCT TEAM · TBILISI'), days:3, time:'11:00',
       fields:[[L('პოზიცია','Role'),L('Product Designer')],[L('ვისთან','With'),L('ნინო, Design Lead','Nino, Design Lead')],[L('კოდი','Code'),L('INT-2207')]],
       stamp:{big:L('მოვალ','I’M IN'), round:false}},
   sign:L('მალე გნახავთ.','See you soon.') },
 
-{ id:'corporate', cat:'work',
+{ id:'corporate', cat:'work', ui:{frame:'deco', caps:true, kick:'rule', ask:'details', pick:'menu', tk:'card', btn:'outline', rad:2, brad:2}, det:[[L('თარიღი','Date'),'@date'],[L('ადგილი','Venue'),L('შუშის დარბაზი, ვაკე','The Glass Hall, Vake')],[L('დრესკოდი','Dress code'),L('საღამოს, თავისუფალი','Evening, relaxed')],[L('პროგრამა','Program'),L('ვახშამი · ჯილდოები · DJ','Dinner · Awards · DJ')]],
   name:L('კორპორატივი','Company dinner'), kind:L('ბიზნესი · ღონისძიება','Business · Event'),
   desc:L('წლის დასასრულის ვახშამი: მენიუს და ტრანსფერის არჩევა, ნომინაცია ყველასთვის და პერსონალური საშვი.','A year-end dinner: menu and shuttle choices, an award for everyone and a personal pass.'),
-  c:{bg:'#0f1a17',s:'#16241f',s2:'#1d2e28',ink:'#eef3ee',mut:'#9aaea5',acc:'#c9a45c',on:'#0f1a17',acc2:'#7fc8a9',paper:'#f4f1e8',pink:'#0f1a17',line:'#2a423b',flap:'#22362f',flapInk:'#c9a45c',accp:'#7a5e22'},
+  c:{bg:'#0f1a17',s:'#16241f',s2:'#1d2e28',ink:'#eef3ee',mut:'#9aaea5',acc:'#c9a45c',on:'#0f1a17',acc2:'#7fc8a9',paper:'#f4f1e8',pink:'#0f1a17',line:'#2a423b',flap:'#22362f',flapInk:'#c9a45c',accp:'#7a5e22',out:'#c9a45c'},
   pat:'lines', po:.05, str:'85%', fx:'rect',
   op:{type:'doors', l:'20', r:'26', ls:L('წლის','YEAR'), rs:L('ბოლო','END')},
   kick:L('წლის ბოლო','YEAR END'),
@@ -1168,10 +1388,10 @@ const TBY = Object.fromEntries(TPL.map(t => [t.id, t]));
 
 /* ---------- strings used inside every invite ---------- */
 const G = {
-  ka:{yes:'კი', no:'არა', next:'შემდეგი', toTicket:'ბილეთის ნახვა', stamp:'დაარტყი ბეჭედი', again:'თავიდან დაწყება',
+  ka:{yes:'კი', no:'არა', next:'შემდეგი', toTicket:'ბილეთის ნახვა', stamp:'ვადასტურებ', order:'შეკვეთა №', pax:'სტუმარი', board:'ჩასხდომა', boardT:'ჩასხდომის ბილეთი', to:'ვის', admit:'შესასვლელი ბილეთი', visitor:'სტუმარი', again:'თავიდან დაწყება',
       count:'არჩეულია {n} / {m}', max:'მაქსიმუმ {m}. ჯერ რომელიმე ამოიღე.', pickNote:'მენიუდან. აირჩიე {m}-მდე.',
       date:'თარიღი', time:'დრო', picks:'{to} არჩევანი', d:'დღე', h:'საათი', m:'წუთი', s:'წამი', tk:'შენი ბილეთი', ok:'დადასტურდა', now:'დროა!'},
-  en:{yes:'Yes', no:'No', next:'Next', toTicket:'See my ticket', stamp:'Press the stamp', again:'Start over',
+  en:{yes:'Yes', no:'No', next:'Next', toTicket:'See my ticket', stamp:'Confirm', order:'ORDER №', pax:'Guest', board:'Boarding', boardT:'Boarding pass', to:'To', admit:'ADMIT ONE', visitor:'Visitor', again:'Start over',
       count:'{n} of {m} picked', max:'Up to {m}. Remove one first.', pickNote:'From the menu. Choose up to {m}.',
       date:'Date', time:'Time', picks:'{to} picks', d:'days', h:'hrs', m:'min', s:'sec', tk:'Your ticket', ok:'CONFIRMED', now:'It’s time!'}
 };
@@ -1194,7 +1414,7 @@ ka:{
            ['კი თუ არა?','კითხვას უსვამს ის, ვინც დაპატიჟა, და არა რესტორანი. „არა“ გარბის. ეს ეკრანი გაზიარებისთვისაა შექმნილი.','სტუმრები თავად აზიარებენ'],
            ['მენიუ','ირჩევს კერძებს თქვენი ნამდვილი მენიუდან. სამზარეულო არჩევანს წინასწარ ხედავს, ოფიციანტმა კი იცის, რა შესთავაზოს.','წინასწარი შეკვეთა და დამატებითი გაყიდვა'],
            ['სიურპრიზი','ომიკუჯი, სადღეგრძელო ან მონეტა, თქვენს სტილში. აქვე შეგიძლიათ შესთავაზოთ პაემნის პაკეტი: მისასალმებელი სასმელი და დესერტი ორზე.','პაემნის პაკეტი, 15–30 ₾'],
-           ['ბილეთი','დადასტურების ბეჭედს თავად ურტყამს, ბილეთზე კი ვახშმამდე დარჩენილი დრო ითვლება. ვინც თავად დაადასტურა, ნაკლებად აცდენს.','ნაკლები გაცდენა']]},
+           ['ბილეთი','ბილეთს თავად ადასტურებს და ვახშმამდე დარჩენილი დრო იწყებს თვლას. ვინც თავად დაადასტურა, ნაკლებად აცდენს.','ნაკლები გაცდენა']]},
   cus:{label:'ინდივიდუალური', h:'როცა შაბლონი არ კმარა, ვხატავთ ნულიდან.',
     sub:'ერთჯერადი მოსაწვევი კონკრეტული ადამიანისთვის ან ღონისძიებისთვის, ან ექსკლუზიური სტილი თქვენი რესტორნისთვის.',
     occ:[['პაემანი','თქვენი ადგილი, თქვენი ხუმრობები, თქვენი ფოტოები','49 ₾-დან','custom-personal','person','omakase'],
@@ -1256,7 +1476,7 @@ en:{
            ['Yes or no?','The question comes from the person who invited them, not from the restaurant. The No button runs away. This is the screen made to be shared.','Guests share it for you'],
            ['The menu','They pick dishes from your real menu. The kitchen sees the picks in advance, and the waiter knows what to suggest.','Pre-orders and upsell'],
            ['The surprise','An omikuji, a toast or a coin toss, in your style. This is also where you can offer a date package: a welcome drink and dessert for two.','Date package, 15–30 ₾'],
-           ['The ticket','They press the confirmation stamp themselves, and the ticket counts down to dinner. A guest who confirmed personally is less likely to skip.','Fewer no-shows']]},
+           ['The ticket','They confirm the ticket themselves, and it starts counting down to dinner. A guest who confirmed personally is less likely to skip.','Fewer no-shows']]},
   cus:{label:'Custom', h:'When a template isn’t enough, we draw it from scratch.',
     sub:'A one-off invite for one person or one event, or an exclusive style for your restaurant.',
     occ:[['A date','Your place, your inside jokes, your photos','from 49 ₾','custom-personal','person','omakase'],
@@ -1324,14 +1544,33 @@ function fmtDate(d){
   return lang === 'ka' ? D.days[d.getDay()] + ',<br>' + d.getDate() + ' ' + D.months[d.getMonth()]
                        : D.days[d.getDay()] + ',<br>' + d.getDate() + ' ' + D.months[d.getMonth()];
 }
+/* each template carries its own art direction: layout, type, components, ticket */
+const UI_DEF = {align:'center', head:'serif', body:'sans', caps:false, h1:38, rad:14, brad:999, btn:'fill', card:'solid', frame:'', kick:'', ask:'belt', pick:'list', tk:'stub', glow:1};
+const HEADS = {
+  serif:['var(--fi-serif)', 800, '100%', '0'],
+  light:['var(--fi-serif)', 500, '100%', '.005em'],
+  sans: ['var(--fi-sans)', 800, '100%', '0'],
+  cond: ['var(--fi-sans)', 900, '62.5%', '.01em'],
+  geo:  ['var(--fi-geo)', 700, '100%', '-.01em']
+};
+const uiOf = t => Object.assign({}, UI_DEF, t.ui || {});
+const capsT = s => lang === 'ka' ? mt(s) : String(s).toUpperCase();
 function tvars(t){
-  const c = t.c;
+  const c = t.c, u = uiOf(t), h = HEADS[u.head] || HEADS.serif;
   return ['--ibg:'+c.bg,'--is:'+c.s,'--is2:'+c.s2,'--iink:'+c.ink,'--imut:'+c.mut,'--iacc:'+c.acc,'--ion:'+c.on,'--iacc2:'+c.acc2,
     '--ipaper:'+c.paper,'--ipink:'+c.pink,'--iline:'+c.line,'--iflap:'+(c.flap||c.acc),'--iflapink:'+(c.flapInk||c.on),
     '--ibox:'+(c.box||c.acc),'--iaccp:'+(c.accp||c.acc),'--ipat:'+pat(t.pat, t.patc||c.ink, c.acc2),'--ipo:'+(t.po||.06),
-    '--idisp:'+(t.font==='sans'?'var(--fi-sans)':'var(--fi-serif)'),'--istr:'+(t.str||'100%'),
+    '--idisp:'+h[0],'--ihf:'+h[0],'--ihw:'+h[1],'--ihs:'+h[2],'--ihl:'+h[3],'--ih1:'+u.h1+'px',
+    '--ibf:'+(u.body === 'geo' ? 'var(--fi-geo)' : 'var(--fi-sans)'),'--irad:'+u.rad+'px','--ibrad:'+u.brad+'px','--iglow:'+u.glow,
+    '--iout:'+(c.out||c.acc2),'--ibgimg:'+(c.bgImg||'none'),'--itable:'+(c.table||c.s2),'--isil:'+(c.sil||c.bg),
     '--iglyph:'+(t.jp?'var(--f-jp)':'var(--fi-serif)'),'--ikick:'+(t.jp?'var(--f-jp)':'inherit')].join(';');
 }
+function scrOpen(t){
+  const u = uiOf(t);
+  const cls = 'scr al-'+u.align+' b-'+u.btn+' c-'+u.card+(u.frame ? ' has-frame frm-'+u.frame : '')+(u.kick ? ' k-'+u.kick : '')+(u.caps ? ' caps' : '');
+  return '<div class="'+cls+'" style="'+tvars(t)+'">';
+}
+const frameEl = t => { const u = uiOf(t); return u.frame ? '<div class="i-frame fr-'+u.frame+'" aria-hidden="true"></div>' : ''; };
 
 /* ---------- invite views ---------- */
 function vOpener(t, isStatic){
@@ -1352,28 +1591,45 @@ function vOpener(t, isStatic){
     '<span class="bx-lid">'+(o.label?'<b>'+esc(tx(o.label))+'</b>':'')+(o.small?'<small>'+esc(tx(o.small))+'</small>':'')+'</span></'+tag+'>';
 }
 function vCover(t, isStatic){
+  const u = uiOf(t), name = tx(t.to);
   return '<section class="i-step"><div class="i-kick">'+esc(tx(t.kick))+'</div>'+
-    '<h1 class="i-h1">'+esc(tx(t.to))+',</h1><p class="i-lead">'+esc(tx(t.intro))+'</p>'+
+    '<h1 class="i-h1">'+esc(u.caps ? capsT(name) : name)+(t.punct || ',')+'</h1><p class="i-lead">'+esc(tx(t.intro))+'</p>'+
     vOpener(t, isStatic)+'<p class="i-hint"><i></i>'+esc(tx(t.hint))+'</p></section>';
 }
 const dots = n => '<div class="i-dots" aria-hidden="true">'+[1,2,3,4].map(i => '<i'+(i<=n?' class="a"':'')+'></i>').join('')+'</div>';
 const fcol = c => c ? ' style="--f:'+c+'"' : '';
+/* Tbilisi at dusk: Narikala walls on the left, the old town, Mtatsminda and its TV tower on the right */
+const SKY = '<svg class="i-sky" viewBox="0 0 300 120" aria-hidden="true">'+
+  '<circle cx="150" cy="98" r="44" fill="var(--iacc)" opacity=".92"/>'+
+  '<path fill="var(--isil)" d="M0 120V84l18-6 12-8h10v-8h4v4h4v-4h4v4h4v-6h4v6h4v-4h4v4h4v-4h4v8l16 6 16 10h6v-8h6v8h6V72h4v14h8v-6h8v8h10V76h4v12h10l16-10 20-14 20-10 14-3 16 3 20 10 24 8v48z"/>'+
+  '<path fill="var(--isil)" d="M236 52l3-42h2l3 42zM239.6 10V1h.8v9zM232 40h16v2.4h-16zM234.5 27h11v2.2h-11z"/>'+
+  '<g fill="var(--iacc)" opacity=".85"><rect x="116" y="82" width="2" height="2"/><rect x="132" y="78" width="2" height="2"/><rect x="152" y="84" width="2" height="2"/><rect x="164" y="80" width="2" height="2"/><rect x="58" y="70" width="2" height="2"/></g></svg>';
+function askArt(t){
+  const u = uiOf(t);
+  if (u.ask === 'belt'){
+    const dish = t.items.map(x => '<div class="i-dish"'+fcol(x.col)+'>'+ic(x.ic)+'</div>').join('');
+    return '<div class="i-belt" aria-hidden="true"><div class="i-track">'+dish+dish+dish+dish+'</div></div>';
+  }
+  if (u.ask === 'trio') return '<div class="i-trio" aria-hidden="true">'+(t.trio || [0,1,2]).map(i => { const x = t.items[i]; return '<span'+fcol(x.col)+'>'+ic(x.ic)+'</span>'; }).join('')+'</div>';
+  if (u.ask === 'skyline') return SKY;
+  if (u.ask === 'details') return '<dl class="i-det">'+(t.det || []).map(r => '<div><dt>'+esc(capsT(tx(r[0])))+'</dt><dd>'+(r[1] === '@date' ? fmtDate(demoDate(t)).replace('<br>', ' ') : esc(tx(r[1])))+'</dd></div>').join('')+'</dl>';
+  return '';
+}
 function vAsk(t){
-  const g = G[lang];
-  const dish = t.items.map(x => '<div class="i-dish"'+fcol(x.col)+'>'+ic(x.ic)+'</div>').join('');
+  const g = G[lang], u = uiOf(t), big = u.ask === 'bigtype';
   return '<section class="i-step">'+dots(1)+'<div class="i-kick">'+esc(tx(t.kick2||t.kick))+'</div>'+
-    '<h2 class="i-h2">'+esc(tx(t.q))+'</h2>'+
-    '<div class="i-belt" aria-hidden="true"><div class="i-track">'+dish+dish+dish+dish+'</div></div>'+
+    (big ? '<div class="i-bigic" aria-hidden="true">'+ic(t.bigIc || t.sp.ic)+'</div>' : '')+
+    '<h2 class="i-h2'+(big ? ' i-big' : '')+'">'+esc(tx(t.q))+'</h2>'+askArt(t)+
     '<div class="i-row"><button type="button" class="i-btn i-yes" data-act="yes">'+esc(tx(t.yes)||g.yes)+'</button>'+
     '<button type="button" class="i-btn i-no" data-act="no">'+esc(g.no)+'</button></div><div class="i-msg" aria-live="polite"></div></section>';
 }
 function vPick(t, s){
-  const g = G[lang];
+  const g = G[lang], u = uiOf(t);
   const list = t.items.map((x, i) => '<button type="button" class="i-item'+(s.picks.includes(i)?' sel':'')+'" data-act="pick" data-i="'+i+'" aria-pressed="'+s.picks.includes(i)+'">'+
     '<span class="ic"'+fcol(x.col)+'>'+ic(x.ic)+'</span><span class="tx"><b>'+esc(tx(x.n))+'</b><small>'+esc(tx(x.d))+'</small></span>'+
     (x.p?'<span class="pc">'+esc(tx(x.p))+'</span>':'')+'<span class="ck">'+ic('check')+'</span></button>').join('');
   return '<section class="i-step">'+dots(2)+'<h2 class="i-h2">'+esc(tx(t.pickT))+'</h2>'+
-    '<p class="i-lead">'+esc(fill(g.pickNote,{m:t.max}))+'</p><div class="i-list">'+list+'</div>'+
+    '<p class="i-lead">'+esc(fill(g.pickNote,{m:t.max}))+'</p><div class="i-list pk-'+u.pick+'">'+list+'</div>'+
     '<div class="i-tray"></div><div class="i-count" aria-live="polite"></div>'+
     '<div class="i-row"><button type="button" class="i-btn" data-act="next">'+esc(g.next)+'</button></div></section>';
 }
@@ -1388,26 +1644,83 @@ function vSurprise(t, s){
   }
   return h + '</section>';
 }
+const QR = (() => { const rows = ['1110111','1010101','1110111','0001000','1101011','0110110','1011101']; let r = '';
+  rows.forEach((row, y) => row.split('').forEach((b, x) => { if (b === '1') r += '<rect x="'+x+'" y="'+y+'" width="1" height="1"/>'; }));
+  return '<svg class="tkg-qr" viewBox="0 0 7 7" aria-hidden="true">'+r+'</svg>'; })();
 function vTicket(t, s){
-  const g = G[lang], tk = t.tk, d = demoDate(t);
-  const fields = [[g.date, fmtDate(d), true], [g.time, tk.time, true]].concat(tk.fields.map(f => [tx(f[0]), esc(tx(f[1])), false]));
-  const grid = fields.map(f => '<div class="i-f'+(f[2]?' big':'')+'"><label>'+esc(caps(f[0]))+'</label><div>'+f[1]+'</div></div>').join('');
-  const chips = s.picks.map(i => { const x = t.items[i]; return '<span class="i-chip"><span'+fcol(x.col)+'>'+ic(x.ic)+'</span>'+esc(tx(x.n))+'</span>'; }).join('');
+  const g = G[lang], u = uiOf(t), tk = t.tk, d = demoDate(t);
+  const date2 = fmtDate(d), date1 = date2.replace('<br>', ' ');
+  const flds = tk.fields.map(f => [tx(f[0]), tx(f[1])]);
+  const picks = s.picks.map(i => t.items[i]);
+  const chips = picks.map(x => '<span class="i-chip"><span'+fcol(x.col)+'>'+ic(x.ic)+'</span>'+esc(tx(x.n))+'</span>').join('');
+  const names = picks.map(x => esc(tx(x.n))).join(' · ');
+  const pickLbl = esc(caps(fill(g.picks, {to:tx(t.toGen)})));
+  const luck = s.fortune >= 0 ? esc(tx(t.sp.lines)[s.fortune]) : '';
   const big = tx(tk.stamp.big), sz = big.length > 4 ? (big.length > 5 ? 12 : 14) : (big.length > 2 ? 18 : 23);
-  let h = '<section class="i-step">'+dots(4)+'<h2 class="i-h2">'+esc(tx(tk.title)||g.tk)+'</h2>'+
-    '<div class="i-tk"><div class="i-tk-top"><div class="i-brand">'+esc(tx(tk.venue))+'</div><div class="i-sub">'+esc(caps(tx(tk.sub)))+'</div><i class="i-n l"></i><i class="i-n r"></i></div>'+
-    '<div class="i-tk-body"><div class="i-grid">'+grid+'</div>'+
-    (chips ? '<div class="i-picks"><label>'+esc(caps(fill(g.picks,{to:tx(t.toGen)})))+'</label>'+chips+'</div>' : '')+
-    (s.fortune >= 0 ? '<p class="i-luck">'+esc(tx(t.sp.title))+': '+esc(tx(t.sp.lines)[s.fortune])+'</p>' : '')+
-    '<div class="i-stamp'+(tk.stamp.round?' round':'')+(s.stamped?' on':'')+'" style="--sz:'+sz+'px'+(tk.stamp.jp?';--ibig:var(--f-jp)':'')+'"><b>'+esc(big)+'</b><small>'+esc(caps(g.ok))+'</small></div></div></div>';
-  if (!s.stamped) h += '<div class="i-row"><button type="button" class="i-btn" data-act="stamp">'+esc(g.stamp)+'</button></div>';
+  const stamp = '<div class="i-stamp'+(tk.stamp.round?' round':'')+(s.stamped?' on':'')+'" style="--sz:'+sz+'px'+(tk.stamp.jp?';--ibig:var(--f-jp)':'')+'"><b>'+esc(big)+'</b><small>'+esc(caps(g.ok))+'</small></div>';
+  const cell = (l, v) => '<div><label>'+esc(caps(l))+'</label><div>'+v+'</div></div>';
+  const venue = tx(tk.venue);
+  let card;
+  if (u.tk === 'card'){
+    card = '<div class="i-tk tk-card tf-'+(u.frame || 'hairline')+'"><div class="tkc-in"><div class="tkc-sub">'+esc(caps(tx(tk.sub)))+'</div>'+
+      '<div class="tkc-venue">'+esc(u.caps ? capsT(venue) : venue)+'</div><div class="tkc-rule"></div>'+
+      '<div class="tkc-date">'+date1+'</div><div class="tkc-time">'+tk.time+'</div>'+
+      '<div class="tkc-fields">'+flds.map(f => '<span><b>'+esc(caps(f[0]))+'</b>'+esc(f[1])+'</span>').join('')+'</div>'+
+      (names ? '<div class="tkc-picks"><label>'+pickLbl+'</label>'+names+'</div>' : '')+(luck ? '<p class="tkc-luck">'+luck+'</p>' : '')+stamp+'</div></div>';
+  } else if (u.tk === 'postcard'){
+    card = '<div class="i-tk tk-post"><div class="tkp-top"><div class="tkp-brand">'+esc(venue)+'<small>'+esc(caps(tx(tk.sub)))+'</small></div>'+
+      '<div class="tkp-post"><i>'+ic(t.items[0].ic)+'<span>'+esc(tx(tk.post || L('POSTA')))+'</span></i></div></div>'+
+      '<div class="tkp-grid"><div class="tkp-msg">'+luck+(names ? '<b>'+names+'</b>' : '')+'</div><div class="tkp-addr">'+
+      [[g.to, esc(tx(t.to))], [g.date, date1], [g.time, tk.time]].concat(flds.map(f => [f[0], esc(f[1])])).map(r => '<div class="ln"><label>'+esc(caps(r[0]))+'</label>'+r[1]+'</div>').join('')+
+      '</div></div>'+stamp+'</div>';
+  } else if (u.tk === 'receipt'){
+    const code = (flds[flds.length - 1] || ['', ''])[1];
+    const row = (l, v) => '<div class="tkr-row"><span>'+l+'</span><span class="dd"></span><span>'+v+'</span></div>';
+    card = '<div class="i-tk tk-rcpt"><div class="tkr-head"><b>'+esc(venue)+'</b><span>'+esc(caps(tx(tk.sub)))+'</span><span>'+esc(g.order)+' '+esc(code)+'</span></div><div class="tkr-sep"></div>'+
+      row(esc(g.date), date1)+row(esc(g.time), tk.time)+flds.slice(0, -1).map(f => row(esc(f[0]), esc(f[1]))).join('')+
+      (picks.length ? '<div class="tkr-sep"></div>'+picks.map(x => row('1 × '+esc(tx(x.n)), x.p ? esc(tx(x.p)) : '')).join('') : '')+
+      '<div class="tkr-sep"></div>'+(luck ? '<p class="tkr-luck">'+luck+'</p>' : '')+'<div class="tkr-bar"></div><div class="tkr-code">'+esc(code)+'</div>'+stamp+'</div>';
+  } else if (u.tk === 'pass'){
+    const r = tk.route || {a:'TBS', al:L('თბილისი','Tbilisi'), b:'—', bl:L('')};
+    const code = (flds[flds.length - 1] || ['', ''])[1];
+    card = '<div class="i-tk tk-pass"><div class="tkb-band"><span>'+esc(venue)+'</span><span>'+esc(caps(g.boardT))+'</span></div>'+
+      '<div class="tkb-route"><div><b>'+esc(r.a)+'</b><small>'+esc(tx(r.al))+'</small></div>'+ic('arrowR')+'<div><b>'+esc(r.b)+'</b><small>'+esc(tx(r.bl))+'</small></div></div>'+
+      '<div class="tkb-grid">'+cell(g.pax, esc(tx(t.to)))+cell(g.date, date1)+cell(g.board, tk.time)+flds.slice(1, -1).map(f => cell(f[0], esc(f[1]))).join('')+'</div>'+
+      (chips ? '<div class="tkb-picks"><label>'+pickLbl+'</label>'+chips+'</div>' : '')+(luck ? '<p class="tkb-luck">'+luck+'</p>' : '')+
+      '<div class="tkb-tear"></div><div class="tkb-stub"><div class="tkb-bar"></div><span>'+esc(code)+'</span></div>'+stamp+'</div>';
+  } else if (u.tk === 'badge'){
+    const name = tx(t.to);
+    card = '<div class="i-tk tk-badge"><div class="tkg-slot"></div><div class="tkg-head">'+esc(venue)+'<span>'+esc(caps(tx(tk.sub)))+'</span></div>'+
+      '<div class="tkg-ava">'+esc(name.charAt(0))+'</div><div class="tkg-name">'+esc(name)+'</div><div class="tkg-role">'+esc((flds[0] || ['', ''])[1])+'</div>'+
+      '<div class="tkg-grid">'+cell(g.date, date1)+cell(g.time, tk.time)+flds.slice(1).map(f => cell(f[0], esc(f[1]))).join('')+'</div>'+
+      (chips ? '<div class="i-picks"><label>'+pickLbl+'</label>'+chips+'</div>' : '')+(luck ? '<p class="tkg-luck">'+luck+'</p>' : '')+
+      '<div class="tkg-foot"><span>'+esc(caps(g.visitor))+'</span>'+QR+'</div>'+stamp+'</div>';
+  } else if (u.tk === 'label'){
+    card = '<div class="i-tk tk-label"><div class="tkl-in"><div class="tkl-top">'+esc(caps(tx(tk.sub)))+'</div><div class="tkl-name">'+esc(capsT(venue))+'</div>'+
+      '<div class="tkl-orn">'+ic('diamond')+'</div><div class="tkl-vint">'+d.getFullYear()+'</div><div class="tkl-date">'+date1+' · '+tk.time+'</div>'+
+      '<div class="tkl-fields">'+flds.map(f => esc(f[1])).join(' · ')+'</div>'+(names ? '<div class="tkl-picks"><label>'+pickLbl+'</label>'+names+'</div>' : '')+
+      (luck ? '<p class="tkl-luck">'+luck+'</p>' : '')+stamp+'</div></div>';
+  } else if (u.tk === 'sticker'){
+    card = '<div class="i-tk tk-stk"><div class="tks-band">'+esc(caps(g.admit))+'</div><div class="tks-big">'+esc(tx(tk.big || L('')))+'</div>'+
+      '<div class="tks-venue">'+esc(u.caps ? capsT(venue) : venue)+'</div><div class="tks-sub">'+esc(caps(tx(tk.sub)))+'</div>'+
+      '<div class="tks-grid">'+cell(g.date, date1)+cell(g.time, tk.time)+flds.map(f => cell(f[0], esc(f[1]))).join('')+'</div>'+
+      (chips ? '<div class="i-picks"><label>'+pickLbl+'</label>'+chips+'</div>' : '')+(luck ? '<p class="tks-luck">'+luck+'</p>' : '')+stamp+'</div>';
+  } else {
+    const fields = [[g.date, date2, true], [g.time, tk.time, true]].concat(flds.map(f => [f[0], esc(f[1]), false]));
+    card = '<div class="i-tk"><div class="i-tk-top"><div class="i-brand">'+esc(venue)+'</div><div class="i-sub">'+esc(caps(tx(tk.sub)))+'</div><i class="i-n l"></i><i class="i-n r"></i></div>'+
+      '<div class="i-tk-body"><div class="i-grid">'+fields.map(f => '<div class="i-f'+(f[2]?' big':'')+'"><label>'+esc(caps(f[0]))+'</label><div>'+f[1]+'</div></div>').join('')+'</div>'+
+      (chips ? '<div class="i-picks"><label>'+pickLbl+'</label>'+chips+'</div>' : '')+
+      (luck ? '<p class="i-luck">'+esc(tx(t.sp.title))+': '+luck+'</p>' : '')+stamp+'</div></div>';
+  }
+  let h = '<section class="i-step">'+dots(4)+'<h2 class="i-h2">'+esc(tx(tk.title)||g.tk)+'</h2>'+card;
+  if (!s.stamped) h += '<div class="i-row"><button type="button" class="i-btn" data-act="stamp">'+esc(tx(tk.cta) || g.stamp)+'</button></div>';
   else h += '<div class="i-after"><div class="i-cd" data-cd="'+d.getTime()+'">'+['d','h','m','s'].map(k => '<div><b>0</b><span>'+esc(g[k])+'</span></div>').join('')+'</div>'+
     '<p class="i-sign">'+esc(tx(t.sign))+'<br><em>'+esc(tx(t.from))+'</em></p>'+
     '<div class="i-row"><button type="button" class="i-btn ghost" data-act="again">'+esc(g.again)+'</button></div></div>';
   return h + '</section>';
 }
 function coverHTML(t){
-  return '<div class="scr" style="'+tvars(t)+'"><div class="scr-in">'+vCover(t, true)+'</div></div>';
+  return scrOpen(t)+'<div class="scr-in">'+vCover(t, true)+'</div>'+frameEl(t)+'</div>';
 }
 
 /* ---------- live invite instance ---------- */
@@ -1428,7 +1741,7 @@ class Invite {
   render(){
     const t = this.t, s = this.s;
     const views = [() => vCover(t, false), () => vAsk(t), () => vPick(t, s), () => vSurprise(t, s), () => vTicket(t, s)];
-    this.el.innerHTML = '<div class="scr" style="'+tvars(t)+'"><div class="scr-in">'+views[s.step]()+'</div><div class="i-fx"></div></div>';
+    this.el.innerHTML = scrOpen(t)+'<div class="scr-in">'+views[s.step]()+'</div>'+frameEl(t)+'<div class="i-fx"></div></div>';
     this.inner = this.el.querySelector('.scr-in');
     if (s.step === 2) this.tray();
     tick();
