@@ -47,7 +47,7 @@
     var expr = expression(Math.max(-3, Math.min(3, Math.round(mood || 0))));
 
     var s = [];
-    s.push('<svg viewBox="0 0 120 120" xmlns="http://www.w3.org/2000/svg" class="avatar-svg" data-expr="' + expr + '" role="img" aria-label="' + (customer.name || '') + '">');
+    s.push('<svg viewBox="0 0 120 120" xmlns="http://www.w3.org/2000/svg" class="avatar-svg" data-expr="' + expr + '" role="img" aria-label="' + String(customer.name || '').replace(/&/g, '&amp;').replace(/"/g, '&quot;').replace(/</g, '&lt;') + '">');
     s.push('<circle cx="60" cy="60" r="60" fill="var(--avatar-bg, #E6EEF4)"/>');
 
     // long hair behind the head

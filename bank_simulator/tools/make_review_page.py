@@ -47,18 +47,19 @@ REVIEW_CSS = """
 REVIEW_JS = r"""
 (function () {
   var C = window.SimApp.content;
+  function esc(v) { return String(v == null ? '' : v).replace(/&/g, '&amp;').replace(/</g, '&lt;').replace(/>/g, '&gt;').replace(/"/g, '&quot;'); }
   var strip = document.createElement('div');
   strip.className = 'review-strip';
   var opts = '<option value="">Jump to…</option>' +
     '<optgroup label="Whole game"><option value="restart">Restart the evaluation from level 1 (clears progress)</option></optgroup>' +
     '<optgroup label="Levels">' + C.config.levels.map(function (l) {
-      return '<option value="level:' + l.id + '">Level ' + l.id + ' · ' + l.name + ' (random draw)</option>';
+      return '<option value="level:' + esc(l.id) + '">Level ' + esc(l.id) + ' · ' + esc(l.name) + ' (random draw)</option>';
     }).join('') + '</optgroup>' +
     '<optgroup label="Cases">' + C.cases.map(function (c) {
-      return '<option value="case:' + c.id + '">' + c.id + ' · ' + c.title + ' · L' + c.level + ' · ' + c.channel + '</option>';
+      return '<option value="case:' + esc(c.id) + '">' + esc(c.id) + ' · ' + esc(c.title) + ' · L' + esc(c.level) + ' · ' + esc(c.channel) + '</option>';
     }).join('') + '</optgroup>' +
     (C.quiz.length ? '<optgroup label="Quiz questions">' + C.quiz.map(function (q) {
-      return '<option value="case:' + q.id + '">' + q.id + ' · ' + q.question.slice(0, 60) + '</option>';
+      return '<option value="case:' + esc(q.id) + '">' + esc(q.id) + ' · ' + esc(String(q.question).slice(0, 60)) + '</option>';
     }).join('') + '</optgroup>' : '');
   strip.innerHTML = '<b>Review build</b><label for="rv-jump">Go to</label><select id="rv-jump">' + opts + '</select>' +
     '<label><input type="checkbox" id="rv-scores"> Show answer scores</label>' +
@@ -104,7 +105,7 @@ REVIEW_JS = r"""
         if (o.mood) parts.push('<span>Mood ' + (o.mood > 0 ? '+' : '') + o.mood + '</span>');
         if (v === 'best') parts.unshift('<span class="best">Best</span>');
         if (o.critical) parts.unshift('<span class="crit">Critical: ' + NAMES[o.critical.skill] + '</span>');
-        if (o.opportunity) parts.push('<span>Captures ' + o.opportunity + '</span>');
+        if (o.opportunity) parts.push('<span>Captures ' + esc(o.opportunity) + '</span>');
         var tag = document.createElement('span');
         tag.className = 'score-tag';
         tag.innerHTML = parts.join('');

@@ -315,8 +315,15 @@
       (Scorm.isStandalone() ? '<div class="standalone-bar">სატესტო რეჟიმი: LMS არ არის დაკავშირებული, პროგრესი ინახება ამ ბრაუზერში. <button class="link" data-act="reset-local">თავიდან დაწყება</button></div>' : '');
   }
 
+  var screenGen = 0;          // bumps on every screen change; stale timers check it
+  var inputLockedUntil = 0;   // ignore answer/next clicks right after a screen changes (double-click guard)
+
+  function lockInput() { inputLockedUntil = Date.now() + (window.SIM_FAST ? 0 : 350); }
+
   function render(html) {
     stopCallTimer();
+    screenGen++;
+    lockInput();
     app.innerHTML = html;
     app.scrollTop = 0;
     window.scrollTo(0, 0);
@@ -414,7 +421,7 @@
     run.stepIndex++;
     if (run.mode === 'eval') {
       state.e.i = Math.max(state.e.i, run.stepIndex);
-      Scorm.set('cmi.core.lesson_location', 'L' + LEVELS[run.levelIndex].id + '-S' + run.stepIndex);
+      if (LEVELS[run.levelIndex]) Scorm.set('cmi.core.lesson_location', 'L' + LEVELS[run.levelIndex].id + '-S' + run.stepIndex, true);
       saveState();
       saveDetail(run);
     }
@@ -550,8 +557,11 @@
     convo.appendChild(ind);
     convo.scrollTop = convo.scrollHeight;
     var delay = window.SIM_FAST ? 0 : Math.min(1300, 450 + String(text || '').length * 6);
+    var gen = screenGen;
+    var caseRun = current;
     setTimeout(function () {
       if (ind.parentNode) ind.parentNode.removeChild(ind);
+      if (gen !== screenGen || caseRun !== current) return; // screen changed meanwhile
       cb();
     }, delay);
   }
@@ -606,12 +616,18 @@
     });
     html += '</div>';
     choices.innerHTML = html;
+    awaitingChoice = true;
+    lockInput();
   }
 
+  var awaitingChoice = false;
+
   function choose(i) {
+    if (!awaitingChoice || !current) return;
     var node = current.node();
     var opt = node.options[i];
     if (!opt) return;
+    awaitingChoice = false;
     document.getElementById('choices').innerHTML = '';
     addMsg('employee', '<div class="bubble"><small>' + T.you + '</small>' + esc(opt.text) + '</div>');
     var r = current.choose(i);
@@ -647,6 +663,7 @@
     document.getElementById('choices').innerHTML =
       '<div class="case-end"><span class="outcome outcome-' + cls + '">საუბარი დასრულდა</span>' +
       '<button class="btn btn-primary" data-act="advance">' + (run.stepIndex + 1 < run.steps.length ? 'შემდეგი' : 'დონის დასრულება') + '</button></div>';
+    lockInput();
     var btn = app.querySelector('[data-act="advance"]');
     if (btn) btn.focus();
   }
@@ -666,6 +683,7 @@
   }
 
   function answerQuiz(i) {
+    if (!currentQuiz) return;
     var q = currentQuiz.q;
     var latency = Date.now() - currentQuiz.shownAt;
     var qr = { id: q.id, answer: i, correct: i === q.correct, points: q.points, lvl: run.lvl, latency: latency };
@@ -679,6 +697,7 @@
         latency: latency, weighting: q.points
       });
     }
+    currentQuiz = null;
     advance();
   }
 
@@ -695,7 +714,10 @@
     var verdict = Engine.levelPass(content, l, agg);
     var passed = verdict.passed;
     run.levelResults.push({ levelId: l.id, pct: agg.overall, passed: passed });
-    if (passed) state.p.u = Math.max(state.p.u, run.levelIndex + 1);
+    if (passed) {
+      state.p.u = Math.max(state.p.u, run.levelIndex + 1);
+      if (run.mode === 'practice' && !preview) saveState();
+    }
     var more = passed && run.levelIndex + 1 < LEVELS.length && !preview;
     if (run.mode === 'eval') {
       state.e.lv.push([l.id, agg.overall, passed ? 1 : 0]);
@@ -835,7 +857,7 @@
     }).join('');
     var cls = { resolved: 'ok', escalated: 'warn', unresolved: 'bad', walkout: 'bad' }[res.outcome] || 'ok';
     var steps = res.compact ? '<p class="muted">დეტალური ჩანაწერი ამ საუბრისთვის მიუწვდომელია (სესია განახლდა სხვა მოწყობილობაზე/ბრაუზერში).</p>' :
-      res.steps.map(function (st, idx) {
+      res.steps.filter(function (st) { return cs.nodes[st.node] && cs.nodes[st.node].options && cs.nodes[st.node].options[st.option]; }).map(function (st, idx) {
         var node = cs.nodes[st.node];
         var opt = node.options[st.option];
         var best = Engine.bestOption(node);
@@ -874,7 +896,7 @@
     var detailCases = detail && detail.cases ? detail.cases.slice() : [];
     r.caseResults = e.r.map(function (a) {
       for (var i = 0; i < detailCases.length; i++) {
-        if (detailCases[i].caseId === a[0] && detailCases[i].lvl === (a[7] || 0)) return detailCases.splice(i, 1)[0];
+        if (detailCases[i] && detailCases[i].caseId === a[0] && detailCases[i].lvl === (a[7] || 0)) return detailCases.splice(i, 1)[0];
       }
       return expandCase(a);
     });
@@ -892,6 +914,12 @@
 
   function resumeEval() {
     run = rebuildEvalRun();
+    if (!LEVELS[run.levelIndex]) {
+      // the package was updated and this level no longer exists: close the evaluation with what was recorded
+      run.levelIndex = LEVELS.length - 1;
+      finalizeEval();
+      return showReport(run, Engine.aggregate(content, run.caseResults, run.quizResults));
+    }
     if (run.stepIndex === 0) showLevelIntro();
     else nextStep();
   }
@@ -963,10 +991,14 @@
     'preview-restart': function () { startPreview(); }
   };
 
+  var GUARDED = { 'choose': 1, 'quiz-answer': 1, 'advance': 1, 'next-step': 1, 'next-level': 1, 'finish-run': 1, 'start-eval': 1, 'resume-eval': 1 };
+
   app.addEventListener('click', function (ev) {
     var el = ev.target.closest('[data-act]');
     if (!el || el.disabled) return;
-    var fn = actions[el.getAttribute('data-act')];
+    var act = el.getAttribute('data-act');
+    if (GUARDED[act] && Date.now() < inputLockedUntil) { ev.preventDefault(); return; }
+    var fn = actions[act];
     if (fn) { ev.preventDefault(); fn(el); }
   });
 
@@ -982,10 +1014,15 @@
   });
 
   document.addEventListener('keydown', function (ev) {
-    if (ev.target && /input|textarea/i.test(ev.target.tagName)) return;
-    var k = ev.key.toUpperCase();
-    var idx = '1234567'.indexOf(k);
-    if (idx < 0) idx = 'ABCDEFG'.indexOf(k);
+    var panel = document.getElementById('ref-panel');
+    if (ev.key === 'Escape' && panel && panel.classList.contains('open')) { ev.preventDefault(); actions['ref-toggle'](); return; }
+    if (ev.ctrlKey || ev.metaKey || ev.altKey || ev.repeat || ev.isComposing) return;
+    var t = ev.target;
+    if (t && t.closest && (t.closest('input,textarea,select,[contenteditable],dialog,#ref-panel,.review-strip') || t.isContentEditable)) return;
+    var m = /^(?:Digit|Numpad)([1-7])$/.exec(ev.code || '');
+    var idx = -1;
+    if (m) idx = Number(m[1]) - 1;
+    else if ((m = /^Key([A-G])$/.exec(ev.code || ''))) idx = m[1].charCodeAt(0) - 65;
     if (idx < 0) return;
     var opts = app.querySelectorAll('#choices .opt, .quiz .opt');
     if (opts[idx]) { ev.preventDefault(); opts[idx].click(); }

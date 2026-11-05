@@ -40,6 +40,7 @@ async function sco(page) {
   }
   await frame.waitForFunction(() => window.SimApp);
   await frame.evaluate(() => { window.SIM_FAST = true; });
+  await frame.waitForTimeout(400); // the double-click guard ignores clicks right after a screen appears
   return frame;
 }
 

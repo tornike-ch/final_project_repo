@@ -175,7 +175,7 @@
           if (data.meta) parts.meta = data.meta;
         }
         finishImport(parts, mode, file.name);
-      });
+      }).catch(function (e) { report('Import failed: ' + e.message, true); });
     } else if (/\.xlsx?$/.test(name)) {
       loadXLSX().then(function (XLSX) {
         return file.arrayBuffer().then(function (buf) {
@@ -189,7 +189,7 @@
           var parts = SheetIO.sheetsToContent(sheets);
           finishImport(parts, mode, file.name);
         });
-      }).catch(function (e) { report(e.message, true); });
+      }).catch(function (e) { report('Import failed: ' + e.message, true); });
     } else {
       report('Unsupported file type. Use .json or .xlsx', true);
     }
@@ -407,7 +407,7 @@
 
     quiz: function () {
       var rows = content.quiz.map(function (q) {
-        return '<tr><td><code>' + esc(q.id) + '</code></td><td>' + (q.level || 'any') + '</td><td>' + esc(q.question) + '<br><small class="muted">✓ ' + esc((q.options || [])[q.correct || 0]) + '</small></td><td>' + (q.points || 1) + '</td>' +
+        return '<tr><td><code>' + esc(q.id) + '</code></td><td>' + esc(q.level || 'any') + '</td><td>' + esc(q.question) + '<br><small class="muted">✓ ' + esc((q.options || [])[q.correct || 0]) + '</small></td><td>' + esc(q.points || 1) + '</td>' +
           '<td class="nowrap"><button class="btn btn-sm" data-act="preview-quiz" data-id="' + esc(q.id) + '">Preview</button> <button class="btn btn-sm" data-act="quiz-edit" data-id="' + esc(q.id) + '">Edit</button> <button class="btn btn-sm" data-act="quiz-del" data-id="' + esc(q.id) + '">Delete</button></td></tr>';
       }).join('');
       return '<h1>Quiz questions <small class="muted">' + content.quiz.length + '</small></h1>' +
@@ -446,7 +446,7 @@
   function newCaseTemplate() {
     var n = content.cases.length + 1;
     return {
-      id: 'NEW' + n, title: 'ახალი ქეისი', level: (content.config.levels[0] || { id: 1 }).id, channel: 'branch', category: '',
+      id: (function () { var k = n; while (findIndex(content.cases, 'NEW' + k) >= 0) k++; return 'NEW' + k; })(), title: 'ახალი ქეისი', level: (content.config.levels[0] || { id: 1 }).id, channel: 'branch', category: '',
       brief: 'კლიენტი მოვიდა ფილიალში.',
       customer: { name: 'კლიენტი', gender: 'f', age: 35, segment: '', occupation: '', income: '', productsHeld: [], digital: '', notes: '', initialMood: 0 },
       opportunities: [],
@@ -464,17 +464,23 @@
     };
   }
 
-  function findIndex(list, id) { for (var i = 0; i < list.length; i++) if (list[i].id === id) return i; return -1; }
+  function findIndex(list, id) { for (var i = 0; i < list.length; i++) if (String(list[i].id) === String(id)) return i; return -1; }
 
   function upsert(listName, oldId) {
     return function (obj) {
       var list = content[listName];
+      if (obj.id == null || String(obj.id).trim() === '') { alert('Every item needs an id.'); return; }
+      obj.id = String(obj.id);
       var i = oldId != null ? findIndex(list, oldId) : -1;
-      if (i >= 0) list[i] = obj;
-      else {
-        var j = findIndex(list, obj.id);
-        if (j >= 0) list[j] = obj; else list.push(obj);
+      var j = findIndex(list, obj.id);
+      if (j >= 0 && j !== i) {
+        if (!confirm('An item with id ' + obj.id + ' already exists. Replace it?')) return;
+        if (i >= 0) list.splice(i, 1);
+        j = findIndex(list, obj.id);
+        list[j] = obj;
+        return;
       }
+      if (i >= 0) list[i] = obj; else list.push(obj);
     };
   }
 
@@ -515,7 +521,7 @@
     'case-del': function (el) {
       var id = el.getAttribute('data-id');
       if (!confirm('Delete case ' + id + '?')) return;
-      content.cases.splice(findIndex(content.cases, id), 1);
+      var ix = findIndex(content.cases, id); if (ix < 0) return; content.cases.splice(ix, 1);
       save(); render();
     },
     'prod-add': function () { editJson('New product', { id: 'P_NEW', type: 'product', category: '', name: '', short: '', conditions: [{ label: '', value: '' }] }, upsert('products')); },
@@ -523,7 +529,7 @@
     'prod-del': function (el) {
       var id = el.getAttribute('data-id');
       if (!confirm('Delete ' + id + '?')) return;
-      content.products.splice(findIndex(content.products, id), 1);
+      var ix = findIndex(content.products, id); if (ix < 0) return; content.products.splice(ix, 1);
       save(); render();
     },
     'quiz-add': function () { editJson('New question', { id: 'Q' + (content.quiz.length + 1), level: 0, question: '', options: ['', '', '', ''], correct: 0, points: 2, explanation: '' }, upsert('quiz')); },
@@ -531,7 +537,7 @@
     'quiz-del': function (el) {
       var id = el.getAttribute('data-id');
       if (!confirm('Delete ' + id + '?')) return;
-      content.quiz.splice(findIndex(content.quiz, id), 1);
+      var ix = findIndex(content.quiz, id); if (ix < 0) return; content.quiz.splice(ix, 1);
       save(); render();
     }
   };

@@ -47,25 +47,34 @@
     c.products = Array.isArray(c.products) ? c.products : [];
     c.cases = Array.isArray(c.cases) ? c.cases : [];
     c.quiz = Array.isArray(c.quiz) ? c.quiz : [];
+    c.cases = c.cases.filter(function (cs) { return cs && typeof cs === 'object'; });
+    c.products = c.products.filter(function (p) { return p && typeof p === 'object'; });
+    c.quiz = c.quiz.filter(function (q) { return q && typeof q === 'object'; });
+    c.products.forEach(function (p) { if (p.id != null) p.id = String(p.id); });
     c.cases.forEach(function (cs) {
+      if (cs.id != null) cs.id = String(cs.id);
       cs.level = Number(cs.level) || 1;
       cs.channel = CHANNELS.indexOf(cs.channel) >= 0 ? cs.channel : 'branch';
       cs.customer = cs.customer || {};
       cs.opportunities = Array.isArray(cs.opportunities) ? cs.opportunities : [];
       cs.nodes = cs.nodes || {};
-      if (!cs.start) cs.start = Object.keys(cs.nodes)[0];
+      if (cs.start == null) cs.start = Object.keys(cs.nodes)[0];
+      cs.start = String(cs.start);
       Object.keys(cs.nodes).forEach(function (nid) {
+        if (!cs.nodes[nid] || typeof cs.nodes[nid] !== 'object') cs.nodes[nid] = { end: true, outcome: 'unresolved', _invalid: true };
         var n = cs.nodes[nid];
-        n.options = Array.isArray(n.options) ? n.options : [];
+        n.options = Array.isArray(n.options) ? n.options.filter(function (o) { return o && typeof o === 'object'; }) : [];
         if (!n.options.length) n.end = true;
         n.options.forEach(function (o) {
-          o.scores = o.scores || {};
+          if (o.next != null) o.next = String(o.next);
+          o.scores = o.scores && typeof o.scores === 'object' ? o.scores : {};
           SKILLS.forEach(function (s) { o.scores[s] = Number(o.scores[s]) || 0; });
           o.mood = Number(o.mood) || 0;
         });
       });
     });
     c.quiz.forEach(function (q) {
+      if (q.id != null) q.id = String(q.id);
       q.level = Number(q.level) || 0;
       q.points = Number(q.points) || 1;
       q.correct = Number(q.correct) || 0;
@@ -74,7 +83,7 @@
       l.id = Number(l.id) || i + 1;
       l.casesPerRun = Math.max(1, Number(l.casesPerRun) || 1);
       l.quizQuestions = Math.max(0, Number(l.quizQuestions) || 0);
-      l.passThreshold = Math.max(0, Math.min(100, Number(l.passThreshold) || 0));
+      l.passThreshold = Math.max(0, Math.min(100, l.passThreshold === undefined || l.passThreshold === '' ? 70 : Number(l.passThreshold) || 0));
       l.skillFloor = Math.max(0, Math.min(100, Number(l.skillFloor) || 0));
     });
     return c;
@@ -91,6 +100,17 @@
    */
   function caseMax(cs) {
     if (cs._max) return cs._max;
+    // 1) the reference path: follow the best (highest-total, non-critical) answer at every step
+    var sums = { knowledge: 0, service: 0, sales: 0 };
+    var nid = cs.start, guard = {};
+    while (cs.nodes[nid] && !cs.nodes[nid].end && !guard[nid]) {
+      guard[nid] = true;
+      var b = bestOption(cs.nodes[nid]);
+      if (!b) break;
+      SKILLS.forEach(function (sk) { sums[sk] += b.scores[sk] || 0; });
+      nid = b.next;
+    }
+    // 2) best achievable continuation from any node (non-critical answers), for validation
     var memo = {};
     var visiting = {};
     function best(nid) {
@@ -101,6 +121,7 @@
       visiting[nid] = true;
       var top = null;
       n.options.forEach(function (o) {
+        if (o.critical) return;
         var rest = best(o.next);
         var total = optionTotal(o) + rest.total;
         if (!top || total > top.total) {
@@ -113,10 +134,9 @@
       memo[nid] = top || zero;
       return memo[nid];
     }
-    var r = best(cs.start).sums;
     Object.defineProperty(cs, '_bestFrom', { value: best, enumerable: false, configurable: true });
     var result = {};
-    SKILLS.forEach(function (s) { result[s] = Math.max(0, r[s]); });
+    SKILLS.forEach(function (s) { result[s] = Math.max(0, sums[s]); });
     Object.defineProperty(cs, '_max', { value: result, enumerable: false, configurable: true });
     return result;
   }
@@ -141,10 +161,36 @@
     return best;
   }
 
+  var OUTCOMES = ['resolved', 'unresolved', 'escalated', 'walkout'];
+
   function validate(content) {
-    var c = normalize(content);
     var errors = [];
     var warnings = [];
+    // checks on the raw input, before normalize() papers over bad values
+    ((content && content.cases) || []).forEach(function (cs, i) {
+      if (!cs || typeof cs !== 'object') { errors.push('Case #' + (i + 1) + ': not an object'); return; }
+      var w = 'Case ' + (cs.id || '#' + (i + 1));
+      if (cs.level !== undefined && isNaN(Number(cs.level))) errors.push(w + ': level "' + cs.level + '" is not a number');
+      if (cs.channel !== undefined && CHANNELS.indexOf(cs.channel) < 0) errors.push(w + ': channel "' + cs.channel + '" must be branch, phone or chat');
+      Object.keys(cs.nodes || {}).forEach(function (nid) {
+        var n = cs.nodes[nid];
+        if (!n || typeof n !== 'object') { errors.push(w + '/' + nid + ': node is empty'); return; }
+        if (n.end && n.outcome && OUTCOMES.indexOf(n.outcome) < 0) errors.push(w + '/' + nid + ': outcome "' + n.outcome + '" must be one of ' + OUTCOMES.join(', '));
+        (n.options || []).forEach(function (o, k) {
+          if (!o) return;
+          SKILLS.concat(['mood']).forEach(function (sk) {
+            var v = sk === 'mood' ? o.mood : (o.scores || {})[sk];
+            if (v !== undefined && v !== null && v !== '' && isNaN(Number(v))) errors.push(w + '/' + nid + ' option ' + (k + 1) + ': ' + sk + ' "' + v + '" is not a number');
+          });
+        });
+      });
+    });
+    var seenLevels = {};
+    (((content && content.config) || {}).levels || []).forEach(function (l) {
+      if (seenLevels[l.id]) errors.push('Level id ' + l.id + ' is used twice');
+      seenLevels[l.id] = true;
+    });
+    var c = normalize(content);
     var productIds = {};
     c.products.forEach(function (p) {
       if (!p.id) errors.push('პროდუქტს/Product without id: ' + (p.name || '?'));
@@ -185,6 +231,17 @@
         if (n.options.length > 6) warnings.push(where + '/' + nid + ': more than 6 options');
       });
       if (!hasEnd) errors.push(where + ': no end node');
+      // every reachable node must be able to reach an end (no endless loops)
+      var canEnd = {};
+      var changed = true;
+      while (changed) {
+        changed = false;
+        Object.keys(cs.nodes).forEach(function (nid) {
+          if (canEnd[nid]) return;
+          var n = cs.nodes[nid];
+          if (n.end || n.options.some(function (o) { return canEnd[o.next]; })) { canEnd[nid] = true; changed = true; }
+        });
+      }
       // reachability
       var seen = {};
       (function walk(nid) {
@@ -194,7 +251,23 @@
       })(cs.start);
       Object.keys(cs.nodes).forEach(function (nid) {
         if (!seen[nid]) warnings.push(where + '/' + nid + ': node is unreachable');
+        else if (!canEnd[nid]) errors.push(where + '/' + nid + ': no path from here reaches an end node (loop)');
+        var n = cs.nodes[nid];
+        if (n.end || !seen[nid]) return;
+        var b = bestOption(n);
+        if (!b) { errors.push(where + '/' + nid + ': every option is critical, there is no correct answer'); return; }
+        var bt = optionTotal(b);
+        n.options.forEach(function (o, i) {
+          if (o === b) return;
+          if (!o.critical && optionTotal(o) === bt) warnings.push(where + '/' + nid + ' option ' + (i + 1) + ': ties with the best answer on total points; make one clearly better');
+          if (o.critical && optionTotal(o) >= bt) warnings.push(where + '/' + nid + ' option ' + (i + 1) + ': critical answer has as many points as the best answer; give it negative points');
+        });
       });
+      if (cs._bestFrom && cs.nodes[cs.start]) {
+        var ref = caseMax(cs);
+        var refTotal = ref.knowledge + ref.service + ref.sales;
+        if (cs._bestFrom(cs.start).total > refTotal) warnings.push(where + ': a path through weaker answers scores more in total than always choosing the best answer; check the branch points');
+      }
       var mx = caseMax(cs);
       if (!mx.knowledge && !mx.service && !mx.sales) warnings.push(where + ': no positive points anywhere');
 
@@ -341,12 +414,12 @@
     if (opt.opportunity && this.captured.indexOf(opt.opportunity) < 0) this.captured.push(opt.opportunity);
     // Walkout: the customer is already at the lowest mood (-3, visibly angry)
     // and the employee makes it worse once more.
-    var rawMood = this.mood + (opt.mood || 0);
-    this.mood = Math.max(-3, Math.min(3, rawMood));
+    var prevMood = this.mood;
+    this.mood = Math.max(-3, Math.min(3, this.mood + (opt.mood || 0)));
     this.steps.push({ node: this.nodeId, option: index, latency: latency, at: Date.now(), verdict: verdict(node, opt) });
     this.nodeId = opt.next;
     var next = this.node();
-    if (this.content.config.features.moodWalkout && rawMood < -3 && next && !next.end) {
+    if (this.content.config.features.moodWalkout && prevMood <= -3 && (opt.mood || 0) < 0 && next && !next.end) {
       this.outcome = 'walkout';
       return { ended: true, walkout: true, node: next };
     }
@@ -455,6 +528,7 @@
   var Engine = {
     SKILLS: SKILLS,
     CHANNELS: CHANNELS,
+    OUTCOMES: OUTCOMES,
     DEFAULT_CONFIG: DEFAULT_CONFIG,
     normalize: normalize,
     validate: validate,

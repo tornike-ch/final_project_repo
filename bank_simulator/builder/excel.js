@@ -45,13 +45,20 @@
   }
 
   function str(v) { return v == null ? '' : String(v).trim(); }
-  function num(v, d) { var n = Number(v); return v === '' || v == null || isNaN(n) ? d : n; }
-  function scalar(v) {
+  var numWarnings = null; // collects cells that are not numbers during one import
+  function num(v, d, where) {
+    if (v === '' || v == null) return d;
+    var n = typeof v === 'number' ? v : Number(String(v).replace(/[\u2212\u2012\u2013\u2014]/g, '-').replace(',', '.').trim());
+    if (isNaN(n)) { if (numWarnings && where) numWarnings.push(where + ': "' + v + '" is not a number, used ' + d); return d; }
+    return n;
+  }
+  /* typed Settings: everything not listed is text */
+  var BOOL_KEYS = /^config\.(features\.(referencePanel|quiz|moodWalkout|shuffleOptions|showTimeInReport)|scoring\.(balanceCategories|criticalFailsLevel))$/;
+  var NUM_KEYS = /^config\.scoring\.criticalPenalty$/;
+  function typed(path, v) {
     var s = str(v);
-    if (/^(true|yes|1)$/i.test(s) && typeof v !== 'number') return true;
-    if (/^(false|no|0)$/i.test(s) && typeof v !== 'number') return false;
-    if (typeof v === 'boolean') return v;
-    if (s !== '' && !isNaN(Number(s)) && !/^#/.test(s)) return Number(s);
+    if (BOOL_KEYS.test(path)) return typeof v === 'boolean' ? v : /^(true|yes|1|on|კი)$/i.test(s);
+    if (NUM_KEYS.test(path)) return num(v, 0);
     return s;
   }
   function list(v) {
@@ -102,7 +109,7 @@
     s.Products = (content.products || []).map(function (p) {
       return {
         product_id: p.id, type: p.type || 'product', category: p.category || '', name: p.name, short: p.short || '',
-        conditions: (p.conditions || []).map(function (c) { return c.label + ': ' + c.value; }).join('\n')
+        conditions: (p.conditions || []).map(function (c) { return c.label ? c.label + ': ' + c.value : c.value; }).join('\n')
       };
     });
     s.Quiz = (content.quiz || []).map(function (q) {
@@ -119,13 +126,15 @@
   /* ---------- rows -> content parts ---------- */
   function sheetsToContent(sheets) {
     var out = { warnings: [] };
+    numWarnings = out.warnings;
     if (sheets.Settings && sheets.Settings.length) {
       out.settings = {};
       sheets.Settings.forEach(function (r) {
         var k = str(r.key);
         if (!k) return;
         var path = /^meta\./.test(k) ? k : 'config.' + k;
-        out.settings[path] = scalar(r.value);
+        if (str(r.value) === '' && typeof r.value !== 'boolean') return; // empty cell keeps the current value
+        out.settings[path] = typed(path, r.value);
       });
     }
     if (sheets.Levels && sheets.Levels.length) {
@@ -146,7 +155,7 @@
           id: id, title: str(r.title), level: num(r.level, 1), channel: str(r.channel).toLowerCase() || 'branch',
           category: str(r.category), brief: str(r.brief),
           customer: {
-            name: str(r.customer_name), gender: str(r.gender).toLowerCase().charAt(0) === 'f' || str(r.gender) === 'ქ' ? 'f' : 'm',
+            name: str(r.customer_name), gender: /^(f|w|ქ|მდ)/.test(str(r.gender).toLowerCase()) ? 'f' : 'm',
             age: num(r.age, undefined), segment: str(r.segment), occupation: str(r.occupation), income: str(r.income),
             productsHeld: list(r.products_held), digital: str(r.digital), notes: str(r.notes), initialMood: num(r.initial_mood, 0)
           },
@@ -181,9 +190,9 @@
         if (n.end) { out.warnings.push('Options: node ' + c.id + '/' + r.node_id + ' is an end node, option ignored'); return; }
         var o = {
           text: str(r.text), next: str(r.next),
-          scores: { knowledge: num(r.knowledge, 0), service: num(r.service, 0), sales: num(r.sales, 0) }
+          scores: { knowledge: num(r.knowledge, 0, c.id + '/' + r.node_id + ' knowledge'), service: num(r.service, 0, c.id + '/' + r.node_id + ' service'), sales: num(r.sales, 0, c.id + '/' + r.node_id + ' sales') }
         };
-        if (num(r.mood, 0)) o.mood = num(r.mood, 0);
+        if (num(r.mood, 0, c.id + '/' + r.node_id + ' mood')) o.mood = num(r.mood, 0);
         if (str(r.product_id)) o.product = str(r.product_id);
         if (str(r.opportunity_id)) o.opportunity = str(r.opportunity_id);
         if (str(r.critical_skill)) o.critical = { skill: str(r.critical_skill).toLowerCase(), reason: str(r.critical_reason) };
@@ -196,7 +205,7 @@
       out.products = sheets.Products.filter(function (r) { return str(r.product_id); }).map(function (r) {
         return {
           id: str(r.product_id), type: str(r.type) || 'product', category: str(r.category), name: str(r.name), short: str(r.short),
-          conditions: str(r.conditions).split(/\s*(?:\n|\|)\s*/).filter(Boolean).map(function (line) {
+          conditions: str(r.conditions).split(/\n/.test(str(r.conditions)) ? /\s*\n\s*/ : /\s*\|\s*/).filter(Boolean).map(function (line) {
             var i = line.indexOf(':');
             return i > 0 ? { label: line.slice(0, i).trim(), value: line.slice(i + 1).trim() } : { label: '', value: line };
           })
@@ -206,10 +215,17 @@
     if (sheets.Quiz && sheets.Quiz.length) {
       out.quiz = sheets.Quiz.filter(function (r) { return str(r.quiz_id); }).map(function (r) {
         var opts = [];
-        for (var i = 1; i <= 6; i++) if (str(r['option_' + i])) opts.push(str(r['option_' + i]));
+        var col = num(r.correct, 0, 'Quiz ' + r.quiz_id + ' correct');
+        var correctIdx = -1;
+        for (var i = 1; i <= 6; i++) {
+          if (!str(r['option_' + i])) continue;
+          if (i === col) correctIdx = opts.length; // map the column number to the position after skipping blanks
+          opts.push(str(r['option_' + i]));
+        }
+        if (correctIdx < 0) out.warnings.push('Quiz ' + r.quiz_id + ': the "correct" column does not point to a filled option');
         return {
           id: str(r.quiz_id), level: num(r.level, 0), question: str(r.question), options: opts,
-          correct: num(r.correct, 1) - 1, points: num(r.points, 1), explanation: str(r.explanation)
+          correct: Math.max(0, correctIdx), points: num(r.points, 1), explanation: str(r.explanation)
         };
       });
     }
