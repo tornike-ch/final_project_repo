@@ -288,7 +288,8 @@
         (e.res && !e.res.lost ? '<button class="btn" data-act="eval-report">დეტალური შედეგები</button>' : '') +
         '<button class="btn btn-primary btn-lg" data-act="practice-menu">პრაქტიკა</button></div>';
     }
-    render(topbar() + '<main class="screen center"><section class="card welcome"><h1>' + esc(t.productName) + '</h1>' + body + '</section></main>');
+    render(topbar() + '<main class="screen center"><section class="card welcome"><h1>' + esc(t.productName) + '</h1>' + body +
+      '<p class="credits">კლიენტების ილუსტრაციები: Micah Lanier, „Avatar Illustration System“ (CC BY 4.0), DiceBear-ის მეშვეობით.</p></section></main>');
   }
 
   function firstName(n) {

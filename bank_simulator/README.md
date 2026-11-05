@@ -78,3 +78,7 @@ node tools/builder_test.js --xlsx <path to xlsx.full.min.js>   # export, unzip a
 - Builder UI is in English; the game is in Georgian.
 - No escalate-to-manager button. Escalation is modelled as an answer option with outcome `escalated`.
 - No pausing inside a conversation. Resume restarts the unfinished conversation, and earlier answers in it are not counted twice.
+
+## Credits
+
+Customer illustrations: **Micah Lanier, "Avatar Illustration System"** ([source](https://www.figma.com/community/file/829741575478342595)), licensed [CC BY 4.0](https://creativecommons.org/licenses/by/4.0/). They are rendered with [DiceBear](https://www.dicebear.com) (MIT), bundled in `player/js/micah.js` (see `tools/avatar_lib/README.md`). The credit line on the start screen satisfies the attribution requirement, so keep it. Per-customer look overrides go in `customer.avatar` (see CASE_FORMAT.md).

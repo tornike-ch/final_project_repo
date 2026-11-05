@@ -1,6 +1,14 @@
 /*
- * Procedural SVG customer avatars. Mood (-3..3) changes the expression,
- * which is the only on-screen mood signal (by design).
+ * Customer avatars. Mood (-3..3) changes the facial expression, which is the
+ * only on-screen mood signal (by design).
+ *
+ * Primary renderer: Micah illustration style (DiceBear, bundled in js/micah.js;
+ * artwork by Micah Lanier, CC BY 4.0). Falls back to a simple built-in SVG
+ * face if that bundle is missing.
+ *
+ * Optional per-customer overrides (case.customer.avatar):
+ *   { hair, hairColor, skin, shirt, shirtColor, glasses, facialHair, earrings }
+ * using Micah option values, e.g. { "hair": "pixie", "glasses": "round" }.
  */
 (function () {
   'use strict';
@@ -27,7 +35,7 @@
     return 'happy';
   }
 
-  function render(customer, mood, seed) {
+  function legacy(customer, mood, seed) {
     customer = customer || {};
     var h = hash(seed || customer.name);
     var a = customer.avatar || {};
@@ -105,6 +113,69 @@
     s.push(mouth);
     s.push('</svg>');
     return s.join('');
+  }
+
+  /* ---------- Micah renderer ---------- */
+  var M_SKIN = ['f9d4bf', 'f2d3b1', 'ecc3a0', 'e3b48f', 'd9a57e'];
+  var M_HAIR = ['2c1b18', '3b2417', '4a312c', '5b3a29', '724133', '1c1c1c'];
+  var M_GREY = ['c9c9c9', 'b0b0b0', 'dcdcdc'];
+  var M_SHIRT = ['3d5a80', '6b8fbf', '2a7f62', '9287ff', 'c06c84', '4f5d75', 'e0a96d', '5b8e7d'];
+
+  // expression -> [eyebrows (male), eyebrows (female), eyes, mouth]
+  var FACES = {
+    angry: ['down', 'eyelashesDown', 'eyes', 'nervous'],
+    annoyed: ['down', 'eyelashesDown', 'eyes', 'frown'],
+    neutral: ['up', 'eyelashesUp', 'eyes', 'smirk'],
+    pleased: ['up', 'eyelashesUp', 'eyes', 'smile'],
+    happy: ['up', 'eyelashesUp', 'smiling', 'laughing']
+  };
+
+  var cache = {};
+
+  function pick(list, h, shift) { return list[(h >>> shift) % list.length]; }
+
+  function micahUri(customer, mood, seed) {
+    var a = customer.avatar || {};
+    var h = hash(seed || customer.name);
+    var age = Number(customer.age) || 35;
+    var female = (customer.gender || 'm') === 'f';
+    var expr = expression(Math.max(-3, Math.min(3, Math.round(mood || 0))));
+    var face = FACES[expr];
+    var hairStyle = a.hair || (female ? pick(['full', 'pixie'], h, 2)
+      : age >= 45 ? pick(['mrClean', 'fonze'], h, 2)
+      : 'fonze');
+    var hairColor = a.hairColor || (age >= 60 ? pick(M_GREY, h, 4) : age >= 48 && !female && (h % 3 === 0) ? '6b6b6b' : pick(M_HAIR, h, 4));
+    var facialHair = a.facialHair !== undefined ? a.facialHair : (!female && (h >>> 7) % 10 < 4 ? pick(['scruff', 'beard'], h, 8) : null);
+    var glasses = a.glasses !== undefined ? a.glasses : (age >= 60 || (h >>> 9) % 10 < 2 ? pick(['round', 'square'], h, 10) : null);
+    var earrings = a.earrings !== undefined ? a.earrings : (female && (h >>> 11) % 10 < 6 ? pick(['stud', 'hoop'], h, 12) : null);
+    var opts = {
+      seed: String(seed || customer.name || 'x'),
+      baseColor: [a.skin || pick(M_SKIN, h, 13)],
+      hair: [hairStyle], hairColor: [hairColor], hairProbability: 100,
+      eyebrows: [female ? face[1] : face[0]], eyebrowsColor: [age >= 60 ? '8c8c8c' : '2c1b18'],
+      eyes: [face[2]], mouth: [face[3]],
+      shirt: [a.shirt || pick(['collared', 'crew', 'open'], h, 14)], shirtColor: [a.shirtColor || pick(M_SHIRT, h, 15)],
+      facialHair: facialHair ? [facialHair] : undefined, facialHairColor: [hairColor], facialHairProbability: facialHair ? 100 : 0,
+      glasses: glasses ? [glasses] : undefined, glassesColor: ['3f3f46'], glassesProbability: glasses ? 100 : 0,
+      earrings: earrings ? [earrings] : undefined, earringColor: ['e0a96d'], earringsProbability: earrings ? 100 : 0
+    };
+    Object.keys(opts).forEach(function (k) { if (opts[k] === undefined) delete opts[k]; });
+    var key = JSON.stringify(opts);
+    if (!cache[key]) cache[key] = window.MicahAvatar(opts);
+    return { uri: cache[key], expr: expr };
+  }
+
+  function escAttr(s) { return String(s || '').replace(/&/g, '&amp;').replace(/"/g, '&quot;').replace(/</g, '&lt;'); }
+
+  function render(customer, mood, seed) {
+    customer = customer || {};
+    if (typeof window.MicahAvatar !== 'function') return legacy(customer, mood, seed);
+    try {
+      var r = micahUri(customer, mood, seed);
+      return '<img class="avatar-img" src="' + r.uri + '" data-expr="' + r.expr + '" alt="' + escAttr(customer.name) + '" draggable="false">';
+    } catch (e) {
+      return legacy(customer, mood, seed);
+    }
   }
 
   window.Avatar = { render: render, expression: expression };

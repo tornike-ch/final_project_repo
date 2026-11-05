@@ -38,7 +38,8 @@ The builder accepts a full content file, an **array of cases**, or **one case ob
     "productsHeld": ["სადებეტო ბარათი"],                      // CRM "products" tab
     "digital": "მობილბანკი არ აქვს",                            // CRM profile
     "notes": "ბოლო 3 თვეში 4-ჯერ მოვიდა…",                      // CRM "notes" tab: put sales cues here
-    "initialMood": -1                                         // -3 (furious) … 3 (delighted)
+    "initialMood": -1,                                        // -3 (furious) … 3 (delighted)
+    "avatar": { "hair": "pixie", "glasses": "round" }         // optional look overrides (see below)
   },
   "opportunities": [                  // hidden sales opportunities (for the report)
     { "id": "o_mobile", "product": "P_MOBILE", "cue": "კლიენტი ხშირად მოდის კომუნალურების გადასახდელად" }
@@ -47,6 +48,14 @@ The builder accepts a full content file, an **array of cases**, or **one case ob
   "nodes": { "n1": { … }, "n2": { … }, "end_ok": { … } }
 }
 ```
+
+**Avatar.** Faces are generated automatically from `gender`, `age` and the case id: the same customer always looks the same, and mood changes only the expression. The optional `customer.avatar` overrides the look with these values:
+- `hair`: `full`, `pixie`, `fonze`, `mrClean` (bald), `dougFunny`, `dannyPhantom`, `mrT`, `turban`
+- `hairColor`, `skin`, `shirtColor`: hex without `#`, e.g. `"3b2417"`
+- `shirt`: `collared`, `crew`, `open`
+- `glasses`: `round`, `square` or `null`
+- `facialHair`: `beard`, `scruff` or `null`
+- `earrings`: `stud`, `hoop` or `null`
 
 ### Node (one customer turn)
 

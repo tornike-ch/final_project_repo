@@ -26,6 +26,7 @@ PLAYER_FILES = [
     "css/style.css",
     "js/scorm.js",
     "js/engine.js",
+    "js/micah.js",
     "js/avatar.js",
     "js/app.js",
 ]

@@ -152,6 +152,7 @@ def main():
         "<script>" + content_js + "</script>",
         "<script>" + js("js/scorm.js") + "</script>",
         "<script>" + js("js/engine.js") + "</script>",
+        "<script>" + js("js/micah.js") + "</script>",
         "<script>" + js("js/avatar.js") + "</script>",
         "<script>" + js("js/app.js") + "</script>",
         "<script>" + REVIEW_JS + "</script>",
