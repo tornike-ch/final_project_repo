@@ -1,0 +1,51 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Simulator Builder</title>
+  <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Noto+Sans+Georgian:wght@400;600;700&display=swap">
+  <link rel="stylesheet" href="builder.css">
+</head>
+<body>
+  <header class="bar">
+    <div class="title"><b>Simulator Builder</b><span>Bank service simulator · SCORM 1.2</span></div>
+    <div class="bar-actions">
+      <span id="save-state" class="muted"></span>
+      <button class="btn" data-act="preview-full">Test full game</button>
+      <button class="btn btn-primary" data-act="export-scorm">Export SCORM package</button>
+    </div>
+  </header>
+  <div class="layout">
+    <nav class="nav" id="nav">
+      <button data-view="overview" class="active">Overview</button>
+      <button data-view="import">Import / Export</button>
+      <button data-view="settings">Settings &amp; add-ons</button>
+      <button data-view="levels">Levels</button>
+      <button data-view="cases">Cases</button>
+      <button data-view="products">Products &amp; procedures</button>
+      <button data-view="quiz">Quiz questions</button>
+      <button data-view="validation">Validation <span id="val-badge" class="badge"></span></button>
+    </nav>
+    <main class="main" id="main"></main>
+  </div>
+
+  <dialog id="editor">
+    <form method="dialog" class="editor">
+      <h2 id="editor-title">Edit</h2>
+      <p class="muted" id="editor-hint">Edit the JSON and save. See CASE_FORMAT.md for every field.</p>
+      <textarea id="editor-text" spellcheck="false"></textarea>
+      <p class="error" id="editor-error"></p>
+      <div class="row-end">
+        <button value="cancel" class="btn">Cancel</button>
+        <button id="editor-save" value="default" class="btn btn-primary">Save</button>
+      </div>
+    </form>
+  </dialog>
+
+  <script src="player_bundle.js"></script>
+  <script src="excel.js"></script>
+  <script src="zip.js"></script>
+  <script src="builder.js"></script>
+</body>
+</html>

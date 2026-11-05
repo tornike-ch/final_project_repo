@@ -1,0 +1,82 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>SCORM 1.2 Test Harness</title>
+<style>
+  :root { --b: #DDE3EA; --m: #637282; }
+  body { margin: 0; font-family: system-ui, -apple-system, "Segoe UI", sans-serif; display: grid; grid-template-columns: 1fr 380px; height: 100vh; background: #fff; color: #1B2733; }
+  iframe { width: 100%; height: 100vh; border: 0; border-right: 1px solid var(--b); }
+  aside { overflow: auto; padding: 12px; font-size: 12.5px; }
+  h1 { font-size: 15px; margin: 0 0 6px; }
+  p { color: var(--m); margin: 0 0 10px; }
+  table { width: 100%; border-collapse: collapse; }
+  td { border-bottom: 1px solid var(--b); padding: 4px; vertical-align: top; word-break: break-all; }
+  td:first-child { color: var(--m); width: 45%; }
+  button { margin: 0 6px 10px 0; }
+  .calls { max-height: 220px; overflow: auto; background: #F7F9FB; border: 1px solid var(--b); padding: 6px; font-family: ui-monospace, monospace; font-size: 11px; white-space: pre-wrap; }
+  @media (max-width: 900px) { body { grid-template-columns: 1fr; } aside { border-top: 1px solid var(--b); } iframe { height: 75vh; } }
+</style>
+</head>
+<body>
+<iframe id="sco" title="SCO"></iframe>
+<aside>
+  <h1>Mock LMS (SCORM 1.2)</h1>
+  <p>Loads the player in an iframe with a fake LMS API, so you can see exactly what will be reported. Data persists in this browser's localStorage. Serve the folder over http (for example <code>python3 -m http.server</code>) instead of opening the file directly.</p>
+  <button id="reload">Relaunch SCO</button><button id="wipe">Wipe LMS data</button>
+  <table id="cmi"></table>
+  <h1 style="margin-top:12px">API calls</h1>
+  <div class="calls" id="calls"></div>
+</aside>
+<script>
+(function () {
+  var KEY = 'mock-lms-cmi';
+  var cmi;
+  function load() {
+    try { cmi = JSON.parse(localStorage.getItem(KEY)) || null; } catch (e) { cmi = null; }
+    if (!cmi) cmi = { 'cmi.core.student_id': 'E-1024', 'cmi.core.student_name': 'Beridze, Nino', 'cmi.core.lesson_status': 'not attempted', 'cmi.suspend_data': '', 'cmi.core.score.raw': '' };
+    cmi['cmi.core.entry'] = cmi['cmi.suspend_data'] ? 'resume' : 'ab-initio';
+  }
+  function save() { localStorage.setItem(KEY, JSON.stringify(cmi)); }
+  var calls = [];
+  var lastError = '0';
+  function logCall(s) { calls.push(s); if (calls.length > 400) calls.shift(); var el = document.getElementById('calls'); el.textContent = calls.slice(-80).join('\n'); el.scrollTop = el.scrollHeight; }
+  function renderTable() {
+    var keys = Object.keys(cmi).sort(function (a, b) { return a.localeCompare(b, 'en', { numeric: true }); });
+    document.getElementById('cmi').innerHTML = keys.map(function (k) {
+      var v = String(cmi[k]);
+      if (k === 'cmi.suspend_data') v = v.length + ' chars: ' + v.slice(0, 300) + (v.length > 300 ? '…' : '');
+      return '<tr><td>' + k + '</td><td>' + v.replace(/</g, '&lt;') + '</td></tr>';
+    }).join('');
+  }
+  window.API = {
+    LMSInitialize: function () { logCall('LMSInitialize'); return 'true'; },
+    LMSFinish: function () { logCall('LMSFinish'); save(); renderTable(); return 'true'; },
+    LMSGetValue: function (k) { lastError = '0'; return cmi[k] != null ? String(cmi[k]) : ''; },
+    LMSSetValue: function (k, v) {
+      if (k === 'cmi.suspend_data' && String(v).length > 4096) { lastError = '405'; logCall('SET FAILED (too long) ' + k); return 'false'; }
+      cmi[k] = String(v);
+      var m = k.match(/^cmi\.interactions\.(\d+)\./);
+      if (m) cmi['cmi.interactions._count'] = String(Math.max(Number(cmi['cmi.interactions._count'] || 0), Number(m[1]) + 1));
+      var o = k.match(/^cmi\.objectives\.(\d+)\./);
+      if (o) cmi['cmi.objectives._count'] = String(Math.max(Number(cmi['cmi.objectives._count'] || 0), Number(o[1]) + 1));
+      logCall('SET ' + k + ' = ' + String(v).slice(0, 120));
+      lastError = '0';
+      return 'true';
+    },
+    LMSCommit: function () { logCall('LMSCommit'); save(); renderTable(); return 'true'; },
+    LMSGetLastError: function () { return lastError; },
+    LMSGetErrorString: function () { return ''; },
+    LMSGetDiagnostic: function () { return ''; }
+  };
+  window.mockLMS = { data: function () { return cmi; }, calls: calls };
+  var src = new URLSearchParams(location.search).get('sco') || '../player/index.html';
+  function launch() { load(); renderTable(); document.getElementById('sco').src = src + (src.indexOf('?') < 0 ? '?' : '&') + 't=' + Date.now(); }
+  document.getElementById('reload').onclick = launch;
+  document.getElementById('wipe').onclick = function () { localStorage.removeItem(KEY); launch(); };
+  launch();
+})();
+</script>
+</body>
+</html>
