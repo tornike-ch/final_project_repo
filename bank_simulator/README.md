@@ -39,7 +39,7 @@ The builder runs completely in the browser, with no server or install, and keeps
 | **Workstation** | Mock CRM profile (profile, products, notes tabs) with sales cues, plus the optional **reference panel** (searchable product catalog and procedures). |
 | **Feedback** | Only at the end of the session: skill scores, levels, critical errors, missed sales opportunities, and a step-by-step review with the best answer and an explanation. |
 | **Time** | Every answer's response time is recorded and sent to the LMS. It is not scored, and it is hidden from the employee unless enabled. |
-| **Resume** | Closing mid-session resumes at the start of the unfinished conversation. |
+| **Resume** | Every evaluation answer is saved immediately. Closing and reopening continues where the employee left off, and answers cannot be changed. |
 
 ## What is sent to the LMS
 
@@ -54,6 +54,31 @@ The builder runs completely in the browser, with no server or install, and keeps
 | `cmi.core.lesson_location`, `session_time`, `exit=suspend` | Standard bookkeeping |
 
 Interaction letters refer to the option order in the content file, not the shuffled screen order, so reports stay comparable between employees.
+
+## LMS settings (important for evaluation)
+
+The "first run counts" lock lives inside the LMS attempt. If the LMS starts a **new attempt**, it hands the game empty data and the employee could retake the evaluation. Configure the course activity so that doesn't happen.
+
+**Moodle (SCORM activity):**
+
+| Setting | Value |
+|---|---|
+| Grading method | Highest grade (the score is a single value) |
+| Attempts grading | **First attempt** |
+| Number of attempts | Unlimited, so practice works. With 1, practice after the evaluation may not be saved. |
+| Force new attempt | **No** |
+| Force completed | **No** (Yes would lock an unfinished evaluation as complete) |
+| Disable preview mode | **Yes** (the game also refuses to start the evaluation in browse/review mode) |
+| Display | New window, or current window with a height of at least 700 px |
+
+**Other LMSs** (iSpring, TalentLMS, Docebo, Cornerstone, SuccessFactors): disable retakes, re-registration and "reset progress on completion", and keep completed attempts. Run one end-to-end test in your LMS before rollout, ideally with the `tools/lms_test_harness.html` values as a reference.
+
+**What the game does to protect the result:**
+- It sets `incomplete` at launch, so an LMS that auto-completes on exit does not lock anyone out.
+- Every evaluation answer is saved immediately.
+- If it cannot reach the LMS (blocked frame, failed initialisation), it shows a blocking message instead of running unscored.
+- If saving fails, it shows a red warning and retries every 15 s.
+- A final result the LMS did not confirm is re-sent on the next launch.
 
 ## Testing
 
@@ -77,7 +102,6 @@ node tools/builder_test.js --xlsx <path to xlsx.full.min.js>   # export, unzip a
 - The LMS status is `completed` (not passed/failed), so the score itself carries the result.
 - Builder UI is in English; the game is in Georgian.
 - No escalate-to-manager button. Escalation is modelled as an answer option with outcome `escalated`.
-- No pausing inside a conversation. Resume restarts the unfinished conversation, and earlier answers in it are not counted twice.
 
 ## Credits
 

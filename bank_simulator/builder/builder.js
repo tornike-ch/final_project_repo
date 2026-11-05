@@ -86,7 +86,7 @@
   function manifest(c, files) {
     var title = xmlEsc(c.meta.title || 'Simulator');
     return '<?xml version="1.0" encoding="UTF-8"?>\n' +
-      '<manifest identifier="' + slug(c.meta.packageId) + '" version="' + xmlEsc(c.meta.version || '1.0') + '"\n' +
+      '<manifest identifier="' + (/^[A-Za-z_]/.test(slug(c.meta.packageId)) ? '' : 'PKG_') + slug(c.meta.packageId) + '" version="' + xmlEsc(c.meta.version || '1.0') + '"\n' +
       '  xmlns="http://www.imsproject.org/xsd/imscp_rootv1p1p2"\n' +
       '  xmlns:adlcp="http://www.adlnet.org/xsd/adlcp_rootv1p2"\n' +
       '  xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"\n' +

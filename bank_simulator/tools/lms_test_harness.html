@@ -41,6 +41,12 @@
   function save() { localStorage.setItem(KEY, JSON.stringify(cmi)); }
   var calls = [];
   var lastError = '0';
+  var params = new URLSearchParams(location.search);
+  var state = 'new'; // new -> running -> finished (per launch)
+  var TIMESPAN = /^\d{2,4}:\d{2}:\d{2}(\.\d{1,2})?$/;
+  var CLOCK = /^\d{2}:\d{2}:\d{2}(\.\d{1,2})?$/;
+  var errorLog = [];
+  function fail(code, msg) { lastError = code; errorLog.push(code + ' ' + msg); logCall('ERROR ' + code + ' ' + msg); return 'false'; }
   function logCall(s) { calls.push(s); if (calls.length > 400) calls.shift(); var el = document.getElementById('calls'); el.textContent = calls.slice(-80).join('\n'); el.scrollTop = el.scrollHeight; }
   function renderTable() {
     var keys = Object.keys(cmi).sort(function (a, b) { return a.localeCompare(b, 'en', { numeric: true }); });
@@ -51,11 +57,26 @@
     }).join('');
   }
   window.API = {
-    LMSInitialize: function () { logCall('LMSInitialize'); return 'true'; },
-    LMSFinish: function () { logCall('LMSFinish'); save(); renderTable(); return 'true'; },
-    LMSGetValue: function (k) { lastError = '0'; return cmi[k] != null ? String(cmi[k]) : ''; },
+    LMSInitialize: function () {
+      if (params.get('initfail')) return fail('101', 'LMSInitialize refused (simulated)');
+      if (state !== 'new') return fail('101', 'LMSInitialize called twice');
+      state = 'running'; logCall('LMSInitialize'); return 'true';
+    },
+    LMSFinish: function () {
+      if (state !== 'running') return fail('301', 'LMSFinish while not initialized');
+      state = 'finished';
+      // SCORM 1.2 RTE: a SCO that exits without setting lesson_status is marked completed
+      if (cmi['cmi.core.lesson_status'] === 'not attempted') { cmi['cmi.core.lesson_status'] = 'completed'; logCall('LMS auto-completed the attempt'); }
+      logCall('LMSFinish'); save(); renderTable(); return 'true';
+    },
+    LMSGetValue: function (k) { if (state !== 'running') { fail('301', 'get while not initialized'); return ''; } lastError = '0'; return cmi[k] != null ? String(cmi[k]) : ''; },
     LMSSetValue: function (k, v) {
-      if (k === 'cmi.suspend_data' && String(v).length > 4096) { lastError = '405'; logCall('SET FAILED (too long) ' + k); return 'false'; }
+      if (state !== 'running') return fail('301', 'set while not initialized: ' + k);
+      if (k === 'cmi.suspend_data' && String(v).length > 4096) return fail('405', 'suspend_data too long');
+      if ((k === 'cmi.core.session_time' || /\.latency$/.test(k)) && !TIMESPAN.test(v)) return fail('405', 'bad CMITimespan ' + k + '=' + v);
+      if (/^cmi\.interactions\.\d+\.time$/.test(k) && !CLOCK.test(v)) return fail('405', 'bad CMITime ' + k + '=' + v);
+      var ix = k.match(/^cmi\.interactions\.(\d+)\./);
+      if (ix && Number(ix[1]) > Number(cmi['cmi.interactions._count'] || 0)) return fail('201', 'interaction index beyond _count: ' + k);
       cmi[k] = String(v);
       var m = k.match(/^cmi\.interactions\.(\d+)\./);
       if (m) cmi['cmi.interactions._count'] = String(Math.max(Number(cmi['cmi.interactions._count'] || 0), Number(m[1]) + 1));
@@ -65,16 +86,24 @@
       lastError = '0';
       return 'true';
     },
-    LMSCommit: function () { logCall('LMSCommit'); save(); renderTable(); return 'true'; },
+    LMSCommit: function () { if (state !== 'running') return fail('301', 'commit while not initialized'); logCall('LMSCommit'); save(); renderTable(); return 'true'; },
     LMSGetLastError: function () { return lastError; },
     LMSGetErrorString: function () { return ''; },
     LMSGetDiagnostic: function () { return ''; }
   };
-  window.mockLMS = { data: function () { return cmi; }, calls: calls };
+  window.mockLMS = { data: function () { return cmi; }, calls: calls, errors: function () { return errorLog.slice(); } };
   var src = new URLSearchParams(location.search).get('sco') || '../player/index.html';
-  function launch() { load(); renderTable(); document.getElementById('sco').src = src + (src.indexOf('?') < 0 ? '?' : '&') + 't=' + Date.now(); }
+  function launch() {
+    var f = document.getElementById('sco');
+    f.src = 'about:blank'; // let the running SCO unload (LMSFinish) before the next launch
+    setTimeout(function () { state = 'new'; errorLog = []; if (!localStorage.getItem(KEY)) cmi = null; load(); renderTable(); f.src = src + (src.indexOf('?') < 0 ? '?' : '&') + 't=' + Date.now(); }, 60);
+  }
   document.getElementById('reload').onclick = launch;
-  document.getElementById('wipe').onclick = function () { localStorage.removeItem(KEY); launch(); };
+  document.getElementById('wipe').onclick = function () {
+    state = 'wiped'; // the closing SCO must not write its data back
+    localStorage.removeItem(KEY);
+    launch();
+  };
   launch();
 })();
 </script>

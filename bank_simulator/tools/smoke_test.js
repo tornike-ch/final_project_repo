@@ -33,7 +33,11 @@ function check(cond, msg) {
 }
 
 async function sco(page) {
-  const frame = page.frame({ url: /player\/index\.html/ });
+  let frame = null;
+  for (let i = 0; i < 100 && !frame; i++) {
+    frame = page.frame({ url: /player\/index\.html/ });
+    if (!frame) await page.waitForTimeout(50);
+  }
   await frame.waitForFunction(() => window.SimApp);
   await frame.evaluate(() => { window.SIM_FAST = true; });
   return frame;
@@ -110,8 +114,8 @@ const WORST = () => {
 
   /* ---------- 1. perfect evaluation run ---------- */
   await page.goto(base + '/tools/lms_test_harness.html');
-  await page.evaluate(() => localStorage.clear());
-  await page.goto(base + '/tools/lms_test_harness.html');
+  await page.click('#wipe');
+  await page.waitForTimeout(400);
   let frame = await sco(page);
   await shot(page, '01_welcome');
   await frame.click('[data-act="start-eval"]');
@@ -160,8 +164,7 @@ const WORST = () => {
   await shot(page, '07_practice_report_failed');
 
   /* ---------- 3. failing evaluation + resume ---------- */
-  await page.evaluate(() => localStorage.clear());
-  await page.click('#reload');
+  await page.click('#wipe');
   await page.waitForTimeout(300);
   frame = await sco(page);
   await frame.click('[data-act="start-eval"]');
@@ -185,6 +188,25 @@ const WORST = () => {
   const crit = await frame.$$eval('.crit-list li', (els) => els.length);
   check(crit === critCount, 'report lists every critical error (' + crit + ' of ' + critCount + ')');
   if (critCount) check(lms['cmi.objectives.4.status'] === 'failed', 'critical-errors objective failed');
+
+  check((await page.evaluate(() => window.mockLMS.errors())).length === 0, 'no SCORM errors in the mock LMS: ' + (await page.evaluate(() => window.mockLMS.errors())).slice(0, 3).join(' | '));
+
+  /* ---------- 3b. open and close without starting: must not lock the evaluation ---------- */
+  await page.click('#wipe');
+  await page.waitForTimeout(400);
+  frame = await sco(page);
+  await page.click('#reload'); // close without starting
+  await page.waitForTimeout(400);
+  frame = await sco(page);
+  check(!!(await frame.$('[data-act="start-eval"]')), 'opening and closing without starting keeps the evaluation available');
+  lms = await page.evaluate(() => window.mockLMS.data());
+  check(lms['cmi.core.lesson_status'] === 'incomplete', 'status set to incomplete at launch (' + lms['cmi.core.lesson_status'] + ')');
+
+  /* ---------- 3c. LMS refuses initialisation: game must not run silently ---------- */
+  await page.goto(base + '/tools/lms_test_harness.html?initfail=1');
+  await page.waitForTimeout(600);
+  const blocked = await page.frame({ url: /player\/index\.html/ }).textContent('body');
+  check(/LMS-თან კავშირი ვერ დამყარდა/.test(blocked), 'init failure shows a blocking message instead of a silent test mode');
 
   /* ---------- 4. standalone (no LMS) + preview hash + phone screen ---------- */
   const p2 = await ctx.newPage();

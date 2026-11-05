@@ -149,6 +149,7 @@ def main():
         '<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Noto+Sans+Georgian:wght@400;500;600;700&display=swap">',
         "<style>" + (PLAYER / "css/style.css").read_text(encoding="utf-8") + REVIEW_CSS + "</style>",
         '<div id="app" class="app"><main class="screen center"><section class="card"><p>იტვირთება…</p></section></main></div>',
+        "<script>window.SIM_ALLOW_STANDALONE = true;</script>",
         "<script>" + content_js + "</script>",
         "<script>" + js("js/scorm.js") + "</script>",
         "<script>" + js("js/engine.js") + "</script>",

@@ -96,22 +96,36 @@
 
   function loadState() {
     var raw = Scorm.get('cmi.suspend_data');
-    try { state = raw ? JSON.parse(raw) : null; } catch (e) { state = null; }
-    if (!state || state.v !== 1) state = { v: 1, e: emptyEval(), p: { u: 0, n: 0 } };
+    var parsed = null;
+    try { parsed = raw ? JSON.parse(raw) : null; } catch (e) { parsed = null; }
+    state = parsed && parsed.v === 1 ? parsed : { v: 1, e: emptyEval(), p: { u: 0, n: 0 } };
     var status = Scorm.get('cmi.core.lesson_status');
-    // LMS says the attempt is over, but suspend data was lost: keep evaluation locked.
-    if (state.e.s !== 'd' && /^(completed|passed|failed)$/.test(status)) {
+    var scoreRaw = Scorm.get('cmi.core.score.raw');
+    // The LMS holds a finished, scored attempt but our saved data is gone: keep the evaluation locked.
+    // (A status without a score can come from an LMS that auto-completes on exit; that must not lock.)
+    if (!parsed && /^(completed|passed|failed)$/.test(status) && scoreRaw !== '') {
       state.e.s = 'd';
-      var raw100 = Number(Scorm.get('cmi.core.score.raw'));
-      state.e.res = state.e.res || { o: isNaN(raw100) ? null : raw100, lost: 1 };
+      state.e.res = { o: Number(scoreRaw), lost: 1 };
+      state.e.sent = 1;
     }
+  }
+
+  /** LMS launched us for browsing/review, or the attempt does not count. */
+  function noCredit() {
+    var mode = Scorm.get('cmi.core.lesson_mode');
+    return mode === 'browse' || mode === 'review' || Scorm.get('cmi.core.credit') === 'no-credit';
   }
 
   function saveState() {
     var data = JSON.stringify(state);
     if (data.length > 4000) {
-      // SCORM 1.2 limit is 4096 chars: drop per-case detail from the oldest entries.
-      state.e.r = state.e.r.map(function (r) { return r.slice(0, 7); });
+      // SCORM 1.2 limit is 4096 chars. First drop the replay strings of finished cases
+      // (only the report detail is lost), keeping scores, level index and outcome.
+      state.e.r = state.e.r.map(function (r) { return r.slice(0, 12); });
+      data = JSON.stringify(state);
+    }
+    if (data.length > 4000) {
+      state.e.r = state.e.r.map(function (r) { return r.slice(0, 10); });
       data = JSON.stringify(state);
     }
     Scorm.set('cmi.suspend_data', data);
@@ -186,9 +200,14 @@
   function interaction(fields) {
     var i = state.e.n++;
     var p = 'cmi.interactions.' + i + '.';
-    Scorm.set(p + 'id', sanitizeId(fields.id));
+    if (!Scorm.set(p + 'id', sanitizeId(fields.id), true)) {
+      // index out of step with the LMS (e.g. it dropped stored interactions): append at _count
+      var c = parseInt(Scorm.get('cmi.interactions._count'), 10);
+      if (!isNaN(c) && c !== i) { i = c; state.e.n = c + 1; p = 'cmi.interactions.' + i + '.'; }
+      Scorm.set(p + 'id', sanitizeId(fields.id));
+    }
     Scorm.set(p + 'type', fields.type);
-    Scorm.set(p + 'time', Scorm.clock());
+    Scorm.set(p + 'time', fields.time || Scorm.clock());
     if (fields.weighting != null) Scorm.set(p + 'weighting', fields.weighting);
     if (fields.pattern != null) Scorm.set(p + 'correct_responses.0.pattern', fields.pattern);
     Scorm.set(p + 'student_response', String(fields.response).slice(0, 255));
@@ -208,6 +227,7 @@
         pattern: best ? String.fromCharCode(97 + node.options.indexOf(best)) : null,
         result: st.verdict === 'best' ? 'correct' : (st.verdict === 'critical' || st.verdict === 'poor') ? 'wrong' : 'neutral',
         latency: st.latency,
+        time: st.at ? Scorm.clock(new Date(st.at)) : null,
         weighting: best ? Engine.optionTotal(best) : 0
       });
     });
@@ -315,7 +335,11 @@
       '<li>უკუკავშირს და დეტალურ შედეგებს სესიის ბოლოს ნახავთ.</li>' +
       '<li><b>შეფასებისთვის მხოლოდ პირველი მცდელობა ითვლება.</b> შემდეგ შეგიძლიათ შეუზღუდავად ივარჯიშოთ.</li>' +
       '</ul>';
-    if (e.s === 'n') {
+    if (e.s !== 'd' && noCredit()) {
+      body = '<p class="lead">კურსი გახსნილია ნახვის რეჟიმში — შეფასება ამ რეჟიმში არ ითვლება.</p>' +
+        '<p class="muted">შეფასების გასავლელად კურსი LMS-დან ჩვეულებრივ რეჟიმში გახსენით. აქ შეგიძლიათ მხოლოდ ივარჯიშოთ.</p>' +
+        '<div class="actions"><button class="btn btn-primary btn-lg" data-act="practice-menu">პრაქტიკა</button></div>';
+    } else if (e.s === 'n') {
       body = '<p class="lead">მოგესალმებით' + (studentName ? ', ' + esc(firstName(studentName)) : '') + '! თქვენ მომსახურების ოპერატორის როლში ხართ.</p>' + rules +
         '<div class="actions"><button class="btn btn-primary btn-lg" data-act="start-eval">შეფასების დაწყება</button></div>';
     } else if (e.s === 'a') {
@@ -719,6 +743,7 @@
     state.e.cur = null;
     reportFinal(agg, levelsPassed, run.levelResults.length);
     saveState();
+    if (Scorm.ok) { state.e.sent = 1; saveState(); }
     saveDetail(run);
   }
 
@@ -830,6 +855,7 @@
 
   /* ---------------- actions ---------------- */
   function startEval() {
+    if (noCredit()) return showWelcome();
     state.e = emptyEval();
     state.e.s = 'a';
     state.e.st = levelSteps(0);
@@ -990,6 +1016,18 @@
     nextStep();
   }
 
+  function showLmsBanner(on) {
+    var el = document.getElementById('lms-banner');
+    if (!on) { if (el) el.remove(); return; }
+    if (el) return;
+    el = document.createElement('div');
+    el.id = 'lms-banner';
+    el.className = 'lms-banner';
+    el.setAttribute('role', 'alert');
+    el.textContent = 'შედეგები LMS-ში ვერ ინახება. ნუ დახურავთ ფანჯარას — ვცდილობთ ხელახლა. თუ შეტყობინება არ ქრება, მიმართეთ ადმინისტრატორს.';
+    document.body.insertBefore(el, document.body.firstChild);
+  }
+
   /* ---------------- boot ---------------- */
   function boot() {
     applyTheme();
@@ -1003,7 +1041,13 @@
       startPreview();
       return;
     }
-    Scorm.init(content.meta.packageId);
+    if (!Scorm.init(content.meta.packageId)) {
+      render('<main class="screen center"><section class="card"><h1>LMS-თან კავშირი ვერ დამყარდა</h1>' +
+        '<p class="lead">შეფასება ვერ დაიწყება, რადგან შედეგები LMS-ში ვერ შეინახება.</p>' +
+        '<p>დახურეთ ეს ფანჯარა და კურსი თავიდან გაუშვით LMS-დან. თუ პრობლემა განმეორდა, მიმართეთ ადმინისტრატორს.</p>' +
+        '<p class="muted small">კოდი: ' + esc(Scorm.error) + '</p></section></main>');
+      return;
+    }
     studentName = Scorm.get('cmi.core.student_name');
     studentId = Scorm.get('cmi.core.student_id');
     detailKey = 'sim-detail:' + content.meta.packageId + ':' + (studentId || 'local');
@@ -1013,9 +1057,28 @@
       try { window.localStorage.removeItem(detailKey); } catch (e) { /* ignore */ }
     }
     loadState();
+    var st0 = Scorm.get('cmi.core.lesson_status');
+    if ((st0 === '' || st0 === 'not attempted') && !noCredit()) Scorm.set('cmi.core.lesson_status', 'incomplete');
     Scorm.set('cmi.core.exit', 'suspend');
+    Scorm.commit();
+    Scorm.onFailure = function () { showLmsBanner(true); };
+    Scorm.onRecover = function () {
+      showLmsBanner(false);
+      if (state.e.s === 'd' && !state.e.sent) { state.e.sent = 1; saveState(); }
+    };
+    // finish only when the page really goes away; commit on the earlier signals
     window.addEventListener('pagehide', function () { Scorm.finish(); });
-    window.addEventListener('beforeunload', function () { Scorm.finish(); });
+    window.addEventListener('beforeunload', function () { Scorm.commit(); });
+    document.addEventListener('visibilitychange', function () { if (document.visibilityState === 'hidden') Scorm.commit(); });
+    // final result computed earlier but never confirmed by the LMS: send it again
+    if (state.e.s === 'd' && !state.e.sent && state.e.res && !state.e.res.lost) {
+      run = rebuildEvalRun();
+      var agg = Engine.aggregate(content, run.caseResults, run.quizResults);
+      reportFinal(agg, run.levelResults.filter(function (l) { return l.passed; }).length, run.levelResults.length);
+      saveState();
+      if (Scorm.ok) { state.e.sent = 1; saveState(); }
+      run = null;
+    }
     showWelcome();
   }
 

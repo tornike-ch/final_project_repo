@@ -64,6 +64,10 @@ svg { width: 18px; height: 18px; flex: none; }
 }
 .pill-eval { background: var(--primary); }
 .pill-practice { background: var(--accent); }
+.lms-banner {
+  position: sticky; top: 0; z-index: 50; padding: 10px 16px; text-align: center; font-weight: 600;
+  background: #B42318; color: #fff;
+}
 .standalone-bar {
   background: #FFF6DD; color: #6B4E00; font-size: 13px; padding: 6px 16px; text-align: center;
   border-bottom: 1px solid #F1E2B0;

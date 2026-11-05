@@ -43,6 +43,8 @@ def load_content():
 def manifest(content, files):
     meta = content.get("meta", {})
     ident = re.sub(r"[^A-Za-z0-9_.-]", "_", meta.get("packageId", "bank-service-simulator"))
+    if not re.match(r"^[A-Za-z_]", ident):
+        ident = "PKG_" + ident
     title = escape(meta.get("title", "Simulator"))
     file_tags = "\n".join(f'      <file href="{escape(f)}"/>' for f in files)
     return f"""<?xml version="1.0" encoding="UTF-8"?>

@@ -158,7 +158,10 @@
       if (!cs.id) errors.push(where + ': missing id');
       else if (caseIds[cs.id]) errors.push(where + ': duplicate id');
       caseIds[cs.id] = true;
-      if (!/^[A-Za-z0-9_\-.]+$/.test(cs.id || '')) warnings.push(where + ': id should use only latin letters, digits, _ - . (needed for LMS reporting)');
+      if (!/^[A-Za-z0-9_\-.]+$/.test(cs.id || '')) errors.push(where + ': id must use only latin letters, digits, _ - . (it is sent to the LMS)');
+      Object.keys(cs.nodes).forEach(function (nid) {
+        if (!/^[A-Za-z0-9_\-.]+$/.test(nid)) warnings.push(where + ': node id "' + nid + '" should use only latin letters, digits, _ - . (sent to the LMS)');
+      });
       if (levelIds.indexOf(cs.level) < 0) warnings.push(where + ': level ' + cs.level + ' is not configured, case will never be drawn');
       if (!cs.nodes[cs.start]) { errors.push(where + ': start node "' + cs.start + '" does not exist'); return; }
       var oppIds = {};
@@ -340,7 +343,7 @@
     // and the employee makes it worse once more.
     var rawMood = this.mood + (opt.mood || 0);
     this.mood = Math.max(-3, Math.min(3, rawMood));
-    this.steps.push({ node: this.nodeId, option: index, latency: latency, verdict: verdict(node, opt) });
+    this.steps.push({ node: this.nodeId, option: index, latency: latency, at: Date.now(), verdict: verdict(node, opt) });
     this.nodeId = opt.next;
     var next = this.node();
     if (this.content.config.features.moodWalkout && rawMood < -3 && next && !next.end) {
