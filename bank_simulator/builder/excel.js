@@ -11,9 +11,9 @@
     Settings: ['key', 'value'],
     Levels: ['id', 'name', 'description', 'cases_per_run', 'quiz_questions', 'pass_threshold', 'skill_floor'],
     Cases: ['case_id', 'title', 'level', 'channel', 'category', 'brief', 'start_node',
-      'customer_name', 'gender', 'age', 'segment', 'occupation', 'income', 'products_held', 'digital', 'notes', 'initial_mood'],
+      'customer_name', 'gender', 'age', 'segment', 'occupation', 'income', 'products_held', 'digital', 'notes', 'initial_mood', 'extra_json'],
     Opportunities: ['case_id', 'opportunity_id', 'product_id', 'cue'],
-    Nodes: ['case_id', 'node_id', 'type', 'system', 'say', 'outcome'],
+    Nodes: ['case_id', 'node_id', 'type', 'stage', 'system', 'say', 'outcome', 'config_json'],
     Options: ['case_id', 'node_id', 'text', 'next', 'knowledge', 'service', 'sales', 'mood',
       'product_id', 'opportunity_id', 'critical_skill', 'critical_reason', 'feedback'],
     Products: ['product_id', 'type', 'category', 'name', 'short', 'conditions'],
@@ -83,16 +83,28 @@
         start_node: c.start, customer_name: cu.name || '', gender: cu.gender || '', age: cu.age == null ? '' : cu.age,
         segment: cu.segment || '', occupation: cu.occupation || '', income: cu.income || '',
         products_held: (cu.productsHeld || []).join('; '), digital: cu.digital || '', notes: cu.notes || '',
-        initial_mood: cu.initialMood || 0
+        initial_mood: cu.initialMood || 0,
+        extra_json: (function () {
+          var x = {};
+          ['date', 'crm', 'bureau'].forEach(function (k) { if (c[k] !== undefined) x[k] = c[k]; });
+          if (cu.documents) x.documents = cu.documents;
+          if (cu.document) x.document = cu.document;
+          if (cu.avatar) x.avatar = cu.avatar;
+          return Object.keys(x).length ? JSON.stringify(x) : '';
+        })()
       });
       (c.opportunities || []).forEach(function (o) {
         s.Opportunities.push({ case_id: c.id, opportunity_id: o.id, product_id: o.product || '', cue: o.cue || '' });
       });
       Object.keys(c.nodes || {}).forEach(function (nid) {
         var n = c.nodes[nid];
+        var cfgKeys = ['questions', 'maxQuestions', 'prompt', 'doneLabel', 'fields', 'branches', 'title', 'instructions', 'submitLabel', 'doneText', 'saveTo', 'unlock', 'next', 'mood', 'moodIfWrong'];
+        var cj = {};
+        cfgKeys.forEach(function (k) { if (n[k] !== undefined && !(k === 'mood' && !n.mood)) cj[k] = n[k]; });
         s.Nodes.push({
-          case_id: c.id, node_id: nid, type: n.end ? 'end' : (n.type || 'dialogue'),
-          system: n.system || '', say: n.say || '', outcome: n.end ? (n.outcome || 'resolved') : ''
+          case_id: c.id, node_id: nid, type: n.end ? 'end' : (n.type || 'dialogue'), stage: n.stage || '',
+          system: n.system || '', say: n.say || '', outcome: n.end ? (n.outcome || 'resolved') : '',
+          config_json: Object.keys(cj).length ? JSON.stringify(cj) : ''
         });
         (n.options || []).forEach(function (o) {
           var sc = o.scores || {};
@@ -161,6 +173,13 @@
           },
           opportunities: [], start: str(r.start_node), nodes: {}
         };
+        if (str(r.extra_json)) {
+          try {
+            var x = JSON.parse(str(r.extra_json));
+            ['date', 'crm', 'bureau'].forEach(function (k) { if (x[k] !== undefined) c[k] = x[k]; });
+            ['documents', 'document', 'avatar'].forEach(function (k) { if (x[k] !== undefined) c.customer[k] = x[k]; });
+          } catch (e) { out.warnings.push('Cases ' + id + ': extra_json is not valid JSON'); }
+        }
         cases[id] = c;
         order.push(id);
       });
@@ -177,8 +196,15 @@
         var n = {};
         if (str(r.system)) n.system = str(r.system);
         if (str(r.say)) n.say = str(r.say);
+        if (str(r.stage)) n.stage = str(r.stage);
         if (type === 'end') { n.end = true; n.outcome = str(r.outcome) || 'resolved'; }
-        else { if (type === 'product') n.type = 'product'; n.options = []; }
+        else { if (type === 'product' || type === 'ask' || type === 'task') n.type = type; n.options = []; }
+        if (str(r.config_json)) {
+          try {
+            var cj = JSON.parse(str(r.config_json));
+            Object.keys(cj).forEach(function (k) { n[k] = cj[k]; });
+          } catch (e) { out.warnings.push('Nodes ' + r.case_id + '/' + nid + ': config_json is not valid JSON'); }
+        }
         c.nodes[nid] = n;
         if (!c.start) c.start = nid;
       });

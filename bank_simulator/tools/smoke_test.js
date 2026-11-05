@@ -56,6 +56,8 @@ async function playThrough(frame, strategy, opts = {}) {
   for (let guard = 0; guard < 400; guard++) {
     const act = await frame.evaluate(() => {
       const q = (s) => document.querySelector(s);
+      if (q('#choices .q-chip')) return 'ask';
+      if (q('#task-form') && q('.task-prompt')) return 'task';
       if (q('#choices .opt')) return 'choose';
       if (q('.quiz .opt')) return 'quiz';
       if (q('[data-act="advance"]')) return 'advance';
@@ -71,7 +73,33 @@ async function playThrough(frame, strategy, opts = {}) {
       if (done >= opts.stopAfterCases && act === 'advance') return errors;
     }
     if (act === 'wait') { await frame.waitForTimeout(30); continue; }
-    if (act === 'choose') {
+    if (act === 'ask' || act === 'task') {
+      const worst = strategy === WORST;
+      await frame.evaluate(({ act, worst }) => {
+        const cur = window.SimApp.current();
+        const node = cur.node();
+        if (act === 'ask') {
+          const pick = worst ? node.questions.filter((q) => window.Engine.optionTotal(q) <= 0).slice(0, 1).concat(node.questions.slice(0, 1))
+            : window.Engine.bestQuestions(node);
+          pick.forEach((q) => cur.ask(q.id)); // ask directly through the engine (UI shows answers with delays)
+          const done = document.querySelector('[data-act="ask-done"]');
+          done.disabled = false;
+          done.click();
+          return;
+        }
+        const exp = window.Engine.expectedValues(node);
+        node.fields.forEach((f) => {
+          if (f.type === 'computed') return;
+          const form = document.getElementById('task-form');
+          let v = exp[f.id];
+          if (worst) v = f.options ? f.options.find((o) => String(o) !== String(exp[f.id])) || f.options[0] : (f.type === 'checkbox' ? !exp[f.id] : '1');
+          if (f.type === 'checkbox') form.querySelector('[name="' + f.id + '"]').checked = !!v;
+          else if (f.type === 'radio') { const r = [...form.querySelectorAll('[name="' + f.id + '"]')].find((x) => x.value === String(v)); if (r) r.checked = true; }
+          else form.querySelector('[name="' + f.id + '"]').value = v;
+        });
+        document.querySelector('#task-form button[type="submit"]').click();
+      }, { act, worst });
+    } else if (act === 'choose') {
       const idx = await frame.evaluate(strategy);
       await frame.click('#choices .opt[data-i="' + idx + '"]');
     } else if (act === 'quiz') {
@@ -143,7 +171,7 @@ const WORST = () => {
   check(lms['cmi.objectives.4.id'] === 'critical_errors' && lms['cmi.objectives.4.status'] === 'passed', 'critical-errors objective passed (none)');
   check(Number(lms['cmi.interactions._count']) > 20, 'interactions written (' + lms['cmi.interactions._count'] + ')');
   check(lms['cmi.suspend_data'].length < 4096, 'suspend_data within 4096 chars (' + lms['cmi.suspend_data'].length + ')');
-  const summaries = Object.keys(lms).filter((k) => /interactions\.\d+\.id$/.test(k) && /^C\w+_SUMMARY$/.test(lms[k]));
+  const summaries = Object.keys(lms).filter((k) => /interactions\.\d+\.id$/.test(k) && /^(?!SESSION_)\w+_SUMMARY$/.test(lms[k]));
   check(Object.keys(lms).some((k) => /interactions\.\d+\.id$/.test(k) && lms[k] === 'SESSION_SUMMARY'), 'session summary interaction written');
   check(summaries.length === 6, 'one summary interaction per case (' + summaries.length + ')');
 

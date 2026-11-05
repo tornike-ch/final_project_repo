@@ -46,7 +46,8 @@ const check = (c, m) => { console.log((c ? 'PASS ' : 'FAIL ') + m); if (!c) fail
   await page.reload();
   await page.waitForSelector('.cards');
   if (SHOTS) await page.screenshot({ path: path.join(SHOTS, 'b1_overview.png') });
-  check((await page.textContent('.cards')).includes('7'), 'overview shows 7 sample cases');
+  const nSample = await page.evaluate(() => window.DEFAULT_CONTENT.cases.length);
+  check((await page.textContent('.cards')).includes(String(nSample)), 'overview shows ' + nSample + ' sample cases');
 
   // ---- export SCORM zip
   const [dl] = await Promise.all([page.waitForEvent('download'), page.click('.bar [data-act="export-scorm"]')]);
@@ -74,7 +75,7 @@ const check = (c, m) => { console.log((c ? 'PASS ' : 'FAIL ') + m); if (!c) fail
   fs.writeFileSync(jf, JSON.stringify(newCase));
   await page.setInputFiles('#imp-file', jf);
   await page.waitForSelector('.notice');
-  check((await page.textContent('.notice')).includes('7 → 8'), 'JSON merge adds a case');
+  check((await page.textContent('.notice')).includes(nSample + ' → ' + (nSample + 1)), 'JSON merge adds a case');
 
   // ---- settings toggle persists
   await page.click('#nav [data-view="settings"]');
@@ -87,7 +88,7 @@ const check = (c, m) => { console.log((c ? 'PASS ' : 'FAIL ') + m); if (!c) fail
   if (SHOTS) await page.screenshot({ path: path.join(SHOTS, 'b2_cases.png') });
   const [pop] = await Promise.all([page.waitForEvent('popup'), page.click('[data-act="preview-case"][data-id="C999"]')]);
   await pop.waitForSelector('#choices .opt', { timeout: 10000 });
-  check((await pop.textContent('.ticket')).length > 0, 'case preview opens in a new window');
+  check((await pop.textContent('.scene-tag')).length > 0, 'case preview opens in a new window');
   await pop.close();
 
   // ---- Excel round trip
@@ -101,7 +102,7 @@ const check = (c, m) => { console.log((c ? 'PASS ' : 'FAIL ') + m); if (!c) fail
     await page.setInputFiles('#imp-file', xp);
     await page.waitForSelector('.notice');
     const txt = await page.textContent('.notice');
-    check(txt.includes('8 → 8') && !/error/i.test(txt), 'Excel re-import (replace) keeps 8 cases, no errors: ' + txt.trim().slice(0, 120));
+    check(txt.includes((nSample + 1) + ' → ' + (nSample + 1)) && !/error/i.test(txt), 'Excel re-import (replace) keeps all cases, no errors: ' + txt.trim().slice(0, 120));
     const v = await page.evaluate(() => window.Engine.validate(window.Builder.content()).errors.length);
     check(v === 0, 'content valid after Excel round trip');
   } else {

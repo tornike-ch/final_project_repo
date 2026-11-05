@@ -102,6 +102,86 @@ Mood goes from −3 to 3 and starts at `initialMood`. When the customer is alrea
 
 ---
 
+## 2b. Realistic cases: stages, system data, questions and tasks
+
+Long cases (12–20 actions) combine conversation with work in the mock bank system. Everything in this section is optional; the short dialogue-only cases keep working.
+
+### Case-level system data
+```jsonc
+"date": "2026-11-05",                    // "today" inside the case (used for document expiry), shown on the monitor
+"customer": {
+  "documents": [                          // shown in the "დოკუმენტები" tab once unlocked
+    { "key": "id", "type": "პირადობის მოწმობა", "surname": "…", "name": "…", "birthDate": "02.09.1984", "sex": "მამრ.",
+      "personalNumber": "01024057731", "expiry": "11.06.2026", "number": "12ID40971", "issueDate": "11.06.2016" },
+    { "key": "passport", "type": "პასპორტი", … }
+  ]
+},
+"crm": { "fullName": "…", "personalNumber": "…", "phone": "…", "employer": "…", "income": "2,300 ₾", "idDocument": "…", "idExpiry": "…", "lastUpdate": "…" },
+"bureau": { "score": 712, "rating": "B", "overdue": "…", "inquiries": 1,
+            "loans": [ { "lender": "…", "type": "…", "balance": "…", "monthly": "…" } ], "note": "…" }
+```
+- `crm` is the customer record as currently saved, and it may be outdated on purpose. A task with `"saveTo": "crm"` writes its fields back (each field's `crmKey`).
+- **Unlocking:** documents and the credit bureau stay locked until a node lists them in `"unlock": ["id"]`, `["passport"]` or `["bureau"]`. This happens when the customer hands over the document or signs consent.
+
+### Stages
+Any node may carry `"stage"`: `greeting`, `identification`, `verification`, `needs`, `solution`, `offer` or `closing`. A progress bar shows the stage the employee is in. It never shows a score.
+
+### Node type `ask` (the employee chooses which questions to ask)
+```jsonc
+{ "type": "ask", "stage": "needs", "say": "კარგი, რა უნდა იცოდეთ?",
+  "prompt": "გაარკვიეთ საჭიროება (მაქს. 4 კითხვა)", "maxQuestions": 4, "next": "n7",
+  "questions": [
+    { "id": "q_purpose", "text": "რისთვის გჭირდებათ თანხა?", "answer": "მანქანა უნდა ვიყიდო…", "scores": { "knowledge": 1, "service": 1 }, "required": true },
+    { "id": "q_judge", "text": "იქნებ ჯერ დააგროვოთ?", "answer": "ეს ჩემი გადასაწყვეტია.", "scores": { "service": -2 }, "mood": -1, "feedback": "…" }
+  ] }
+```
+- Each asked question adds its points and its `mood`, and the customer answers it in the speech box.
+- The best set of questions is the positive ones, highest value first, up to `maxQuestions`.
+- `required` questions that were never asked are listed in the report.
+- Answers should give the facts the employee needs later in the tasks, such as amount, term, income and other debts.
+
+### Node type `task` (work in the bank system)
+```jsonc
+{ "type": "task", "stage": "solution", "say": "ხელი მოვაწერე. რამდენი გამოვა?", "unlock": ["bureau"],
+  "title": "სამომხმარებლო სესხის განაცხადი", "instructions": "…", "doneText": "განაცხადი გაიგზავნა.",
+  "fields": [
+    { "id": "amount", "label": "სესხის თანხა", "type": "number", "unit": "₾", "expect": { "equals": 8000 }, "scores": { "knowledge": 1 }, "required": true },
+    { "id": "rate", "label": "წლიური განაკვეთი", "type": "select", "options": ["16","19","23","27"], "unit": "%",
+      "expect": { "equals": "19" }, "scores": { "knowledge": 2 }, "wrongScores": { "knowledge": -1 }, "feedback": "B + ≥3,000 ₾ → 19%" },
+    { "id": "payment", "label": "ყოველთვიური შენატანი", "type": "computed", "compute": "annuity", "from": { "amount": "amount", "rate": "rate", "term": "term" } },
+    { "id": "pti", "label": "PTI", "type": "computed", "compute": "pct", "args": ["total", "income"], "unit": "%" },
+    { "id": "status", "label": "დოკუმენტის სტატუსი", "type": "radio", "options": ["მოქმედი","ვადაგასული","არ ემთხვევა მფლობელს"],
+      "expect": { "equals": "ვადაგასული" }, "scores": { "knowledge": 3 }, "critical": { "skill": "knowledge", "reason": "ვადაგასული დოკუმენტით მომსახურება" } }
+  ],
+  "branches": [ { "if": { "field": "status", "in": ["ვადაგასული"] }, "next": "n3" } ],
+  "next": "n4" }
+```
+- **Field types:**
+  - `text`, `number`, `date` (typed as `დდ.თთ.წწწწ`), `select`, `radio`, `checkbox`;
+  - `computed`, which the system calculates live: `annuity` (monthly loan payment), or `mul` / `div` / `pct` / `sum` / `sub` over `args` (field ids or numbers).
+- **`expect` rules:**
+  - `equals`: text is compared case- and space-insensitively; numbers allow a `tolerance`; `"match": "digits"` compares digits only, for phone and ID numbers;
+  - `oneOf: [...]`;
+  - `min` / `max`;
+  - `notEmpty`.
+- **Field options:**
+  - `value` pre-fills a field and can reference the CRM, e.g. `"{crm.phone}"`;
+  - `hint` shows extra text under the field;
+  - `required` blocks submitting while the field is empty.
+- **Scoring:** a correct field adds `scores`. A wrong one adds `wrongScores` and, if `critical` is set, records a critical error. The report shows every field as entered / correct / ✓✗.
+- **Branches:** they are checked in order (`equals`, `in`, `gt`, `gte`, `lt`, `lte`, or `{ "wrong": "fieldId" }`), and `next` is the fallback.
+- **No hints during the task:** the employee gets no correctness feedback, only `doneText`. Feedback arrives in the end-of-session report.
+
+### Products with rate tables
+A product or procedure may include a table shown in the reference tab:
+`"table": { "title": "განაკვეთები", "columns": ["რეიტინგი","…"], "rows": [["A","16%","19%"], …], "note": "PTI ≤ 40%" }`.
+
+### Excel
+- **Nodes sheet:** the `type` (`ask` / `task`) and `stage` columns, plus `config_json`, which holds the node's `questions`, `fields`, `branches`, `title`, `instructions` and so on as JSON.
+- **Cases sheet:** `extra_json` holds `date`, `crm`, `bureau`, `documents` and `avatar`.
+
+See cases **R201** (euro purchase + travel card) and **R301** (consumer loan with an expired ID, CRM update, bureau consent, rate table and PTI) in `player/data/content.js` as complete examples.
+
 ## 3. Product or procedure
 
 ```json
