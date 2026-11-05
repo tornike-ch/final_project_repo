@@ -5,7 +5,7 @@
 <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
 <title>პატიჟი · Patizhi</title>
 <meta name="claude:viewport-fit-sides" content="cover">
-<meta name="description" content="აქციეთ ყოველი მოსაწვევი შთაბეჭდილებად. ინტერაქტიული მოსაწვევები რესტორნებისთვის: სტუმარი ჯავშნის მაგიდას ორზე და მოსაწვევს უგზავნის მას, ვისაც ეპატიჟება.">
+<meta name="description" content="აქციეთ ყოველი მომენტი შთაბეჭდილებად. ციფრული გამოცდილებები ბიზნესისთვის: მოსაწვევები, სწავლება, ახალი თანამშრომლის პირველი დღე და კამპანიები.">
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Google+Sans:wght@400..700&family=DM+Mono:wght@400;500&family=Playfair+Display:ital,wght@1,700&family=Noto+Sans+Georgian:wdth,wght@62.5..100,400..800&family=Noto+Serif+Georgian:wdth,wght@62.5..100,500..900&family=Shippori+Mincho:wght@800&display=swap">
@@ -254,6 +254,21 @@ html[lang="en"] .poster{text-transform:uppercase;line-height:.86}
 .mc-seal{position:absolute;top:-34px;right:-22px;width:clamp(112px,13vw,150px);aspect-ratio:1;color:var(--seal);transform:rotate(12deg);z-index:2}
 @media (max-width:1060px){.chef{position:static;width:58px;height:58px;font-size:9px;margin-top:-4px}.course{display:grid}.course .chef{order:3}}
 @media (max-width:600px){.c-body{padding-left:0}.c-rom{min-width:20px;font-size:15px}.c-line{gap:10px}.mc-seal{right:-6px;top:-40px;width:104px}}
+
+/* experience types */
+.xp-grid{display:grid;grid-template-columns:repeat(4,minmax(0,1fr));gap:18px}
+.xp{display:flex;flex-direction:column;gap:12px;padding:24px 22px 20px;border-top:3px solid var(--ink);background:color-mix(in srgb,var(--ink) 4%,transparent)}
+.xp .xi{width:46px;height:46px;border-radius:50%;border:2px solid var(--seal);color:var(--seal);display:grid;place-items:center}
+.xp h3{font-family:var(--f-disp);font-weight:700;font-size:24px;line-height:1.15;margin:0}
+.xp .who{font-size:13px;color:var(--muted)}
+.xp p{font-size:15px;color:var(--ink2)}
+.xp .meta{margin-top:auto;display:flex;flex-wrap:wrap;justify-content:space-between;align-items:center;gap:8px;padding-top:12px;border-top:1px solid var(--line)}
+.xp .pr{font-weight:700;font-size:14.5px}
+.xp .stt{font-size:11px;font-weight:800;letter-spacing:.08em;padding:3px 8px;border-radius:3px;background:var(--seal-btn);color:var(--seal-ink)}
+.xp .stt.pilot{background:transparent;color:var(--brass);box-shadow:inset 0 0 0 1px var(--brass)}
+.xp .tlink{align-self:flex-start}
+@media (max-width:1060px){.xp-grid{grid-template-columns:repeat(2,minmax(0,1fr))}}
+@media (max-width:560px){.xp-grid{grid-template-columns:1fr}}
 
 /* faq */
 .faq-grid{display:grid;grid-template-columns:minmax(0,.8fr) minmax(0,1.2fr);gap:40px 72px;align-items:start}
@@ -517,7 +532,7 @@ dialog.stage::backdrop{background:transparent}
 .scr::after{opacity:var(--iglow)}
 .i-h1,.i-h2{font-family:var(--ihf);font-weight:var(--ihw);font-stretch:var(--ihs);letter-spacing:var(--ihl)}
 .i-h1{font-size:var(--ih1);line-height:1.08}
-.caps .i-h1{letter-spacing:.015em}
+.hcaps .i-h1{letter-spacing:.015em}
 .i-btn{border-radius:var(--ibrad)}
 .i-item,.i-det{border-radius:var(--irad)}
 .i-card{border-radius:min(10px,var(--irad))}
@@ -731,6 +746,38 @@ dialog.stage::backdrop{background:transparent}
 
 .v-pizza .bx-lid b{font-family:"Playfair Display",var(--fi-serif)}
 
+/* lesson flow */
+.l-prog{height:5px;border-radius:3px;background:var(--iline);overflow:hidden;margin:0 0 14px}
+.l-prog i{display:block;height:100%;background:var(--iacc);transition:width .45s}
+.l-meta{display:flex;justify-content:space-between;align-items:center;font-size:11.5px;color:var(--imut);font-weight:700}
+.l-xp{display:inline-flex;align-items:center;gap:4px;color:var(--iacc2);font-weight:700}
+.l-xp .ico{width:14px;height:14px;--f:var(--iacc2)}
+.l-xp.big{justify-content:center;width:100%;font-size:13px;margin:2px 0 4px}
+.l-qic{width:52px;height:52px;margin-top:10px}
+.l-qic .ico{width:44px;height:44px}
+.l-opts{display:grid;gap:8px;margin-top:12px;text-align:left}
+.l-opt{display:flex;align-items:center;gap:10px;width:100%;padding:11px 12px;border-radius:var(--irad);background:var(--is);border:1.5px solid var(--iline);color:var(--iink);cursor:pointer;font-family:var(--idisp);font-weight:700;font-size:14px;text-align:left;transition:border-color .2s,background-color .2s,opacity .2s}
+.l-opt:disabled{cursor:default}
+.l-k{width:24px;height:24px;flex-shrink:0;border-radius:50%;display:grid;place-items:center;background:var(--is2);font-size:11px;font-family:var(--ibf)}
+.l-opt.ok{border-color:#3fae6a;background:color-mix(in srgb,#3fae6a 22%,var(--is))}
+.l-opt.ok .l-k{background:#3fae6a;color:#fff}
+.l-opt.bad{border-color:var(--iacc);background:color-mix(in srgb,var(--iacc) 20%,var(--is))}
+.l-opt.bad .l-k{background:var(--iacc);color:var(--ion)}
+.l-opt.dim{opacity:.45}
+.l-opt.shake{animation:ishake .5s}
+.l-fb{margin-top:12px;padding:10px 12px;border-radius:var(--irad);font-size:12.5px;line-height:1.5;text-align:left;background:var(--is);border-left:3px solid}
+.l-fb.ok{border-color:#3fae6a}
+.l-fb.bad{border-color:var(--iacc)}
+.l-fb b{display:block;font-size:13px;margin-bottom:2px}
+.l-facts{list-style:none;margin:14px 0 0;padding:0;display:grid;gap:8px;text-align:left}
+.l-facts li{display:flex;gap:10px;align-items:flex-start;padding:10px;border-radius:var(--irad);background:var(--is);border:1px solid var(--iline);font-size:12.5px;line-height:1.5}
+.l-facts .ic{width:38px;height:38px;flex-shrink:0;border-radius:10px;background:var(--is2);display:grid;place-items:center;color:var(--iacc2)}
+.l-facts .ic .ico{width:24px;height:24px}
+.l-facts b{display:inline-grid;place-items:center;width:18px;height:18px;border-radius:50%;background:var(--iacc);color:var(--ion);font-size:10px;margin-right:6px;vertical-align:1px}
+.l-score{display:flex;justify-content:center;align-items:baseline;gap:6px;margin-top:6px}
+.l-score b{font-family:var(--ihf);font-size:64px;line-height:1;color:var(--iacc2)}
+.l-score span{font-size:20px;color:var(--imut)}
+
 @media (prefers-reduced-motion: reduce){
   html{scroll-behavior:auto}
   *,*::before,*::after{animation-duration:.01ms!important;animation-iteration-count:1!important;transition-duration:.01ms!important}
@@ -748,6 +795,7 @@ dialog.stage::backdrop{background:transparent}
       <b data-t="brand"></b>
     </a>
     <nav class="main" aria-label="Main">
+      <a href="#experiences" data-t="nav.xp"></a>
       <a href="#templates" data-t="nav.templates"></a>
       <a href="#how" data-t="nav.how"></a>
       <a href="#custom" data-t="nav.custom"></a>
@@ -765,6 +813,7 @@ dialog.stage::backdrop{background:transparent}
   </div>
   <div class="mnav" id="mnav">
     <div class="wrap">
+      <a href="#experiences" data-t="nav.xp"></a>
       <a href="#templates" data-t="nav.templates"></a>
       <a href="#how" data-t="nav.how"></a>
       <a href="#custom" data-t="nav.custom"></a>
@@ -796,6 +845,19 @@ dialog.stage::backdrop{background:transparent}
       </div>
     </div>
     <div class="belt" id="belt"><div class="belt-track" id="beltTrack"></div></div>
+  </section>
+
+  <section class="sec" id="experiences">
+    <div class="wrap">
+      <div class="occ-top">
+        <div>
+          <p class="label" data-t="xp.label"></p>
+          <h2 class="say" data-t="xp.h"></h2>
+        </div>
+        <p class="sub" data-t="xp.sub"></p>
+      </div>
+      <div class="xp-grid" id="xpGrid"></div>
+    </div>
   </section>
 
   <section class="sec story" id="how">
@@ -1400,14 +1462,19 @@ const G = {
 const S = {
 ka:{
   brand:'პატიჟი',
-  nav:{templates:'კოლექცია', how:'როგორ მუშაობს', custom:'ინდივიდუალური', pricing:'ფასები', faq:'კითხვები', request:'მოთხოვნა'},
+  nav:{xp:'გამოცდილებები', templates:'კოლექცია', how:'როგორ მუშაობს', custom:'ინდივიდუალური', pricing:'ფასები', faq:'კითხვები', request:'მოთხოვნა'},
   ui:{theme:'თემის შეცვლა', menu:'მენიუ', close:'დახურვა', play:'დემოს გახსნა', prev:'წინა შაბლონი', next:'შემდეგი შაბლონი', styles:'იგივე ძრავა, სხვა სტილი'},
-  hero:{lines:['აქციეთ ყოველი','მოსაწვევი','შთაბეჭდილებად'], linesNarrow:['აქციეთ','ყოველი','მოსაწვევი','შთაბეჭდილებად'],
-    h1:'აქციეთ ყოველი მოსაწვევი შთაბეჭდილებად', ring:'პატიჟი · დადასტურდა · პატიჟი · დადასტურდა · ', yes:'კი',
-    lead:'ინტერაქტიული მოსაწვევები რესტორნებისთვის. სტუმარი ჯავშნის მაგიდას ორზე და ბმულს უგზავნის მას, ვისაც ეპატიჟება: თქვენი ბრენდით, თქვენი მენიუთი და ჯავშნის დეტალებით.',
+  hero:{lines:['აქციეთ ყოველი','მომენტი','შთაბეჭდილებად'], linesNarrow:['აქციეთ','ყოველი','მომენტი','შთაბეჭდილებად'],
+    h1:'აქციეთ ყოველი მომენტი შთაბეჭდილებად', ring:'პატიჟი · დადასტურდა · პატიჟი · დადასტურდა · ', yes:'კი',
+    lead:'ციფრული გამოცდილებები ბიზნესისთვის: მოსაწვევები, სწავლება, ახალი თანამშრომლის პირველი დღე და კამპანიები. ერთი ძრავა, თქვენი ბრენდი, ნებისმიერ ტელეფონზე, აპლიკაციის გარეშე.',
     cta:'სცადეთ დემო', cta2:'ფასები'},
-  belt:{label:'კოლექცია · 10 შაბლონი', hint:'შეეხეთ ნებისმიერს და გაიარეთ ბოლომდე', original:'ორიგინალი'},
-  story:{label:'როგორ მუშაობს', h:'სტუმარი ჯავშნის მაგიდას ორზე და ბმულს უგზავნის მას, ვისაც ეპატიჟება. აი, რას ხედავს ის.',
+  belt:{label:'კოლექცია · 11 გამოცდილება', hint:'შეეხეთ ნებისმიერს და გაიარეთ ბოლომდე', original:'ორიგინალი'},
+  xp:{label:'გამოცდილებები', h:'ერთი ძრავა, ოთხი სახის გამოცდილება', sub:'ყველა იხსნება ტელეფონზე, თქვენი ბრენდით, და ბოლოს გაზომვად შედეგს იძლევა.', pilot:'პილოტის მოთხოვნა',
+    items:[['calcheck','მოსაწვევები','რესტორნები, ღონისძიებები, კერძო პირები','მაგიდის ჯავშანი მოსაწვევად იქცევა: თანხმობა, არჩევანი მენიუდან და ბილეთი.','99 ₾/თვიდან','მზადაა','','omakase','დემოს ნახვა'],
+           ['bulb','სწავლება','რესტორნები, კომპანიები, სკოლები','მოკლე თამაში-გაკვეთილები მყისიერი პასუხით, ქულებით და სერტიფიკატით.','149 ₾/თვიდან','ახალი','','academy','დემოს ნახვა'],
+           ['briefcase','ახალი თანამშრომელი','HR გუნდები','გასაუბრებაზე მოწვევიდან პირველ სამუშაო დღემდე, ერთ გამოცდილებაში.','საპილოტე პროექტი','პილოტი','pilot','interview','დემოს ნახვა'],
+           ['gift','კამპანიები და ლოიალობა','ბრენდები, რესტორნები','დაბადების დღის საჩუქრები, სეზონური თამაშები და გათამაშებები, რომლებსაც ბოლომდე გადიან.','საპილოტე პროექტი','პილოტი','pilot','','']]},
+  story:{label:'როგორ მუშაობს მოსაწვევი', h:'სტუმარი ჯავშნის მაგიდას ორზე და ბმულს უგზავნის მას, ვისაც ეპატიჟება. აი, რას ხედავს ის.',
     sub:'ბმული მოდის ჯავშნის დადასტურებასთან ერთად, SMS-ით ან WhatsApp-ით. ჯავშნის სისტემის შეცვლა არ გჭირდებათ.',
     marks:['ა','ბ','გ','დ','ე'], gain:'რესტორნისთვის:',
     steps:[['ფარდა იხსნება','პირველი, რასაც ის ხედავს, თქვენი სახელი, ფერები და ლოგოა. თქვენთან ჯერ არც კი ყოფილა.','რეკლამა ყოველ მოსაწვევში'],
@@ -1422,7 +1489,8 @@ ka:{
          ['დაბადების დღე','სიურპრიზი, რომელიც არ გაჟონავს','49 ₾-დან','custom-personal','person','birthday'],
          ['რესტორნის სტილი','ექსკლუზიური შაბლონი, რომელიც სხვას არ მიეცემა','600 ₾-დან','custom-venue','restaurant',''],
          ['გასაუბრება','კანდიდატი პირველივე წერილიდან გაიგებს, ვინ ხართ','შეთანხმებით','business','company','interview'],
-         ['კორპორატივი','საშვი, მენიუ და ტრანსფერი ერთ ბმულში','შეთანხმებით','business','company','corporate']],
+         ['კორპორატივი','საშვი, მენიუ და ტრანსფერი ერთ ბმულში','შეთანხმებით','business','company','corporate'],
+         ['სწავლება','გაკვეთილი, ქვიზი ან სიმულაცია თქვენს თემაზე','1 500 ₾-დან','learning','company','academy']],
     proc:['ბრიფი, 15 წუთი','ესკიზი 3 დღეში','აწყობა და ტესტი','ბმული'], procNote:'ერთი რაუნდი შესწორება ფასში შედის.'},
   pr:{label:'ფასები ლარში', title:'მენიუ', sub:'რესტორნებისთვის. ყოველთვიური გამოწერა, კონტრაქტის გარეშე.',
     monthly:'თვიურად', yearly:'წლიურად, 2 თვე საჩუქრად', mo:'თვეში', yr:'თვეში · {x} ₾ წელიწადში', chef:'შეფის რჩევა', pick:'აირჩიეთ',
@@ -1431,7 +1499,7 @@ ka:{
       {id:'plan-main', rom:'II', name:'მთავარი კერძი', price:199, rec:true, for:'პაემნის რესტორნებისთვის, სადაც ორზე ჯავშანი ხშირია.', f:['ყველა შაბლონი, სეზონურების ჩათვლით','ულიმიტო მოსაწვევი','არჩეული კერძები სამზარეულოს Telegram-ში','შეხსენება ვიზიტამდე ერთი დღით ადრე','პაემნის პაკეტის გაყიდვა','თვიური ანგარიში: გახსნები, დადასტურებები, გაცდენები']},
       {id:'plan-chef', rom:'III', name:'შეფის მენიუ', price:299, for:'რესტორნებისთვის, რომლებსაც საკუთარი სტილი სურთ.', f:['ყველაფერი „მთავარი კერძიდან“','ექსკლუზიური შაბლონი ყოველ კვარტალში','3 ფილიალამდე','ცვლილებები 24 საათში','მოსაწვევის ღილაკი თქვენს საიტზე']}],
     alcH:'ა ლა კარტი',
-    alc:[['ექსკლუზიური შაბლონი რესტორნისთვის','600 ₾-დან'],['პირადი მოსაწვევი შაბლონიდან','49 ₾'],['პირადი მოსაწვევი ნულიდან','250 ₾-დან'],['დამატებითი მოსაწვევი „აპერიტივზე“','2 ₾'],['ბიზნეს ღონისძიება ან HR მოსაწვევი','შეთანხმებით'],['პაემნის პაკეტი სტუმრისთვის, რეკომენდებული ფასი','15–30 ₾']],
+    alc:[['ექსკლუზიური შაბლონი რესტორნისთვის','600 ₾-დან'],['პირადი მოსაწვევი შაბლონიდან','49 ₾'],['პირადი მოსაწვევი ნულიდან','250 ₾-დან'],['დამატებითი მოსაწვევი „აპერიტივზე“','2 ₾'],['ბიზნეს ღონისძიება ან HR მოსაწვევი','შეთანხმებით'],['პაემნის პაკეტი სტუმრისთვის, რეკომენდებული ფასი','15–30 ₾'],['მენიუს სწავლება გუნდისთვის','149 ₾ / თვე'],['სასწავლო გამოცდილება კომპანიისთვის, პილოტი','1 500 ₾-დან']],
     sealRing:'დამფუძნებელი პარტნიორები · პირველი ხუთი · ', sealC:'1 თვე\nუფასოდ',
     foot:'დამფუძნებელი პარტნიორები: პირველ 5 რესტორანს პირველი თვე უფასოა და ფასი 12 თვით ფიქსირდება.'},
   faq:{label:'კითხვები', h:'რას გვეკითხებიან რესტორნები',
@@ -1440,12 +1508,12 @@ ka:{
           ['სტუმარს აპლიკაციის ჩამოტვირთვა სჭირდება?','არა. მოსაწვევი ჩვეულებრივი ბმულია და იხსნება ნებისმიერ ტელეფონზე.'],
           ['ვინ ხედავს არჩეულ კერძებს?','მხოლოდ რესტორანი და ის, ვინც მოსაწვევი გააგზავნა. ეს წინასწარი სურვილია და არა გადახდილი შეკვეთა.'],
           ['მენიუს შეცვლა შეიძლება?','დიახ. „მთავარ კერძსა“ და „შეფის მენიუში“ ცვლილებებს 24–48 საათში ვაკეთებთ.'],
-          ['რესტორნების გარდა მუშაობთ?','დიახ: გასაუბრებები, დაბადების დღეები, ხელის თხოვნა და კორპორატიული ღონისძიებები.']]},
+          ['რესტორნების გარდა მუშაობთ?','დიახ: სწავლება, ახალი თანამშრომლის პირველი დღე, დაბადების დღეები, ხელის თხოვნა და კორპორატიული ღონისძიებები. ყველა ერთ ძრავაზეა აწყობილი.']]},
   req:{label:'მოთხოვნა', h:'მოგვწერეთ. დემოს თქვენსავე მენიუზე ავაწყობთ.', email:'ელფოსტა', based:'ქალაქი', city:'თბილისი',
     note:'ვპასუხობთ ერთ სამუშაო დღეში. შაბლონით ჩაშვებას 3–5 დღე სჭირდება.', stub:'მოთხოვნა',
     sendRing:'პატიჟი · მოთხოვნა · პატიჟი · მოთხოვნა · '},
   f:{who:'ვინ ხართ', whoOpts:[['restaurant','რესტორანი'],['person','კერძო პირი'],['company','კომპანია']],
-    type:'რა გჭირდებათ', types:[['plan-start','გამოწერა: აპერიტივი'],['plan-main','გამოწერა: მთავარი კერძი'],['plan-chef','გამოწერა: შეფის მენიუ'],['custom-venue','ექსკლუზიური შაბლონი რესტორნისთვის'],['custom-personal','პირადი მოსაწვევი'],['business','ბიზნეს ღონისძიება ან HR'],['other','სხვა']],
+    type:'რა გჭირდებათ', types:[['plan-start','გამოწერა: აპერიტივი'],['plan-main','გამოწერა: მთავარი კერძი'],['plan-chef','გამოწერა: შეფის მენიუ'],['custom-venue','ექსკლუზიური შაბლონი რესტორნისთვის'],['custom-personal','პირადი მოსაწვევი'],['business','ბიზნეს ღონისძიება ან HR'],['learning','სწავლება'],['onboarding','ახალი თანამშრომლის პირველი დღე'],['campaign','კამპანია ან ლოიალობა'],['other','სხვა']],
     tpl:'შაბლონი', tplNone:'ჯერ არ ვიცი', name:'სახელი', org:'რესტორანი ან კომპანია', opt:'(არასავალდებულო)', contact:'ტელეფონი ან ელფოსტა', date:'თარიღი',
     budget:'ბიუჯეტი', budgets:[['b0','ჯერ არ ვიცი'],['b1','100 ₾-მდე'],['b2','100–300 ₾'],['b3','300–1000 ₾'],['b4','1000 ₾-ზე მეტი']],
     msg:'დეტალები', msgPh:'მაგ.: სუშის პაემანი, ორაგული უყვარს, მაგიდა ხუთშაბათს 21:00-ზე', note:'დააჭირეთ ბეჭედს და მოთხოვნა გაიგზავნება.', send:'გაგზავნა',
@@ -1456,20 +1524,25 @@ ka:{
     copy:'ტექსტის კოპირება', copied:'დაკოპირდა', edit:'რედაქტირება', subj:'პატიჟი: ახალი მოთხოვნა', none:'—', slip:'№'},
   st:{custom:'რას ცვლით', customList:['ლოგო, ფერები და შრიფტი','მენიუ: კერძები, ფასები, ფოტოები ან იკონები','ტექსტები ქართულად და ინგლისურად','ჯავშნის ველები, ბილეთი და ბეჭედი'],
     req:'ამ შაბლონის მოთხოვნა', restart:'თავიდან', fict:'დემო რესტორნები და სახელები გამოგონილია.'},
-  foot:{slogan:'აქციეთ ყოველი მოსაწვევი შთაბეჭდილებად.', demo:'საიტზე ნაჩვენები რესტორნები, კომპანიები და სახელები გამოგონილია და მხოლოდ დემოსთვისაა.', copy:'© 2026 პატიჟი · თბილისი'},
+  foot:{slogan:'აქციეთ ყოველი მომენტი შთაბეჭდილებად.', demo:'საიტზე ნაჩვენები რესტორნები, კომპანიები და სახელები გამოგონილია და მხოლოდ დემოსთვისაა.', copy:'© 2026 პატიჟი · თბილისი'},
   days:['კვირა','ორშაბათი','სამშაბათი','ოთხშაბათი','ხუთშაბათი','პარასკევი','შაბათი'],
   months:['იანვარი','თებერვალი','მარტი','აპრილი','მაისი','ივნისი','ივლისი','აგვისტო','სექტემბერი','ოქტომბერი','ნოემბერი','დეკემბერი']
 },
 en:{
   brand:'Patizhi',
-  nav:{templates:'Collection', how:'How it works', custom:'Custom', pricing:'Pricing', faq:'FAQ', request:'Request'},
+  nav:{xp:'Experiences', templates:'Collection', how:'How it works', custom:'Custom', pricing:'Pricing', faq:'FAQ', request:'Request'},
   ui:{theme:'Switch theme', menu:'Menu', close:'Close', play:'Play demo', prev:'Previous template', next:'Next template', styles:'Same engine, another style'},
-  hero:{lines:['Make every','invitation an','experience'], linesNarrow:['Make every','invitation','an experience'],
-    h1:'Make every invitation an experience', ring:'PATIZHI · CONFIRMED · PATIZHI · CONFIRMED · ', yes:'YES',
-    lead:'Interactive invites for restaurants. A guest books a table for two and sends the invite to the person they’re bringing, in your brand, with your menu and the booking details.',
+  hero:{lines:['Make every','moment an','experience'], linesNarrow:['Make every','moment an','experience'],
+    h1:'Make every moment an experience', ring:'PATIZHI · CONFIRMED · PATIZHI · CONFIRMED · ', yes:'YES',
+    lead:'Digital experiences for business: invites, learning, a new hire’s first day and campaigns. One engine, your brand, on any phone, no app to install.',
     cta:'Try the demo', cta2:'Pricing'},
-  belt:{label:'The collection · 10 templates', hint:'Tap any invite to play it through', original:'THE ORIGINAL'},
-  story:{label:'How it works', h:'A guest books a table for two and sends the link to their date. This is what their date sees.',
+  belt:{label:'The collection · 11 experiences', hint:'Tap any card to play it through', original:'THE ORIGINAL'},
+  xp:{label:'Experiences', h:'One engine, four kinds of experience', sub:'Each one opens on a phone, carries your brand and ends with a result you can measure.', pilot:'Request a pilot',
+    items:[['calcheck','Invites','Restaurants, events, individuals','A table booking becomes an invite: a yes, menu picks and a ticket.','from 99 ₾/month','LIVE','','omakase','Play demo'],
+           ['bulb','Learning','Restaurants, companies, schools','Short game-like lessons with instant feedback, points and a certificate.','from 149 ₾/month','NEW','','academy','Play demo'],
+           ['briefcase','New hires','HR teams','From the interview invite to the first working day, in one experience.','Pilot project','PILOT','pilot','interview','Play demo'],
+           ['gift','Campaigns and loyalty','Brands, restaurants','Birthday rewards, seasonal games and prize draws people actually finish.','Pilot project','PILOT','pilot','','']]},
+  story:{label:'How an invite works', h:'A guest books a table for two and sends the link to their date. This is what their date sees.',
     sub:'The link comes with the booking confirmation, by SMS or WhatsApp. Your booking system stays the same.',
     marks:['1','2','3','4','5'], gain:'For the restaurant:',
     steps:[['The curtain opens','The first thing they see is your name, colors and logo, before they’ve ever been to you.','An ad in every invite'],
@@ -1484,7 +1557,8 @@ en:{
          ['A birthday','A surprise that won’t leak','from 49 ₾','custom-personal','person','birthday'],
          ['Your venue’s style','An exclusive template no other restaurant gets','from 600 ₾','custom-venue','restaurant',''],
          ['Job interviews','Candidates know who you are from the first letter','on request','business','company','interview'],
-         ['Company events','Passes, menu choices and shuttles in one link','on request','business','company','corporate']],
+         ['Company events','Passes, menu choices and shuttles in one link','on request','business','company','corporate'],
+         ['Training','A lesson, quiz or simulation on your topic','from 1,500 ₾','learning','company','academy']],
     proc:['Brief, 15 minutes','Sketch in 3 days','Build and test','Your link'], procNote:'One round of changes is included in the price.'},
   pr:{label:'Prices in GEL', title:'The menu', sub:'For restaurants. Monthly plans, no contract.',
     monthly:'Monthly', yearly:'Yearly, 2 months free', mo:'per month', yr:'per month · {x} ₾ billed yearly', chef:'CHEF’S PICK', pick:'Choose',
@@ -1493,7 +1567,7 @@ en:{
       {id:'plan-main', rom:'II', name:'Main Course', price:199, rec:true, for:'For date-night venues with lots of bookings for two.', f:['All templates, including seasonal ones','Unlimited invites','Menu picks sent to the kitchen on Telegram','Reminder one day before the visit','Date package sales','Monthly report: opens, confirmations, no-shows']},
       {id:'plan-chef', rom:'III', name:'Chef’s Menu', price:299, for:'For venues that want a look of their own.', f:['Everything in Main Course','An exclusive template every quarter','Up to 3 locations','Changes within 24 hours','An invite button for your own website']}],
     alcH:'À la carte',
-    alc:[['Exclusive template for a restaurant','from 600 ₾'],['Personal invite from a template','49 ₾'],['Fully custom personal invite','from 250 ₾'],['Extra invite on Aperitif','2 ₾'],['Business event or HR invites','on request'],['Date package for guests, suggested price','15–30 ₾']],
+    alc:[['Exclusive template for a restaurant','from 600 ₾'],['Personal invite from a template','49 ₾'],['Fully custom personal invite','from 250 ₾'],['Extra invite on Aperitif','2 ₾'],['Business event or HR invites','on request'],['Date package for guests, suggested price','15–30 ₾'],['Menu training for your team','149 ₾ / month'],['Learning experience for a company, pilot','from 1,500 ₾']],
     sealRing:'FOUNDING PARTNERS · FIRST FIVE · ', sealC:'1 month\nfree',
     foot:'Founding partners: for the first 5 restaurants the first month is free and the price is locked for 12 months.'},
   faq:{label:'FAQ', h:'What restaurants ask us',
@@ -1502,12 +1576,12 @@ en:{
           ['Does the guest need to download an app?','No. The invite is a regular link and opens on any phone.'],
           ['Who sees the menu picks?','Only the restaurant and the person who sent the invite. Picks are a wish list, not a paid order.'],
           ['Can we update the menu?','Yes. On Main Course and Chef’s Menu we apply changes within 24–48 hours.'],
-          ['Do you work outside restaurants?','Yes: interviews, birthdays, proposals and company events.']]},
+          ['Do you work outside restaurants?','Yes: learning, a new hire’s first day, birthdays, proposals and company events. They all run on the same engine.']]},
   req:{label:'Request', h:'Write to us. We’ll build the demo on your own menu.', email:'Email', based:'Based in', city:'Tbilisi, Georgia',
     note:'We reply within one working day. Launching with a template takes 3–5 days.', stub:'Request',
     sendRing:'PATIZHI · REQUEST · PATIZHI · REQUEST · '},
   f:{who:'You are', whoOpts:[['restaurant','A restaurant'],['person','An individual'],['company','A company']],
-    type:'What you need', types:[['plan-start','Plan: Aperitif'],['plan-main','Plan: Main Course'],['plan-chef','Plan: Chef’s Menu'],['custom-venue','Exclusive template for a restaurant'],['custom-personal','Personal invite'],['business','Business event or HR'],['other','Something else']],
+    type:'What you need', types:[['plan-start','Plan: Aperitif'],['plan-main','Plan: Main Course'],['plan-chef','Plan: Chef’s Menu'],['custom-venue','Exclusive template for a restaurant'],['custom-personal','Personal invite'],['business','Business event or HR'],['learning','Learning'],['onboarding','A new hire’s first day'],['campaign','Campaign or loyalty'],['other','Something else']],
     tpl:'Template', tplNone:'Not sure yet', name:'Name', org:'Restaurant or company', opt:'(optional)', contact:'Phone or email', date:'Date',
     budget:'Budget', budgets:[['b0','Not sure yet'],['b1','Up to 100 ₾'],['b2','100–300 ₾'],['b3','300–1000 ₾'],['b4','Over 1000 ₾']],
     msg:'Details', msgPh:'e.g. Sushi date, loves salmon, table booked for Thursday at 21:00', note:'Press the seal to send your request.', send:'Send',
@@ -1518,7 +1592,7 @@ en:{
     copy:'Copy text', copied:'Copied', edit:'Edit', subj:'Patizhi: new request', none:'—', slip:'No.'},
   st:{custom:'What you customize', customList:['Logo, colors and type','Menu: dishes, prices, photos or icons','Copy in Georgian and English','Booking fields, the ticket and the stamp'],
     req:'Request this template', restart:'Restart', fict:'Demo venues and names are fictional.'},
-  foot:{slogan:'Make every invitation an experience.', demo:'Restaurants, companies and names shown on this site are fictional and for demo purposes only.', copy:'© 2026 Patizhi · Tbilisi'},
+  foot:{slogan:'Make every moment an experience.', demo:'Restaurants, companies and names shown on this site are fictional and for demo purposes only.', copy:'© 2026 Patizhi · Tbilisi'},
   days:['Sunday','Monday','Tuesday','Wednesday','Thursday','Friday','Saturday'],
   months:['January','February','March','April','May','June','July','August','September','October','November','December']
 }};
@@ -1567,7 +1641,7 @@ function tvars(t){
 }
 function scrOpen(t){
   const u = uiOf(t);
-  const cls = 'scr al-'+u.align+' b-'+u.btn+' c-'+u.card+(u.frame ? ' has-frame frm-'+u.frame : '')+(u.kick ? ' k-'+u.kick : '')+(u.caps ? ' caps' : '');
+  const cls = 'scr al-'+u.align+' b-'+u.btn+' c-'+u.card+(u.frame ? ' has-frame frm-'+u.frame : '')+(u.kick ? ' k-'+u.kick : '')+(u.caps ? ' hcaps' : '');
   return '<div class="'+cls+'" style="'+tvars(t)+'">';
 }
 const frameEl = t => { const u = uiOf(t); return u.frame ? '<div class="i-frame fr-'+u.frame+'" aria-hidden="true"></div>' : ''; };
@@ -1824,6 +1898,99 @@ function tick(){
 }
 setInterval(tick, 1000);
 
+/* ---------- learning experiences: same engine, a lesson flow instead of an invite ---------- */
+TPL.splice(1, 0, { id:'academy', cat:'learn',
+  name:L('მენიუს აკადემია','Menu Academy'), kind:L('სწავლება · რესტორნის გუნდი','Learning · Restaurant team'),
+  desc:L('ოფიციანტების სწავლება იმავე მენიუდან, რომლითაც მოსაწვევები მუშაობს: სამი მთავარი ფაქტი, 4 კითხვა მყისიერი პასუხით და სერტიფიკატი.','Staff training built from the same menu the invites use: three key facts, 4 questions with instant feedback and a certificate.'),
+  c:Object.assign({}, TPL[0].c), pat:'waves', po:.06, jp:true, fx:'petal', fxc:['#f6c1cc','#fde2e7','#c9a45c'],
+  ui:{kick:'rule', h1:36},
+  op:{type:'noren', l:'寿', r:'司', ls:L('სუ','SU'), rs:L('ში','SHI')},
+  kick:L('მენიუს აკადემია','MENU ACADEMY'), to:L('ნინო','Nino'), from:L('ნამის გუნდი','The Nami team'),
+  intro:L('შენი პირველი კვირა ნამიში. 5 წუთში ისწავლი მენიუს და მიიღებ სერტიფიკატს.','Your first week at Nami. Learn the menu in 5 minutes and get your certificate.'),
+  hint:L('შეეხე ფარდას','Tap the curtain'),
+  items:TPL[0].items,
+  learn:{title:L('სამი რამ, რაც პირველ დღეს უნდა იცოდე','Three things to know on day one'),
+    facts:[['roll',L('კაპა მაკი მხოლოდ კიტრი და სეზამია. ვეგეტარიანელ სტუმარს ეს შესთავაზე.','Kappa maki is only cucumber and sesame. Offer it to vegetarian guests.')],
+           ['nigiri',L('ფილადელფიაში ნაღების ყველია. ლაქტოზაზე ჰკითხე სტუმარს.','Philadelphia has cream cheese. Ask guests about lactose.')],
+           ['sashimi',L('დრაკონში კრევეტის ტემპურაა. ზღვის პროდუქტებზე ალერგია გადაამოწმე.','Dragon roll has shrimp tempura. Check for shellfish allergies.')]],
+    cta:L('დავიწყოთ ქვიზი','Start the quiz')},
+  quiz:[
+    {ic:'roll', q:L('რომელ როლში არ არის თევზი?','Which roll has no fish?'), o:[L('კაპა მაკი','Kappa maki'), L('საკე მაკი','Sake maki'), L('დრაკონი','Dragon roll')], a:0,
+     why:L('კაპა მაკი მხოლოდ კიტრი და სეზამია.','Kappa maki is just cucumber and sesame.')},
+    {ic:'nigiri', q:L('სტუმარი ლაქტოზას ვერ იტანს. რას არ შესთავაზებ?','A guest is lactose intolerant. What do you not offer?'), o:[L('საკე ნიგირი','Sake nigiri'), L('ფილადელფია როლი','Philadelphia roll'), L('მაგურო საშიმი','Maguro sashimi')], a:1,
+     why:L('ფილადელფიაში ნაღების ყველია.','Philadelphia contains cream cheese.')},
+    {ic:'sashimi', q:L('რა არის უნაგი?','What is unagi?'), o:[L('თინუსი','Tuna'), L('ყვითელკუდა','Yellowtail'), L('გველთევზა','Eel')], a:2,
+     why:L('უნაგი გველთევზაა, უნაგის სოუსით.','Unagi is eel, served with unagi sauce.')},
+    {ic:'bowl', q:L('რომელ კერძშია კრევეტი?','Which dish has shrimp in it?'), o:[L('დრაკონი','Dragon roll'), L('მისოს წვნიანი','Miso soup'), L('მოჩი','Mochi')], a:0,
+     why:L('დრაკონში კრევეტის ტემპურაა. ალერგიაზე ყოველთვის ჰკითხე.','The dragon roll has shrimp tempura. Always ask about allergies.')}],
+  cert:{venue:L('NAMI'), course:L('მენიუს აკადემია · დონე 1','Menu Academy · Level 1'), stamp:L('確定'), lvl:L('მენიუს ექსპერტი','Menu expert')},
+  steps:[L('ფარდა იხსნება','The curtain opens'), L('სამი მთავარი ფაქტი','Three key facts'), L('ქვიზი: 4 კითხვა მყისიერი პასუხით','Quiz: 4 questions with instant feedback'), L('ქულა და სერტიფიკატი','Score and certificate')],
+  sign:L('კარგი სამუშაო დღე გქონდეს!','Have a great shift!')
+});
+TBY.academy = TPL[1];
+Object.assign(G.ka, {lq:'კითხვა {n} / {m}', lnext:'შემდეგი კითხვა', lres:'შედეგის ნახვა', lok:'სწორია!', lbad:'არა ზუსტად', lscore:'შენი ქულა', lcert:'სერტიფიკატი', lname:'სახელი', lcourse:'კურსი', ldate:'თარიღი', lagain:'თავიდან'});
+Object.assign(G.en, {lq:'Question {n} of {m}', lnext:'Next question', lres:'See my result', lok:'Correct!', lbad:'Not quite', lscore:'Your score', lcert:'Certificate', lname:'Name', lcourse:'Course', ldate:'Date', lagain:'Start over'});
+
+class Lesson {
+  constructor(el, id){
+    this.el = el; this.timers = [];
+    el.addEventListener('click', e => this.onClick(e));
+    invites.push(this);
+    this.set(id);
+  }
+  set(id){ this.t = TBY[id]; this.reset(); }
+  reset(){ this.clear(); this.s = {step:'cover', q:0, score:0, ans:-1}; this.render(); }
+  clear(){ this.timers.forEach(clearTimeout); this.timers = []; }
+  later(fn, ms){ this.timers.push(setTimeout(fn, ms)); }
+  render(){
+    const t = this.t, s = this.s, g = G[lang];
+    let body = '';
+    if (s.step === 'cover') body = vCover(t, false);
+    else if (s.step === 'learn'){
+      body = '<section class="i-step"><div class="l-prog" aria-hidden="true"><i style="width:8%"></i></div><div class="i-kick">'+esc(tx(t.kick))+'</div>'+
+        '<h2 class="i-h2">'+esc(tx(t.learn.title))+'</h2><ol class="l-facts">'+
+        t.learn.facts.map((f, i) => '<li><span class="ic">'+ic(f[0])+'</span><span><b>'+(i + 1)+'</b>'+esc(tx(f[1]))+'</span></li>').join('')+'</ol>'+
+        '<div class="i-row"><button type="button" class="i-btn" data-act="start">'+esc(tx(t.learn.cta))+'</button></div></section>';
+    } else if (s.step === 'quiz'){
+      const q = t.quiz[s.q], done = s.ans >= 0, ok = done && s.ans === q.a, n = t.quiz.length;
+      body = '<section class="i-step"><div class="l-prog" aria-hidden="true"><i style="width:'+Math.round((s.q + (done ? 1 : 0)) / n * 100)+'%"></i></div>'+
+        '<div class="l-meta"><span>'+esc(fill(g.lq, {n:s.q + 1, m:n}))+'</span><span class="l-xp">'+ic('star')+(s.score * 10)+' XP</span></div>'+
+        '<div class="i-bigic l-qic" aria-hidden="true">'+ic(q.ic)+'</div><h2 class="i-h2">'+esc(tx(q.q))+'</h2><div class="l-opts">'+
+        q.o.map((o, i) => '<button type="button" class="l-opt'+(done ? (i === q.a ? ' ok' : (i === s.ans ? ' bad' : ' dim')) : '')+'" data-act="ans" data-i="'+i+'"'+(done ? ' disabled' : '')+'>'+
+          '<span class="l-k">'+'ABC'[i]+'</span><span>'+esc(tx(o))+'</span></button>').join('')+'</div>'+
+        (done ? '<div class="l-fb '+(ok ? 'ok' : 'bad')+'" aria-live="polite"><b>'+esc(ok ? g.lok : g.lbad)+'</b>'+esc(tx(q.why))+'</div>'+
+          '<div class="i-row"><button type="button" class="i-btn" data-act="nextq">'+esc(s.q + 1 < n ? g.lnext : g.lres)+'</button></div>' : '')+'</section>';
+    } else {
+      const n = t.quiz.length, d = new Date(), date = d.getDate()+' '+S[lang].months[d.getMonth()]+' '+d.getFullYear();
+      body = '<section class="i-step"><div class="l-prog" aria-hidden="true"><i style="width:100%"></i></div><div class="i-kick">'+esc(g.lscore)+'</div>'+
+        '<div class="l-score"><b>'+s.score+'</b><span>/ '+n+'</span></div><div class="l-xp big">'+ic('star')+(s.score * 10)+' XP · '+esc(tx(t.cert.lvl))+'</div>'+
+        '<div class="i-tk tk-card tf-hairline"><div class="tkc-in"><div class="tkc-sub">'+esc(caps(g.lcert))+'</div><div class="tkc-venue">'+esc(tx(t.cert.venue))+'</div><div class="tkc-rule"></div>'+
+        '<div class="tkc-date">'+esc(tx(t.to))+'</div><div class="tkc-fields"><span><b>'+esc(caps(g.lcourse))+'</b>'+esc(tx(t.cert.course))+'</span><span><b>'+esc(caps(g.ldate))+'</b>'+esc(date)+'</span><span><b>'+esc(caps(g.lscore))+'</b>'+s.score+' / '+n+'</span></div>'+
+        '<div class="i-stamp on" style="--sz:23px;--ibig:var(--f-jp)"><b>'+esc(tx(t.cert.stamp))+'</b><small>'+esc(caps(g.ok))+'</small></div></div></div>'+
+        '<p class="i-sign">'+esc(tx(t.sign))+'<br><em>'+esc(tx(t.from))+'</em></p>'+
+        '<div class="i-row"><button type="button" class="i-btn ghost" data-act="again">'+esc(g.lagain)+'</button></div></section>';
+    }
+    this.el.innerHTML = scrOpen(t)+'<div class="scr-in">'+body+'</div>'+frameEl(t)+'<div class="i-fx"></div></div>';
+    this.inner = this.el.querySelector('.scr-in');
+  }
+  go(step){ this.s.step = step; this.render(); if (this.inner) this.inner.scrollTop = 0; }
+  show(step){ const map = ['cover','learn','quiz','quiz','result']; this.clear(); this.s = {step:map[step] || 'cover', q:0, score:0, ans:-1}; this.render(); }
+  onClick(e){
+    const b = e.target.closest('[data-act]'); if (!b || !this.el.contains(b)) return;
+    const a = b.dataset.act, s = this.s, t = this.t;
+    if (a === 'open'){ if (b.classList.contains('open')) return; b.classList.add('open'); this.later(() => this.go('learn'), reduced() ? 50 : 1050); }
+    else if (a === 'start'){ this.go('quiz'); }
+    else if (a === 'ans' && s.ans < 0){
+      s.ans = +b.dataset.i;
+      if (s.ans === t.quiz[s.q].a){ s.score++; this.render(); this.burst(16); }
+      else { this.render(); const bad = this.el.querySelector('.l-opt.bad'); if (bad){ bad.classList.add('shake'); } }
+    }
+    else if (a === 'nextq'){ if (s.q + 1 < t.quiz.length){ s.q++; s.ans = -1; this.go('quiz'); } else { this.go('result'); this.later(() => this.burst(40), 200); } }
+    else if (a === 'again'){ this.reset(); }
+  }
+}
+Lesson.prototype.burst = Invite.prototype.burst;
+
 /* ---------- site ---------- */
 Object.assign(I, {
   arrowL:'<path d="M19 12H5M11 6l-6 6 6 6"/>',
@@ -1963,7 +2130,7 @@ let storyIO = null, storyActive = -1;
 function renderStory(){
   const D = S[lang].story;
   $('#steps').innerHTML = D.steps.map((s, i) => '<li data-i="'+i+'"'+(i === storyActive ? ' class="on"' : '')+'><span class="mark" aria-hidden="true">'+esc(D.marks[i])+'</span><h3>'+esc(s[0])+'</h3><p>'+esc(s[1])+'</p><p class="gain"><b>'+esc(D.gain)+'</b>'+esc(s[2])+'</p></li>').join('');
-  $('#storySw').innerHTML = TPL.map(t => '<button type="button" data-sw="'+t.id+'" aria-pressed="'+(storyInv.t.id === t.id)+'" aria-label="'+esc(tx(t.name))+'" title="'+esc(tx(t.name))+'" style="--a:'+t.c.bg+';--b:'+t.c.acc+'"></button>').join('');
+  $('#storySw').innerHTML = TPL.filter(t => t.cat !== 'learn').map(t => '<button type="button" data-sw="'+t.id+'" aria-pressed="'+(storyInv.t.id === t.id)+'" aria-label="'+esc(tx(t.name))+'" title="'+esc(tx(t.name))+'" style="--a:'+t.c.bg+';--b:'+t.c.acc+'"></button>').join('');
   observeSteps();
 }
 function observeSteps(){
@@ -1987,6 +2154,13 @@ $('#storySw').addEventListener('click', e => {
 });
 
 /* ---------- occasions ---------- */
+function renderXp(){
+  const X = S[lang].xp;
+  $('#xpGrid').innerHTML = X.items.map(x => '<article class="xp"><span class="xi">'+ic(x[0])+'</span><h3>'+esc(x[1])+'</h3><span class="who">'+esc(x[2])+'</span><p>'+esc(x[3])+'</p>'+
+    (x[7] ? '<button type="button" class="tlink" data-demo="'+x[7]+'">'+ic('play')+'<span>'+esc(x[8])+'</span></button>' : '<button type="button" class="tlink" data-req="campaign" data-who="company"><span>'+esc(X.pilot)+'</span>'+ic('arrowR')+'</button>')+
+    '<div class="meta"><span class="pr">'+esc(x[4])+'</span><span class="stt'+(x[6] ? ' '+x[6] : '')+'">'+esc(x[5])+'</span></div></article>').join('');
+}
+$('#xpGrid').addEventListener('click', e => { const b = e.target.closest('[data-demo]'); if (b) openDemo(b.dataset.demo); });
 function renderCustom(){
   const C = S[lang].cus;
   $('#occ').innerHTML = C.occ.map(o => '<li><button type="button" data-req="'+o[3]+'" data-who="'+o[4]+'" data-tpl="'+o[5]+'">'+
@@ -2027,13 +2201,18 @@ function fillStage(t){
   $('#stName').textContent = tx(t.name);
   $('#stKind').hidden = true;
   $('#stDesc').textContent = tx(t.desc);
-  $('#stSteps').innerHTML = [tx(t.hint), tx(t.q), tx(t.pickT), tx(t.sp.title), tx(t.tk.title) || G[lang].tk].map((x, k) => '<li><b>'+esc(marks[k])+'</b><span>'+esc(x)+'</span></li>').join('');
+  $('#stSteps').innerHTML = (t.steps ? t.steps.map(tx) : [tx(t.hint), tx(t.q), tx(t.pickT), tx(t.sp.title), tx(t.tk.title) || G[lang].tk]).map((x, k) => '<li><b>'+esc(marks[k])+'</b><span>'+esc(x)+'</span></li>').join('');
   $('#stCust').innerHTML = D.st.customList.map(x => '<li>'+ic('check')+'<span>'+esc(x)+'</span></li>').join('');
   $('#stCount').textContent = pad2(i + 1) + ' / ' + pad2(TPL.length);
 }
 function openDemo(id){
   const t = TBY[id]; if (!t) return;
-  if (!dlgInv) dlgInv = new Invite($('#dlgPhone'), id); else dlgInv.set(id);
+  const wantLesson = t.cat === 'learn';
+  if (dlgInv && (dlgInv instanceof Lesson) !== wantLesson){
+    dlgInv.clear(); invites.splice(invites.indexOf(dlgInv), 1);
+    const old = $('#dlgPhone'), fresh = old.cloneNode(false); old.replaceWith(fresh); dlgInv = null;
+  }
+  if (!dlgInv) dlgInv = wantLesson ? new Lesson($('#dlgPhone'), id) : new Invite($('#dlgPhone'), id); else dlgInv.set(id);
   fillStage(t);
   if (!dlg.open){ if (dlg.showModal) dlg.showModal(); else dlg.setAttribute('open', ''); }
 }
@@ -2047,7 +2226,7 @@ dlg.addEventListener('keydown', e => { if (e.target.closest('input,select,textar
 $('#stRestart').addEventListener('click', () => dlgInv && dlgInv.reset());
 $('#stReq').addEventListener('click', () => {
   const t = dlgInv.t; dlg.close();
-  const map = {restaurant:['plan-main','restaurant'], life:['custom-personal','person'], work:['business','company']}[t.cat];
+  const map = {restaurant:['plan-main','restaurant'], life:['custom-personal','person'], work:['business','company'], learn:['learning','restaurant']}[t.cat];
   requestFor(map[0], map[1], t.id);
 });
 
@@ -2167,7 +2346,7 @@ $$('#mnav a').forEach(a => a.addEventListener('click', () => setMenu(false)));
 
 /* ---------- go ---------- */
 function renderAll(){
-  applyStatic(); renderHero(); renderBelt(); renderStory(); renderCustom(); renderMenu(); renderFaq(); renderForm();
+  applyStatic(); renderHero(); renderBelt(); renderXp(); renderStory(); renderCustom(); renderMenu(); renderFaq(); renderForm();
   invites.forEach(i => i.render());
   if (dlg.open && dlgInv) fillStage(dlgInv.t);
 }
