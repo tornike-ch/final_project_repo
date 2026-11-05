@@ -1,4 +1,4 @@
-# Patizhi (პატიჟი): invite business site
+# Gancda (განცდა): digital experiences site
 
 A one-file website for the interactive invite business: portfolio of 10 playable templates,
 custom-invite offer, restaurant pricing, FAQ and a request form. Georgian first, English switch,
@@ -19,7 +19,7 @@ At the top of the `<script>` in `index.html`:
 ```js
 const CONFIG = {
   formEndpoint: '',            // a URL that accepts a JSON POST (Formspree, Getform, your own API)
-  email: 'hello@patizhi.ge'    // placeholder: replace with the real address
+  email: 'hello@gancda.ge'    // placeholder: replace with the real address
 };
 ```
 
