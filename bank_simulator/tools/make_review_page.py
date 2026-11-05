@@ -34,8 +34,8 @@ REVIEW_CSS = """
 .review-strip button:hover { border-color: #9FD3E6; }
 .review-strip .hint { color: #A9B6C2; }
 .topbar { top: env(safe-area-inset-top, 0px); }
-.ws { height: calc(100vh - 56px - 44px); }
-.standalone-bar + .ws { height: calc(100vh - 56px - 33px - 44px); }
+.app:has(> .ws) { height: calc(100dvh - 44px); }
+@media (max-width: 860px) { .app:has(> .ws) { height: auto; } }
 .score-tag { display: flex; gap: 6px; flex-wrap: wrap; margin-top: 6px; font-size: 11.5px; font-family: system-ui, sans-serif; }
 .score-tag span { padding: 1px 7px; border-radius: 999px; background: #EEF2F6; color: #36414D; border: 1px solid #D3DBE3; }
 .score-tag .best { background: #DFF3E8; color: #146B42; border-color: #A9DCC0; }

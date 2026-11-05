@@ -371,3 +371,106 @@ svg { width: 18px; height: 18px; flex: none; }
   .case-review { break-inside: avoid; }
   .case-review:not([open]) .steps { display: block; }
 }
+
+/* =====================================================================
+   Accessibility & layout fixes (UX review)
+   ===================================================================== */
+:root { --muted: #5A6878; --primary-strong: #00729D; --accent-strong: #007670; }
+
+/* Workstation fills exactly one screen; conversation scrolls inside it */
+.ws { flex: 1 1 auto; }
+@supports selector(:has(*)) {
+  .app:has(> .ws) { height: 100vh; height: 100dvh; }
+  .ws { flex: 1 1 0; min-height: 0; height: auto; }
+}
+
+/* Contrast: white text only on the strong shades */
+.btn-primary { background: var(--primary-strong); border-color: var(--primary-strong); }
+.msg-employee .bubble { background: var(--primary-strong); }
+.msg-employee .bubble small { color: #fff; opacity: .9; }
+.level-badge { background: var(--primary-strong); }
+.link { color: var(--primary-strong); }
+.standalone-bar .link { color: #006C9E; }
+.pill-eval { background: #fff; color: var(--primary-dark); font-weight: 700; }
+.pill-eval svg { width: 13px; height: 13px; }
+.pill-practice { background: var(--accent-strong); }
+.outcome-ok, .level-result.ok { color: #157347; }
+.level-result.bad, .v-poor .verdict, .v-critical .verdict, .crit-text { color: #B42318; }
+.v-ok .step-n { background: #9A6200; }
+.outcome-neutral { background: var(--surface-2); color: var(--text); border: 1px solid var(--border); }
+
+/* Visible focus */
+:focus-visible { outline: 3px solid var(--primary-dark); outline-offset: 2px; }
+.topbar :focus-visible, .cust-phone :focus-visible { outline-color: #fff; }
+h1[tabindex="-1"]:focus, .choices:focus { outline: none; }
+
+.sr-only { position: absolute !important; width: 1px; height: 1px; padding: 0; margin: -1px; overflow: hidden; clip: rect(0 0 0 0); white-space: nowrap; border: 0; }
+
+/* Long level names never widen the page */
+.pill { display: inline-flex; max-width: min(320px, 60vw); overflow: hidden; text-overflow: ellipsis; vertical-align: middle; }
+
+/* Long Georgian words wrap instead of overflowing */
+.crm-row > div, .bubble, .opt-text, .ref-item b, .ref-item span, .cond td, .ticket span, .cust-meta b, .step-body { overflow-wrap: anywhere; min-width: 0; }
+.crm-row { grid-template-columns: minmax(84px, 38%) minmax(0, 1fr); }
+
+/* More room for options, with a hint when they scroll */
+.choices {
+  max-height: 62%;
+  background:
+    linear-gradient(var(--surface) 30%, rgba(255, 255, 255, 0)) top / 100% 24px no-repeat local,
+    radial-gradient(farthest-side at 50% 100%, rgba(16, 32, 48, .18), transparent) bottom / 100% 8px no-repeat scroll,
+    var(--surface);
+}
+
+.notice-eval { margin: 8px auto 0; max-width: 520px; padding: 10px 14px; border-radius: 8px; background: #FFF6DD; border: 1px solid #F1E2B0; color: #5B4A1A; font-size: 14px; }
+.call-status.ended .dot { background: #9AA8B5; animation: none; }
+.call-status .dot { animation: pulse 1.6s 3; }
+
+/* Report */
+.review-head { display: flex; align-items: center; justify-content: space-between; gap: 12px; margin-top: 28px; }
+.review-head h2 { margin: 0 0 12px; }
+.case-review summary::before {
+  content: ""; width: 8px; height: 8px; flex: none; border-right: 2px solid var(--muted); border-bottom: 2px solid var(--muted);
+  transform: rotate(-45deg); transition: transform .15s; margin-right: 2px;
+}
+.case-review[open] summary::before { transform: rotate(45deg); }
+.btn-sm { padding: 4px 10px; font-size: 12.5px; }
+
+/* Reference panel: desktop slides over the customer column, wide screens get a 3rd column */
+@media (min-width: 861px) {
+  .ref-panel { left: 16px; right: auto; width: 320px; transform: translateX(calc(-100% - 24px)); }
+  .ref-panel.open { transform: none; }
+}
+@media (min-width: 1280px) {
+  .ws.ref-open { grid-template-columns: 300px minmax(0, 1fr) 360px; }
+  .ws.ref-open .ref-panel { position: static; transform: none; visibility: visible; width: auto; box-shadow: var(--shadow); }
+}
+
+/* Tablets and phones: customer stays visible as a sticky strip, conversation scrolls, choices pinned */
+@media (max-width: 860px) {
+  .app:has(> .ws) { height: auto; }
+  .ws { display: flex; flex-direction: column; height: auto; }
+  .ws-left { display: contents; }
+  .cust-card {
+    order: 0; position: sticky; top: 0; z-index: 10; display: flex; align-items: center; gap: 12px; padding: 6px 12px;
+  }
+  .cust-card .cust-avatar, .cust-branch .cust-avatar { padding: 0; background: none; }
+  .cust-card .cust-avatar img, .cust-card .cust-avatar svg,
+  .cust-branch .cust-avatar img, .cust-branch .cust-avatar svg,
+  .cust-phone .cust-avatar img, .cust-chat .cust-avatar img { width: 64px; height: 64px; margin: 0; border-radius: 50%; background: var(--avatar-bg); box-shadow: none; }
+  .cust-meta { text-align: left; padding: 0; }
+  .cust-meta .call-status { justify-content: flex-start; }
+  .ws-main { order: 1; min-height: 0; height: calc(100dvh - 150px); }
+  .crm { order: 2; }
+}
+@media (max-width: 560px) {
+  .topbar { height: auto; min-height: 56px; flex-wrap: wrap; padding: 8px 12px; row-gap: 6px; }
+  .brand-text { display: none; }
+  .topbar-mid { order: 3; flex: 1 0 100%; justify-content: flex-start; flex-wrap: nowrap; overflow-x: auto; }
+  .ref-toggle span { position: absolute; width: 1px; height: 1px; overflow: hidden; clip: rect(0 0 0 0); }
+  .ws-main { height: calc(100dvh - 190px); }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  *, *::before, *::after { animation-duration: .01ms !important; animation-iteration-count: 1 !important; transition-duration: .01ms !important; }
+}

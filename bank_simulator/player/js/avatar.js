@@ -172,7 +172,9 @@
     if (typeof window.MicahAvatar !== 'function') return legacy(customer, mood, seed);
     try {
       var r = micahUri(customer, mood, seed);
-      return '<img class="avatar-img" src="' + r.uri + '" data-expr="' + r.expr + '" alt="' + escAttr(customer.name) + '" draggable="false">';
+      // text equivalent of the face for screen-reader users (read on demand, not announced)
+      var moodWord = { angry: 'გაბრაზებული', annoyed: 'უკმაყოფილო', neutral: 'მშვიდი', pleased: 'კმაყოფილი', happy: 'ძალიან კმაყოფილი' }[r.expr];
+      return '<img class="avatar-img" src="' + r.uri + '" data-expr="' + r.expr + '" alt="' + escAttr(customer.name) + ', ' + moodWord + '" draggable="false">';
     } catch (e) {
       return legacy(customer, mood, seed);
     }

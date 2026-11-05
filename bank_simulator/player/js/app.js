@@ -76,6 +76,19 @@
   };
 
   /* ---------------- theme ---------------- */
+  /** Darken a brand colour until white text on it reaches WCAG AA (4.5:1). */
+  function strongShade(hex) {
+    var m = /^#?([0-9a-f]{6})$/i.exec(String(hex || '').trim());
+    if (!m) return hex;
+    var rgb = [0, 2, 4].map(function (i) { return parseInt(m[1].substr(i, 2), 16); });
+    function lum(c) {
+      var v = c.map(function (x) { x /= 255; return x <= 0.03928 ? x / 12.92 : Math.pow((x + 0.055) / 1.055, 2.4); });
+      return 0.2126 * v[0] + 0.7152 * v[1] + 0.0722 * v[2];
+    }
+    for (var k = 0; k < 30 && 1.05 / (lum(rgb) + 0.05) < 4.6; k++) rgb = rgb.map(function (x) { return Math.round(x * 0.93); });
+    return '#' + rgb.map(function (x) { return ('0' + x.toString(16)).slice(-2); }).join('');
+  }
+
   function applyTheme() {
     var t = cfg.theme;
     var r = document.documentElement.style;
@@ -83,6 +96,8 @@
     r.setProperty('--primary-dark', t.primaryDark);
     r.setProperty('--accent', t.accent);
     r.setProperty('--bg', t.background);
+    r.setProperty('--primary-strong', strongShade(t.primary));
+    r.setProperty('--accent-strong', strongShade(t.accent));
     document.title = t.productName + ' — ' + t.bankName;
   }
 
@@ -305,8 +320,11 @@
   /* ---------------- screens ---------------- */
   function topbar(extra) {
     var t = cfg.theme;
-    var mode = run ? (run.mode === 'eval' ? '<span class="pill pill-eval">შეფასება</span>' : '<span class="pill pill-practice">პრაქტიკა</span>') : '';
-    var lvl = run && LEVELS[run.levelIndex] ? '<span class="pill">დონე ' + LEVELS[run.levelIndex].id + ' · ' + esc(LEVELS[run.levelIndex].name) + '</span>' : '';
+    var opts = typeof extra === 'object' && extra ? extra : { html: extra };
+    var mode = run ? (run.mode === 'eval' ? '<span class="pill pill-eval">' + ICONS.check + 'შეფასება · ითვლება</span>' : '<span class="pill pill-practice">პრაქტიკა · არ ითვლება</span>') : '';
+    var lvName = run && LEVELS[run.levelIndex] ? 'დონე ' + LEVELS[run.levelIndex].id + ' · ' + LEVELS[run.levelIndex].name : '';
+    var lvl = lvName && !opts.noLevel ? '<span class="pill" title="' + esc(lvName) + '">' + esc(lvName) + '</span>' : '';
+    extra = opts.html;
     return '<header class="topbar">' +
       '<div class="brand"><span class="logo">' + esc(t.logoText) + '</span><span class="brand-text"><b>' + esc(t.bankName) + '</b><small>' + esc(t.productName) + '</small></span></div>' +
       '<div class="topbar-mid">' + mode + lvl + (extra || '') + '</div>' +
@@ -327,6 +345,8 @@
     app.innerHTML = html;
     app.scrollTop = 0;
     window.scrollTo(0, 0);
+    var h = app.querySelector('h1');
+    if (h) { if (!h.hasAttribute('tabindex')) h.setAttribute('tabindex', '-1'); try { h.focus({ preventScroll: true }); } catch (e) { h.focus(); } }
   }
 
   function showWelcome() {
@@ -338,8 +358,9 @@
       '<li>სიმულაცია შედგება <b>' + LEVELS.length + ' დონისგან</b>. თითოეულ დონეზე შემთხვევითად შეირჩევა კლიენტები' + (cfg.features.quiz ? ' და ცოდნის შემოწმების კითხვები' : '') + '.</li>' +
       '<li>ყოველ ნაბიჯზე აირჩიეთ პასუხი, რომელსაც კლიენტს ეტყოდით. შეფასდება სამი უნარი: <b>პროდუქტის ცოდნა, მომსახურება და გაყიდვები</b>.</li>' +
       '<li>შემდეგ დონეზე გადასასვლელად საჭიროა დონის გასვლის ზღვრის მიღწევა.</li>' +
-      '<li>გამოიყენეთ კლიენტის პროფილი (CRM)' + (cfg.features.referencePanel ? ' და საცნობარო პანელი' : '') + ' — ისინი მინიშნებებს შეიცავს.</li>' +
-      '<li>უკუკავშირს და დეტალურ შედეგებს სესიის ბოლოს ნახავთ.</li>' +
+      '<li>გამოიყენეთ კლიენტის პროფილი (CRM)' + (cfg.features.referencePanel ? ' და საცნობარო პანელი' : '') + ' — ისინი მინიშნებებს შეიცავს' + (cfg.features.referencePanel ? ' (საცნობაროს გამოყენება ფიქსირდება, ქულას არ ამცირებს)' : '') + '.</li>' +
+      '<li>დრო შეზღუდული არ არის. პასუხის ხანგრძლივობა ფიქსირდება, მაგრამ ქულაზე გავლენას არ ახდენს.</li>' +
+      '<li>უკუკავშირს და დეტალურ შედეგებს სესიის ბოლოს ნახავთ. შეფასების დროს გაცემული პასუხის შეცვლა შეუძლებელია.</li>' +
       '<li><b>შეფასებისთვის მხოლოდ პირველი მცდელობა ითვლება.</b> შემდეგ შეგიძლიათ შეუზღუდავად ივარჯიშოთ.</li>' +
       '</ul>';
     if (e.s !== 'd' && noCredit()) {
@@ -404,6 +425,8 @@
       '<div class="tiles"><div class="tile"><span>კლიენტები</span><b>' + nCases + '</b></div>' +
       (nQuiz ? '<div class="tile"><span>ცოდნის კითხვები</span><b>' + nQuiz + '</b></div>' : '') +
       '<div class="tile"><span>გასვლის ზღვარი</span><b>' + l.passThreshold + '%</b></div></div>' +
+      (run.mode === 'eval' ? '<p class="notice-eval">ეს შეფასებაა: პასუხები ითვლება და მათი შეცვლა შეუძლებელია.' +
+        (cfg.scoring.criticalFailsLevel ? ' კრიტიკული შეცდომა (მაგ., წესების დარღვევა) დონის ჩაჭრას ნიშნავს.' : '') + '</p>' : '') +
       '<div class="actions"><button class="btn btn-primary btn-lg" data-act="next-step">დაწყება</button></div></section></main>');
   }
 
@@ -438,14 +461,15 @@
     var nCases = run.steps.filter(function (s) { return s.charAt(0) === 'c'; });
     var pos = nCases.indexOf('c:' + cs.id) + 1;
     var progress = '<span class="pill">კლიენტი ' + pos + ' / ' + nCases.length + '</span>';
-    var refBtn = cfg.features.referencePanel ? '<button class="btn btn-ghost ref-toggle" data-act="ref-toggle">' + ICONS.book + '<span>საცნობარო</span></button>' : '';
+    var refBtn = cfg.features.referencePanel ? '<button class="btn btn-ghost ref-toggle" data-act="ref-toggle" aria-expanded="false" aria-controls="ref-panel" aria-label="საცნობარო">' + ICONS.book + '<span>საცნობარო</span></button>' : '';
     render(topbar(progress + refBtn) +
       '<main class="ws ws-' + ch + '">' +
+      '<h1 class="sr-only" tabindex="-1">კლიენტი ' + pos + ' / ' + nCases.length + ' — ' + T.channels[ch] + ': ' + esc(cs.brief || '') + '</h1>' +
       '<aside class="ws-left">' + customerCard(cs, ch) + crmPanel(cs) + '</aside>' +
       '<section class="ws-main">' +
       '<div class="ticket"><span class="ch-icon">' + ICONS[ch] + '</span><div><b>' + T.channels[ch] + '</b><span>' + esc(cs.brief || '') + '</span></div></div>' +
-      '<div class="convo convo-' + ch + '" id="convo" aria-live="polite"></div>' +
-      '<div class="choices" id="choices"></div>' +
+      '<div class="convo convo-' + ch + '" id="convo" role="log" aria-live="polite" aria-relevant="additions" aria-label="საუბარი"></div>' +
+      '<div class="choices" id="choices" role="group" aria-labelledby="choices-label" tabindex="-1"></div>' +
       '</section>' +
       (cfg.features.referencePanel ? refPanel() : '') +
       '</main>');
@@ -466,8 +490,8 @@
   function customerCard(cs, ch) {
     var c = cs.customer;
     var label = { branch: 'ფილიალის ვიზიტორი', phone: 'შემომავალი ზარი', chat: 'ონლაინ ჩატი' }[ch];
-    var extra = ch === 'phone' ? '<div class="call-status"><span class="dot"></span>ზარი მიმდინარეობს · <span id="call-timer">0:00</span></div>' :
-      ch === 'chat' ? '<div class="call-status"><span class="dot"></span>ონლაინ</div>' : '';
+    var extra = ch === 'phone' ? '<div class="call-status" id="call-status"><span class="dot"></span>ზარი მიმდინარეობს' + (run && run.mode === 'eval' ? '' : ' · <span id="call-timer">0:00</span>') + '</div>' :
+      ch === 'chat' ? '<div class="call-status" id="call-status"><span class="dot"></span>ონლაინ</div>' : '';
     return '<div class="cust-card cust-' + ch + '">' +
       '<div class="cust-avatar" id="cust-avatar">' + Avatar.render(c, current.mood, cs.id + c.name) + '</div>' +
       '<div class="cust-meta"><small>' + label + '</small><b>' + esc(c.name || T.customer) + '</b>' + extra + '</div></div>';
@@ -483,22 +507,23 @@
   function crmPanel(cs) {
     var c = cs.customer;
     return '<div class="crm"><div class="crm-head">კლიენტის პროფილი (CRM)</div>' +
-      '<div class="crm-tabs" role="tablist">' +
-      '<button class="active" data-act="crm-tab" data-tab="0">პროფილი</button>' +
-      '<button data-act="crm-tab" data-tab="1">პროდუქტები</button>' +
-      '<button data-act="crm-tab" data-tab="2">შენიშვნები</button></div>' +
-      '<div class="crm-body" data-tab="0">' +
+      '<div class="crm-tabs" role="tablist" aria-label="კლიენტის პროფილი">' +
+      ['პროფილი', 'პროდუქტები', 'შენიშვნები'].map(function (lbl, i) {
+        return '<button role="tab" id="crm-t' + i + '" aria-controls="crm-p' + i + '" aria-selected="' + (i === 0) + '" tabindex="' + (i === 0 ? 0 : -1) + '"' +
+          (i === 0 ? ' class="active"' : '') + ' data-act="crm-tab" data-tab="' + i + '">' + lbl + '</button>';
+      }).join('') + '</div>' +
+      '<div class="crm-body" data-tab="0" role="tabpanel" id="crm-p0" aria-labelledby="crm-t0">' +
       crmRow('სახელი', c.name) + crmRow('ასაკი', c.age) + crmRow('სეგმენტი', c.segment) +
       crmRow('საქმიანობა', c.occupation) + crmRow('შემოსავალი', c.income) + crmRow('ციფრული არხები', c.digital) + '</div>' +
-      '<div class="crm-body hidden" data-tab="1">' + (crmRow('აქტიური პროდუქტები', c.productsHeld) || '<p class="muted">მონაცემი არ არის</p>') + '</div>' +
-      '<div class="crm-body hidden" data-tab="2">' + (c.notes ? '<p>' + esc(c.notes) + '</p>' : '<p class="muted">შენიშვნები არ არის</p>') + '</div>' +
+      '<div class="crm-body hidden" data-tab="1" role="tabpanel" id="crm-p1" aria-labelledby="crm-t1">' + (crmRow('აქტიური პროდუქტები', c.productsHeld) || '<p class="muted">მონაცემი არ არის</p>') + '</div>' +
+      '<div class="crm-body hidden" data-tab="2" role="tabpanel" id="crm-p2" aria-labelledby="crm-t2">' + (c.notes ? '<p>' + esc(c.notes) + '</p>' : '<p class="muted">შენიშვნები არ არის</p>') + '</div>' +
       '</div>';
   }
 
   function refPanel() {
-    return '<aside class="ref-panel" id="ref-panel" aria-hidden="true">' +
+    return '<aside class="ref-panel" id="ref-panel" aria-hidden="true" aria-label="საცნობარო">' +
       '<div class="ref-head"><b>' + ICONS.book + ' საცნობარო</b><button class="icon-btn" data-act="ref-toggle" aria-label="დახურვა">' + ICONS.close + '</button></div>' +
-      '<input type="search" id="ref-search" placeholder="ძიება: პროდუქტი, პირობა…" autocomplete="off">' +
+      '<input type="search" id="ref-search" placeholder="ძიება: პროდუქტი, პირობა…" aria-label="ძიება საცნობაროში" autocomplete="off">' +
       '<div class="ref-list" id="ref-list">' + refList('') + '</div>' +
       '<div class="ref-detail hidden" id="ref-detail"></div></aside>';
   }
@@ -604,7 +629,7 @@
   function renderOptions(node) {
     var choices = document.getElementById('choices');
     var isProduct = node.type === 'product';
-    var html = '<div class="choices-label">' + (isProduct ? 'აირჩიეთ შესათავაზებელი პროდუქტი' : 'აირჩიეთ თქვენი პასუხი') + '</div>';
+    var html = '<div class="choices-label" id="choices-label">' + (isProduct ? 'აირჩიეთ შესათავაზებელი პროდუქტი' : 'აირჩიეთ თქვენი პასუხი') + '</div>';
     html += '<div class="opt-list' + (isProduct ? ' opt-products' : '') + '">';
     var order = node.options.map(function (_, i) { return i; });
     if (cfg.features.shuffleOptions !== false && !window.SIM_NO_SHUFFLE) order = Engine.shuffle(order);
@@ -628,7 +653,9 @@
     var opt = node.options[i];
     if (!opt) return;
     awaitingChoice = false;
-    document.getElementById('choices').innerHTML = '';
+    var chEl = document.getElementById('choices');
+    if (chEl) chEl.focus({ preventScroll: true });
+    chEl.innerHTML = '';
     addMsg('employee', '<div class="bubble"><small>' + T.you + '</small>' + esc(opt.text) + '</div>');
     var r = current.choose(i);
     if (run.mode === 'eval') {
@@ -659,9 +686,11 @@
       saveState();
       saveDetail(run);
     }
-    var cls = { resolved: 'ok', escalated: 'warn', unresolved: 'bad', walkout: 'bad' }[res.outcome] || 'ok';
+    var cst = document.getElementById('call-status');
+    if (cst) { cst.classList.add('ended'); cst.innerHTML = '<span class="dot"></span>' + (current.channel === 'phone' ? 'ზარი დასრულდა' : 'ჩატი დასრულდა'); }
+    // neutral on purpose: no hint about how the conversation went until the session report
     document.getElementById('choices').innerHTML =
-      '<div class="case-end"><span class="outcome outcome-' + cls + '">საუბარი დასრულდა</span>' +
+      '<div class="case-end"><span class="outcome outcome-neutral">საუბარი დასრულდა</span>' +
       '<button class="btn btn-primary" data-act="advance">' + (run.stepIndex + 1 < run.steps.length ? 'შემდეგი' : 'დონის დასრულება') + '</button></div>';
     lockInput();
     var btn = app.querySelector('[data-act="advance"]');
@@ -741,7 +770,7 @@
       '<button class="btn btn-primary btn-lg" data-act="finish-run">შედეგების ნახვა</button>';
     render(topbar() + '<main class="screen center"><section class="card level-intro">' +
       '<div class="level-badge">' + l.id + '</div><h1>დონე ' + l.id + ': ' + esc(l.name) + '</h1>' + verdictHtml +
-      '<div class="tiles"><div class="tile tile-main"><span>დონის ქულა</span><b>' + agg.overall + '%</b></div><div class="tile"><span>ზღვარი</span><b>' + l.passThreshold + '%</b></div></div>' +
+      (run.mode === 'eval' ? '' : '<div class="tiles"><div class="tile tile-main"><span>დონის ქულა</span><b>' + agg.overall + '%</b></div><div class="tile"><span>ზღვარი</span><b>' + l.passThreshold + '%</b></div></div>') +
       (more ? '<p class="muted">დეტალურ უკუკავშირს სესიის ბოლოს მიიღებთ.</p>' : '') +
       '<div class="actions">' + next + '</div></section></main>');
   }
@@ -831,14 +860,14 @@
     var buttons = preview ? '<button class="btn btn-primary" data-act="preview-restart">თავიდან</button>' :
       '<button class="btn" data-act="home">მთავარი</button><button class="btn btn-primary" data-act="practice-menu">პრაქტიკა</button>';
 
-    render(topbar() + '<main class="screen report"><section class="card wide">' +
+    render(topbar({ noLevel: true }) + '<main class="screen report"><section class="card wide">' +
       '<div class="report-head"><div><small class="eyebrow">' + (r.mode === 'eval' ? 'პირველი მცდელობა · იგზავნება LMS-ში' : 'არ იგზავნება LMS-ში') + '</small><h1>' + title + '</h1></div>' +
       '<div class="overall"><span>საერთო</span><b>' + agg.overall + '%</b></div></div>' +
       '<div class="skill-grid">' + skillCards + '</div>' +
       (levels ? '<h2>დონეები</h2><ul class="level-list">' + levels + '</ul>' : '') +
       (criticals.length ? '<h2>კრიტიკული შეცდომები</h2><ul class="crit-list">' + criticals.join('') + '</ul>' : '') +
       (missed.length ? '<h2>გამოტოვებული გაყიდვის შესაძლებლობები</h2><ul class="missed-list">' + missed.join('') + '</ul>' : '') +
-      '<h2>საუბრების მიმოხილვა</h2>' + cases + quiz +
+      '<div class="review-head"><h2>საუბრების მიმოხილვა</h2><button class="btn btn-sm" data-act="expand-all">ყველას გაშლა</button></div>' + cases + quiz +
       '<p class="muted small">' + (cfg.features.referencePanel ? 'საცნობარო პანელის გამოყენება: ' + refUse + '-ჯერ. ' : '') +
       (cfg.features.showTimeInReport ? 'საუბრებში გატარებული დრო: ' + fmtTime(totalTime) + '.' : '') + '</p>' +
       '<div class="actions">' + buttons + '</div></section></main>');
@@ -951,7 +980,11 @@
     'quiz-answer': function (el) { answerQuiz(Number(el.getAttribute('data-i'))); },
     'crm-tab': function (el) {
       var tab = el.getAttribute('data-tab');
-      app.querySelectorAll('.crm-tabs button').forEach(function (b) { b.classList.toggle('active', b === el); });
+      app.querySelectorAll('.crm-tabs button').forEach(function (b) {
+        b.classList.toggle('active', b === el);
+        b.setAttribute('aria-selected', b === el ? 'true' : 'false');
+        b.setAttribute('tabindex', b === el ? '0' : '-1');
+      });
       app.querySelectorAll('.crm-body').forEach(function (b) { b.classList.toggle('hidden', b.getAttribute('data-tab') !== tab); });
     },
     'ref-toggle': function () {
@@ -960,8 +993,13 @@
       var open = !p.classList.contains('open');
       p.classList.toggle('open', open);
       p.setAttribute('aria-hidden', open ? 'false' : 'true');
+      var ws = app.querySelector('.ws');
+      if (ws) ws.classList.toggle('ref-open', open);
+      var tg = app.querySelector('.ref-toggle');
+      if (tg) tg.setAttribute('aria-expanded', open ? 'true' : 'false');
       if (open && current) current.ref.opens++;
       if (open) { var s = document.getElementById('ref-search'); if (s) s.focus(); }
+      else if (tg) tg.focus();
     },
     'ref-view': function (el) {
       var p = PRODUCTS[el.getAttribute('data-id')];
@@ -988,7 +1026,13 @@
       }
       restartLocal();
     },
-    'preview-restart': function () { startPreview(); }
+    'preview-restart': function () { startPreview(); },
+    'expand-all': function (el) {
+      var all = app.querySelectorAll('.case-review');
+      var open = !Array.prototype.every.call(all, function (d) { return d.open; });
+      all.forEach(function (d) { d.open = open; });
+      el.textContent = open ? 'ყველას აკეცვა' : 'ყველას გაშლა';
+    }
   };
 
   var GUARDED = { 'choose': 1, 'quiz-answer': 1, 'advance': 1, 'next-step': 1, 'next-level': 1, 'finish-run': 1, 'start-eval': 1, 'resume-eval': 1 };
@@ -1016,6 +1060,16 @@
   document.addEventListener('keydown', function (ev) {
     var panel = document.getElementById('ref-panel');
     if (ev.key === 'Escape' && panel && panel.classList.contains('open')) { ev.preventDefault(); actions['ref-toggle'](); return; }
+    var tab = ev.target && ev.target.closest && ev.target.closest('[role="tab"]');
+    if (tab && /^(ArrowLeft|ArrowRight|Home|End)$/.test(ev.key)) {
+      var tabs = Array.prototype.slice.call(tab.parentNode.querySelectorAll('[role="tab"]'));
+      var at = tabs.indexOf(tab);
+      var to = ev.key === 'Home' ? 0 : ev.key === 'End' ? tabs.length - 1 : (at + (ev.key === 'ArrowRight' ? 1 : -1) + tabs.length) % tabs.length;
+      ev.preventDefault();
+      tabs[to].click();
+      tabs[to].focus();
+      return;
+    }
     if (ev.ctrlKey || ev.metaKey || ev.altKey || ev.repeat || ev.isComposing) return;
     var t = ev.target;
     if (t && t.closest && (t.closest('input,textarea,select,[contenteditable],dialog,#ref-panel,.review-strip') || t.isContentEditable)) return;
