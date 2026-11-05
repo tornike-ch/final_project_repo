@@ -167,8 +167,43 @@
 
   function escAttr(s) { return String(s || '').replace(/&/g, '&amp;').replace(/"/g, '&quot;').replace(/</g, '&lt;'); }
 
+  /* ---------- photo portraits (uploaded in the builder) ---------- */
+  var MOOD_FALLBACK = {
+    angry: ['angry', 'annoyed', 'neutral'], annoyed: ['annoyed', 'angry', 'neutral'], neutral: ['neutral', 'pleased'],
+    pleased: ['pleased', 'happy', 'neutral'], happy: ['happy', 'pleased', 'neutral']
+  };
+
+  /** the portrait set for a customer: explicit customer.portrait, else best gender/age match */
+  function portraitFor(customer, seed) {
+    var list = window.SIM_PORTRAITS || [];
+    if (!list.length || customer.portrait === false) return null;
+    if (customer.portrait) {
+      for (var i = 0; i < list.length; i++) if (list[i].id === customer.portrait) return list[i];
+    }
+    if (window.SIM_PORTRAITS_AUTO === false) return null;
+    var g = customer.gender || 'm';
+    var age = Number(customer.age) || 35;
+    var same = list.filter(function (p) { return (p.gender || 'm') === g && p.images && p.images.neutral; });
+    if (!same.length) return null;
+    var bestGap = Math.min.apply(null, same.map(function (p) { return Math.abs((Number(p.age) || 35) - age); }));
+    var close = same.filter(function (p) { return Math.abs((Number(p.age) || 35) - age) <= bestGap + 7; });
+    return close[hash(seed || customer.name) % close.length];
+  }
+
+  function photoUrl(portrait, expr) {
+    var order = MOOD_FALLBACK[expr] || ['neutral'];
+    for (var i = 0; i < order.length; i++) if (portrait.images[order[i]]) return portrait.images[order[i]];
+    return portrait.images.neutral;
+  }
+
   function render(customer, mood, seed) {
     customer = customer || {};
+    var expr0 = expression(Math.max(-3, Math.min(3, Math.round(mood || 0))));
+    var pt = portraitFor(customer, seed);
+    if (pt) {
+      var word = { angry: 'გაბრაზებული', annoyed: 'უკმაყოფილო', neutral: 'მშვიდი', pleased: 'კმაყოფილი', happy: 'ძალიან კმაყოფილი' }[expr0];
+      return '<img class="avatar-img avatar-photo" src="' + escAttr(photoUrl(pt, expr0)) + '" data-expr="' + expr0 + '" alt="' + escAttr(customer.name) + ', ' + word + '" draggable="false">';
+    }
     if (typeof window.MicahAvatar !== 'function') return legacy(customer, mood, seed);
     try {
       var r = micahUri(customer, mood, seed);
@@ -180,5 +215,5 @@
     }
   }
 
-  window.Avatar = { render: render, expression: expression };
+  window.Avatar = { render: render, expression: expression, portraitFor: portraitFor };
 })();

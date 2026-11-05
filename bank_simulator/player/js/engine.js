@@ -566,6 +566,17 @@
         if (qpool < l.quizQuestions) warnings.push('Level ' + l.id + ': quiz pool has ' + qpool + ' questions, ' + l.quizQuestions + ' requested');
       }
     });
+    var pIds = {};
+    (Array.isArray(c.portraits) ? c.portraits : []).forEach(function (p, i) {
+      if (!p || !p.id) { errors.push('Customer photo set #' + (i + 1) + ': missing id'); return; }
+      if (pIds[p.id]) errors.push('Customer photo set ' + p.id + ': duplicate id');
+      pIds[p.id] = true;
+      if (!p.images || !p.images.neutral) warnings.push('Customer photo set ' + p.id + ': the neutral photo is missing (it will not be used)');
+      else if (['angry', 'annoyed', 'pleased', 'happy'].some(function (m) { return !p.images[m]; })) warnings.push('Customer photo set ' + p.id + ': not all five expressions uploaded; the nearest one is shown instead');
+    });
+    c.cases.forEach(function (cs) {
+      if (cs.customer.portrait && !pIds[cs.customer.portrait]) warnings.push('Case ' + cs.id + ': customer.portrait "' + cs.customer.portrait + '" does not exist');
+    });
     var qIds = {};
     c.quiz.forEach(function (q) {
       if (qIds[q.id]) errors.push('Quiz ' + q.id + ': duplicate id');

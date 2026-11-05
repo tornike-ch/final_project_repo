@@ -55,6 +55,14 @@ The builder runs completely in the browser, with no server or install, and keeps
 
 Interaction letters refer to the option order in the content file, not the shuffled screen order, so reports stay comparable between employees.
 
+## Fitting the LMS window
+
+The game always fits the window or frame it runs in: the page never scrolls, and only inner areas (conversation, forms, report) scroll. The **full-screen button** (top right) uses the browser's full-screen mode. Inside an LMS frame it appears only if the LMS allows full screen for embedded content (iframe `allowfullscreen`). If your LMS (for example Matrix LMS) does not, set the SCORM activity to open **in a new window** or enable the LMS's own full-screen/maximise option. The layout adapts to any size, with a two-tab view (conversation / bank system) on narrow screens.
+
+## Customer photos
+
+For a professional look, upload realistic photos (five expressions per person) in **Builder → Customer photos**. See **PORTRAITS.md** for specs and how to produce them (Photoshop Smart Portrait, Adobe Firefly or a photo shoot). Without photos the illustrated faces are used.
+
 ## LMS settings (important for evaluation)
 
 The "first run counts" lock lives inside the LMS attempt. If the LMS starts a **new attempt**, it hands the game empty data and the employee could retake the evaluation. Configure the course activity so that doesn't happen.

@@ -53,6 +53,9 @@
     return m;
   }
 
+  window.SIM_PORTRAITS = Array.isArray(content.portraits) ? content.portraits : [];
+  window.SIM_PORTRAITS_AUTO = cfg.features.autoPortraits !== false;
+
   var CASES = byId(content.cases);
   var QUIZ = byId(content.quiz);
   var PRODUCTS = byId(content.products);
@@ -65,7 +68,27 @@
     return m + ':' + (s < 10 ? '0' : '') + s;
   }
 
+  function fullscreenSupported() {
+    return !!(document.fullscreenEnabled || document.webkitFullscreenEnabled);
+  }
+  function isFullscreen() { return !!(document.fullscreenElement || document.webkitFullscreenElement); }
+  function toggleFullscreen() {
+    var el = document.documentElement;
+    try {
+      if (isFullscreen()) (document.exitFullscreen || document.webkitExitFullscreen).call(document);
+      else (el.requestFullscreen || el.webkitRequestFullscreen).call(el);
+    } catch (e) { /* refused by the host */ }
+  }
+  ['fullscreenchange', 'webkitfullscreenchange'].forEach(function (ev) {
+    document.addEventListener(ev, function () {
+      var b = document.querySelector('.fs-btn');
+      if (b) b.innerHTML = isFullscreen() ? ICONS.fsExit : ICONS.fs;
+    });
+  });
+
   var ICONS = {
+    fs: '<svg viewBox="0 0 24 24" aria-hidden="true"><path d="M4 4h6v2H6v4H4zm10 0h6v6h-2V6h-4zM4 14h2v4h4v2H4zm14 0h2v6h-6v-2h4z" fill="currentColor"/></svg>',
+    fsExit: '<svg viewBox="0 0 24 24" aria-hidden="true"><path d="M8 4h2v6H4V8h4zm6 0h2v4h4v2h-6zM4 14h6v6H8v-4H4zm10 0h6v2h-4v4h-2z" fill="currentColor"/></svg>',
     branch: '<svg viewBox="0 0 24 24" aria-hidden="true"><path d="M3 10 12 4l9 6v1H3zM5 12h2v6H5zm4 0h2v6H9zm4 0h2v6h-2zm4 0h2v6h-2zM3 19h18v2H3z" fill="currentColor"/></svg>',
     phone: '<svg viewBox="0 0 24 24" aria-hidden="true"><path d="M6.6 10.8a15.1 15.1 0 0 0 6.6 6.6l2.2-2.2a1 1 0 0 1 1-.25 11.4 11.4 0 0 0 3.6.57 1 1 0 0 1 1 1V20a1 1 0 0 1-1 1A17 17 0 0 1 3 4a1 1 0 0 1 1-1h3.5a1 1 0 0 1 1 1c0 1.25.2 2.45.57 3.57a1 1 0 0 1-.25 1z" fill="currentColor"/></svg>',
     chat: '<svg viewBox="0 0 24 24" aria-hidden="true"><path d="M4 4h16a1 1 0 0 1 1 1v11a1 1 0 0 1-1 1H8l-4 4V5a1 1 0 0 1 1-1z" fill="currentColor"/></svg>',
@@ -342,6 +365,7 @@
       '<div class="brand"><span class="logo">' + esc(t.logoText) + '</span><span class="brand-text"><b>' + esc(t.bankName) + '</b><small>' + esc(t.productName) + '</small></span></div>' +
       '<div class="topbar-mid">' + mode + lvl + (extra || '') + '</div>' +
       '<div class="user">' + (studentName ? esc(studentName) : '') + '</div>' +
+      (fullscreenSupported() ? '<button class="icon-btn fs-btn" data-act="fullscreen" aria-label="სრული ეკრანი" title="სრული ეკრანი">' + (isFullscreen() ? ICONS.fsExit : ICONS.fs) + '</button>' : '') +
       '</header>' +
       (Scorm.isStandalone() ? '<div class="standalone-bar">სატესტო რეჟიმი: LMS არ არის დაკავშირებული, პროგრესი ინახება ამ ბრაუზერში. <button class="link" data-act="reset-local">თავიდან დაწყება</button></div>' : '');
   }
@@ -549,17 +573,23 @@
     var callStatus = ch === 'phone' ? '<span class="call-status" id="call-status"><span class="dot"></span>ზარი მიმდინარეობს' + (run.mode === 'eval' ? '' : ' · <span id="call-timer">0:00</span>') + '</span>' :
       ch === 'chat' ? '<span class="call-status" id="call-status"><span class="dot"></span>ონლაინ</span>' : '';
     render(topbar(progress) +
-      '<main class="desk desk-' + ch + '">' +
+      '<div class="pane-switch" role="tablist" aria-label="ხედი">' +
+      '<button role="tab" data-act="pane" data-pane="talk" aria-selected="true" class="active">საუბარი</button>' +
+      '<button role="tab" data-act="pane" data-pane="system" aria-selected="false">ბანკის სისტემა</button></div>' +
+      '<main class="desk desk-' + ch + '" data-pane="talk">' +
       '<h1 class="sr-only" tabindex="-1">კლიენტი ' + pos + ' / ' + nCases.length + ' — ' + T.channels[ch] + ': ' + esc(cs.brief || '') + '</h1>' +
       '<section class="scene" aria-label="კლიენტთან საუბარი">' +
       '<div id="stage-wrap">' + stageTrack() + '</div>' +
-      '<div class="scene-view scene-' + ch + '">' + sceneBackdrop(ch) +
-      '<div class="scene-customer" id="cust-avatar">' + Avatar.render(cs.customer, current.mood, cs.id + cs.customer.name) + '</div>' +
-      (ch === 'branch' ? '<div class="counter" aria-hidden="true"></div>' : '') +
+      (Avatar.portraitFor && Avatar.portraitFor(cs.customer, cs.id + cs.customer.name)
+        ? '<div class="scene-view scene-photo scene-' + ch + '"><div class="scene-customer" id="cust-avatar">' + Avatar.render(cs.customer, current.mood, cs.id + cs.customer.name) + '</div>' +
+          '<div class="photo-shade" aria-hidden="true"></div>'
+        : '<div class="scene-view scene-' + ch + '">' + sceneBackdrop(ch) +
+          '<div class="scene-customer" id="cust-avatar">' + Avatar.render(cs.customer, current.mood, cs.id + cs.customer.name) + '</div>' +
+          (ch === 'branch' ? '<div class="counter" aria-hidden="true"></div>' : '')) +
       '<div class="scene-tag"><span class="ch-icon">' + ICONS[ch] + '</span><span><small>' + label + '</small><b>' + esc(cs.customer.name || T.customer) + '</b>' + callStatus +
       (cs.brief ? '<em class="scene-brief">' + esc(cs.brief) + '</em>' : '') + '</span></div>' +
       '</div>' +
-      '<div class="speech" id="speech" role="log" aria-live="polite" aria-label="საუბარი"></div>' +
+      '<div class="speech" id="speech" role="log" aria-live="polite" aria-label="საუბარი" tabindex="0"></div>' +
       '<div class="reply" id="choices" role="group" aria-labelledby="choices-label" tabindex="-1"></div>' +
       '</section>' +
       '<section class="monitor" aria-label="ბანკის სისტემა">' +
@@ -568,9 +598,6 @@
       '<nav class="mon-tabs" id="mon-tabs" role="tablist"></nav>' +
       '<div class="mon-body" id="mon-body" role="tabpanel"></div>' +
       '</section>' +
-      '<div class="history" id="history" hidden><div class="history-card" role="dialog" aria-modal="true" aria-label="საუბრის ისტორია">' +
-      '<div class="history-head"><b>საუბრის ისტორია</b><button class="icon-btn" data-act="history-close" aria-label="დახურვა">' + ICONS.close + '</button></div>' +
-      '<div class="history-body" id="history-body"></div></div></div>' +
       '</main>');
     if (ch === 'phone' && run.mode !== 'eval') startCallTimer();
     renderMonitor();
@@ -604,23 +631,15 @@
   function renderSpeech(typingNow) {
     var box = document.getElementById('speech');
     if (!box) return;
-    // latest customer line, the employee line just before it, and any system note in between
-    var lastCust = -1;
-    for (var i = transcript.length - 1; i >= 0; i--) if (transcript[i].who === 'customer') { lastCust = i; break; }
-    var from = lastCust;
-    for (var j = lastCust - 1; j >= 0 && transcript[j].who !== 'customer'; j--) from = j;
-    if (lastCust < 0) from = Math.max(0, transcript.length - 2);
-    var tail = transcript.slice(from).filter(function (m, k, arr) { return m.who !== 'employee' || k >= arr.length - 3; });
     var name = esc(current.cs.customer.name || T.customer);
-    var html = tail.map(function (m) {
+    var html = transcript.map(function (m) {
       if (m.who === 'system') return '<div class="sp sp-system"><span>' + T.system + ':</span> ' + esc(m.text) + '</div>';
       if (m.who === 'employee') return '<div class="sp sp-employee"><small>' + T.you + '</small>' + esc(m.text) + '</div>';
       return '<div class="sp sp-customer"><small>' + name + '</small>' + esc(m.text) + '</div>';
     }).join('');
     if (typingNow) html += '<div class="sp sp-customer sp-typing" aria-label="კლიენტი წერს"><span></span><span></span><span></span></div>';
-    var count = transcript.filter(function (m) { return m.who !== 'system'; }).length;
-    html += count > 2 ? '<button class="history-btn" data-act="history">საუბრის ისტორია (' + count + ')</button>' : '';
     box.innerHTML = html;
+    box.scrollTop = box.scrollHeight; // the box scrolls, never the page
   }
 
   function renderHistory() {
@@ -910,11 +929,23 @@
     lockInput();
   }
 
+  /** narrow screens show one pane at a time: the conversation or the bank system */
+  function setPane(p) {
+    var d = app.querySelector('.desk');
+    if (!d) return;
+    d.setAttribute('data-pane', p);
+    app.querySelectorAll('.pane-switch button').forEach(function (b) {
+      var on = b.getAttribute('data-pane') === p;
+      b.classList.toggle('active', on);
+      b.setAttribute('aria-selected', on ? 'true' : 'false');
+    });
+  }
+
   function renderTaskPrompt(node) {
     var choices = document.getElementById('choices');
     choices.innerHTML = '<div class="task-prompt"><span class="tp-icon">' + ICONS.book + '</span><div><b>' + esc(node.title || 'ამოცანა') + '</b>' +
-      '<span>შეასრულეთ ოპერაცია სისტემაში (მარჯვნივ) და დააჭირეთ „' + esc(node.submitLabel || 'დადასტურება') + '“.</span></div>' +
-      '<button class="btn btn-sm" data-act="mon-tab" data-tab="task">გახსნა</button></div>';
+      '<span>შეასრულეთ ოპერაცია ბანკის სისტემაში და დააჭირეთ „' + esc(node.submitLabel || 'დადასტურება') + '“.</span></div>' +
+      '<button class="btn btn-sm" data-act="mon-tab" data-tab="task" data-pane="system">გახსნა</button></div>';
     awaitingChoice = true;
   }
 
@@ -989,6 +1020,7 @@
     }
     awaitingChoice = false;
     var r = current.submitTask(vals);
+    setPane('talk');
     say('system', node.doneText || ((node.title || 'ოპერაცია') + ' — შესრულდა.'));
     monTab = node.saveTo === 'crm' ? 'crm' : 'crm';
     renderMonitor();
@@ -1422,6 +1454,7 @@
     'preview-restart': function () { startPreview(); },
     'mon-tab': function (el) {
       var tab = el.getAttribute('data-tab');
+      if (el.getAttribute('data-pane')) setPane(el.getAttribute('data-pane'));
       if (tab === 'products' && current && monTab !== 'products') current.ref.opens++;
       monTab = tab;
       renderMonitor();
@@ -1432,6 +1465,8 @@
     'ask-done': function () { finishAsk(); },
     'task-submit': function () { submitTask(); },
     'calc': function (el) { calcPress(el.getAttribute('data-k')); },
+    'fullscreen': function () { toggleFullscreen(); },
+    'pane': function (el) { setPane(el.getAttribute('data-pane')); },
     'history': function () {
       renderHistory();
       var h = document.getElementById('history');

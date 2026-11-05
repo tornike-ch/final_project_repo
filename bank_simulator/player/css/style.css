@@ -706,3 +706,53 @@ h1[tabindex="-1"]:focus, .choices:focus { outline: none; }
 .stage-track li:not(.now) { padding: 4px; }
 .scene-phone .scene-customer, .scene-chat .scene-customer { left: 72%; }
 @media (max-width: 860px) { .scene-phone .scene-customer, .scene-chat .scene-customer { left: 76%; } }
+
+/* =====================================================================
+   Fit the LMS frame: the page itself never scrolls; content areas do
+   ===================================================================== */
+html, body { height: 100%; overflow: hidden; }
+.app { height: 100vh; height: 100dvh; min-height: 0; overflow: hidden; display: flex; flex-direction: column; }
+.topbar { position: relative; top: auto; flex: none; }
+.standalone-bar, .lms-banner { flex: none; }
+.screen { flex: 1 1 0; min-height: 0; overflow-y: auto; }
+.desk { flex: 1 1 0; min-height: 0; height: auto; }
+.ws { flex: 1 1 0; min-height: 0; height: auto; }
+.fs-btn { color: #fff; flex: none; }
+.fs-btn:hover { background: rgba(255, 255, 255, .12); }
+.fs-btn svg { width: 20px; height: 20px; }
+
+/* scene column: compact scene, conversation log scrolls inside, replies below */
+.scene-view { height: clamp(120px, 24vh, 210px); }
+.speech { flex: 1 1 0; min-height: 90px; overflow-y: auto; overscroll-behavior: contain; scroll-behavior: smooth; }
+.reply { flex: 0 1 auto; max-height: 46%; }
+.history-btn { display: none; }
+
+.pane-switch { display: none; }
+
+@media (max-width: 860px) {
+  .app:has(> .desk) { height: 100dvh; }
+  .pane-switch { display: flex; flex: none; gap: 4px; padding: 6px 10px 0; background: var(--bg); }
+  .pane-switch button {
+    flex: 1; border: 1px solid var(--border); background: var(--surface); border-radius: 8px 8px 0 0;
+    padding: 8px; font-weight: 600; color: var(--muted);
+  }
+  .pane-switch button.active { color: var(--primary-dark); border-bottom-color: var(--surface); box-shadow: inset 0 3px 0 var(--primary-strong); }
+  .desk { display: flex; flex-direction: column; flex: 1 1 0; min-height: 0; height: auto; padding: 0 10px 10px; }
+  .desk > .scene, .desk > .monitor { flex: 1 1 0; min-height: 0; }
+  .desk[data-pane="talk"] > .monitor { display: none; }
+  .desk[data-pane="system"] > .scene { display: none; }
+  .monitor { min-height: 0; border-radius: 0 0 16px 16px; }
+  .scene { border-radius: 0 0 14px 14px; }
+  .scene-view { height: clamp(110px, 20vh, 160px); }
+  .reply { max-height: 52%; overflow-y: auto; }
+}
+
+/* photo portraits: the scene becomes a camera view of the customer */
+.scene-photo { background: #1B2733; }
+.scene-photo .scene-customer { position: absolute; inset: 0; width: auto; height: auto; transform: none; left: 0; top: 0; bottom: 0; }
+.scene-photo .scene-customer img { width: 100%; height: 100%; object-fit: cover; object-position: 50% 22%; border-radius: 0; box-shadow: none; background: none; }
+.scene-photo.scene-phone .scene-customer img, .scene-photo.scene-chat .scene-customer img { filter: saturate(.95); }
+.photo-shade { position: absolute; inset: 0; z-index: 1; background: linear-gradient(180deg, rgba(11, 36, 64, .35) 0, transparent 35%, transparent 70%, rgba(11, 36, 64, .35) 100%); pointer-events: none; }
+.avatar-photo { animation: fadein .25s ease-out; }
+.id-photo .avatar-photo { width: 100%; height: 100%; object-fit: cover; object-position: 50% 20%; filter: grayscale(.25); }
+.mini-avatar .avatar-photo { object-fit: cover; }

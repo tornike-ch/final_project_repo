@@ -81,3 +81,11 @@ dialog::backdrop { background: rgba(11, 36, 64, .45); }
   .nav button { white-space: nowrap; }
   .main { padding: 16px; overflow-x: auto; }
 }
+
+.mood-row { display: grid; grid-template-columns: repeat(5, minmax(0, 1fr)); gap: 10px; margin: 10px 0; }
+.mood-slot { display: flex; flex-direction: column; gap: 4px; align-items: center; cursor: pointer; }
+.mood-slot img, .mood-slot .empty-slot { width: 100%; aspect-ratio: 1; object-fit: cover; border-radius: 10px; border: 1px solid var(--border); }
+.mood-slot .empty-slot { display: grid; place-items: center; font-size: 28px; color: var(--muted); background: #F7F9FB; border-style: dashed; }
+.mood-slot small { font-size: 12px; color: var(--muted); }
+.w-sm { width: 120px; }
+.form-row input, .form-row select { padding: 5px 8px; border: 1px solid var(--border); border-radius: 6px; }

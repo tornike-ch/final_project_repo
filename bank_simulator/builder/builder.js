@@ -40,6 +40,7 @@
     c.cases = c.cases || [];
     c.products = c.products || [];
     c.quiz = c.quiz || [];
+    c.portraits = c.portraits || [];
     return c;
   }
   function download(name, data, type) {
@@ -334,7 +335,8 @@
           ['config.features.quizPlacement', 'Quiz placement', 'select', [['between', 'Between customers'], ['end', 'At the end of each level']]],
           ['config.features.moodWalkout', 'Customer can walk out (already angry + another bad answer)', 'bool'],
           ['config.features.shuffleOptions', 'Shuffle answer order (recommended for evaluation)', 'bool'],
-          ['config.features.showTimeInReport', 'Show response times to the employee in the final report', 'bool']
+          ['config.features.showTimeInReport', 'Show response times to the employee in the final report', 'bool'],
+          ['config.features.autoPortraits', 'Customer photos: auto-assign by gender and age when a case names no portrait', 'bool']
         ]],
         ['Channel', [
           ['config.channel', 'Channel used for cases', 'select', [['case', 'Per case (as tagged)'], ['branch', 'All cases: branch'], ['phone', 'All cases: phone'], ['chat', 'All cases: chat']]]
@@ -417,6 +419,35 @@
         '<table class="grid"><thead><tr><th>Id</th><th>Level</th><th>Question</th><th>Points</th><th></th></tr></thead><tbody>' + rows + '</tbody></table>';
     },
 
+    portraits: function () {
+      var MOODS = [['angry', 'Angry'], ['annoyed', 'Annoyed'], ['neutral', 'Neutral'], ['pleased', 'Pleased'], ['happy', 'Happy']];
+      var used = {};
+      content.cases.forEach(function (c) { if (c.customer && c.customer.portrait) used[c.customer.portrait] = (used[c.customer.portrait] || 0) + 1; });
+      var cards = content.portraits.map(function (p, i) {
+        return '<section class="panel portrait"><div class="form-row">' +
+          '<label>Id <input data-portrait="' + i + '" data-key="id" value="' + esc(p.id) + '" class="w-sm"></label>' +
+          '<label>Label <input data-portrait="' + i + '" data-key="label" value="' + esc(p.label || '') + '"></label>' +
+          '<label>Gender <select data-portrait="' + i + '" data-key="gender"><option value="f"' + (p.gender === 'f' ? ' selected' : '') + '>female</option><option value="m"' + (p.gender !== 'f' ? ' selected' : '') + '>male</option></select></label>' +
+          '<label>Age <input type="number" data-portrait="' + i + '" data-key="age" value="' + esc(p.age || '') + '" class="w-xs"></label>' +
+          '<span class="muted small">' + (used[p.id] ? 'used by ' + used[p.id] + ' case(s) explicitly' : 'auto-assigned by gender/age') + '</span>' +
+          '<button class="btn btn-sm" data-act="portrait-del" data-i="' + i + '">Delete</button></div>' +
+          '<div class="mood-row">' + MOODS.map(function (m) {
+            var img = p.images && p.images[m[0]];
+            return '<label class="mood-slot">' + (img ? '<img src="' + esc(img) + '" alt="' + m[1] + '">' : '<span class="empty-slot">+</span>') +
+              '<small>' + m[1] + (m[0] === 'neutral' ? ' (required)' : '') + '</small><input type="file" accept="image/*" data-portrait-img="' + i + '" data-mood="' + m[0] + '" hidden></label>';
+          }).join('') + '</div>' +
+          '<label class="btn btn-sm file-btn">Upload all 5 at once…<input type="file" accept="image/*" multiple data-portrait-bulk="' + i + '" hidden></label> ' +
+          '<span class="muted small">File names containing angry / annoyed / neutral / pleased / happy are matched automatically; otherwise they fill the slots in that order.</span></section>';
+      }).join('');
+      var bytes = JSON.stringify(content.portraits).length;
+      return '<h1>Customer photos <small class="muted">' + content.portraits.length + '</small></h1>' +
+        '<p>Upload realistic photos of a person with <b>five expressions</b> (angry → happy). The customer\'s face is the only mood signal in the game, so the same person, framing and light should be used in all five. ' +
+        'Photos are resized to 600 px and embedded in the SCORM package. A case uses <code>customer.portrait: "&lt;id&gt;"</code>, or gets the closest gender/age match automatically. ' +
+        'Without photos the illustrated faces are used. See <b>PORTRAITS.md</b> for how to produce the photos.</p>' +
+        '<p class="muted small">Current size of all photos: ' + Math.round(bytes / 1024) + ' KB' + (bytes > 3500000 ? ' — large: browser storage may not keep the builder session; export Content JSON as backup.' : '') + '</p>' +
+        '<div class="btn-row"><button class="btn" data-act="portrait-add">Add person</button></div>' + cards;
+    },
+
     validation: function () {
       var v = Engine.validate(content);
       var li = function (x) { return '<li>' + esc(x) + '</li>'; };
@@ -484,6 +515,37 @@
     };
   }
 
+  /* ---------------- portraits ---------------- */
+  function resizeImage(file) {
+    return new Promise(function (resolve, reject) {
+      var fr = new FileReader();
+      fr.onerror = function () { reject(new Error('Could not read ' + file.name)); };
+      fr.onload = function () {
+        var img = new Image();
+        img.onerror = function () { reject(new Error(file.name + ' is not an image')); };
+        img.onload = function () {
+          var max = 600;
+          var k = Math.min(1, max / Math.max(img.width, img.height));
+          var cv = document.createElement('canvas');
+          cv.width = Math.round(img.width * k);
+          cv.height = Math.round(img.height * k);
+          cv.getContext('2d').drawImage(img, 0, 0, cv.width, cv.height);
+          resolve(cv.toDataURL('image/jpeg', 0.82));
+        };
+        img.src = fr.result;
+      };
+      fr.readAsDataURL(file);
+    });
+  }
+
+  function setPortraitImage(i, mood, file) {
+    return resizeImage(file).then(function (uri) {
+      var p = content.portraits[i];
+      p.images = p.images || {};
+      p.images[mood] = uri;
+    });
+  }
+
   /* ---------------- events ---------------- */
   var ACTIONS = {
     'export-scorm': exportScorm,
@@ -532,6 +594,18 @@
       var ix = findIndex(content.products, id); if (ix < 0) return; content.products.splice(ix, 1);
       save(); render();
     },
+    'portrait-add': function () {
+      var n = content.portraits.length + 1;
+      while (findIndex(content.portraits, 'p' + n) >= 0) n++;
+      content.portraits.push({ id: 'p' + n, label: '', gender: 'f', age: 35, images: {} });
+      save(); render();
+    },
+    'portrait-del': function (el) {
+      var i = Number(el.getAttribute('data-i'));
+      if (!confirm('Delete photo set ' + content.portraits[i].id + '?')) return;
+      content.portraits.splice(i, 1);
+      save(); render();
+    },
     'quiz-add': function () { editJson('New question', { id: 'Q' + (content.quiz.length + 1), level: 0, question: '', options: ['', '', '', ''], correct: 0, points: 2, explanation: '' }, upsert('quiz')); },
     'quiz-edit': function (el) { var id = el.getAttribute('data-id'); editJson('Edit ' + id, content.quiz[findIndex(content.quiz, id)], upsert('quiz', id), 'correct = index of the right option, starting at 0.'); },
     'quiz-del': function (el) {
@@ -559,6 +633,32 @@
       return;
     }
     if (t.id === 'case-filter') { caseFilter = t.value; render(); return; }
+    if (t.hasAttribute('data-portrait-img') && t.files[0]) {
+      setPortraitImage(Number(t.getAttribute('data-portrait-img')), t.getAttribute('data-mood'), t.files[0])
+        .then(function () { save(); render(); }).catch(function (e) { alert(e.message); });
+      return;
+    }
+    if (t.hasAttribute('data-portrait-bulk') && t.files.length) {
+      var pi = Number(t.getAttribute('data-portrait-bulk'));
+      var moods = ['angry', 'annoyed', 'neutral', 'pleased', 'happy'];
+      var files = Array.prototype.slice.call(t.files, 0, 5);
+      var free = moods.slice();
+      var plan = files.map(function (f) {
+        var m = moods.filter(function (x) { return f.name.toLowerCase().indexOf(x) >= 0; })[0];
+        if (m) free.splice(free.indexOf(m), 1);
+        return [f, m];
+      }).map(function (x) { return [x[0], x[1] || free.shift()]; });
+      Promise.all(plan.map(function (x) { return setPortraitImage(pi, x[1], x[0]); }))
+        .then(function () { save(); render(); }).catch(function (e) { alert(e.message); });
+      return;
+    }
+    if (t.hasAttribute('data-portrait')) {
+      var pp = content.portraits[Number(t.getAttribute('data-portrait'))];
+      var key = t.getAttribute('data-key');
+      pp[key] = key === 'age' ? Number(t.value) : t.value;
+      save();
+      return;
+    }
     var path = t.getAttribute('data-path');
     if (path) {
       var v = t.type === 'checkbox' ? t.checked : t.type === 'number' ? Number(t.value) : t.value;

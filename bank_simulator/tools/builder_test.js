@@ -109,6 +109,45 @@ const check = (c, m) => { console.log((c ? 'PASS ' : 'FAIL ') + m); if (!c) fail
     console.log('SKIP Excel round trip (pass --xlsx path/to/xlsx.full.min.js)');
   }
 
+  // ---- customer photos: upload 5 expressions, the game uses them
+  const imgDir = path.join(tmp, 'faces');
+  fs.mkdirSync(imgDir);
+  const gen = await ctx.newPage();
+  const moods = ['angry', 'annoyed', 'neutral', 'pleased', 'happy'];
+  for (const m of moods) {
+    const data = await gen.evaluate((m) => {
+      const c = document.createElement('canvas'); c.width = 800; c.height = 1000;
+      const g = c.getContext('2d');
+      g.fillStyle = { angry: '#b42318', annoyed: '#c27c00', neutral: '#5a6878', pleased: '#2a7f62', happy: '#1e9e62' }[m];
+      g.fillRect(0, 0, 800, 1000); g.fillStyle = '#fff'; g.font = 'bold 120px sans-serif'; g.fillText(m.toUpperCase(), 60, 520);
+      return c.toDataURL('image/png').split(',')[1];
+    }, m);
+    fs.writeFileSync(path.join(imgDir, 'test-' + m + '.png'), Buffer.from(data, 'base64'));
+  }
+  await gen.close();
+  await page.click('#nav [data-view="portraits"]');
+  await page.click('[data-act="portrait-add"]');
+  await page.selectOption('[data-portrait="0"][data-key="gender"]', 'f');
+  await page.fill('[data-portrait="0"][data-key="age"]', '34');
+  await page.dispatchEvent('[data-portrait="0"][data-key="age"]', 'change');
+  await page.setInputFiles('[data-portrait-bulk="0"]', moods.map((m) => path.join(imgDir, 'test-' + m + '.png')));
+  await page.waitForFunction(() => window.Builder.content().portraits[0] && Object.keys(window.Builder.content().portraits[0].images || {}).length === 5);
+  const p0 = await page.evaluate(() => { const p = window.Builder.content().portraits[0]; return { n: Object.keys(p.images).length, kb: Math.round(JSON.stringify(p.images).length / 1024), jpeg: p.images.angry.startsWith('data:image/jpeg') }; });
+  check(p0.n === 5 && p0.jpeg, 'five expressions uploaded and converted to JPEG (' + p0.kb + ' KB)');
+  if (SHOTS) await page.screenshot({ path: path.join(SHOTS, 'b4_photos.png'), fullPage: true });
+  const [pop2] = await Promise.all([page.waitForEvent('popup'), (async () => { await page.click('#nav [data-view="cases"]'); await page.click('[data-act="preview-case"][data-id="C101"]'); })()]);
+  await pop2.waitForSelector('#choices .opt', { timeout: 10000 });
+  const photo = await pop2.evaluate(() => { const i = document.querySelector('#cust-avatar img'); return i ? { photo: i.classList.contains('avatar-photo'), expr: i.getAttribute('data-expr') } : null; });
+  check(photo && photo.photo, 'case uses the uploaded photo for a matching customer (' + JSON.stringify(photo) + ')');
+  await pop2.evaluate(() => { window.SIM_FAST = true; });
+  await pop2.waitForTimeout(400);
+  await pop2.evaluate(() => { const n = window.SimApp.current().node(); const b = window.Engine.bestOption(n); document.querySelector('#choices .opt[data-i="' + n.options.indexOf(b) + '"]').click(); });
+  await pop2.waitForTimeout(500);
+  const expr2 = await pop2.evaluate(() => document.querySelector('#cust-avatar img').getAttribute('data-expr'));
+  check(expr2 !== photo.expr, 'photo changes with the mood (' + photo.expr + ' -> ' + expr2 + ')');
+  if (SHOTS) await pop2.screenshot({ path: path.join(SHOTS, 'b5_photo_case.png') });
+  await pop2.close();
+
   if (SHOTS) {
     await page.click('#nav [data-view="settings"]');
     await page.screenshot({ path: path.join(SHOTS, 'b3_settings.png'), fullPage: true });
