@@ -137,7 +137,21 @@
     var crit = { knowledge: 0, service: 0, sales: 0 };
     r.criticals.forEach(function (c) { crit[c.skill] = (crit[c.skill] || 0) + 1; });
     return [r.caseId, r.earned.knowledge, r.earned.service, r.earned.sales, crit.knowledge, crit.service, crit.sales,
-      r.lvl, r.seconds, (r.outcome || 'u').charAt(0), r.captured.length, r.ref.opens + r.ref.views];
+      r.lvl, r.seconds, (r.outcome || 'u').charAt(0), r.captured.length, r.ref.opens + r.ref.views,
+      r.steps.map(function (st) { return st.option; }).join('')];
+  }
+
+  /** Re-runs recorded choices through the engine (resume / report after reload). */
+  function replayCase(cs, choices) {
+    var cr = new Engine.CaseRun(content, cs);
+    for (var k = 0; k < choices.length; k++) {
+      var node = cr.node();
+      if (!node || node.end || !node.options[Number(choices.charAt(k))]) break;
+      var r = cr.choose(Number(choices.charAt(k)));
+      if (r.ended) break;
+    }
+    cr.steps.forEach(function (st) { st.latency = null; });
+    return cr;
   }
 
   function expandCase(a) {
@@ -147,6 +161,17 @@
     });
     var o = { r: 'resolved', u: 'unresolved', w: 'walkout', e: 'escalated' }[a[9]] || 'resolved';
     var cs = CASES[a[0]];
+    if (cs && a[12]) {
+      try {
+        var res = replayCase(cs, String(a[12])).result();
+        // keep the scores that were reported; take the step detail from the replay
+        res.earned = { knowledge: a[1], service: a[2], sales: a[3] };
+        if (res.criticals.length !== criticals.length) res.criticals = criticals;
+        res.lvl = a[7] || 0; res.seconds = a[8] || 0; res.outcome = o;
+        res.ref = { opens: 0, searches: 0, views: a[11] || 0 };
+        return res;
+      } catch (e) { /* content changed: fall back to the summary */ }
+    }
     return {
       caseId: a[0], level: cs ? cs.level : 0, lvl: a[7] || 0,
       earned: { knowledge: a[1], service: a[2], sales: a[3] },
@@ -200,7 +225,7 @@
     });
   }
 
-  function reportFinal(agg, levelsPassed) {
+  function reportFinal(agg, levelsPassed, levelsAttempted) {
     Scorm.set('cmi.core.score.min', '0');
     Scorm.set('cmi.core.score.max', '100');
     Scorm.set('cmi.core.score.raw', String(agg.overall));
@@ -218,7 +243,23 @@
     Scorm.set(lp + 'score.min', '0');
     Scorm.set(lp + 'score.max', '100');
     Scorm.set(lp + 'score.raw', String(Math.round(levelsPassed / LEVELS.length * 100)));
-    Scorm.set(lp + 'status', levelsPassed === LEVELS.length ? 'passed' : 'failed');
+    Scorm.set(lp + 'status', 'completed');
+    var cp = 'cmi.objectives.' + (idx + 1) + '.';
+    Scorm.set(cp + 'id', 'critical_errors');
+    Scorm.set(cp + 'score.min', '0');
+    Scorm.set(cp + 'score.max', '100');
+    Scorm.set(cp + 'score.raw', String(Math.min(100, agg.criticals)));
+    Scorm.set(cp + 'status', agg.criticals ? 'failed' : 'passed');
+    interaction({
+      id: 'SESSION_SUMMARY',
+      type: 'fill-in',
+      response: SKILLS.map(function (s) {
+        var a = agg.skills[s];
+        return { knowledge: 'K', service: 'S', sales: 'SA' }[s] + (a.pct == null ? 'na' : a.pct) + '(' + a.earned + '/' + a.max + ',n' + a.decisions + ')';
+      }).join(';') + ';CRIT' + agg.criticals + ';LVL' + levelsPassed + '/' + LEVELS.length + ';TRIED' + levelsAttempted +
+        ';CASES' + run.caseResults.length + ';T' + run.caseResults.reduce(function (t, r) { return t + (r.seconds || 0); }, 0) + 's',
+      result: 'neutral'
+    });
     var status = 'completed';
     if (cfg.scorm.statusMode === 'passed_failed') status = levelsPassed === LEVELS.length ? 'passed' : 'failed';
     Scorm.set('cmi.core.lesson_status', status);
@@ -280,7 +321,7 @@
     } else if (e.s === 'a') {
       var lv = LEVELS[e.li];
       body = '<p class="lead">შეფასება დაწყებულია. გააგრძელეთ იქიდან, სადაც შეჩერდით.</p>' +
-        '<p class="muted">დონე ' + (lv ? lv.id + ' · ' + esc(lv.name) : '') + ', ნაბიჯი ' + (e.i + 1) + ' / ' + e.st.length + '. დაუსრულებელი საუბარი თავიდან დაიწყება.</p>' + rules +
+        '<p class="muted">დონე ' + (lv ? lv.id + ' · ' + esc(lv.name) : '') + ', ნაბიჯი ' + Math.min(e.i + 1, e.st.length) + ' / ' + e.st.length + '. უკვე გაცემული პასუხები შენახულია და შეცვლა შეუძლებელია.</p>' + rules +
         '<div class="actions"><button class="btn btn-primary btn-lg" data-act="resume-eval">გაგრძელება</button></div>';
     } else {
       body = '<p class="lead">შეფასება დასრულებულია. შედეგი უკვე გაგზავნილია.</p>' + summaryTiles(e.res) +
@@ -348,7 +389,7 @@
   function advance() {
     run.stepIndex++;
     if (run.mode === 'eval') {
-      state.e.i = run.stepIndex;
+      state.e.i = Math.max(state.e.i, run.stepIndex);
       Scorm.set('cmi.core.lesson_location', 'L' + LEVELS[run.levelIndex].id + '-S' + run.stepIndex);
       saveState();
       saveDetail(run);
@@ -378,7 +419,9 @@
       (cfg.features.referencePanel ? refPanel() : '') +
       '</main>');
     if (ch === 'phone') startCallTimer();
-    showNode(current.node(), true);
+    var saved = run.mode === 'eval' && state.e.cur && state.e.cur[0] === cs.id ? String(state.e.cur[1] || '') : '';
+    if (saved) resumeConversation(saved);
+    else showNode(current.node(), true);
   }
 
   function startCallTimer() {
@@ -502,6 +545,28 @@
     }, node.say);
   }
 
+  /** Rebuild the transcript of an interrupted conversation from saved choices. */
+  function resumeConversation(choices) {
+    for (var k = 0; k < choices.length; k++) {
+      var node = current.node();
+      var idx = Number(choices.charAt(k));
+      if (!node || node.end || !node.options[idx]) break;
+      if (node.system) addMsg('system', '<span>' + T.system + ':</span> ' + esc(node.system));
+      if (node.say) customerMsg(node.say);
+      addMsg('employee', '<div class="bubble"><small>' + T.you + '</small>' + esc(node.options[idx].text) + '</div>');
+      var r = current.choose(idx);
+      current.steps[current.steps.length - 1].latency = null;
+      if (r.walkout) {
+        updateAvatar();
+        addMsg('system', '<span>' + T.system + ':</span> ' + T.walkout[current.channel]);
+        return endCase(null);
+      }
+    }
+    updateAvatar();
+    addMsg('system', '<span>' + T.system + ':</span> საუბარი გაგრძელდა შეწყვეტის შემდეგ. წინა პასუხები შენახულია.');
+    showNode(current.node());
+  }
+
   function renderOptions(node) {
     var choices = document.getElementById('choices');
     var isProduct = node.type === 'product';
@@ -526,6 +591,10 @@
     document.getElementById('choices').innerHTML = '';
     addMsg('employee', '<div class="bubble"><small>' + T.you + '</small>' + esc(opt.text) + '</div>');
     var r = current.choose(i);
+    if (run.mode === 'eval') {
+      state.e.cur = [current.cs.id, current.steps.map(function (st) { return st.option; }).join('')];
+      saveState();
+    }
     if (r.walkout) {
       typing(function () {
         updateAvatar();
@@ -545,6 +614,10 @@
     if (run.mode === 'eval') {
       state.e.r.push(compactCase(res));
       reportCaseInteractions(res);
+      state.e.cur = null;
+      state.e.i = run.stepIndex + 1; // this case can never be replayed
+      saveState();
+      saveDetail(run);
     }
     var cls = { resolved: 'ok', escalated: 'warn', unresolved: 'bad', walkout: 'bad' }[res.outcome] || 'ok';
     document.getElementById('choices').innerHTML =
@@ -575,6 +648,7 @@
     run.quizResults.push(qr);
     if (run.mode === 'eval') {
       state.e.q.push([q.id, qr.correct ? 1 : 0, run.lvl]);
+      state.e.i = run.stepIndex + 1;
       interaction({
         id: 'QUIZ_' + q.id, type: 'choice', response: String.fromCharCode(97 + i),
         pattern: String.fromCharCode(97 + q.correct), result: qr.correct ? 'correct' : 'wrong',
@@ -594,7 +668,8 @@
   function finishLevel() {
     var l = LEVELS[run.levelIndex];
     var agg = levelAggregate(run.lvl);
-    var passed = agg.overall >= l.passThreshold;
+    var verdict = Engine.levelPass(content, l, agg);
+    var passed = verdict.passed;
     run.levelResults.push({ levelId: l.id, pct: agg.overall, passed: passed });
     if (passed) state.p.u = Math.max(state.p.u, run.levelIndex + 1);
     var more = passed && run.levelIndex + 1 < LEVELS.length && !preview;
@@ -609,7 +684,13 @@
         finalizeEval(); // lock the result now, before the employee even opens the report
       }
     }
-    var verdictHtml = passed ? '<div class="level-result ok">' + ICONS.check + ' დონე გავლილია</div>' : '<div class="level-result bad">დონე ვერ გაიარეთ</div>';
+    var why = verdict.reasons.map(function (r) {
+      if (r === 'threshold') return 'დონის ქულა ზღვარზე დაბალია';
+      if (r === 'critical') return 'დაშვებულია კრიტიკული შეცდომა';
+      return '„' + T.skills[r.slice(6)] + '“ მინიმალურ ზღვარზე (' + l.skillFloor + '%) დაბალია';
+    });
+    var verdictHtml = passed ? '<div class="level-result ok">' + ICONS.check + ' დონე გავლილია</div>' :
+      '<div class="level-result bad">დონე ვერ გაიარეთ</div>' + (why.length ? '<p class="muted">მიზეზი: ' + why.join('; ') + '.</p>' : '');
     var next = more ? '<button class="btn btn-primary btn-lg" data-act="next-level">შემდეგი დონე</button>' :
       '<button class="btn btn-primary btn-lg" data-act="finish-run">შედეგების ნახვა</button>';
     render(topbar() + '<main class="screen center"><section class="card level-intro">' +
@@ -633,11 +714,12 @@
     state.e.s = 'd';
     state.e.res = {
       o: agg.overall, k: agg.skills.knowledge.pct, s: agg.skills.service.pct, sa: agg.skills.sales.pct,
-      lp: levelsPassed
+      lp: levelsPassed, c: agg.criticals
     };
+    state.e.cur = null;
+    reportFinal(agg, levelsPassed, run.levelResults.length);
     saveState();
     saveDetail(run);
-    reportFinal(agg, levelsPassed);
   }
 
   function finishRun() {
@@ -661,7 +743,7 @@
     var skillCards = SKILLS.map(function (s) {
       var a = agg.skills[s];
       return '<div class="skill-card"><div class="skill-head"><span>' + T.skills[s] + '</span><b>' + (a.pct == null ? '—' : a.pct + '%') + '</b></div>' + bar(a.pct) +
-        '<small class="muted">' + (a.max ? a.earned + ' / ' + a.max + ' ქულა' : 'ამ სესიაში არ შეფასებულა') +
+        '<small class="muted">' + (a.max ? a.earned + ' / ' + a.max + ' ქულა · ' + a.decisions + ' შეფასებული გადაწყვეტილება' : 'ამ სესიაში არ შეფასებულა') +
         (a.criticals ? ' · <span class="crit-text">' + a.criticals + ' კრიტიკული შეცდომა</span>' : '') + '</small></div>';
     }).join('');
 

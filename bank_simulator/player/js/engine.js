@@ -14,8 +14,8 @@
       bankName: 'ბანკი', logoText: 'BANK', productName: 'მომსახურების სიმულატორი',
       primary: '#00A3E0', primaryDark: '#0B2440', accent: '#00B5AD', background: '#F2F5F8'
     },
-    levels: [{ id: 1, name: 'დონე 1', description: '', casesPerRun: 3, quizQuestions: 0, passThreshold: 70 }],
-    scoring: { criticalPenalty: 15, balanceCategories: true },
+    levels: [{ id: 1, name: 'დონე 1', description: '', casesPerRun: 3, quizQuestions: 0, passThreshold: 70, skillFloor: 0 }],
+    scoring: { criticalPenalty: 15, criticalFailsLevel: true, balanceCategories: true },
     features: { referencePanel: true, quiz: true, quizPlacement: 'between', moodWalkout: true, shuffleOptions: true, showTimeInReport: false },
     channel: 'case',
     scorm: { statusMode: 'completed' }
@@ -75,6 +75,7 @@
       l.casesPerRun = Math.max(1, Number(l.casesPerRun) || 1);
       l.quizQuestions = Math.max(0, Number(l.quizQuestions) || 0);
       l.passThreshold = Math.max(0, Math.min(100, Number(l.passThreshold) || 0));
+      l.skillFloor = Math.max(0, Math.min(100, Number(l.skillFloor) || 0));
     });
     return c;
   }
@@ -113,6 +114,7 @@
       return memo[nid];
     }
     var r = best(cs.start).sums;
+    Object.defineProperty(cs, '_bestFrom', { value: best, enumerable: false, configurable: true });
     var result = {};
     SKILLS.forEach(function (s) { result[s] = Math.max(0, r[s]); });
     Object.defineProperty(cs, '_max', { value: result, enumerable: false, configurable: true });
@@ -192,12 +194,43 @@
       });
       var mx = caseMax(cs);
       if (!mx.knowledge && !mx.service && !mx.sales) warnings.push(where + ': no positive points anywhere');
+
+      // answer-length tell: the best answer should not be recognisable by its length
+      var decisions = 0, bestLongest = 0, spread = [];
+      var bestFrom = cs._bestFrom;
+      Object.keys(cs.nodes).forEach(function (nid) {
+        var n = cs.nodes[nid];
+        if (n.end || n.options.length < 2 || !seen[nid]) return;
+        decisions++;
+        var lens = n.options.map(function (o) { return String(o.text || '').length; });
+        var b = bestOption(n);
+        var bl = b ? String(b.text || '').length : 0;
+        if (b && lens.every(function (x, i) { return n.options[i] === b || x < bl; })) bestLongest++;
+        var mn = Math.min.apply(null, lens), mxl = Math.max.apply(null, lens);
+        if (mn > 0 && mxl > 1.5 * mn) spread.push(nid);
+        // recovery: a wrong (non-best, non-critical) answer should not reach the ideal total
+        if (b && bestFrom) {
+          var ideal = optionTotal(b) + bestFrom(b.next).total;
+          n.options.forEach(function (o, i) {
+            if (o === b || o.critical) return;
+            if (optionTotal(o) < optionTotal(b) && optionTotal(o) + bestFrom(o.next).total >= ideal) {
+              warnings.push(where + '/' + nid + ' option ' + (i + 1) + ': weaker answer can still reach the ideal total later (recovery branch gives the points back)');
+            }
+          });
+        }
+      });
+      if (decisions >= 3 && bestLongest / decisions > 0.4) {
+        warnings.push(where + ': the best answer is the longest option at ' + bestLongest + ' of ' + decisions + ' decisions (length gives the answer away; aim for 40% or less)');
+      }
+      if (spread.length) warnings.push(where + ': option lengths differ more than 1.5x at ' + spread.join(', ') + ' (keep options of similar length)');
     });
     c.config.levels.forEach(function (l) {
       var pool = c.cases.filter(function (cs) { return cs.level === l.id; }).length;
       if (!pool) errors.push('Level ' + l.id + ': no cases in pool');
       else if (pool < l.casesPerRun) warnings.push('Level ' + l.id + ': pool has ' + pool + ' cases but casesPerRun is ' + l.casesPerRun + ' (all will be used, no randomness)');
       else if (pool === l.casesPerRun) warnings.push('Level ' + l.id + ': pool size equals casesPerRun - everyone gets the same cases');
+      else if (pool < 3 * l.casesPerRun) warnings.push('Level ' + l.id + ': pool has ' + pool + ' cases; at least ' + (3 * l.casesPerRun) + ' (3x casesPerRun) is recommended so colleagues get different cases');
+      if (l.casesPerRun < 4) warnings.push('Level ' + l.id + ': only ' + l.casesPerRun + ' cases per run; 4-6 give a much more reliable pass/fail');
       if (c.config.features.quiz && l.quizQuestions) {
         var qpool = c.quiz.filter(function (q) { return q.level === l.id || q.level === 0; }).length;
         if (qpool < l.quizQuestions) warnings.push('Level ' + l.id + ': quiz pool has ' + qpool + ' questions, ' + l.quizQuestions + ' requested');
@@ -338,13 +371,24 @@
 
   /* ---------- Aggregation ---------- */
 
+  /**
+   * Skill % = earned / max - penalty per critical error, clamped 0..100.
+   * A skill with no possible points in scope is "not measured" (null) and never
+   * enters the average; negative points or criticals on it still show in the
+   * report, and criticals still fail the level (criticalFailsLevel).
+   */
   function skillPct(earned, max, crit, penalty) {
-    var pct;
-    if (max > 0) pct = Math.round((earned / max) * 100);
-    else if (earned < 0 || crit > 0) pct = 100 + earned * 10;
-    else return null;
-    pct -= crit * penalty;
+    if (!(max > 0)) return null;
+    var pct = Math.round((earned / max) * 100) - crit * penalty;
     return Math.max(0, Math.min(100, pct));
+  }
+
+  /** skills on which the options of a node actually differ */
+  function nodeSkills(node) {
+    return SKILLS.filter(function (s) {
+      var vals = node.options.map(function (o) { return o.scores[s] || 0; });
+      return Math.max.apply(null, vals) !== Math.min.apply(null, vals);
+    });
   }
 
   /**
@@ -356,7 +400,8 @@
     var byId = {};
     content.cases.forEach(function (c) { byId[c.id] = c; });
     var acc = {};
-    SKILLS.forEach(function (s) { acc[s] = { earned: 0, max: 0, criticals: 0 }; });
+    SKILLS.forEach(function (s) { acc[s] = { earned: 0, max: 0, criticals: 0, decisions: 0 }; });
+    var criticals = 0;
     (caseResults || []).forEach(function (r) {
       var cs = byId[r.caseId];
       if (!cs) return;
@@ -365,10 +410,15 @@
         acc[s].earned += r.earned[s] || 0;
         acc[s].max += mx[s];
       });
-      (r.criticals || []).forEach(function (c) { if (acc[c.skill]) acc[c.skill].criticals++; });
+      (r.steps || []).forEach(function (st) {
+        var node = cs.nodes[st.node];
+        if (node) nodeSkills(node).forEach(function (s) { acc[s].decisions++; });
+      });
+      (r.criticals || []).forEach(function (c) { criticals++; if (acc[c.skill]) acc[c.skill].criticals++; });
     });
     (quizResults || []).forEach(function (q) {
       acc.knowledge.max += q.points;
+      acc.knowledge.decisions++;
       if (q.correct) acc.knowledge.earned += q.points;
     });
     var pcts = [];
@@ -377,7 +427,26 @@
       if (acc[s].pct != null) pcts.push(acc[s].pct);
     });
     var overall = pcts.length ? Math.round(pcts.reduce(function (a, b) { return a + b; }, 0) / pcts.length) : 0;
-    return { skills: acc, overall: overall };
+    return { skills: acc, overall: overall, criticals: criticals };
+  }
+
+  /**
+   * Level pass rule: overall >= passThreshold, no critical errors (if
+   * criticalFailsLevel), and every sufficiently measured skill (>= 6 scored
+   * decisions) at or above the level's skillFloor.
+   * Returns { passed, reasons: ['threshold'|'critical'|'floor:<skill>'] }.
+   */
+  function levelPass(content, level, agg) {
+    var reasons = [];
+    if (agg.overall < level.passThreshold) reasons.push('threshold');
+    if (content.config.scoring.criticalFailsLevel && agg.criticals > 0) reasons.push('critical');
+    if (level.skillFloor > 0) {
+      SKILLS.forEach(function (s) {
+        var a = agg.skills[s];
+        if (a.pct != null && a.decisions >= 6 && a.pct < level.skillFloor) reasons.push('floor:' + s);
+      });
+    }
+    return { passed: reasons.length === 0, reasons: reasons };
   }
 
   var Engine = {
@@ -396,6 +465,8 @@
     buildLevelSteps: buildLevelSteps,
     CaseRun: CaseRun,
     aggregate: aggregate,
+    levelPass: levelPass,
+    nodeSkills: nodeSkills,
     skillPct: skillPct
   };
 

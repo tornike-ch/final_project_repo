@@ -134,10 +134,12 @@ const WORST = () => {
   check(lms['cmi.core.lesson_status'] === 'completed', 'lesson_status completed (got ' + lms['cmi.core.lesson_status'] + ')');
   check(lms['cmi.objectives.0.id'] === 'knowledge' && lms['cmi.objectives.0.score.raw'] === '100', 'knowledge objective = 100');
   check(lms['cmi.objectives.2.id'] === 'sales' && lms['cmi.objectives.2.score.raw'] === '100', 'sales objective = 100');
-  check(lms['cmi.objectives.3.id'] === 'levels' && lms['cmi.objectives.3.status'] === 'passed', 'levels objective passed');
+  check(lms['cmi.objectives.3.id'] === 'levels' && lms['cmi.objectives.3.score.raw'] === '100', 'levels objective = 100% of levels passed');
+  check(lms['cmi.objectives.4.id'] === 'critical_errors' && lms['cmi.objectives.4.status'] === 'passed', 'critical-errors objective passed (none)');
   check(Number(lms['cmi.interactions._count']) > 20, 'interactions written (' + lms['cmi.interactions._count'] + ')');
   check(lms['cmi.suspend_data'].length < 4096, 'suspend_data within 4096 chars (' + lms['cmi.suspend_data'].length + ')');
-  const summaries = Object.keys(lms).filter((k) => /interactions\.\d+\.id$/.test(k) && /_SUMMARY$/.test(lms[k]));
+  const summaries = Object.keys(lms).filter((k) => /interactions\.\d+\.id$/.test(k) && /^C\w+_SUMMARY$/.test(lms[k]));
+  check(Object.keys(lms).some((k) => /interactions\.\d+\.id$/.test(k) && lms[k] === 'SESSION_SUMMARY'), 'session summary interaction written');
   check(summaries.length === 6, 'one summary interaction per case (' + summaries.length + ')');
 
   /* ---------- 2. relaunch after completion: evaluation locked ---------- */
@@ -175,12 +177,14 @@ const WORST = () => {
   lms = await page.evaluate(() => window.mockLMS.data());
   const raw = Number(lms['cmi.core.score.raw']);
   check(raw < 70, 'failing run reports low score (' + raw + ')');
-  check(lms['cmi.objectives.3.status'] === 'failed', 'levels objective failed');
+  check(lms['cmi.objectives.3.score.raw'] === '0', 'levels objective = 0% when level 1 failed (' + lms['cmi.objectives.3.score.raw'] + ')');
   const st = await frame.evaluate(() => window.SimApp.state());
   check(st.e.s === 'd' && st.e.lv.length === 1, 'evaluation stopped after failed level 1');
   check(st.e.r.length === 2, 'resumed run kept the case played before relaunch (' + st.e.r.length + ')');
+  const critCount = st.e.r.reduce((t, r) => t + r[4] + r[5] + r[6], 0);
   const crit = await frame.$$eval('.crit-list li', (els) => els.length);
-  check(crit > 0, 'report lists critical errors (' + crit + ')');
+  check(crit === critCount, 'report lists every critical error (' + crit + ' of ' + critCount + ')');
+  if (critCount) check(lms['cmi.objectives.4.status'] === 'failed', 'critical-errors objective failed');
 
   /* ---------- 4. standalone (no LMS) + preview hash + phone screen ---------- */
   const p2 = await ctx.newPage();

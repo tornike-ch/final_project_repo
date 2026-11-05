@@ -341,6 +341,7 @@
         ]],
         ['Scoring & LMS', [
           ['config.scoring.criticalPenalty', 'Critical error penalty (percentage points off that skill)', 'number'],
+          ['config.scoring.criticalFailsLevel', 'Any critical error fails the level (recommended for evaluation)', 'bool'],
           ['config.scoring.balanceCategories', 'Balance random draw across case categories', 'bool'],
           ['config.scorm.statusMode', 'LMS status at the end of the evaluation', 'select', [['completed', 'completed (score decides)'], ['passed_failed', 'passed / failed (all levels passed?)']]]
         ]]
@@ -361,11 +362,13 @@
           '<td><input type="number" min="1" data-level="' + i + '" data-key="casesPerRun" value="' + esc(l.casesPerRun) + '" class="w-xs"> <small class="muted">of ' + s.pool + '</small></td>' +
           '<td><input type="number" min="0" data-level="' + i + '" data-key="quizQuestions" value="' + esc(l.quizQuestions || 0) + '" class="w-xs"> <small class="muted">of ' + s.qpool + '</small></td>' +
           '<td><input type="number" min="0" max="100" data-level="' + i + '" data-key="passThreshold" value="' + esc(l.passThreshold) + '" class="w-xs">%</td>' +
+          '<td><input type="number" min="0" max="100" data-level="' + i + '" data-key="skillFloor" value="' + esc(l.skillFloor || 0) + '" class="w-xs">%</td>' +
           '<td><button class="btn btn-sm" data-act="level-del" data-i="' + i + '">Remove</button></td></tr>';
       }).join('');
-      return '<h1>Levels</h1><p class="muted">Each level draws <i>cases per run</i> random cases from the cases tagged with that level id. The employee must reach the pass threshold (average of the three skills on that level) to unlock the next one. The evaluation stops at the first failed level.</p>' +
-        '<table class="grid"><thead><tr><th>Id</th><th>Name</th><th>Description</th><th>Cases per run</th><th>Quiz questions</th><th>Pass at</th><th></th></tr></thead><tbody>' + rows + '</tbody></table>' +
-        '<div class="btn-row"><button class="btn" data-act="level-add">Add level</button></div>';
+      return '<h1>Levels</h1><p class="muted">Each level draws <i>cases per run</i> random cases from the cases tagged with that level id. See the pass rule below the table. The evaluation stops at the first failed level.</p>' +
+        '<table class="grid"><thead><tr><th>Id</th><th>Name</th><th>Description</th><th>Cases per run</th><th>Quiz questions</th><th>Pass at</th><th>Skill floor</th><th></th></tr></thead><tbody>' + rows + '</tbody></table>' +
+        '<div class="btn-row"><button class="btn" data-act="level-add">Add level</button></div>' +
+        '<p class="muted small">Pass rule: level average ≥ <i>Pass at</i>, no critical errors (if enabled in Settings), and every skill with at least 6 scored decisions on that level ≥ <i>Skill floor</i> (0 = off). Recommended for a defensible result: 4–6 cases per run and a pool of at least 3× that.</p>';
     },
 
     cases: function () {
@@ -496,7 +499,7 @@
     },
     'level-add': function () {
       var max = content.config.levels.reduce(function (m, l) { return Math.max(m, Number(l.id) || 0); }, 0);
-      content.config.levels.push({ id: max + 1, name: 'დონე ' + (max + 1), description: '', casesPerRun: 3, quizQuestions: 0, passThreshold: 70 });
+      content.config.levels.push({ id: max + 1, name: 'დონე ' + (max + 1), description: '', casesPerRun: 4, quizQuestions: 0, passThreshold: 70, skillFloor: 0 });
       save(); render();
     },
     'level-del': function (el) {

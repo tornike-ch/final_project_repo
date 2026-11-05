@@ -9,7 +9,7 @@
 
   var COLUMNS = {
     Settings: ['key', 'value'],
-    Levels: ['id', 'name', 'description', 'cases_per_run', 'quiz_questions', 'pass_threshold'],
+    Levels: ['id', 'name', 'description', 'cases_per_run', 'quiz_questions', 'pass_threshold', 'skill_floor'],
     Cases: ['case_id', 'title', 'level', 'channel', 'category', 'brief', 'start_node',
       'customer_name', 'gender', 'age', 'segment', 'occupation', 'income', 'products_held', 'digital', 'notes', 'initial_mood'],
     Opportunities: ['case_id', 'opportunity_id', 'product_id', 'cue'],
@@ -24,7 +24,7 @@
     'meta.title', 'meta.packageId', 'meta.version',
     'config.theme.bankName', 'config.theme.logoText', 'config.theme.productName',
     'config.theme.primary', 'config.theme.primaryDark', 'config.theme.accent', 'config.theme.background',
-    'config.scoring.criticalPenalty', 'config.scoring.balanceCategories',
+    'config.scoring.criticalPenalty', 'config.scoring.criticalFailsLevel', 'config.scoring.balanceCategories',
     'config.features.referencePanel', 'config.features.quiz', 'config.features.quizPlacement',
     'config.features.moodWalkout', 'config.features.shuffleOptions', 'config.features.showTimeInReport',
     'config.channel', 'config.scorm.statusMode'
@@ -66,7 +66,7 @@
       return { key: k.replace(/^config\./, ''), value: v == null ? '' : v };
     });
     s.Levels = (content.config.levels || []).map(function (l) {
-      return { id: l.id, name: l.name, description: l.description || '', cases_per_run: l.casesPerRun, quiz_questions: l.quizQuestions || 0, pass_threshold: l.passThreshold };
+      return { id: l.id, name: l.name, description: l.description || '', cases_per_run: l.casesPerRun, quiz_questions: l.quizQuestions || 0, pass_threshold: l.passThreshold, skill_floor: l.skillFloor || 0 };
     });
     s.Cases = []; s.Opportunities = []; s.Nodes = []; s.Options = [];
     (content.cases || []).forEach(function (c) {
@@ -132,7 +132,7 @@
       out.levels = sheets.Levels.filter(function (r) { return str(r.id) !== ''; }).map(function (r, i) {
         return {
           id: num(r.id, i + 1), name: str(r.name), description: str(r.description),
-          casesPerRun: num(r.cases_per_run, 3), quizQuestions: num(r.quiz_questions, 0), passThreshold: num(r.pass_threshold, 70)
+          casesPerRun: num(r.cases_per_run, 3), quizQuestions: num(r.quiz_questions, 0), passThreshold: num(r.pass_threshold, 70), skillFloor: num(r.skill_floor, 0)
         };
       });
     }

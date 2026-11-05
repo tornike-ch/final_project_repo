@@ -89,10 +89,12 @@ The builder accepts a full content file, an **array of cases**, or **one case ob
    - the right product offered at the wrong moment (sales −)
 3. Put **sales cues** in the dialogue *and/or* the CRM (`notes`, `productsHeld`, `income`). Reward spotting them with `sales` points plus `opportunity`.
 4. Penalise **pushy selling** (offering to an angry or vulnerable customer, or an unrelated product) with negative `sales` and `service`.
-5. Use `critical` sparingly: real compliance or ethics failures only.
+5. Use `critical` sparingly: real compliance or ethics failures only. By default **any critical error fails the level**, so have a second person review every critical.
 6. Every path must reach an `end` node, and avoid loops.
 7. Keep a case to 3–6 decisions. Long cases tire people and dilute the score.
 8. Answer order is shuffled in the game, so write options in any order.
+10. **Length must not give the answer away.** Keep options in a node of similar length (the longest at most about 1.5× the shortest). Make some wrong answers long and polished, and some best answers short. The validator warns when the best answer is the longest option at more than 40% of a case's decisions.
+11. **Recovery branches keep the cost of a mistake.** After a weaker answer, the remaining path should be worth the same per-skill points as the ideal branch, so a mistake costs exactly what it cost at its own step. A wrong answer must never lead back to the full ideal total; the validator warns when it does. Answers that end the case early should do so deliberately.
 9. Every product fact used in a case must also appear in `products`, so the reference panel can answer it.
 
 ### Mood and walk-out
@@ -147,11 +149,19 @@ earned    = sum of the points of the answers actually chosen (it can be negative
 skill %   = earned ÷ maximum, pooled over all cases (and quiz questions, for knowledge) in the scope,
             minus  criticalPenalty × number of critical errors on that skill (default 15 points each),
             clamped to 0–100
-overall % = plain average of the skills that had a non-zero maximum
+overall % = plain average of the skills that are measured in the scope (maximum > 0)
 ```
-- A **level** passes when its overall % is at least the level's `passThreshold`.
-- The **LMS score** (`cmi.core.score.raw`) is the overall % of the evaluation run. Each skill % is sent as its own objective.
-- If a skill has no possible points in the whole scope but the employee still lost points on it (for example pushy selling in service-only cases), that skill gets 100 − 10 per negative point − penalties.
+- A skill with no possible points in the scope is **not measured**. It is shown as "—" and never enters the average, so pushy selling in a case with no sales opportunity cannot raise or lower the average. Make sure such answers also carry negative `service` points (rule 4).
+- A **level** passes when all of these hold:
+  1. the overall % is at least the level's `passThreshold`;
+  2. no critical error was made on that level (`config.scoring.criticalFailsLevel`, on by default);
+  3. if the level has a `skillFloor` above 0, every skill with at least 6 scored decisions on that level is at or above it.
+- The **LMS score** (`cmi.core.score.raw`) is the overall % of the evaluation run. The LMS also receives:
+  - an objective per skill;
+  - `levels` (% of levels passed);
+  - `critical_errors` (count; failed if any);
+  - a `SESSION_SUMMARY` interaction with earned/max and the number of scored decisions per skill.
+- **Reliability:** with 2 cases per level, a strong employee can fail by bad luck with the cases drawn. Use **4–6 cases per level** and a pool of **at least 3× that** per level. Treat a skill % based on fewer than about 10 decisions as indicative only.
 
 To change the evaluation logic later, edit `aggregate()` and `skillPct()` in `player/js/engine.js`. Most changes, though, only need different `scores` on the options plus the `config.scoring` settings.
 
