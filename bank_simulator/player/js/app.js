@@ -839,12 +839,17 @@
       document.getElementById('ref-detail').classList.add('hidden');
       document.getElementById('ref-list').classList.remove('hidden');
     },
-    'reset-local': function () {
-      if (!window.confirm('სატესტო პროგრესი წაიშლება. გავაგრძელოთ?')) return;
-      Scorm.resetLocal();
-      try { window.localStorage.removeItem(detailKey); } catch (e) { /* ignore */ }
-      state = { v: 1, e: emptyEval(), p: { u: 0, n: 0 } };
-      showWelcome();
+    'reset-local': function (el) {
+      // two-step confirmation inside the page (window.confirm is blocked in some hosts)
+      if (el.getAttribute('data-armed') !== '1') {
+        el.setAttribute('data-armed', '1');
+        el.textContent = 'პროგრესი წაიშლება — დააჭირეთ ისევ დასადასტურებლად';
+        setTimeout(function () {
+          if (el.isConnected) { el.removeAttribute('data-armed'); el.textContent = 'თავიდან დაწყება'; }
+        }, 4000);
+        return;
+      }
+      restartLocal();
     },
     'preview-restart': function () { startPreview(); }
   };
@@ -876,6 +881,14 @@
     var opts = app.querySelectorAll('#choices .opt, .quiz .opt');
     if (opts[idx]) { ev.preventDefault(); opts[idx].click(); }
   });
+
+  function restartLocal() {
+    preview = null;
+    Scorm.resetLocal();
+    try { window.localStorage.removeItem(detailKey); } catch (e) { /* ignore */ }
+    state = { v: 1, e: emptyEval(), p: { u: 0, n: 0 } };
+    showWelcome();
+  }
 
   /* ---------------- builder preview ---------------- */
   function startPreview() {
@@ -925,6 +938,15 @@
 
   // exposed for automated tests
   window.SimApp = {
+    /** jump straight into a case or quiz id, or a level ({level: 2}); used by review tools */
+    jump: function (target) {
+      if (!detailKey) detailKey = 'sim-detail:' + content.meta.packageId + ':local';
+      preview = typeof target === 'object' ? { id: null, level: target.level } : { id: target, level: null };
+      state = state || { v: 1, e: emptyEval(), p: { u: LEVELS.length, n: 0 } };
+      startPreview();
+    },
+    /** standalone only: wipe local progress and go back to the start screen */
+    restart: function () { if (Scorm.isStandalone()) restartLocal(); },
     state: function () { return state; },
     run: function () { return run; },
     current: function () { return current; },
