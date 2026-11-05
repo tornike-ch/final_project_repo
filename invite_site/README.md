@@ -19,7 +19,7 @@ At the top of the `<script>` in `index.html`:
 ```js
 const CONFIG = {
   formEndpoint: '',            // a URL that accepts a JSON POST (Formspree, Getform, your own API)
-  email: 'hello@gancda.ge'    // placeholder: replace with the real address
+  email: 'hello@gancda.com'    // placeholder: replace with the real address
 };
 ```
 
