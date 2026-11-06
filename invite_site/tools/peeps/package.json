@@ -1,0 +1,11 @@
+{
+  "name": "gancda-peeps",
+  "private": true,
+  "description": "Builds src/peeps.json (Open Peeps characters for the story) from the Open Peeps package",
+  "scripts": { "build": "node build.js" },
+  "dependencies": {
+    "@opeepsfun/open-peeps": "1.0.6",
+    "react": "18.3.1",
+    "react-dom": "18.3.1"
+  }
+}

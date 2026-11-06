@@ -89,23 +89,21 @@ function house(x, w, h, fill, o = {}){
   if (o.door) s += '<path d="M'+(x + w / 2 - 26)+' '+G+'v-74a26 26 0 0 1 52 0v74z" fill="var(--wd)"/><circle cx="'+(x + w / 2 + 14)+'" cy="'+(G - 40)+'" r="3.5" fill="var(--hF)"/>';
   return s + '</g>';
 }
-function person(x, y, o = {}){
-  const s = o.s || 1, sh = o.shirt || 'var(--p1)', sk = o.skin || 'var(--s1)', hr = o.hair || 'var(--hr1)', pt = o.pants || 'var(--pt)';
-  const armL = o.arms === 'up' ? 'M-18 -106 L-36 -156' : 'M-18 -106 L-30 -66';
-  const armR = o.arms === 'up' || o.arms === 'wave' ? 'M18 -106 L36 -156' : 'M18 -106 L30 -66';
-  const hair = o.long ? '<path d="M-24 -142 Q-26 -172 0 -170 Q26 -172 24 -142 L26 -112 Q20 -108 16 -120 Q14 -152 0 -154 Q-14 -152 -16 -120 Q-20 -108 -26 -112Z" fill="'+hr+'"/>'
-    : '<path d="M-23 -146 Q-22 -172 0 -170 Q22 -172 23 -146 Q10 -160 -23 -146Z" fill="'+hr+'"/>';
-  const legs = o.sit ? '' : '<rect x="-14" y="-62" width="12" height="62" rx="6" fill="'+pt+'"/><rect x="2" y="-62" width="12" height="62" rx="6" fill="'+pt+'"/>';
-  return '<g class="pp'+(o.cls ? ' ' + o.cls : '')+'" transform="translate('+x+' '+y+') scale('+s+')"><g class="pb" style="animation-delay:-'+f1(R() * 2.6)+'s">'+legs+
-    '<path d="M-22 -58 Q-25 -120 0 -122 Q25 -120 22 -58Z" fill="'+sh+'"/>'+
-    '<path d="'+armL+'" stroke="'+sh+'" stroke-width="11" stroke-linecap="round"/>'+
-    (o.arms === 'wave' ? '<g class="wave"><path d="'+armR+'" stroke="'+sh+'" stroke-width="11" stroke-linecap="round"/></g>' : '<path d="'+armR+'" stroke="'+sh+'" stroke-width="11" stroke-linecap="round"/>')+
-    (o.phone ? '<rect x="22" y="-96" width="16" height="26" rx="3" fill="var(--ink)"/><rect x="24.5" y="-93" width="11" height="18" rx="1.5" fill="var(--win)"/>' : '')+
-    '<circle cx="0" cy="-143" r="23" fill="'+sk+'"/>'+hair+
-    (o.hat ? '<path d="M-20 -160 Q-24 -190 -6 -186 Q0 -200 10 -186 Q26 -190 20 -160Z" fill="#fffaf0"/>' : '')+
-    '<circle cx="-8" cy="-144" r="2.8" fill="#2a1d1a"/><circle cx="8" cy="-144" r="2.8" fill="#2a1d1a"/>'+
-    '<circle cx="-14" cy="-134" r="4.5" fill="var(--cheek)" opacity=".55"/><circle cx="14" cy="-134" r="4.5" fill="var(--cheek)" opacity=".55"/>'+
-    '<path d="M-8 -134 Q0 -125 8 -134" stroke="#2a1d1a" stroke-width="2.6" fill="none" stroke-linecap="round"/></g></g>';
+/* people are Open Peeps (Pablo Stanley, CC0): a body, a hair style and a face, recoloured with CSS variables */
+const PEEPS = /*PEEPS*/null;
+const PK = 0.062;                       // world units per Open Peeps unit for a grown-up
+function peep(x, y, o){
+  const b = PEEPS.bodies[o.b], s = PK * (o.s || 1), fl = o.flip ? -1 : 1;
+  const st = '--sk:' + (o.sk || 'var(--s1)') + ';--tp:' + (o.tp || 'var(--p1)') + ';--pa:' + (o.pa || 'var(--pt)') + ';--jk:' + (o.jk || 'var(--p2)') +
+    ';--so:' + (o.so || 'var(--shoe)') + ';--ac:' + (o.ac || 'var(--p3)') + ';--ol:var(--line)';
+  return '<g class="pp' + (o.cls ? ' ' + o.cls : '') + '" transform="translate(' + x + ' ' + y + ')" style="' + st + '"><g class="pb" style="animation-delay:-' + f1(R() * 2.6) + 's">' +
+    '<g transform="scale(' + f1(fl * s * 1000) / 1000 + ' ' + f1(s * 1000) / 1000 + ') translate(' + (-b.nx) + ' ' + (-b.fy) + ')">' +
+    '<use href="#pp-' + b.part + '" transform="translate(' + b.bx + ' ' + b.by + ')"/>' +
+    '<g transform="translate(' + b.hx + ' ' + b.hy + ')"><use href="#pp-h-' + o.h + '"/><use href="#pp-f-' + o.f + '"/></g></g></g></g>';
+}
+const peepDefs = () => Object.entries(PEEPS.parts).map(([k, v]) => '<g id="pp-' + k + '">' + v + '</g>').join('');
+function stool(x){
+  return '<g><rect x="'+(x - 26)+'" y="'+(G - 58)+'" width="52" height="9" rx="4" fill="var(--wd)"/><path d="M'+(x - 18)+' '+(G - 50)+'L'+(x - 24)+' '+G+'M'+(x + 18)+' '+(G - 50)+'L'+(x + 24)+' '+G+'" stroke="var(--wd)" stroke-width="6" stroke-linecap="round"/></g>';
 }
 function tree(x, s = 1){
   return '<g class="sway" transform="translate('+x+' '+G+') scale('+s+')"><rect x="-9" y="-120" width="18" height="120" rx="6" fill="var(--tk)"/>'+
@@ -187,7 +185,7 @@ function mainLayer(){
   /* prologue: Nini's house with a carved wooden balcony */
   s += '<g data-sc="0">'+house(60, 230, 330, 'var(--hB)', {cols:2, rows:3, rh:60})+
     house(360, 420, 430, 'var(--hA)', {cols:3, rows:3, rh:96, ww:46, wh:58, door:true, dark:.15})+
-    person(575, G - 262, {shirt:'var(--p3)', long:true, hair:'var(--hr3)', arms:'up', cls:'nini'})+
+    peep(575, G - 262, {b:'standing/Dancer', h:'LongHair', f:'BigSmile', tp:'var(--p3)', pa:'var(--p2)', cls:'nini'})+
     // balcony
     '<rect x="330" y="'+(G - 262)+'" width="480" height="16" rx="4" fill="var(--wd)"/>'+
     '<g>'+Array.from({length:21}, (_, i) => '<rect x="'+(338 + i * 22.6)+'" y="'+(G - 330)+'" width="7" height="70" rx="3" fill="var(--wd2)"/>').join('')+'</g>'+
@@ -207,12 +205,16 @@ function mainLayer(){
     '<circle cx="1470" cy="'+(G - 470)+'" r="26" fill="var(--sign)" stroke="var(--ink)" stroke-width="3"/><path d="M1470 '+(G - 488)+'v18l12 8" stroke="var(--ink)" stroke-width="3.5" fill="none" stroke-linecap="round"/>'+
     sign(1470, G - 404, 230, 'school', 'dn-d')+sign(1470, G - 404, 270, 'library', 'dn-n')+
     // the late reader in the lit window, with a desk lamp
-    '<g class="dn-n"><ellipse cx="1640" cy="'+(G - 300)+'" rx="120" ry="110" fill="url(#stWg)" opacity=".8"/><circle cx="1628" cy="'+(G - 318)+'" r="16" fill="var(--s2)"/><path d="M1610 '+(G - 278)+'q18 -30 36 0z" fill="var(--p5)"/>'+
-    '<path d="M1600 '+(G - 276)+'h70" stroke="var(--wd)" stroke-width="5"/><path d="M1664 '+(G - 278)+'v-26l-14 -12" stroke="var(--ink)" stroke-width="3" fill="none"/><path d="M1640 '+(G - 320)+'l16 -8 6 14z" fill="var(--ink)"/></g>'+
+    '<g class="dn-n"><ellipse cx="1644" cy="'+(G - 300)+'" rx="120" ry="110" fill="url(#stWg)" opacity=".8"/>'+
+      '<clipPath id="stWin"><rect x="1596" y="'+(G - 350)+'" width="96" height="96" rx="6"/></clipPath><g clip-path="url(#stWin)">'+
+      peep(1636, G - 250, {b:'effigy/Paper', h:'Bun', f:'Calm', s:1.1, tp:'var(--p5)', sk:'var(--s2)'})+'</g>'+
+      '<path d="M1600 '+(G - 256)+'h88" stroke="var(--wd)" stroke-width="6"/><path d="M1678 '+(G - 258)+'v-26l-14 -12" stroke="var(--ink)" stroke-width="3" fill="none"/><path d="M1654 '+(G - 300)+'l16 -8 6 14z" fill="var(--ink)"/></g>'+
     // the class out front by day
-    '<g class="dn-d">'+person(1250, G, {shirt:'var(--p2)', hair:'var(--hr2)', s:1.05})+
-      person(1350, G, {shirt:'var(--p6)', s:.78, arms:'up'})+person(1420, G, {shirt:'var(--p4)', s:.74, arms:'up', long:true, hair:'var(--hr2)', skin:'var(--s2)'})+
-      person(1560, G, {shirt:'var(--p5)', s:.76, arms:'up', skin:'var(--s3)'})+person(1640, G, {shirt:'var(--p1)', s:.72, arms:'wave', long:true, hair:'var(--hr3)'})+'</g>'+
+    '<g class="dn-d">'+peep(1250, G, {b:'standing/ShirtColorTee', h:'Pomp', f:'Smile', tp:'var(--p2)', sk:'var(--s2)'})+
+      peep(1360, G, {b:'standing/Dancer', h:'Bun', f:'SmileLOL', s:.72, tp:'var(--p6)', pa:'var(--p2)'})+
+      peep(1440, G, {b:'standing/WalkingColorTee', h:'Afro', f:'BigSmile', s:.7, tp:'var(--p4)', sk:'var(--s3)'})+
+      peep(1560, G, {b:'standing/ShirtColorTee', h:'ShortOne', f:'Cute', s:.72, tp:'var(--p5)', flip:true})+
+      peep(1650, G, {b:'standing/EasingColorTee', h:'MediumBangs', f:'LoveGrinTeeth', s:.68, tp:'var(--p1)', jk:'var(--p3)', sk:'var(--s2)'})+'</g>'+
     tree(1880, 1)+'<g class="dn-n" transform="translate(1900 '+(G - 222)+')"><ellipse cx="0" cy="0" rx="18" ry="24" fill="var(--wd)"/><circle cx="-7" cy="-6" r="6" fill="#fff3c0"/><circle cx="7" cy="-6" r="6" fill="#fff3c0"/><circle cx="-7" cy="-6" r="2.5" fill="#1a1320"/><circle cx="7" cy="-6" r="2.5" fill="#1a1320"/><path d="M-3 2l3 5 3 -5z" fill="var(--hF)"/></g></g>';
 
   /* chapter 2: a studio's first day by day, a bakery's night shift by night */
@@ -222,12 +224,13 @@ function mainLayer(){
       '<ellipse cx="2240" cy="'+(G - 110)+'" rx="90" ry="70" fill="url(#stWo)"/></g>'+
     bunting(2300, G - 140, 2540, G - 140, 30, 8, 'dn-d')+lights(2300, G - 140, 2540, G - 140, 30, 8, 'dn-n')+
     sign(2420, G - 290, 270, 'hello', 'dn-d')+
-    '<g class="dn-d">'+person(2300, G, {shirt:'var(--p4)', arms:'wave', hair:'var(--hr2)', skin:'var(--s2)'})+person(2545, G, {shirt:'var(--p6)', arms:'wave', long:true, hair:'var(--hr2)', skin:'var(--s3)'})+'</g>'+
-    '<g class="dn-n">'+person(2300, G, {shirt:'#fffaf0', arms:'wave', hair:'var(--hr2)', skin:'var(--s2)', hat:true, cls:'baker'})+'</g>'+
-    '<g class="dn-d">'+person(2420, G, {shirt:'var(--p2)', hair:'var(--hr1)', cls:'newbie'})+'</g>'+
-    '<g class="dn-n">'+person(2420, G, {shirt:'var(--p5)', hair:'var(--hr1)', long:true, skin:'var(--s2)', cls:'newbie'})+'</g>'+
+    '<g class="dn-d">'+peep(2300, G, {b:'standing/Dancer', h:'Wavy', f:'BigSmile', tp:'var(--p4)', pa:'var(--pt)', sk:'var(--s2)'})+
+      peep(2550, G, {b:'standing/Dancer', h:'LongCurly', f:'SmileLOL', tp:'var(--p6)', pa:'var(--p4)', sk:'var(--s3)', flip:true})+'</g>'+
+    '<g class="dn-n">'+peep(2300, G, {b:'standing/Doc', h:'Beanie', f:'BigSmile', tp:'var(--p2)', jk:'#fffaf0', ac:'#fffaf0', pa:'var(--pt)', sk:'var(--s2)', cls:'baker'})+'</g>'+
+    '<g class="dn-d">'+peep(2420, G, {b:'standing/EasingColorTee', h:'ShortTwo', f:'Smile', tp:'var(--p3)', jk:'var(--p2)', cls:'newbie'})+'</g>'+
+    '<g class="dn-n">'+peep(2420, G, {b:'standing/WalkingColorTee', h:'LongHair', f:'Cute', tp:'var(--p5)', sk:'var(--s2)', cls:'newbie'})+'</g>'+
     balloons(2478, G - 150, 'dn-d')+
-    '<g class="dn-n">'+person(2545, G, {shirt:'#fffaf0', arms:'wave', long:true, hair:'var(--hr2)', skin:'var(--s3)', hat:true})+
+    '<g class="dn-n">'+peep(2550, G, {b:'standing/Doc', h:'Beanie', f:'SmileLOL', tp:'var(--p6)', jk:'#fffaf0', ac:'#fffaf0', pa:'var(--pt)', sk:'var(--s3)', flip:true})+
       '<g transform="translate(2600 '+(G - 90)+')"><ellipse cx="0" cy="0" rx="30" ry="14" fill="#d99a4e"/><path d="M-16 -4l6 8M-4 -6l6 8M8 -5l6 8" stroke="#a8692c" stroke-width="3" stroke-linecap="round"/></g></g>'+
     tree(2820, .95)+'</g>';
 
@@ -237,8 +240,9 @@ function mainLayer(){
     // striped awning
     '<g>'+Array.from({length:10}, (_, i) => '<path d="M'+(3090 + i * 46)+' '+(G - 214)+'h46v40a23 23 0 0 1 -46 0z" fill="'+(i % 2 ? 'var(--awn2)' : 'var(--awn1)')+'"/>').join('')+'</g>'+
     // tables with people playing on their phones
-    [3260, 3660].map((tx, k) => person(tx - 50, G - 6, {shirt:k ? 'var(--p5)' : 'var(--p4)', phone:true, s:.92, skin:k ? 'var(--s3)' : 'var(--s1)'})+
-      person(tx + 52, G - 6, {shirt:k ? 'var(--p3)' : 'var(--p1)', phone:true, s:.92, long:true, hair:k ? 'var(--hr3)' : 'var(--hr2)', skin:'var(--s2)'})+
+    [3260, 3660].map((tx, k) => stool(tx - 62)+stool(tx + 62)+
+      peep(tx - 66, G, {b:k ? 'sitting/OneLegColorTee' : 'sitting/MidColorTee', h:k ? 'Bangs' : 'Afro', f:k ? 'Cheeky' : 'SmileLOL', tp:k ? 'var(--p5)' : 'var(--p4)', sk:k ? 'var(--s1)' : 'var(--s3)'})+
+      peep(tx + 66, G, {b:k ? 'sitting/CrossedLegs' : 'sitting/ClosedLegsColorTee', h:k ? 'BunTwo' : 'LongHair', f:k ? 'BigSmile' : 'LoveGrinTeeth', tp:k ? 'var(--p3)' : 'var(--p1)', jk:'var(--p2)', sk:'var(--s2)', flip:true})+
       '<rect x="'+(tx - 44)+'" y="'+(G - 84)+'" width="88" height="10" rx="5" fill="var(--wd)"/><rect x="'+(tx - 4)+'" y="'+(G - 76)+'" width="8" height="76" fill="var(--wd)"/>'+
       '<path d="M'+(tx - 14)+' '+(G - 84)+'v-14h16v14z" fill="var(--sign)"/><ellipse class="steam dn-n" cx="'+(tx - 6)+'" cy="'+(G - 106)+'" rx="6" ry="8" fill="#fff" opacity=".6"/>').join('')+
     // the gift by day
@@ -249,7 +253,7 @@ function mainLayer(){
       '<rect x="'+(x - 60)+'" y="'+(G - 90)+'" width="120" height="90" fill="var(--wd)"/><path d="M'+(x - 58)+' '+(G - 170)+'v80M'+(x + 58)+' '+(G - 170)+'v80" stroke="var(--wd)" stroke-width="7"/>'+
       '<ellipse class="glow" cx="'+x+'" cy="'+(G - 130)+'" rx="70" ry="50" fill="url(#stWg)"/><g class="sway"><path d="M'+x+' '+(G - 170)+'v12" stroke="var(--ink)" stroke-width="2"/><ellipse cx="'+x+'" cy="'+(G - 140)+'" rx="16" ry="20" fill="#ff6b5b"/></g>'+
       (i ? '<text data-sign="tea" x="'+x+'" y="'+(G - 40)+'" text-anchor="middle" fill="var(--sign)" style="font:800 20px var(--f-label)"></text>' : '<circle cx="'+(x - 20)+'" cy="'+(G - 98)+'" r="10" fill="#ffb347"/><circle cx="'+(x + 6)+'" cy="'+(G - 98)+'" r="10" fill="#ff7a59"/><circle cx="'+(x + 30)+'" cy="'+(G - 98)+'" r="10" fill="#c6ff8a"/>')+'</g>').join('')+
-      person(3850, G, {shirt:'var(--p6)', arms:'up', s:.9, long:true, hair:'var(--hr1)'})+'</g>'+
+      peep(3855, G, {b:'standing/Dancer', h:'LongCurly', f:'SmileLOL', tp:'var(--p6)', pa:'var(--p2)', sk:'var(--s1)'})+'</g>'+
     lights(3110, G - 240, 3990, G - 240, 60, 16, 'dn-n')+'</g>';
 
   /* chapter 4: the long table, by day in a garden, by night under fireworks */
@@ -257,9 +261,10 @@ function mainLayer(){
     '<path d="M4170 '+G+'V'+(G - 360)+'M4830 '+G+'V'+(G - 360)+'" stroke="var(--wd)" stroke-width="12" stroke-linecap="round"/>'+
     bunting(4170, G - 350, 4830, G - 350, 70, 14, 'dn-d')+lights(4170, G - 350, 4830, G - 350, 70, 16, 'dn-n')+
     balloons(4130, G - 260, 'dn-d')+balloons(4870, G - 270, 'dn-d')+
-    [4240, 4330, 4420, 4510, 4600, 4690, 4770].map((x, i) => person(x, G - 40, {s:.9, sit:true, arms:i % 2 ? 'up' : 'wave',
-      shirt:['var(--p1)','var(--p2)','var(--p3)','var(--p4)','var(--p5)','var(--p6)','var(--p2)'][i], long:i % 3 === 1 || i === 3,
-      hair:i === 3 ? 'var(--hr3)' : (i % 2 ? 'var(--hr2)' : 'var(--hr1)'), skin:['var(--s1)','var(--s2)','var(--s3)'][i % 3]})).join('')+
+    [4250, 4335, 4420, 4505, 4590, 4675, 4755].map((x, i) => peep(x, G - 54, {s:1.55,
+      b:['effigy/Coffee','effigy/PointingUp','effigy/Explaining','effigy/PointingUp','effigy/Coffee','effigy/Tee','effigy/PointingUp'][i],
+      h:['Wavy','ShortOne','Afro','LongHair','Bun','Pomp','LongCurly'][i], f:['BigSmile','SmileLOL','LoveGrinTeeth','BigSmile','Cute','SmileLOL','EatingHappy'][i],
+      tp:['var(--p1)','var(--p2)','var(--p3)','var(--p4)','var(--p5)','var(--p6)','var(--p2)'][i], sk:['var(--s1)','var(--s2)','var(--s3)'][i % 3], flip:i > 3})).join('')+
     '<rect x="4200" y="'+(G - 80)+'" width="600" height="18" rx="6" fill="var(--cloth)" stroke="var(--ink)" stroke-width="2"/><path d="M4210 '+(G - 62)+'h580v14q-290 22 -580 0z" fill="var(--cloth)"/>'+
     '<path d="M4230 '+(G - 50)+'V'+G+'M4770 '+(G - 50)+'V'+G+'" stroke="var(--wd)" stroke-width="10"/>'+
     [4260, 4380, 4500, 4620, 4740].map((x, i) => i % 2 ? '<path d="M'+(x - 10)+' '+(G - 80)+'q-6 -26 4 -34h12q10 8 4 34z" fill="var(--hC)"/>' : '<ellipse cx="'+x+'" cy="'+(G - 84)+'" rx="22" ry="6" fill="var(--sign)"/><circle cx="'+(x - 6)+'" cy="'+(G - 90)+'" r="6" fill="var(--p6)"/><circle cx="'+(x + 6)+'" cy="'+(G - 90)+'" r="6" fill="var(--p4)"/>').join('')+
@@ -294,7 +299,7 @@ const PLANE = '<g id="stPlane"><g class="plane-in"><ellipse class="dn-n" cx="-6"
 svg.setAttribute('viewBox', '0 0 1000 1000');
 svg.setAttribute('preserveAspectRatio', 'xMidYMid slice');
 svg.innerHTML = '<defs><radialGradient id="stWg"><stop offset="0" stop-color="#ffcf6b" stop-opacity=".85"/><stop offset="1" stop-color="#ffcf6b" stop-opacity="0"/></radialGradient>'+
-  '<radialGradient id="stWo"><stop offset="0" stop-color="#ff8a3d" stop-opacity=".9"/><stop offset="1" stop-color="#ff8a3d" stop-opacity="0"/></radialGradient></defs>'+
+  peepDefs()+'<radialGradient id="stWo"><stop offset="0" stop-color="#ff8a3d" stop-opacity=".9"/><stop offset="1" stop-color="#ff8a3d" stop-opacity="0"/></radialGradient></defs>'+
   '<g id="stFar">'+farLayer()+'</g><g id="stMid">'+midLayer()+'</g><g id="stMain">'+mainLayer()+
   '<path d="'+flightPath()+'" fill="none" stroke="var(--paper)" stroke-width="3" stroke-dasharray="2 14" stroke-linecap="round" opacity=".7"/>'+PLANE+'<g id="stFx"></g></g><g id="stNear">'+nearLayer()+'</g>';
 const L = {far:svg.querySelector('#stFar'), mid:svg.querySelector('#stMid'), near:svg.querySelector('#stNear')};

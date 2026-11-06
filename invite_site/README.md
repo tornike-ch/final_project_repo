@@ -20,6 +20,12 @@ bakery night shift, a night market, fireworks on a rooftop), its own props, lit 
 fireflies. The sun/moon in the sky switches between them. Tapping people makes them jump; tapping
 the sky throws confetti by day and fireworks by night.
 
+The people are [Open Peeps](https://www.openpeeps.com) by Pablo Stanley (CC0, free for commercial
+use), from the `@opeepsfun/open-peeps` package. `tools/peeps/build.js` turns the bodies, hair styles
+and faces the scenes use into `src/peeps.json`, with their colours as CSS variables so day and night
+recolour them; to add a character, list its parts there, run
+`cd invite_site/tools/peeps && npm install && npm run build`, then use `peep()` in `src/story.js`.
+
 Sources: `src/story.css` and `src/story.js` (the whole town is drawn in code as SVG layers that move
 at different speeds). After editing them run `python3 invite_site/tools/build_story.py`, which
 copies them into `public/index.html` between markers.

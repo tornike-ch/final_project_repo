@@ -5,7 +5,7 @@
   --hA:#f4a65e;--hB:#f8dcb0;--hC:#e8735e;--hD:#9fd6c8;--hE:#cdb8ea;--hF:#ffe08a;--rf:#b5523b;--rf2:#3f6f8f;--wd:#8a5a3c;--wd2:#6d4329;
   --win:#d8f1ff;--winf:#ffffff;--wdk:#d8f1ff;--tr:#4f9d5b;--tr2:#3f8a4c;--tk:#7a5233;--ink:#2a1d1a;--sign:#fffaf0;--signink:#2a1d1a;
   --p1:#e8475b;--p2:#3f7fd9;--p3:#f2b33d;--p4:#36a77a;--p5:#8d5bd6;--p6:#ff8a3d;--pt:#2f3a56;--pt2:#5b4636;
-  --s1:#f6cfae;--s2:#d9a27b;--s3:#a8704d;--hr1:#3a2418;--hr2:#1d1712;--hr3:#c9772f;--cheek:#ff8f8f;
+  --s1:#f6cfae;--s2:#d9a27b;--s3:#a8704d;--line:#1d1712;--shoe:#ffffff;--hr1:#3a2418;--hr2:#1d1712;--hr3:#c9772f;--cheek:#ff8f8f;
   --glow:0;--day:1;--cloud:#ffffff;--paper:#ffffff;--paperf:#dfe8f5;--awn1:#e8475b;--awn2:#fffaf0;--tbl:#f5e6c8;--cloth:#ffffff;
   --cardbg:rgba(255,253,246,.88);--cardink:#231c16;--cardmut:#6c6156;--cardline:rgba(35,28,22,.12);--acc:#e8475b}
 .st-pin.is-night{
@@ -13,7 +13,7 @@
   --hA:#3a3358;--hB:#2e3556;--hC:#3e2f50;--hD:#24404f;--hE:#34305c;--hF:#3d3a52;--rf:#22193a;--rf2:#1a2440;--wd:#3b2b2e;--wd2:#2c2024;
   --win:#ffd27a;--winf:#fff1c4;--wdk:#1b2040;--tr:#1c3a3a;--tr2:#173130;--tk:#2a2230;--ink:#1a1320;--sign:#ffd27a;--signink:#2a1d1a;
   --p1:#a8344a;--p2:#3a5ea3;--p3:#b08436;--p4:#2a7a62;--p5:#6a46a3;--p6:#b9642f;--pt:#1f2640;--pt2:#3b2f2a;
-  --s1:#c7a28c;--s2:#a9816a;--s3:#7f5a45;--hr1:#24170f;--hr2:#120e0b;--hr3:#8a5426;--cheek:#d97a86;
+  --s1:#c7a28c;--s2:#a9816a;--s3:#7f5a45;--line:#0c0a12;--shoe:#bdb6d6;--hr1:#24170f;--hr2:#120e0b;--hr3:#8a5426;--cheek:#d97a86;
   --glow:1;--day:0;--cloud:#2a2f5c;--paper:#fff6d8;--paperf:#e9d9a8;--awn1:#7d2f45;--awn2:#3a3150;--tbl:#3a3048;--cloth:#4a4060;
   --cardbg:rgba(14,16,42,.82);--cardink:#f4ecdf;--cardmut:#b7aecb;--cardline:rgba(255,255,255,.14);--acc:#ffd27a}
 .st-sky,.st-sky i{position:absolute;inset:0}

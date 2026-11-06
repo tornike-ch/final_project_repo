@@ -11,6 +11,9 @@ root = pathlib.Path(__file__).resolve().parent.parent
 page = root / 'public' / 'index.html'
 css = (root / 'src' / 'story.css').read_text()
 js = (root / 'src' / 'story.js').read_text()
+peeps = (root / 'src' / 'peeps.json').read_text().strip()
+assert js.count('/*PEEPS*/null') == 1
+js = js.replace('/*PEEPS*/null', peeps)
 
 HTML = '''<!--story:html-->
   <section class="story" id="story">
