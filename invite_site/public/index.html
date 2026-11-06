@@ -3,8 +3,17 @@
 <head>
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
-<title>განცდა · Gancda</title>
-<meta name="description" content="განცდა ქმნის ინტერაქტიულ ციფრულ გამოცდილებებს: სასწავლო თამაშებს, ონბორდინგის მოგზაურობებს, ბრენდის თამაშებს და მოსაწვევებს. ბმულით, აპის გარეშე.">
+<title>განცდა · სასწავლო თამაშები, ონბორდინგი და ბრენდის თამაშები</title>
+<meta name="description" content="ინტერაქტიული სასწავლო თამაშები, ონბორდინგის მარშრუტები, ბრენდის თამაშები და მოსაწვევები, რომლებიც ბმულით იხსნება ნებისმიერ ტელეფონზე. სტუდია თბილისში.">
+<link rel="canonical" href="https://gancda.com/">
+<meta property="og:type" content="website">
+<meta property="og:site_name" content="Gancda">
+<meta property="og:url" content="https://gancda.com/">
+<meta property="og:title" content="განცდა · თამაში, რომელიც ასწავლის, აცნობს და ყიდის">
+<meta property="og:description" content="სასწავლო თამაშები, ონბორდინგი, ბრენდის თამაშები და მოსაწვევები ბმულით, ნებისმიერ ტელეფონზე. Games that train, onboard and sell.">
+<meta property="og:locale" content="ka_GE">
+<meta property="og:locale:alternate" content="en_US">
+<meta name="twitter:card" content="summary">
 <meta name="theme-color" content="#FAFAF7" media="(prefers-color-scheme: light)">
 <meta name="theme-color" content="#0B0B0E" media="(prefers-color-scheme: dark)">
 <link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 32 32'%3E%3Crect width='32' height='32' rx='9' fill='%235B4BFF'/%3E%3Ctext x='16' y='22.5' text-anchor='middle' font-size='18' font-weight='800' fill='white' font-family='sans-serif'%3E%E1%83%92%3C/text%3E%3C/svg%3E">
@@ -15,7 +24,7 @@
 /* ---------- Gancda: tokens ---------- */
 :root{
   --bg:#FAFAF7;--surface:#FFFFFF;--surface2:#F3F2EE;--ink:#0E0E11;--ink2:#3A3A42;--muted:#6E6E78;--line:#E6E4DE;
-  --acc:#5B4BFF;--acc-ink:#FFFFFF;--acc-soft:#ECEAFF;--ok:#14A86B;--ok-soft:#E3F6EC;--bad:#E5484D;--bad-soft:#FDECEC;--warm:#FFB020;
+  --acc:#5B4BFF;--acc-ink:#FFFFFF;--acc-soft:#ECEAFF;--ok:#0E8A57;--ok-soft:#E3F6EC;--bad:#C2333A;--bad-soft:#FDECEC;--warm:#FFB020;
   --shadow:0 1px 2px rgba(14,14,17,.05),0 12px 32px -12px rgba(14,14,17,.18);
   --device:#0E0E11;--r:20px;
   --f-head:"Noto Sans Georgian","Google Sans",system-ui,-apple-system,"Segoe UI",sans-serif;
@@ -75,11 +84,11 @@ svg.i{width:20px;height:20px;flex:none;fill:none;stroke:currentColor;stroke-widt
 .btn.sm{height:38px;padding:0 14px;border-radius:11px;font-size:14px}
 
 /* ---------- hero ---------- */
-.hero{padding:56px 0 72px}
-.hero-grid{display:grid;grid-template-columns:minmax(0,1.05fr) minmax(0,.95fr);gap:56px;align-items:center}
+.hero{padding:40px 0 64px}
+.hero-grid{display:grid;grid-template-columns:minmax(0,1.15fr) minmax(0,.85fr);gap:48px;align-items:center}
 .eyebrow{display:inline-flex;align-items:center;gap:8px;margin:0 0 18px;padding:6px 12px 6px 8px;border-radius:99px;background:var(--acc-soft);color:var(--acc);font:600 13px/1 var(--f-label)}
 .eyebrow i{width:8px;height:8px;border-radius:50%;background:var(--acc);box-shadow:0 0 0 4px color-mix(in srgb,var(--acc) 25%,transparent)}
-h1{margin:0 0 18px;font:800 clamp(32px,4.3vw,54px)/1.08 var(--f-head);letter-spacing:-.025em}
+h1{margin:0 0 16px;font:800 clamp(32px,3.8vw,50px)/1.1 var(--f-head);letter-spacing:-.025em;text-wrap:balance}
 h1 em{font-style:normal;color:var(--acc)}
 .lede{margin:0 0 28px;max-width:560px;font-size:clamp(16px,1.5vw,19px);line-height:1.6;color:var(--ink2)}
 .picker{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:10px;margin:0 0 26px}
@@ -89,7 +98,8 @@ h1 em{font-style:normal;color:var(--acc)}
 .pick .ic{width:40px;height:40px;border-radius:12px;display:grid;place-items:center;flex:none;background:var(--surface2);color:var(--ink)}
 .pick[aria-pressed="true"] .ic{background:var(--acc);color:var(--acc-ink)}
 .pick b{display:block;font:700 15px/1.3 var(--f-label)}
-.pick span{display:block;font-size:13px;line-height:1.4;color:var(--muted);margin-top:3px}
+.pick .pt{display:block;color:var(--ink)}
+.pick .pt span{display:block;font-size:13px;line-height:1.4;color:var(--muted);margin-top:3px}
 .hero .row{display:flex;gap:12px;flex-wrap:wrap;align-items:center}
 .facts{display:flex;gap:18px;flex-wrap:wrap;margin:22px 0 0;padding:0;list-style:none;font:500 13px/1.3 var(--f-label);color:var(--muted)}
 .facts li{display:flex;align-items:center;gap:6px}
@@ -99,7 +109,7 @@ h1 em{font-style:normal;color:var(--acc)}
 .stage .cap i{width:8px;height:8px;border-radius:50%;background:var(--ok);animation:pulse 1.6s infinite}
 @keyframes pulse{0%{box-shadow:0 0 0 0 color-mix(in srgb,var(--ok) 60%,transparent)}100%{box-shadow:0 0 0 10px transparent}}
 @media (max-width:980px){.hero-grid{grid-template-columns:1fr;gap:36px}.hero{padding:32px 0 56px}}
-@media (max-width:520px){.picker{grid-template-columns:1fr 1fr;gap:8px}.pick{padding:11px;flex-direction:column;gap:8px}.pick .ic{width:34px;height:34px}.pick span span{display:none}.pick b{font-size:13.5px}}
+
 
 /* ---------- the phone ---------- */
 .phone{position:relative;width:340px;max-width:100%;aspect-ratio:340/700;background:var(--device);border-radius:48px;padding:11px;box-shadow:var(--shadow),0 0 0 1px color-mix(in srgb,var(--ink) 10%,transparent)}
@@ -128,13 +138,15 @@ h2{margin:0 0 14px;font:800 clamp(28px,3.6vw,44px)/1.1 var(--f-head);letter-spac
 @media (max-width:560px){.cards{grid-template-columns:1fr}}
 
 .steps{display:grid;grid-template-columns:repeat(4,minmax(0,1fr));gap:14px;counter-reset:s;margin:0;padding:0;list-style:none}
-.steps li{position:relative;padding:22px;border-radius:var(--r);background:var(--surface);border:1px solid var(--line)}
-.steps li::before{counter-increment:s;content:counter(s);display:grid;place-items:center;width:32px;height:32px;border-radius:10px;background:var(--ink);color:var(--bg);font:700 14px/1 var(--f-label);margin-bottom:14px}
+.steps li{position:relative;padding:0 18px 0 0}
+.steps li::after{content:"";position:absolute;top:16px;left:44px;right:8px;height:2px;background:var(--line)}
+.steps li:last-child::after{display:none}
+.steps li::before{counter-increment:s;content:counter(s);display:grid;place-items:center;width:34px;height:34px;border-radius:50%;background:var(--acc);color:var(--acc-ink);font:700 14px/1 var(--f-label);margin-bottom:16px}
 .steps b{display:block;font:700 17px/1.3 var(--f-label);margin-bottom:6px}
 .steps span{display:block;font-size:15px;color:var(--ink2)}
 .steps small{display:block;margin-top:10px;font:600 12px/1 var(--f-label);color:var(--muted)}
-@media (max-width:1000px){.steps{grid-template-columns:repeat(2,minmax(0,1fr))}}
-@media (max-width:560px){.steps{grid-template-columns:1fr}}
+@media (max-width:1000px){.steps{grid-template-columns:repeat(2,minmax(0,1fr));row-gap:28px}.steps li:nth-child(2)::after{display:none}}
+@media (max-width:560px){.steps{grid-template-columns:1fr}.steps li::after{display:none}}
 
 /* results dashboard */
 .dash-grid{display:grid;grid-template-columns:minmax(0,.9fr) minmax(0,1.1fr);gap:40px;align-items:center}
@@ -144,7 +156,7 @@ h2{margin:0 0 14px;font:800 clamp(28px,3.6vw,44px)/1.1 var(--f-head);letter-spac
 .tag{display:inline-flex;align-items:center;gap:6px;padding:4px 10px;border-radius:99px;background:var(--surface2);font:600 12px/1.2 var(--f-label);color:var(--muted)}
 .kpis{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:10px;margin-bottom:18px}
 .kpi{padding:14px;border-radius:14px;background:var(--surface2)}
-.kpi b{display:block;font:800 26px/1.1 var(--f-label);letter-spacing:-.02em}
+.kpi b{display:block;font:800 clamp(18px,2.2vw,26px)/1.1 var(--f-label);letter-spacing:-.02em;white-space:nowrap}
 .kpi span{font-size:12px;color:var(--muted)}
 .bars{display:grid;gap:10px}
 .bar{display:grid;grid-template-columns:minmax(0,1fr) 46px;gap:10px;align-items:center;font-size:14px}
@@ -158,8 +170,8 @@ h2{margin:0 0 14px;font:800 clamp(28px,3.6vw,44px)/1.1 var(--f-head);letter-spac
 
 /* packages */
 .pkgs{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:14px}
-.pkg{display:flex;flex-direction:column;padding:26px;border-radius:24px;background:var(--surface);border:1px solid var(--line)}
-.pkg.hl{border-color:var(--acc);box-shadow:0 0 0 3px color-mix(in srgb,var(--acc) 14%,transparent)}
+.pkg{display:flex;flex-direction:column;padding:26px;border-radius:24px;background:transparent;border:1px solid var(--line)}
+.pkg.hl{background:var(--surface);border-color:var(--acc);box-shadow:0 0 0 3px color-mix(in srgb,var(--acc) 14%,transparent),var(--shadow)}
 .pkg .badge{align-self:flex-start;margin-bottom:14px;padding:4px 10px;border-radius:99px;background:var(--acc);color:var(--acc-ink);font:700 12px/1.2 var(--f-label)}
 .pkg h3{margin:0 0 6px;font:800 22px/1.2 var(--f-label)}
 .pkg .for{margin:0 0 16px;color:var(--ink2);font-size:15px}
@@ -214,7 +226,7 @@ footer .wrap{display:flex;justify-content:space-between;gap:20px;flex-wrap:wrap;
 .app-top{padding:50px 18px 12px;display:flex;align-items:center;gap:10px;border-bottom:1px solid #EEE}
 .app-top .logo{width:34px;height:34px;border-radius:10px;display:grid;place-items:center;color:#fff;font:800 15px/1 var(--f-label);flex:none}
 .app-top b{display:block;font:700 14px/1.2 var(--f-label)}
-.app-top small{display:block;font-size:12px;color:#777}
+.app-top small{display:block;font-size:12px;color:#5E5E68}
 .app-top .xp{white-space:nowrap;margin-left:auto;display:flex;align-items:center;gap:4px;padding:5px 9px;border-radius:99px;background:#FFF4D6;color:#8A5A00;font:700 12px/1 var(--f-label)}
 .app-top .xp svg{width:14px;height:14px}
 .app-body{flex:1;overflow-y:auto;overflow-x:hidden;padding:16px 16px 20px;scrollbar-width:none}
@@ -247,7 +259,7 @@ footer .wrap{display:flex;justify-content:space-between;gap:20px;flex-wrap:wrap;
 .msg{max-width:86%;padding:10px 13px;border-radius:18px;font-size:14px;line-height:1.45}
 .msg.them{align-self:flex-start;background:#F1F1F4;border-bottom-left-radius:6px}
 .msg.me{align-self:flex-end;color:#fff;border-bottom-right-radius:6px}
-.msg .who{display:block;font:700 11px/1.2 var(--f-label);opacity:.6;margin-bottom:3px}
+.msg .who{display:block;font:700 12px/1.2 var(--f-label);opacity:.85;margin-bottom:3px}
 .opts{display:grid;gap:8px}
 .opt{text-align:left;padding:12px 14px;border-radius:14px;border:2px solid #E8E8EC;background:#fff;font-size:14px;line-height:1.4;transition:border-color .15s,transform .1s}
 .opt:hover{border-color:#C9C9D2}
@@ -274,7 +286,7 @@ footer .wrap{display:flex;justify-content:space-between;gap:20px;flex-wrap:wrap;
 .stop .dot{position:relative;z-index:1;width:44px;height:44px;border-radius:50%;display:grid;place-items:center;flex:none;background:#ECECF1;color:#999;border:3px solid #fff;transition:all .3s}
 .stop .dot svg{width:20px;height:20px}
 .stop b{display:block;font:700 15px/1.25 var(--f-label)}
-.stop small{display:block;font-size:12px;color:#888}
+.stop small{display:block;font-size:12px;color:#5E5E68}
 .stop.now{background:#F5F4FF}
 .stop.now .dot{color:#fff;box-shadow:0 0 0 6px rgba(91,75,255,.15);animation:bob 1.6s ease-in-out infinite}
 .stop.done .dot{color:#fff}
@@ -289,13 +301,13 @@ footer .wrap{display:flex;justify-content:space-between;gap:20px;flex-wrap:wrap;
 .mate .b{color:#fff;transform:rotateY(180deg);font-size:12.5px;line-height:1.4}
 .mate .av{width:54px;height:54px;border-radius:50%;display:grid;place-items:center;color:#fff;font:800 20px/1 var(--f-label)}
 .mate b{font:700 14px/1.2 var(--f-label)}
-.mate small{font-size:11.5px;color:#777}
+.mate small{font-size:12px;color:#5E5E68}
 .mate .b b{font-size:13px}
-.mate .tap{font:600 10.5px/1 var(--f-label);color:#999;text-transform:uppercase;letter-spacing:.05em}
+.mate .tap{font:600 12px/1 var(--f-label);color:#5E5E68}
 .q{padding:14px;border-radius:16px;background:#F6F6F8;margin-bottom:12px}
 .q p{margin:0 0 10px;font:700 15px/1.35 var(--f-label)}
 .who-row{display:flex;gap:8px;justify-content:space-between}
-.who-btn{flex:1;display:flex;flex-direction:column;align-items:center;gap:5px;padding:8px 2px;border:2px solid transparent;border-radius:14px;background:#fff;font:600 11.5px/1.2 var(--f-label)}
+.who-btn{flex:1;min-width:0;display:flex;flex-direction:column;align-items:center;gap:5px;padding:8px 2px;border:2px solid transparent;border-radius:14px;background:#fff;font:600 12px/1.2 var(--f-label);overflow-wrap:anywhere}
 .who-btn .av{width:40px;height:40px;font-size:15px;border-radius:50%;display:grid;place-items:center;color:#fff;font-weight:800}
 .who-btn.right{border-color:#14A86B;background:#E3F6EC}
 .who-btn.wrong{border-color:#E5484D;background:#FDECEC}
@@ -305,7 +317,7 @@ footer .wrap{display:flex;justify-content:space-between;gap:20px;flex-wrap:wrap;
 .task.on{border-color:#C9F0DA;background:#F2FBF6}
 .task.on .bx{background:#14A86B;border-color:#14A86B}
 .task.on .bx svg{opacity:1;transform:none}
-.task.on span{text-decoration:line-through;color:#888}
+.task.on span{text-decoration:line-through;color:#5E5E68}
 .vote{display:grid;grid-template-columns:1fr 1fr;gap:8px;margin-top:10px}
 .vote button{height:44px;border-radius:12px;border:2px solid #E6E6EA;background:#fff;font:700 13px/1 var(--f-label)}
 .vote button.right{border-color:#14A86B;background:#E3F6EC;color:#0C5C3A}
@@ -343,17 +355,17 @@ footer .wrap{display:flex;justify-content:space-between;gap:20px;flex-wrap:wrap;
 
 /* invitation */
 .inv{position:absolute;inset:0;display:flex;flex-direction:column;background:#111018;color:#fff;overflow:hidden}
-.inv-body{flex:1;overflow-y:auto;padding:58px 20px 22px;scrollbar-width:none}
+.inv-body{flex:1;overflow-y:auto;overflow-x:hidden;padding:58px 20px 22px;scrollbar-width:none}
 .inv-body::-webkit-scrollbar{display:none}
-.env{position:relative;width:240px;height:170px;margin:40px auto 24px;cursor:pointer;perspective:800px}
+.env{position:relative;display:block;width:min(240px,100%);height:170px;margin:40px auto 24px;padding:0;border:0;background:none;cursor:pointer;perspective:800px}
 .env .back{position:absolute;inset:0;border-radius:12px;background:#2B2840}
-.env .card{position:absolute;left:14px;right:14px;top:14px;bottom:14px;border-radius:10px;background:#fff;color:#111;display:grid;place-items:center;font:800 18px/1.2 var(--f-label);transition:transform .7s .25s cubic-bezier(.3,1.3,.5,1);padding:0}
+.env .card{position:absolute;left:14px;right:14px;top:14px;bottom:14px;border-radius:10px;background:#fff;color:#111;display:grid;place-items:start center;padding-top:14px;font:800 18px/1.2 var(--f-label);opacity:0;transition:transform .7s .25s cubic-bezier(.3,1.3,.5,1),opacity .2s .2s}
 .env .front{position:absolute;inset:0;border-radius:12px;background:linear-gradient(160deg,#3A3560,#24213A);clip-path:polygon(0 40%,50% 72%,100% 40%,100% 100%,0 100%)}
 .env .flap{position:absolute;left:0;right:0;top:0;height:62%;background:#4A4478;clip-path:polygon(0 0,100% 0,50% 100%);transform-origin:top;transition:transform .5s;border-radius:12px 12px 0 0}
-.env .seal{position:absolute;left:50%;top:52%;width:46px;height:46px;margin:-23px 0 0 -23px;border-radius:50%;background:#FF5A5F;display:grid;place-items:center;font:800 16px/1 var(--f-label);z-index:3;box-shadow:0 4px 12px rgba(0,0,0,.35);transition:opacity .3s}
+.env .seal{position:absolute;left:50%;top:52%;width:46px;height:46px;margin:-23px 0 0 -23px;border-radius:50%;background:#C8333A;color:#fff;display:grid;place-items:center;font:800 16px/1 var(--f-label);z-index:3;box-shadow:0 4px 12px rgba(0,0,0,.35);transition:opacity .3s}
 .env.open .flap{transform:rotateX(180deg)}
 .env.open .seal{opacity:0}
-.env.open .card{transform:translateY(-70px)}
+.env.open .card{transform:translateY(-70px);opacity:1}
 .inv-kick{font:700 12px/1 var(--f-label);letter-spacing:.14em;text-transform:uppercase;color:#C8B8FF;margin:0 0 10px}
 .inv-h{margin:0 0 8px;font:800 28px/1.1 var(--f-head);letter-spacing:-.01em}
 .inv-p{margin:0 0 18px;color:#C9C6D8;font-size:14px}
@@ -383,71 +395,208 @@ footer .wrap{display:flex;justify-content:space-between;gap:20px;flex-wrap:wrap;
 .cd{display:grid;grid-template-columns:repeat(4,1fr);gap:6px;margin-bottom:14px}
 .cd div{padding:10px 0;border-radius:12px;background:#1D1B2B;text-align:center}
 .cd b{display:block;font:800 20px/1 var(--f-label)}
-.cd small{font-size:10.5px;color:#9C98B3}
+.cd small{font-size:12px;color:#B9B5CF}
 .inv .abtn.light{background:#26233A;color:#fff;box-shadow:0 3px 0 #15131F}
 
 @media (prefers-reduced-motion:reduce){
   html{scroll-behavior:auto}
   *,*::before,*::after{animation-duration:.01ms!important;animation-iteration-count:1!important;transition-duration:.01ms!important}
+  *,*::before,*::after{animation-delay:0s!important}
   .confetti{display:none}
 }
+
+/* ---------- review fixes ---------- */
+.vh{position:absolute!important;width:1px;height:1px;margin:-1px;padding:0;overflow:hidden;clip:rect(0 0 0 0);white-space:nowrap;border:0}
+.skip{position:absolute;left:12px;top:-60px;z-index:100;padding:10px 14px;border-radius:10px;background:var(--ink);color:var(--bg);font:600 14px/1 var(--f-label);text-decoration:none}
+.skip:focus{top:12px}
+.game:focus-visible,.inv :focus-visible,.gm :focus-visible{outline:3px solid #fff;outline-offset:2px}
+.band{background:var(--surface2)}
+.band .dash{background:var(--surface)}
+.mini{font:700 12px/1.3 var(--f-label);color:#5E5E68;text-transform:uppercase;letter-spacing:.04em}
+.mini2{margin:0 0 10px;font:600 13px/1.3 var(--f-label);color:var(--muted)}
+.hard{margin:16px 0 0;padding:12px 14px;border-radius:12px;background:var(--bad-soft);color:var(--bad);font:600 13px/1.4 var(--f-label)}
+
+/* who it is for */
+.personas{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:14px}
+.persona{display:flex;flex-direction:column;padding:24px;border-radius:var(--r);background:var(--surface);border:1px solid var(--line)}
+.persona .ic{width:44px;height:44px;border-radius:13px;display:grid;place-items:center;background:var(--acc-soft);color:var(--acc);margin-bottom:16px}
+.persona h3{margin:0 0 6px;font:800 20px/1.25 var(--f-label)}
+.persona>p{margin:0 0 16px;font-size:15.5px;color:var(--ink2)}
+.persona ul{margin:0 0 18px;padding:0;list-style:none;display:grid;gap:7px;font-size:14px;color:var(--ink2)}
+.persona li{display:flex;gap:8px}
+.persona li svg{width:16px;height:16px;margin-top:3px;color:var(--ok)}
+.persona .row{margin-top:auto;display:flex;gap:8px;flex-wrap:wrap}
+.persona .btn svg{width:16px;height:16px}
+@media (max-width:900px){.personas{grid-template-columns:1fr}}
+
+/* faq */
+.faq-grid{display:grid;grid-template-columns:minmax(0,.8fr) minmax(0,1.2fr);gap:40px;align-items:start}
+.faq{display:grid;gap:10px}
+.faq details{border:1px solid var(--line);border-radius:16px;background:var(--surface);padding:0 18px}
+.faq summary{list-style:none;display:flex;justify-content:space-between;align-items:center;gap:12px;padding:16px 0;font:700 16px/1.35 var(--f-label);cursor:pointer}
+.faq summary::-webkit-details-marker{display:none}
+.faq summary svg{transition:transform .2s;color:var(--acc)}
+.faq details[open] summary svg{transform:rotate(45deg)}
+.faq details p{margin:0 0 16px;color:var(--ink2)}
+@media (max-width:900px){.faq-grid{grid-template-columns:1fr;gap:8px}}
+.unsure{display:flex;align-items:center;gap:8px;margin:20px 0 0;font:600 15px/1.4 var(--f-label)}
+.unsure svg{color:var(--acc)}
+.unsure a{color:var(--ink);text-underline-offset:3px}
+.sent .ok.warn{background:var(--surface2);color:var(--ink)}
+.err-s{font:600 13px/1.4 var(--f-label);color:var(--bad)}
+
+/* mobile hero: headline, then the phone right after the demo picker */
+@media (max-width:980px){
+  .hero-grid{display:flex;flex-direction:column;align-items:stretch;gap:0}
+  .hero-text{display:contents}
+  .hero .eyebrow{order:1;align-self:flex-start}
+  .hero h1{order:2}
+  .hero .lede{order:3;margin-bottom:18px}
+  .picker{order:4;display:flex;overflow-x:auto;gap:8px;margin:0 -24px 18px;padding:2px 24px 4px;scrollbar-width:none;scroll-snap-type:x mandatory}
+  .picker::-webkit-scrollbar{display:none}
+  .pick{flex:none;scroll-snap-align:start;padding:9px 14px 9px 9px;align-items:center;border-radius:99px}
+  .pick .ic{width:30px;height:30px;border-radius:50%}
+  .pick .ic svg{width:17px;height:17px}
+  .pick .pt span{display:none}
+  .pick b{font-size:14px;white-space:nowrap}
+  .stage{order:5;margin-bottom:28px}
+  .hero .row{order:6}
+  .facts{order:7}
+  .phone{width:300px}
+}
+@media (max-width:520px){.picker{margin:0 -16px 16px;padding:2px 16px 4px}}
+
+/* inside the phone */
+.app-top .tt{min-width:0}
+.app-top .tt b,.app-top .tt small{white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+.app .pbar{margin-top:10px}
+.hero-ic{width:64px;height:64px;border-radius:20px;display:grid;place-items:center;margin:6px 0 14px}
+.hero-ic svg{width:28px;height:28px}
+.who-list{margin:0 0 18px;padding:0;list-style:none;counter-reset:w;display:grid;gap:8px}
+.who-list li{display:flex;gap:10px;align-items:center;font-size:14px;color:#3A3A42}
+.who-list li::before{counter-increment:w;content:counter(w);width:28px;height:28px;border-radius:50%;display:grid;place-items:center;background:#F1F1F4;font:700 12px var(--f-label)}
+.linkbtn,.backbtn{display:inline-flex;align-items:center;gap:6px;border:0;background:none;padding:6px 0;font:700 13px/1.2 var(--f-label);color:#4A3AD8}
+.linkbtn{margin:-6px 0 12px}
+.backbtn{margin:8px 16px 0;align-self:flex-start;color:#5E5E68}
+.linkbtn svg,.backbtn svg{width:16px;height:16px}
+.pills{display:flex;justify-content:center;gap:8px;flex-wrap:wrap;margin-bottom:6px}
+.pill{display:inline-flex;align-items:center;gap:4px;padding:6px 12px;border-radius:99px;font:700 13px/1 var(--f-label)}
+.pill svg{width:14px;height:14px}
+.pill.gold{background:#FFF4D6;color:#7A4F00}.pill.green{background:#E3F6EC;color:#0B6B47}
+.seg3{display:flex;gap:6px;flex-wrap:wrap}
+.seg3 button{flex:1;min-width:52px;height:40px;border-radius:11px;border:2px solid #E6E6EA;background:#fff;font:700 13px/1 var(--f-label)}
+.seg3 button[aria-pressed="true"]{border-color:#0B7F63;background:#E3F6EC;color:#0B5A46}
+.vote button{display:flex;align-items:center;justify-content:center;gap:6px}
+.vote button svg,.who-btn svg{width:16px;height:16px}
+.who-row{gap:6px}
+.see{margin:14px 0;padding:12px 14px;border-radius:16px;background:#F4F3FF;border:1px dashed #B9B0FF;text-align:left}
+.see-h{display:flex;align-items:center;gap:8px;margin-bottom:10px}
+.see-h svg{width:18px;height:18px;color:#4A3AD8}
+.see-h b{font:800 13px/1.2 var(--f-label);color:#2A2270}
+.see-h span{margin-left:auto;font:600 11.5px/1 var(--f-label);color:#5E5E68}
+.see-g{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:8px}
+.see-g div{padding:8px;border-radius:10px;background:#fff}
+.see-g b{display:block;font:800 16px/1.1 var(--f-label);color:#111}
+.see-g span{display:block;margin-top:3px;font-size:11.5px;line-height:1.3;color:#5E5E68}
+.see-l{margin:0;padding:0;list-style:none;display:grid;gap:6px;font-size:13px}
+.see-l li{display:flex;justify-content:space-between;gap:10px;padding:7px 10px;border-radius:10px;background:#fff}
+.see.dark{background:rgba(255,255,255,.08);border-color:rgba(255,255,255,.3)}
+.see.dark .see-h svg,.see.dark .see-h b{color:#fff}.see.dark .see-h span{color:rgba(255,255,255,.75)}
+.see.dark .see-g div{background:rgba(255,255,255,.1)}.see.dark .see-g b{color:#fff}.see.dark .see-g span{color:rgba(255,255,255,.8)}
+.fb.best{margin-top:-6px}
+/* brand game */
+.gm{background:linear-gradient(180deg,#0E3B2C,#145A43)}
+.g-logo{width:64px;height:64px;border-radius:20px;background:#C8F04A;color:#0E3B2C;display:grid;place-items:center;margin:0 auto 14px;font:800 30px var(--f-label)}
+.g-kick{margin:0 0 6px;font:700 12px/1.3 var(--f-label);letter-spacing:.12em;text-transform:uppercase;color:#C8F04A}
+.g-hint{margin:12px 0 0;font-size:12.5px;color:rgba(255,255,255,.8)}
+.g-note{margin:0 0 10px;padding:8px 12px;border-radius:12px;background:rgba(255,255,255,.12);font-size:12.5px;color:#fff}
+.abtn.lime{background:#C8F04A;color:#0E3B2C;box-shadow:0 3px 0 #8DB52A}
+.game .combo{background:#C8F04A!important;color:#0E3B2C}
+.chill{position:absolute;inset:0;z-index:2;pointer-events:none;background:radial-gradient(circle at 50% 100%,rgba(189,235,255,.55),transparent 60%);opacity:0}
+.chill.on{animation:chill .6s ease-out}
+@keyframes chill{30%{opacity:1}100%{opacity:0}}
+.scratch small{margin-top:6px;color:#2F5B48;font-size:12px}
+.scratch canvas:focus-visible{outline:3px solid #fff;outline-offset:-3px}
+/* invitation */
+.env-wrap{text-align:center;padding-top:30px}
+.tap-hint{display:flex;align-items:center;justify-content:center;gap:8px;color:#B9B5CF;font:600 13px var(--f-label)}
+.tap-hint span{width:8px;height:8px;border-radius:50%;background:#FF5A5F;animation:pulse 1.6s infinite}
+.inv-q{margin:0 0 10px;font:800 18px var(--f-label)}
+.inv-sub{margin:4px 0 8px;font:700 13px var(--f-label);color:#D9D6E8}
+.foods{display:flex;flex-wrap:wrap;gap:6px;margin-bottom:14px}
+.foods button{padding:8px 12px;border-radius:99px;border:1px solid #3A3654;background:#1D1B2B;color:#fff;font:600 12.5px/1 var(--f-label)}
+.foods button[aria-pressed="true"]{background:#C8B8FF;color:#111018;border-color:#C8B8FF}
+.stepper button{display:grid;place-items:center}
+.stepper button:disabled{opacity:.4;cursor:default}
+.stepper button svg{width:16px;height:16px}
+.rsvp .yes{background:#C8B8FF;color:#111018}
+.rsvp .no{background:#26233A;color:#fff}
+.abtn.lav{background:#C8B8FF;color:#111018;box-shadow:0 3px 0 #8E7BE0}
+.no-ic{width:72px;height:72px;margin:0 auto 18px;border-radius:50%;background:#26233A;display:grid;place-items:center;color:#C8B8FF}
+.ticket .qr{width:62px;height:62px}
+.ticket .tk-s{color:#55555E}
+.prog li{color:#E4E1F0}
+.inv-meta small{color:#B9B5CF}
+.inv-p{color:#D6D3E4}
+/* dark site: soften the white demo screens */
+@media (prefers-color-scheme:dark){:root:not([data-theme="light"]) .app:not(.gm){background:#F1F1F4}}
+:root[data-theme="dark"] .app:not(.gm){background:#F1F1F4}
+@media (max-width:360px){.who-row{gap:4px}.who-btn .av{width:34px;height:34px}.see-g{grid-template-columns:1fr 1fr 1fr;gap:6px}.see-g b{font-size:14px}}
+@media (max-width:900px){.personas{grid-template-columns:minmax(0,1fr)}}
+@media (max-width:520px){.btn{white-space:normal;text-align:center;height:auto;min-height:48px;padding:12px 18px;line-height:1.25}.btn.sm{min-height:38px;padding:8px 12px}.hero .row .btn{flex:1 1 100%}}
+.persona .btn{white-space:normal;height:auto;min-height:38px;padding:8px 12px;line-height:1.25;text-align:left}
 
 </style>
 </head>
 <body>
+<a class="skip" href="#main">Skip to content · გადასვლა შინაარსზე</a>
+<div id="sr" class="vh" role="status" aria-live="polite"></div>
 <header class="hdr" id="hdr">
   <div class="wrap">
-    <a class="brand" href="#top" aria-label="Gancda"><span class="mk">გ</span><span>Gancda</span></a>
+    <a class="brand" href="#top" aria-label="Gancda"><span class="mk" aria-hidden="true">გ</span><span>Gancda</span></a>
     <nav class="nav" aria-label="Main">
-      <a href="#demos" data-t="nav.demos"></a>
-      <a href="#how" data-t="nav.how"></a>
+      <a href="#who" data-t="nav.who"></a>
       <a href="#results" data-t="nav.results"></a>
       <a href="#packages" data-t="nav.packages"></a>
+      <a href="#faq" data-t="nav.faq"></a>
     </nav>
     <div class="tools">
-      <div class="seg2" role="group" aria-label="Language"><button type="button" data-lang="ka">ქა</button><button type="button" data-lang="en">EN</button></div>
+      <div class="seg2" role="group" aria-label="Language / ენა"><button type="button" data-lang="ka" lang="ka">ქა</button><button type="button" data-lang="en" lang="en">EN</button></div>
       <button type="button" class="ibtn" id="themeBtn"></button>
       <a class="btn sm acc cta" href="#contact" data-t="nav.cta"></a>
     </div>
   </div>
 </header>
 
-<main id="top">
-  <section class="hero">
+<main id="main">
+  <section class="hero" id="top">
     <div class="wrap hero-grid">
-      <div>
+      <div class="hero-text">
         <p class="eyebrow"><i></i><span data-t="hero.eyebrow"></span></p>
         <h1 data-th="hero.h"></h1>
         <p class="lede" data-t="hero.lede"></p>
         <div class="picker" id="picker" role="group"></div>
         <div class="row">
           <a class="btn acc" href="#contact"><span data-t="hero.cta"></span><span data-ic="arrow"></span></a>
-          <a class="btn ghost" href="#demos" data-t="hero.more"></a>
+          <a class="btn ghost" href="#who" data-t="hero.more"></a>
         </div>
         <ul class="facts" id="facts"></ul>
       </div>
       <div class="stage">
-        <div class="phone"><div class="screen" id="phone"></div></div>
+        <div class="phone"><div class="screen" id="phone" role="region"></div></div>
         <p class="cap"><i></i><span data-t="hero.cap"></span></p>
       </div>
     </div>
   </section>
 
-  <section class="sec" id="demos">
+  <section class="sec" id="who">
     <div class="wrap">
-      <div class="sec-h"><p class="kick" data-t="demos.kick"></p><h2 data-t="demos.h"></h2><p data-t="demos.p"></p></div>
-      <div class="cards" id="cards"></div>
+      <div class="sec-h"><p class="kick" data-t="who.kick"></p><h2 data-t="who.h"></h2><p data-t="who.p"></p></div>
+      <div class="personas" id="whoList"></div>
     </div>
   </section>
 
-  <section class="sec" id="how">
-    <div class="wrap">
-      <div class="sec-h"><p class="kick" data-t="how.kick"></p><h2 data-t="how.h"></h2><p data-t="how.p"></p></div>
-      <ol class="steps" id="steps"></ol>
-    </div>
-  </section>
-
-  <section class="sec" id="results">
+  <section class="sec band" id="results">
     <div class="wrap dash-grid">
       <div>
         <p class="kick" data-t="res.kick"></p><h2 data-t="res.h"></h2><p class="lede" data-t="res.p"></p>
@@ -461,7 +610,22 @@ footer .wrap{display:flex;justify-content:space-between;gap:20px;flex-wrap:wrap;
     <div class="wrap">
       <div class="sec-h"><p class="kick" data-t="pk.kick"></p><h2 data-t="pk.h"></h2><p data-t="pk.p"></p></div>
       <div class="pkgs" id="pkgs"></div>
+      <p class="unsure"><span data-ic="bolt"></span><a href="#contact" data-t="pk.unsure"></a></p>
       <p class="note" data-t="pk.note"></p>
+    </div>
+  </section>
+
+  <section class="sec" id="how">
+    <div class="wrap">
+      <div class="sec-h"><p class="kick" data-t="how.kick"></p><h2 data-t="how.h"></h2><p data-t="how.p"></p></div>
+      <ol class="steps" id="steps"></ol>
+    </div>
+  </section>
+
+  <section class="sec" id="faq">
+    <div class="wrap faq-grid">
+      <div class="sec-h"><p class="kick" data-t="faq.kick"></p><h2 data-t="faq.h"></h2></div>
+      <div class="faq" id="faqList"></div>
     </div>
   </section>
 
@@ -475,8 +639,8 @@ footer .wrap{display:flex;justify-content:space-between;gap:20px;flex-wrap:wrap;
         <form id="form" novalidate>
           <div class="fgrid">
             <fieldset class="field full"><legend data-t="f.what"></legend><div class="chips" id="whatChips"></div></fieldset>
-            <div class="field" id="fbName"><label for="fName" data-t="f.name"></label><input id="fName" name="name" autocomplete="name"><span class="err" id="eName"></span></div>
-            <div class="field" id="fbContact"><label for="fContact" data-t="f.contact"></label><input id="fContact" name="contact" autocomplete="email" data-tp="f.contactPh"><span class="err" id="eContact"></span></div>
+            <div class="field" id="fbName"><label for="fName" data-t="f.name"></label><input id="fName" name="name" autocomplete="name" aria-describedby="eName"><span class="err" id="eName" aria-live="polite"></span></div>
+            <div class="field" id="fbContact"><label for="fContact" data-t="f.contact"></label><input id="fContact" name="contact" autocomplete="email" data-tp="f.contactPh" aria-describedby="eContact"><span class="err" id="eContact" aria-live="polite"></span></div>
             <div class="field full"><label for="fCompany" data-t="f.company"></label><input id="fCompany" name="company" autocomplete="organization"></div>
             <div class="field full"><label for="fMsg" data-t="f.msg"></label><textarea id="fMsg" name="message" data-tp="f.msgPh"></textarea></div>
           </div>
@@ -503,198 +667,231 @@ footer .wrap{display:flex;justify-content:space-between;gap:20px;flex-wrap:wrap;
 const L = (ka, en) => ({ka, en});
 const S = {
   ka: {
-    nav:{demos:'დემოები', how:'როგორ ვმუშაობთ', results:'შედეგები', packages:'პაკეტები', cta:'დაგვიკავშირდი'},
-    ui:{theme:'თემის შეცვლა', play:'ითამაშე', playing:'ახლა თამაშობ'},
-    hero:{eyebrow:'ციფრული გამოცდილებების სტუდია',
-      h:'სწავლება, ონბორდინგი და კამპანიები, <em>რომლებსაც თამაშობენ</em>',
-      lede:'ვქმნით ინტერაქტიულ გამოცდილებებს თქვენი გუნდისა და მომხმარებლებისთვის. ბმულით იხსნება ნებისმიერ ტელეფონზე, აპის გარეშე, და ზუსტად გაჩვენებთ, ვინ რა ისწავლა და რა გააკეთა.',
-      cta:'განვიხილოთ თქვენი პროექტი', more:'ოთხივე ფორმატი', cap:'ეს ნამდვილი დემოა. ითამაშე.',
-      facts:['ბმულით, აპის გარეშე', 'ქართულად და ინგლისურად', 'შედეგების ანალიტიკა']},
-    demos:{kick:'ოთხი ფორმატი', h:'ერთი მიზანი: ადამიანმა თავად მოინდომოს',
-      p:'ყოველი ფორმატი ცალკე გამოცდილებაა საკუთარი მექანიკით. ყველა მათგანი თქვენს ბრენდზე, ენასა და მიზანზე იწყობა.'},
+    meta:{title:'განცდა · სასწავლო თამაშები, ონბორდინგი და ბრენდის თამაშები', desc:'ინტერაქტიული სასწავლო თამაშები, ონბორდინგის მარშრუტები, ბრენდის თამაშები და მოსაწვევები, რომლებიც ბმულით იხსნება ნებისმიერ ტელეფონზე. სტუდია თბილისში.'},
+    nav:{who:'ვისთვის', results:'შედეგები', packages:'პაკეტები', faq:'კითხვები', cta:'დაგვიკავშირდით'},
+    ui:{theme:'თემის შეცვლა', play:'ითამაშეთ', demo:'დემო მონაცემები'},
+    hero:{eyebrow:'ინტერაქტიული თამაშების სტუდია',
+      h:'<em>თამაში</em>, რომელიც ასწავლის, აცნობს და ყიდის',
+      lede:'ვქმნით ინტერაქტიულ თამაშებს სწავლებისთვის, ონბორდინგისა და კამპანიებისთვის. იხსნება ბმულით, ნებისმიერ ტელეფონზე, აპის გადმოწერის გარეშე, თქვენ კი ზუსტად ხედავთ, ვინ რა ისწავლა და რა გააკეთა.',
+      cta:'განვიხილოთ თქვენი პროექტი', more:'ვისთვისაა', cap:'ეს ნამდვილი დემოა — ითამაშეთ.',
+      facts:['ბმულით, აპის გადმოწერის გარეშე', 'ქართულად და ინგლისურად', 'შედეგები თქვენს დაფაზე']},
     fmt:{
-      learn:{n:'სასწავლო თამაში', s:'სიმულაცია, სადაც ყოველ არჩევანს შედეგი აქვს',
-        p:'თანამშრომელი რეალურ სიტუაციებში ვარჯიშობს. შეცდომა უსაფრთხოა და ყოველთვის ახსნილია.',
-        u:['კლიენტის სერვისი და გაყიდვები', 'უსაფრთხოება და წესები', 'ახალი პროდუქტის ცოდნა']},
-      onboard:{n:'ონბორდინგის მოგზაურობა', s:'პირველი კვირა, როგორც თავგადასავალი',
-        p:'გუნდი, წესები, ინსტრუმენტები და პირველი საქმეები ეტაპებად, ქულებითა და ბეჯებით. HR ხედავს, ვინ სად გაჩერდა.',
-        u:['ახალი თანამშრომლები', 'სტაჟიორები და სეზონური გუნდი', 'ფილიალების ქსელი']},
-      engage:{n:'ბრენდის თამაში', s:'15-წამიანი თამაში, რომელიც პრიზით მთავრდება',
-        p:'მომხმარებელი თამაშობს, ქულებს აგროვებს და კუპონს იგებს. თქვენ იღებთ ჩართულობას, კონტაქტებს და ნამდვილ ვიზიტებს.',
-        u:['პროდუქტის გაშვება', 'ლოიალობის კამპანია', 'სტენდი ღონისძიებაზე']},
-      attend:{n:'ღონისძიების მოსაწვევი', s:'მოსაწვევი, რომელსაც პასუხობენ',
-        p:'პერსონალური ბმული ყოველ სტუმარს, პასუხი ერთი შეხებით, კალენდარში დამატება და ათვლა. ხედავთ, ვინ მოდის.',
-        u:['კორპორატიული ღონისძიება', 'კონფერენცია ან გახსნა', 'კერძო წვეულება']}
+      learn:{n:'სასწავლო თამაში', s:'სიმულაცია, სადაც ყოველ არჩევანს შედეგი აქვს'},
+      onboard:{n:'ონბორდინგის მარშრუტი', s:'პირველი დღე, რომელიც თავგადასავალს ჰგავს'},
+      engage:{n:'ბრენდის თამაში', s:'15-წამიანი თამაში, რომელიც პრიზით მთავრდება'},
+      attend:{n:'ღონისძიების მოსაწვევი', s:'მოსაწვევი, რომელსაც პასუხობენ'}
     },
-    how:{kick:'პროცესი', h:'იდეიდან ბმულამდე', p:'თქვენ გვეუბნებით, რა უნდა შეიცვალოს. დანარჩენს ჩვენ ვაკეთებთ.',
-      steps:[['მიზანი', 'ერთ შეხვედრაზე ვარკვევთ, ვინ არის აუდიტორია და რა უნდა ისწავლოს ან გააკეთოს.', 'ერთი შეხვედრა'],
-             ['სცენარი და დიზაინი', 'ვწერთ სცენარს, ვხატავთ ეკრანებს თქვენს ბრენდში და ერთად ვამტკიცებთ.', 'შეთანხმებით'],
-             ['გაშვება', 'ვგზავნით ბმულებს: ყველას ერთს ან თითოეულს პერსონალურს. აპი არ სჭირდება.', 'ერთ დღეში'],
-             ['შედეგები', 'ხედავთ, ვინ გაიარა, სად გაუჭირდათ და რა შეიცვალა. შემდეგ ვერსიას ვაუმჯობესებთ.', 'მუდმივად']]},
-    res:{kick:'შედეგები', h:'ხედავთ, რა მუშაობს', p:'ყოველ გამოცდილებას ანალიტიკა ახლავს: არა მხოლოდ „გახსნეს“, არამედ ზუსტად რა გააკეთეს.',
+    who:{kick:'ვისთვის', h:'ერთი მიზანი: რომ მონაწილეობა თავად მოუნდეთ', p:'თითოეული ფორმატი თქვენს ბრენდს, ენასა და მიზანს ერგება.', see:'რას ხედავთ',
+      list:[
+        {k:'hr', n:'HR და სწავლება', o:'ახალი თანამშრომლები უფრო სწრაფად ერგებიან გუნდს, სწავლების შედეგი კი გაზომვადია.', f:['learn', 'onboard'],
+         m:['ვინ დაასრულა და ვინ შეჩერდა', 'რომელ სიტუაციაში ცდებიან ყველაზე ხშირად', 'ქულები გუნდისა და ფილიალის მიხედვით']},
+        {k:'mkt', n:'მარკეტინგი', o:'კამპანია, რომელსაც თამაშობენ: კონტაქტებითა და ვიზიტებით, რომლებსაც დათვლით.', f:['engage'],
+         m:['თამაშების რაოდენობა და დრო', 'თანხმობით მიღებული კონტაქტები', 'გამოყენებული კუპონები']},
+        {k:'ev', n:'ღონისძიებები', o:'ღონისძიებამდე იცით, ვინ მოდის, რამდენი სტუმრით და რა სჭირდებათ.', f:['attend'],
+         m:['პასუხები თითოეული სტუმრისგან', 'თანმხლები პირები და კვების მოთხოვნები', 'კალენდარი და შეხსენებები']}]},
+    res:{kick:'შედეგები', h:'დაამტკიცეთ, რომ იმუშავა', p:'ყოველ პროექტს ანალიტიკა ახლავს: არა მხოლოდ „გახსნეს“, არამედ ზუსტად რა გააკეთეს.',
       checks:['ვინ დაასრულა და ვინ შეჩერდა შუა გზაზე', 'რომელ სიტუაციაში ცდებიან ყველაზე ხშირად', 'ქულები თანამშრომლის, გუნდის ან ფილიალის მიხედვით', 'CSV ექსპორტი თქვენი HR ან CRM სისტემისთვის'],
-      title:'სერვისის სიმულატორი · ფილიალები', tag:'დემო მონაცემები',
-      kpis:[['86%', 'დაასრულა'], ['6.4 / 8', 'საშუალო ქულა'], ['4 წთ', 'საშუალო დრო']],
+      title:'სერვისის სიმულატორი · ფილიალები',
+      kpis:[['86%', 'დაასრულა'], ['6,4 / 8', 'საშუალო ქულა'], ['4 წთ', 'საშუალო დრო']],
       barsT:'საშუალო ქულა ფილიალების მიხედვით', bars:[['ფილიალი A', 92], ['ფილიალი B', 84], ['ფილიალი C', 71], ['ფილიალი D', 63]],
       hard:'ყველაზე რთული სიტუაცია: გაბრაზებული კლიენტი რიგში'},
-    pk:{kick:'პაკეტები', h:'დაიწყეთ პილოტით', p:'პირველი პროექტი პატარაა და გაზომვადი: ერთი გამოცდილება, ერთი აუდიტორია, ნათელი შედეგი.',
+    pk:{kick:'პაკეტები', h:'დაიწყეთ პილოტით', p:'პირველი პროექტი მცირეა და გაზომვადი: ერთი თამაში, ერთი აუდიტორია, ნათელი შედეგი.',
       list:[
-        {n:'პილოტი', b:'დასაწყისად', f:'ერთი გამოცდილება ერთი გუნდისთვის ან კამპანიისთვის', t:'პირველი შედეგები სწრაფად',
-         i:['ერთი ფორმატი ოთხიდან', 'სცენარი და დიზაინი თქვენს ბრენდში', 'ბმულები მონაწილეებისთვის', 'შედეგების რეპორტი'], c:'პილოტის დაწყება'},
-        {n:'პროექტი', f:'სრული გამოცდილება თქვენი მიზნისთვის', t:'მიზნის მიხედვით',
+        {n:'პილოტი', b:'დასაწყისად', f:'ერთი თამაში ერთი გუნდისთვის ან კამპანიისთვის',
+         i:['ერთი ფორმატი ოთხიდან', 'სცენარი და დიზაინი თქვენი ბრენდის სტილში', 'ბმულები მონაწილეებისთვის', 'შედეგების ანგარიში'], c:'პილოტის დაწყება'},
+        {n:'პროექტი', f:'სრული პროექტი თქვენი მიზნისთვის',
          i:['ნებისმიერი ფორმატი ან მათი კომბინაცია', 'პერსონალური ბმული ყველა მონაწილეს', 'ანალიტიკის დაფა და CSV', 'ქართული და ინგლისური ვერსია'], c:'განვიხილოთ'},
-        {n:'პარტნიორობა', f:'რეგულარული სწავლება, ონბორდინგი ან კამპანიები', t:'ყოველთვიურად',
-         i:['ახალი გამოცდილება ყოველ თვე', 'განახლება შედეგების მიხედვით', 'გუნდებისა და ფილიალების ანალიტიკა', 'პრიორიტეტული მხარდაჭერა'], c:'დაგვიკავშირდით'}],
-      note:'ფასი დამოკიდებულია ფორმატზე და მონაწილეების რაოდენობაზე. მოგვწერეთ და გამოგიგზავნით კონკრეტულ შეთავაზებას.'},
-    ct:{kick:'კონტაქტი', h:'მოგვიყევით, რისი შეცვლა გსურთ', p:'რამდენიმე წინადადებაც საკმარისია. გიპასუხებთ იდეებით და შემდეგი ნაბიჯით.'},
+        {n:'პარტნიორობა', f:'რეგულარული სწავლება, ონბორდინგი ან კამპანიები',
+         i:['ახალი თამაში ყოველთვე', 'განახლება შედეგების მიხედვით', 'გუნდებისა და ფილიალების ანალიტიკა', 'პრიორიტეტული მხარდაჭერა'], c:'დაგვიკავშირდით'}],
+      unsure:'ჯერ არ იცით, რომელი ფორმატი გჭირდებათ? მოგვწერეთ მიზანი და ჩვენ შემოგთავაზებთ.',
+      note:'ფასი დამოკიდებულია ფორმატსა და მონაწილეთა რაოდენობაზე. პირველი საუბრის შემდეგ გიგზავნით კონკრეტულ შეთავაზებას.'},
+    how:{kick:'პროცესი', h:'იდეიდან ბმულამდე', p:'თქვენ გვეტყვით, რა უნდა შეიცვალოს. დანარჩენი ჩვენზეა.',
+      steps:[['მიზანი', 'ერთ შეხვედრაზე ვარკვევთ, ვინ არის აუდიტორია და რა უნდა ისწავლოს ან გააკეთოს.'],
+             ['სცენარი და დიზაინი', 'ვწერთ სცენარს, ვხატავთ ეკრანებს თქვენი ბრენდის სტილში და ერთად ვამტკიცებთ.'],
+             ['გაშვება', 'ვგზავნით ბმულებს: ერთს ყველასთვის ან პერსონალურს თითოეულისთვის. აპის გადმოწერა საჭირო არაა.'],
+             ['შედეგები', 'ხედავთ, ვინ დაასრულა, სად გაუჭირდათ და რა შეიცვალა. შემდეგ ვერსიას ვაუმჯობესებთ.']]},
+    faq:{kick:'კითხვები', h:'რასაც ყველაზე ხშირად გვეკითხებიან',
+      list:[
+        ['რა ღირს?', 'ფასი დამოკიდებულია ფორმატსა და მონაწილეთა რაოდენობაზე. პირველი საუბრის შემდეგ გიგზავნით კონკრეტულ ფასს, რომ ბიუჯეტის დაგეგმვა შეძლოთ.'],
+        ['რა დრო სჭირდება?', 'დამოკიდებულია ფორმატსა და კონტენტზე. ვადას პირველ შეხვედრაზე ვთანხმდებით, სანამ მუშაობას დავიწყებთ.'],
+        ['როგორ შედიან მონაწილეები?', 'ბმულით, რომელსაც SMS-ით, ელფოსტით, ჩატით ან QR კოდით უგზავნით. აპის გადმოწერა, ანგარიშის შექმნა ან IT-ის ჩართვა საჭირო არაა.'],
+        ['რა ხდება მონაცემებთან?', 'ვაგროვებთ მხოლოდ იმას, რაც შედეგების სანახავად საჭიროა და რაზეც წინასწარ შევთანხმდებით. პასუხები მხოლოდ თქვენთვისაა ხელმისაწვდომი.'],
+        ['რომელ ენებზე მუშაობს?', 'ქართულად და ინგლისურად, ერთი ბმულით: მონაწილე თავად ირჩევს ენას.'],
+        ['შედეგებს სად ვნახავთ?', 'თქვენს პირად დაფაზე: დასრულება, ქულები, ყველაზე რთული კითხვები და თითოეული მონაწილის სტატუსი. ყველაფერი CSV-ში იტვირთება თქვენი HR ან CRM სისტემისთვის.']]},
+    ct:{kick:'კონტაქტი', h:'მოგვიყევით, რისი შეცვლა გსურთ', p:'რამდენიმე წინადადებაც საკმარისია. გიპასუხებთ იდეებით და შემდეგი ნაბიჯის შეთავაზებით.'},
     f:{what:'რა გაინტერესებთ', unsure:'ჯერ არ ვიცი', name:'სახელი', contact:'ელფოსტა ან ტელეფონი', contactPh:'name@company.ge',
-      company:'კომპანია (სურვილისამებრ)', msg:'მოკლედ თქვენი მიზანი', msgPh:'მაგ. გვინდა ახალი თანამშრომლების პირველი კვირა უფრო მარტივი და სახალისო გავხადოთ.',
-      note:'მონაცემებს ვიყენებთ მხოლოდ თქვენთან დასაკავშირებლად.', send:'გაგზავნა', sending:'იგზავნება…',
+      company:'კომპანია (სურვილისამებრ)', msg:'თქვენი მიზანი მოკლედ', msgPh:'მაგ. გვინდა ახალი თანამშრომლების პირველი კვირა უფრო მარტივი და სახალისო გავხადოთ.',
+      note:'გიპასუხებთ იდეებით და შემდეგი ნაბიჯით. მონაცემებს ვიყენებთ მხოლოდ თქვენთან დასაკავშირებლად.', send:'გაგზავნა', sending:'იგზავნება…',
       eName:'მიუთითეთ სახელი', eContact:'მიუთითეთ ელფოსტა ან ტელეფონი', company2:'კომპანია',
       okH:'მივიღეთ!', ok:'მალე დაგიკავშირდებით. მანამდე შეგიძლიათ დემოები ითამაშოთ.',
-      failH:'ვერ გაიგზავნა', fail:'სცადეთ ხელახლა ან მოგვწერეთ {email}. თქვენი ტექსტი აქაა, რომ არ დაიკარგოს:',
-      offH:'თითქმის მზადაა', off:'გვერდი ფაილიდანაა გახსნილი, ამიტომ ფორმა ვერ გაიგზავნება. დააკოპირეთ ტექსტი და მოგვწერეთ {email}.',
-      again:'კიდევ ერთი მოთხოვნა', copy:'კოპირება', copied:'დაკოპირდა'},
-    foot:{made:'ციფრული გამოცდილებები, თბილისი', demo:'საიტზე ყველა ბრენდი, სახელი და რიცხვი სადემონსტრაციოა.'},
+      failH:'ვერ გაიგზავნა', fail:'სცადეთ ხელახლა ან მოგვწერეთ მისამართზე {email}. თქვენი ტექსტი შევინახეთ, რომ არ დაიკარგოს:',
+      offH:'თითქმის მზადაა', off:'გვერდი ფაილიდანაა გახსნილი, ამიტომ ფორმა ვერ გაიგზავნება. დააკოპირეთ ტექსტი და მოგვწერეთ მისამართზე {email}.',
+      again:'ახალი მოთხოვნის გაგზავნა', copy:'კოპირება', copied:'დაკოპირდა'},
+    foot:{made:'ინტერაქტიული პროექტები, თბილისი', demo:'საიტზე წარმოდგენილი ყველა ბრენდი, სახელი და მონაცემი სადემონსტრაციოა.'},
     months:['იანვარი','თებერვალი','მარტი','აპრილი','მაისი','ივნისი','ივლისი','აგვისტო','სექტემბერი','ოქტომბერი','ნოემბერი','დეკემბერი'],
-    days:['კვირა','ორშაბათი','სამშაბათი','ოთხშაბათი','ხუთშაბათი','პარასკევი','შაბათი']
+    mon:['იან','თებ','მარ','აპრ','მაი','ივნ','ივლ','აგვ','სექ','ოქტ','ნოე','დეკ'],
+    days:['კვირა','ორშაბათი','სამშაბათი','ოთხშაბათი','ხუთშაბათი','პარასკევი','შაბათი'],
+    dy:['კვ','ორშ','სამ','ოთხ','ხუთ','პარ','შაბ']
   },
   en: {
-    nav:{demos:'Demos', how:'How we work', results:'Results', packages:'Packages', cta:'Get in touch'},
-    ui:{theme:'Switch theme', play:'Play it', playing:'Now playing'},
-    hero:{eyebrow:'Digital experience studio',
-      h:'Training, onboarding and campaigns <em>people actually play</em>',
-      lede:'We build interactive experiences for your team and your customers. They open from a link on any phone, no app needed, and show you exactly who learned and did what.',
-      cta:'Talk about your project', more:'All four formats', cap:'This is a real demo. Play it.',
-      facts:['Opens from a link, no app', 'Georgian and English', 'Results analytics']},
-    demos:{kick:'Four formats', h:'One goal: people want to take part',
-      p:'Each format is its own experience with its own mechanics. Every one is built around your brand, your language and your goal.'},
+    meta:{title:'Gancda · Gamified training, onboarding and brand games in Georgia', desc:'Interactive learning games, onboarding journeys, brand games and event invitations that open from a link on any phone. A studio in Tbilisi.'},
+    nav:{who:'Who it’s for', results:'Results', packages:'Packages', faq:'FAQ', cta:'Get in touch'},
+    ui:{theme:'Switch theme', play:'Play', demo:'Demo data'},
+    hero:{eyebrow:'Interactive experience studio',
+      h:'<em>Games</em> that train, onboard and sell',
+      lede:'We build interactive games for training, onboarding and campaigns. They open from a link on any phone, no app to download, and you see exactly who learned and did what.',
+      cta:'Talk about your project', more:'Who it’s for', cap:'This is a real demo — play it.',
+      facts:['Opens from a link, no app', 'Georgian and English', 'Results on your dashboard']},
     fmt:{
-      learn:{n:'Learning game', s:'A simulation where every choice has consequences',
-        p:'Staff practise real situations. Mistakes are safe and always explained.',
-        u:['Customer service and sales', 'Safety and compliance', 'New product knowledge']},
-      onboard:{n:'Onboarding journey', s:'A first week that feels like an adventure',
-        p:'The team, the rules, the tools and the first tasks in stages, with points and badges. HR sees who stopped where.',
-        u:['New hires', 'Interns and seasonal staff', 'Branch networks']},
-      engage:{n:'Brand game', s:'A 15-second game that ends in a prize',
-        p:'Customers play, score and win a coupon. You get engagement, contacts and real visits.',
-        u:['Product launches', 'Loyalty campaigns', 'Event stands']},
-      attend:{n:'Event invitation', s:'An invitation people answer',
-        p:'A personal link for every guest, a one-tap reply, add to calendar and a countdown. You see who is coming.',
-        u:['Corporate events', 'Conferences and openings', 'Private parties']}
+      learn:{n:'Learning game', s:'A simulation where every choice has consequences'},
+      onboard:{n:'Onboarding journey', s:'A first day that feels like an adventure'},
+      engage:{n:'Brand game', s:'A 15-second game that ends in a prize'},
+      attend:{n:'Event invitation', s:'An invitation people answer'}
     },
-    how:{kick:'Process', h:'From idea to link', p:'You tell us what needs to change. We do the rest.',
-      steps:[['Goal', 'In one meeting we work out who the audience is and what they should learn or do.', 'One meeting'],
-             ['Script and design', 'We write the script, design the screens in your brand and sign them off with you.', 'As agreed'],
-             ['Launch', 'We send the links: one for everyone, or a personal one each. No app needed.', 'In a day'],
-             ['Results', 'You see who finished, where people struggled and what changed. We improve the next version.', 'Ongoing']]},
-    res:{kick:'Results', h:'See what works', p:'Every experience comes with analytics: not just “opened”, but exactly what people did.',
+    who:{kick:'Who it’s for', h:'One goal: people want to take part', p:'Every format is built around your brand, your language and your goal.', see:'What you see',
+      list:[
+        {k:'hr', n:'HR and L&D', o:'New hires settle in sooner, and training results you can measure.', f:['learn', 'onboard'],
+         m:['Who finished and who stopped', 'Which situation people get wrong most', 'Scores by team and branch']},
+        {k:'mkt', n:'Marketing', o:'A campaign people play, with contacts and visits you can count.', f:['engage'],
+         m:['Plays and time spent', 'Contacts collected with consent', 'Coupons redeemed']},
+        {k:'ev', n:'Events', o:'Know who is coming before the day, with how many guests and what they need.', f:['attend'],
+         m:['A reply from every guest', 'Plus-ones and dietary needs', 'Calendar and reminders']}]},
+    res:{kick:'Results', h:'Prove it worked', p:'Every project comes with analytics: not just “opened”, but exactly what people did.',
       checks:['Who finished and who stopped half way', 'Which situation people get wrong most often', 'Scores by person, team or branch', 'CSV export for your HR or CRM system'],
-      title:'Service simulator · branches', tag:'Demo data',
+      title:'Service simulator · branches',
       kpis:[['86%', 'finished'], ['6.4 / 8', 'average score'], ['4 min', 'average time']],
       barsT:'Average score by branch', bars:[['Branch A', 92], ['Branch B', 84], ['Branch C', 71], ['Branch D', 63]],
       hard:'Hardest situation: an angry customer in the queue'},
-    pk:{kick:'Packages', h:'Start with a pilot', p:'The first project is small and measurable: one experience, one audience, a clear result.',
+    pk:{kick:'Packages', h:'Start with a pilot', p:'The first project is small and measurable: one game, one audience, a clear result.',
       list:[
-        {n:'Pilot', b:'To start', f:'One experience for one team or campaign', t:'First results, fast',
-         i:['One of the four formats', 'Script and design in your brand', 'Links for participants', 'Results report'], c:'Start a pilot'},
-        {n:'Project', f:'A full experience built for your goal', t:'Shaped by the goal',
+        {n:'Pilot', b:'To start', f:'One game for one team or campaign',
+         i:['One of the four formats', 'Script and design in your brand style', 'Links for participants', 'Results report'], c:'Start a pilot'},
+        {n:'Project', f:'A full project built for your goal',
          i:['Any format, or a combination', 'A personal link for every participant', 'Analytics dashboard and CSV', 'Georgian and English versions'], c:'Let’s talk'},
-        {n:'Partnership', f:'Regular training, onboarding or campaigns', t:'Monthly',
-         i:['A new experience every month', 'Updates based on results', 'Team and branch analytics', 'Priority support'], c:'Get in touch'}],
-      note:'Pricing depends on the format and the number of participants. Write to us and we will send a concrete proposal.'},
-    ct:{kick:'Contact', h:'Tell us what you want to change', p:'A few sentences are enough. We will reply with ideas and a next step.'},
+        {n:'Partnership', f:'Regular training, onboarding or campaigns',
+         i:['A new game every month', 'Updates based on results', 'Team and branch analytics', 'Priority support'], c:'Get in touch'}],
+      unsure:'Not sure which format you need? Tell us the goal and we will suggest one.',
+      note:'Pricing depends on the format and the number of participants. After a first call we send a concrete proposal.'},
+    how:{kick:'Process', h:'From idea to link', p:'You tell us what needs to change. We do the rest.',
+      steps:[['Goal', 'In one meeting we work out who the audience is and what they should learn or do.'],
+             ['Script and design', 'We write the script, design the screens in your brand style and sign them off with you.'],
+             ['Launch', 'We send the links: one for everyone, or a personal one each. No app to download.'],
+             ['Results', 'You see who finished, where people struggled and what changed. We improve the next version.']]},
+    faq:{kick:'FAQ', h:'What people ask us most',
+      list:[
+        ['What does it cost?', 'It depends on the format and the number of participants. After a first call we send a concrete price so you can plan the budget.'],
+        ['How long does it take?', 'It depends on the format and the content. We agree the timeline in the first meeting, before any work starts.'],
+        ['How do participants get in?', 'Through a link you send by SMS, email, chat or QR code. No app, no account and no IT setup needed.'],
+        ['What happens to the data?', 'We collect only what is needed to show results, as agreed with you up front. Answers are visible only to you.'],
+        ['Which languages?', 'Georgian and English, in one link: each participant picks their language.'],
+        ['Where do we see results?', 'On your own dashboard: completion, scores, the hardest questions and each participant’s status. Everything exports to CSV for your HR or CRM system.']]},
+    ct:{kick:'Contact', h:'Tell us what you want to change', p:'A few sentences are enough. We will reply with ideas and a suggested next step.'},
     f:{what:'What are you interested in', unsure:'Not sure yet', name:'Name', contact:'Email or phone', contactPh:'name@company.com',
       company:'Company (optional)', msg:'Your goal, in short', msgPh:'For example: we want new hires’ first week to be simpler and more fun.',
-      note:'We only use your details to get back to you.', send:'Send', sending:'Sending…',
+      note:'We reply with ideas and a next step. We only use your details to get back to you.', send:'Send', sending:'Sending…',
       eName:'Please add your name', eContact:'Please add an email or phone number', company2:'Company',
       okH:'Got it!', ok:'We will be in touch soon. Meanwhile, play the demos.',
-      failH:'Could not send', fail:'Try again or write to {email}. Your text is here so nothing is lost:',
+      failH:'Could not send', fail:'Try again or write to {email}. We kept your text so nothing is lost:',
       offH:'Almost there', off:'This page is open from a file, so the form cannot send. Copy the text and write to {email}.',
-      again:'Send another request', copy:'Copy', copied:'Copied'},
-    foot:{made:'Digital experiences, Tbilisi', demo:'All brands, names and figures on this site are demo content.'},
+      again:'Send a new request', copy:'Copy', copied:'Copied'},
+    foot:{made:'Interactive projects, Tbilisi', demo:'All brands, names and figures on this site are demo content.'},
     months:['January','February','March','April','May','June','July','August','September','October','November','December'],
-    days:['Sunday','Monday','Tuesday','Wednesday','Thursday','Friday','Saturday']
+    mon:['Jan','Feb','Mar','Apr','May','Jun','Jul','Aug','Sep','Oct','Nov','Dec'],
+    days:['Sunday','Monday','Tuesday','Wednesday','Thursday','Friday','Saturday'],
+    dy:['Sun','Mon','Tue','Wed','Thu','Fri','Sat']
   }
 };
 
 /* ---------- demo content ---------- */
+// each option: t text, q quality (2 best, 0 so-so, -2 weak), r the customer's reply, w why
 const LEARN = {
-  brand:L('Volta · სერვისის აკადემია', 'Volta · Service Academy'), sub:L('ელექტრონიკის მაღაზია', 'Electronics store'),
+  brand:L('Volta აკადემია', 'Volta Academy'), sub:L('სერვისის სიმულატორი', 'Service simulator'),
   introH:L('შენი პირველი ცვლა', 'Your first shift'),
-  introP:L('4 კლიენტი, 4 სიტუაცია. აირჩიე, რას ეტყოდი. კლიენტის განწყობა შენს პასუხებზეა დამოკიდებული.', '4 customers, 4 situations. Choose what you would say. Each customer’s mood depends on your answers.'),
-  start:L('ცვლის დაწყება', 'Start the shift'), mood:L('კლიენტის განწყობა', 'Customer mood'), next:L('შემდეგი კლიენტი', 'Next customer'), finish:L('შედეგის ნახვა', 'See my result'),
-  you:L('შენ', 'You'), good:L('ზუსტად!', 'Spot on!'), mid:L('ცუდი არაა', 'Not bad'), bad:L('ასე სჯობს არა', 'Better not'),
+  introP:L('4 კლიენტი, 4 სიტუაცია. აირჩიე, რას ეტყოდი. მაღაზიის რეიტინგი მთელი ცვლის განმავლობაში შენს პასუხებზეა დამოკიდებული.', '4 customers, 4 situations. Choose what you would say. The store rating depends on your answers for the whole shift.'),
+  start:L('ცვლის დაწყება', 'Start the shift'), mood:L('მაღაზიის რეიტინგი', 'Store rating'), next:L('შემდეგი კლიენტი', 'Next customer'), finish:L('შედეგის ნახვა', 'See my result'),
+  you:L('შენ', 'You'), good:L('ზუსტად!', 'Spot on!'), mid:L('ცუდი არაა', 'Not bad'), bad:L('ასე არ ღირს', 'Better not'),
+  best:L('ნახე საუკეთესო პასუხი', 'Show the best answer'), bestT:L('საუკეთესო პასუხი', 'Best answer'),
   of:L('კლიენტი {n} / 4', 'Customer {n} of 4'),
   ends:[L('სერვისის ვარსკვლავი', 'Service star'), L('კარგი დასაწყისი', 'A good start'), L('კიდევ ერთი ცდა', 'One more try')],
-  endP:L('ასეთ შედეგს ხედავს ყოველი თანამშრომელი. თქვენ კი ხედავთ ყველას ერთად: ვინ სად ცდება და რა უნდა ივარჯიშოს.', 'Every employee sees a result like this. You see everyone together: who gets what wrong and what to practise.'),
-  skillsT:L('უნარები', 'Skills'), skills:{empathy:L('თანაგრძნობა', 'Empathy'), ask:L('სწორი კითხვა', 'Asking the right question'), solve:L('გამოსავლის პოვნა', 'Finding a solution')},
+  skillsT:L('შენი უნარები', 'Your skills'), skills:{empathy:L('თანაგრძნობა', 'Empathy'), ask:L('სწორი კითხვა', 'Asking the right question'), solve:L('გამოსავლის პოვნა', 'Finding a solution')},
+  mgrT:L('მენეჯერი ხედავს', 'The manager sees'),
+  mgr:[[L('თანამშრომელი', 'staff'), '12', L('9 დაასრულა', '9 finished')], [L('საშუალო ქულა', 'average score'), L('6,1 / 8', '6.1 / 8'), L('ფილიალის მიხედვით', 'by branch')],
+       [L('ყველაზე რთული', 'hardest'), '68%', L('ცდება თამარის სიტუაციაში', 'miss Tamar’s case')]],
   again:L('თავიდან', 'Play again'),
   qs:[
-    {who:L('ნინო', 'Nino'), skill:'solve', say:L('ორი კვირის წინ ყურსასმენები ვიყიდე და ერთი აღარ მუშაობს. ჩეკი დავკარგე…', 'I bought these earbuds two weeks ago and one has stopped working. I lost the receipt…'),
-     o:[{t:L('ჩეკის გარეშე, სამწუხაროდ, ვერაფერს გავაკეთებთ.', 'Without the receipt there’s nothing we can do, sorry.'), q:-2, r:L('ანუ ფული უბრალოდ გადავყარე?', 'So I just threw my money away?'),
-         w:L('წესი შეიძლება სწორია, მაგრამ კლიენტი ჩიხში დარჩა. შენაძენი ხშირად ბარათით ან ტელეფონის ნომრით მოიძებნება.', 'The rule may be right, but the customer is left stuck. Purchases can often be found by card or phone number.')},
-        {t:L('ვწუხვარ, რომ ასე მოხდა! ბარათით გადაიხადეთ? შენაძენს ბარათით ან ნომრით მოვძებნი.', 'Sorry that happened! Did you pay by card? I can find the purchase by card or phone number.'), q:2, r:L('ბარათით! ძალიან დამამშვიდეთ.', 'By card! What a relief.'),
+    {who:L('ნინო', 'Nino'), sk:['empathy', 'solve'], say:L('ორი კვირის წინ ყურსასმენები ვიყიდე და ერთი აღარ მუშაობს. ჩეკი დავკარგე…', 'I bought these earbuds two weeks ago and one has stopped working. I lost the receipt…'),
+     o:[{t:L('ჩეკის გარეშე დაბრუნება არ შეგვიძლია, მაგრამ სერვის ცენტრს შეგიძლიათ მიმართოთ.', 'We can’t do returns without a receipt, but you could try the service centre.'), q:0, r:L('ანუ ისევ სადღაც სიარული მომიწევს?', 'So I have to go somewhere else again?'),
+         w:L('წესი დაიცავი, მაგრამ პრობლემა სხვას გადაულოცე. შენაძენი ხშირად ბარათით ან ტელეფონის ნომრით მოიძებნება.', 'You kept the rule but passed the problem on. Purchases can often be found by card or phone number.')},
+        {t:L('ვწუხვარ, რომ ასე მოხდა. ბარათით გადაიხადეთ? მაშინ შენაძენს ბარათით ან ნომრით მოვძებნი.', 'Sorry that happened. Did you pay by card? Then I can find the purchase by card or number.'), q:2, r:L('ბარათით! ძალიან დამამშვიდეთ.', 'By card! What a relief.'),
          w:L('თანაგრძნობა და კონკრეტული გამოსავალი ერთად. კლიენტმა იცის, რა მოხდება შემდეგ.', 'Empathy and a concrete way forward together. The customer knows what happens next.')},
-        {t:L('ალბათ დაგივარდათ. ასეთი რამ გარანტიით არ იფარება.', 'You probably dropped them. That isn’t covered by the warranty.'), q:-2, r:L('მე არაფერი დამივარდნია!', 'I didn’t drop anything!'),
-         w:L('ვარაუდი ბრალდებად ჟღერს. ჯერ შეამოწმე, მერე დაასკვენი.', 'A guess sounds like an accusation. Check first, then conclude.')}]},
-    {who:L('გიორგი', 'Giorgi'), skill:'ask', say:L('ლეპტოპი მჭირდება, მაგრამ ყველა ერთნაირი მგონია.', 'I need a laptop, but they all look the same to me.'),
-     o:[{t:L('ეს მოდელი ახლა ფასდაკლებაზეა. ავიღოთ?', 'This one is on sale right now. Shall we take it?'), q:0, r:L('კარგი… მაგრამ ჩემთვის შესაფერისია?', 'OK… but is it right for me?'),
+        {t:L('არაუშავს, ჩეკი არ გვჭირდება. ახალს ახლავე გამოგიცვლით, ერთი წუთით.', 'No problem, we don’t need the receipt. I’ll swap them for new ones right now.'), q:-2, r:L('მართლა? მადლობა! …მენეჯერი რატომ მოდის?', 'Really? Thanks! …why is the manager coming over?'),
+         w:L('კარგად ჟღერს, მაგრამ დაპირება, რომლის შესრულებაც არ შეგიძლია, მერე უფრო დიდ პრობლემად იქცევა. ჯერ შენაძენი მოძებნე.', 'It sounds kind, but a promise you can’t keep becomes a bigger problem later. Find the purchase first.')}]},
+    {who:L('გიორგი', 'Giorgi'), sk:['ask', 'solve'], say:L('ლეპტოპი მჭირდება, მაგრამ ყველა ერთნაირი მგონია.', 'I need a laptop, but they all look the same to me.'),
+     o:[{t:L('ეს მოდელი ახლა ფასდაკლებაზეა. ხომ არ აიღებთ? კარგი შეთავაზებაა.', 'This one is on sale right now. Would you like it? It’s a good deal.'), q:0, r:L('კარგი… მაგრამ ჩემთვის შესაფერისია?', 'OK… but is it right for me?'),
          w:L('შეთავაზება ცუდი არაა, მაგრამ ჯერ არ იცი, რა სჭირდება კლიენტს.', 'Not a bad offer, but you don’t know yet what the customer needs.')},
-        {t:L('ყველაზე ძლიერი ესაა: 32 GB, დისკრეტული გრაფიკით.', 'This is the most powerful: 32 GB with discrete graphics.'), q:-2, r:L('ეს არაფერს მეუბნება.', 'That means nothing to me.'),
-         w:L('ტექნიკური ტერმინები კლიენტს არჩევანში არ ეხმარება.', 'Technical terms don’t help the customer decide.')},
+        {t:L('ამ მოდელს 16 GB მეხსიერება და ძალიან სწრაფი პროცესორი აქვს.', 'This model has 16 GB of memory and a very fast processor.'), q:-2, r:L('ეს არაფერს მეუბნება.', 'That means nothing to me.'),
+         w:L('მახასიათებლები მნიშვნელოვანია, მაგრამ ჯერ არ იცი, რისთვის სჭირდება კლიენტს.', 'Specs matter, but you don’t know yet what the customer needs it for.')},
         {t:L('რისთვის გამოიყენებთ ძირითადად: სწავლა, სამსახური თუ თამაშები?', 'What will you mostly use it for: studying, work or games?'), q:2, r:L('ძირითადად სწავლისთვის და ცოტა ფილმებისთვის.', 'Mostly studying, and a few films.'),
          w:L('ერთი კარგი კითხვა ზუსტ არჩევანამდე მიგიყვანს.', 'One good question leads to the right choice.')}]},
-    {who:L('თამარი', 'Tamar'), skill:'empathy', say:L('უკვე 20 წუთია რიგში ვდგავარ!', 'I’ve been standing in this queue for 20 minutes!'),
-     o:[{t:L('დღეს ორნი ვართ, ეს ჩვენი ბრალი არაა.', 'There are only two of us today, it’s not our fault.'), q:-2, r:L('მე რა შუაში ვარ?', 'And how is that my problem?'),
-         w:L('შეიძლება სიმართლეა, მაგრამ კლიენტისთვის თავის მართლებად ჟღერს.', 'It may be true, but to the customer it sounds like an excuse.')},
-        {t:L('მესმის, დიდხანს მოგიწიათ ლოდინი, ბოდიში. ახლავე მოგემსახურებით.', 'I understand, that was a long wait, I’m sorry. Let me help you right now.'), q:2, r:L('კარგი, მადლობა. დამტენი მჭირდება.', 'OK, thank you. I need a charger.'),
-         w:L('აღიარე გრძნობა, მოიხადე ბოდიში, იმოქმედე. სამივე ერთ წინადადებაში.', 'Acknowledge the feeling, apologise, act. All three in one sentence.')},
-        {t:L('რიგში ყველა დგას, მოიცადეთ.', 'Everyone is queuing, please wait.'), q:-2, r:L('სხვა მაღაზიაში წავალ.', 'I’ll go to another shop.'),
-         w:L('წესი ყველასთვის ერთია, მაგრამ ეს ტონი კლიენტს აგდებს.', 'The rule is the same for everyone, but this tone drives the customer away.')}]},
-    {who:L('ლევანი', 'Levan'), skill:'solve', say:L('ამ ტელეფონს ვყიდულობ.', 'I’ll take this phone.'),
-     o:[{t:L('ქეისიც, მინაც, დამტენიც და დაზღვევაც ხომ არ გნებავთ?', 'Would you also like a case, a screen protector, a charger and insurance?'), q:0, r:L('არა, მხოლოდ ტელეფონი.', 'No, just the phone.'),
+    {who:L('თამარი', 'Tamar'), sk:['empathy', 'solve'], say:L('უკვე 20 წუთია რიგში ვდგავარ!', 'I’ve been standing in this queue for 20 minutes!'),
+     o:[{t:L('დღეს ორნი ვართ და ყველას რიგრიგობით ვემსახურებით.', 'There are only two of us today, and we’re serving everyone in turn.'), q:-2, r:L('მე რა შუაში ვარ?', 'And how is that my problem?'),
+         w:L('მიზეზის ახსნა თავის მართლებად ჟღერს, თუ ჯერ კლიენტის გრძნობას არ აღიარებ.', 'Explaining the reason sounds like an excuse if you don’t acknowledge the feeling first.')},
+        {t:L('ბოდიში ლოდინისთვის. ცოტაც მოიცადეთ, მალე თქვენი რიგია.', 'Sorry for the wait. Just a little longer, it’s nearly your turn.'), q:0, r:L('კარგი… ისევ ვიცდი.', 'Fine… I’ll keep waiting.'),
+         w:L('ბოდიში კარგია, მაგრამ კლიენტი ისევ ელოდება. აჩვენე, რომ მოქმედებ.', 'The apology is good, but the customer is still waiting. Show that you are acting.')},
+        {t:L('მესმის, დიდხანს ელოდეთ, ბოდიში. ახლავე მოგემსახურებით, რას ეძებთ?', 'I understand, that was a long wait, I’m sorry. Let me help you now: what are you looking for?'), q:2, r:L('კარგი, მადლობა. დამტენი მჭირდება.', 'OK, thank you. I need a charger.'),
+         w:L('აღიარე გრძნობა, მოიხადე ბოდიში, იმოქმედე. სამივე ერთ წინადადებაში.', 'Acknowledge the feeling, apologise, act. All three in one sentence.')}]},
+    {who:L('ლევანი', 'Levan'), sk:['ask', 'solve'], say:L('ამ ტელეფონს ავიღებ.', 'I’ll take this phone.'),
+     o:[{t:L('ქეისი, დამცავი მინა, დამტენი და დაზღვევაც ხომ არ გნებავთ?', 'Would you also like a case, a screen protector, a charger and insurance?'), q:-2, r:L('არა, მხოლოდ ტელეფონი.', 'No, just the phone.'),
          w:L('ბევრი შეთავაზება ერთად ზეწოლად აღიქმება.', 'Many offers at once feel like pressure.')},
-        {t:L('კარგი არჩევანია! დამცავ მინასაც დაგიყენებთ? ორ წუთში მზადაა.', 'Great choice! Shall I fit a screen protector too? It takes two minutes.'), q:2, r:L('კარგი იდეაა, დავაყენოთ!', 'Good idea, let’s do it!'),
-         w:L('ერთი, ზუსტად შერჩეული დამატება ეხმარება კლიენტსაც და გაყიდვასაც.', 'One well-chosen add-on helps the customer and the sale.')},
-        {t:L('კარგი, სალაროსთან გადაიხადეთ.', 'OK, please pay at the till.'), q:0, r:L('კი, მადლობა.', 'Sure, thanks.'),
-         w:L('შეცდომა არაა, მაგრამ კლიენტმა სასარგებლო რჩევა ვერ მიიღო.', 'Not a mistake, but the customer missed a useful tip.')}]}
+        {t:L('კარგი არჩევანია! სალაროსთან გადაიხდით თუ აქვე, ბარათით?', 'Great choice! Will you pay at the till or here by card?'), q:0, r:L('ბარათით, მადლობა.', 'By card, thanks.'),
+         w:L('შეცდომა არაა, მაგრამ კლიენტმა სასარგებლო რჩევა ვერ მიიღო.', 'Not a mistake, but the customer missed a useful tip.')},
+        {t:L('კარგი არჩევანია! ეკრანი დაუცველია, დამცავ მინას ხომ არ დაგიყენებთ?', 'Great choice! The screen is bare; shall I fit a screen protector for you?'), q:2, r:L('კარგი იდეაა, დავაყენოთ!', 'Good idea, let’s do it!'),
+         w:L('ერთი, ზუსტად შერჩეული დამატება ეხმარება კლიენტსაც და გაყიდვასაც.', 'One well-chosen add-on helps the customer and the sale.')}]}
   ]
 };
 
 const ONB = {
-  brand:L('Nova · პირველი კვირა', 'Nova · First week'), hello:L('გამარჯობა, ანა!', 'Hi, Ana!'),
-  helloP:L('კეთილი იყოს შენი მობრძანება Nova-ში. გაიარე ოთხი ეტაპი და პირველ დღეს უკვე ყველაფერი გეცოდინება.', 'Welcome to Nova. Go through four stages and you will know everything you need on day one.'),
-  stops:[[L('გაიცანი გუნდი', 'Meet the team'), L('4 ადამიანი', '4 people')], [L('ვინ რას აკეთებს', 'Who does what'), L('3 კითხვა', '3 questions')],
-         [L('პირველი დღის საქმეები', 'First-day tasks'), L('4 დავალება', '4 tasks')], [L('როგორ ვმუშაობთ', 'How we work'), L('3 წესი', '3 rules')]],
+  brand:L('Nova · დაწყებამდე', 'Nova · Before day one'), hello:L('გამარჯობა, ანა!', 'Hi, Ana!'),
+  helloP:L('ორშაბათს იწყებ Nova-ში. გაიარე სამი მოკლე ეტაპი და პირველ დღეს თავს შინაურულად იგრძნობ.', 'You start at Nova on Monday. Go through three short stages and you will feel at home on day one.'),
+  stops:[[L('გაიცანი გუნდი', 'Meet the team'), L('4 ადამიანი', '4 people')], [L('ვის მივმართო და როგორ ვმუშაობთ', 'Who to ask and how we work'), L('4 კითხვა', '4 questions')],
+         [L('მოემზადე პირველი დღისთვის', 'Get ready for day one'), L('3 არჩევანი', '3 choices')]],
   tapCard:L('შეეხე ბარათს', 'Tap a card'), back:L('რუკაზე დაბრუნება', 'Back to the map'), continue:L('გაგრძელება', 'Continue'),
-  team:[{n:'ლევანი', ne:'Levan', c:'#5B4BFF', r:L('გუნდის ლიდერი', 'Team lead'), f:L('პარასკევობით გუნდისთვის ყველაზე კარგ ყავას ადუღებს.', 'Makes the team’s best coffee every Friday.')},
-        {n:'მარიამი', ne:'Mariam', c:'#FF7A59', r:L('HR', 'HR'), f:L('ყველა კითხვაზე გიპასუხებს, დასვენების დღეებზეც.', 'Answers every question, including about days off.')},
-        {n:'დათო', ne:'Dato', c:'#14A86B', r:L('IT', 'IT'), f:L('შენი ლეპტოპი უკვე მზადაა. პაროლს ის მოგცემს.', 'Your laptop is ready. He has your password.')},
-        {n:'ნია', ne:'Nia', c:'#E0A100', r:L('დიზაინერი · შენი ბადი', 'Designer · your buddy'), f:L('პირველ თვეს ყველაფერში დაგეხმარება.', 'Helps you with everything in your first month.')}],
-  who:[{q:L('დასვენების განაცხადი ვის უნდა გაუგზავნო?', 'Who do you send a day-off request to?'), a:1},
-       {q:L('ლეპტოპი არ ირთვება. ვის მიმართავ?', 'Your laptop won’t turn on. Who do you ask?'), a:2},
-       {q:L('პირველ თვეს ვინ დაგეხმარება ყველაფერში?', 'Who helps you with everything in your first month?'), a:3}],
-  tasks:[L('მიიღე ლეპტოპი დათოსგან', 'Pick up your laptop from Dato'), L('შედი გუნდის ჩატში', 'Join the team chat'),
-         L('ყავა შენს ბადისთან, ნიასთან', 'Coffee with your buddy Nia'), L('წაიკითხე ერთგვერდიანი გზამკვლევი', 'Read the one-page handbook')],
-  rules:[{t:L('შეცდომებზე ღიად ვსაუბრობთ, დასჯის გარეშე.', 'We talk about mistakes openly, without blame.'), a:true, w:L('შეცდომა სწავლის ნაწილია. ყოველ პარასკევს ვიზიარებთ, რა ვისწავლეთ.', 'Mistakes are part of learning. Every Friday we share what we learned.')},
-         {t:L('ყველა 19:00-მდე უნდა დარჩეს.', 'Everyone has to stay until 7 pm.'), a:false, w:L('სამუშაო დღე 18:00-ზე მთავრდება. დასვენებაც სამუშაოს ნაწილია.', 'The working day ends at 6 pm. Rest is part of the job.')},
-         {t:L('იდეის შეთავაზება ნებისმიერს შეუძლია, სტაჟიორსაც.', 'Anyone can suggest an idea, interns too.'), a:true, w:L('საუკეთესო იდეები ხშირად ახალი თანამშრომლებისგან მოდის.', 'The best ideas often come from new people.')}],
-  yes:L('ასეა', 'True'), no:L('ასე არაა', 'Not true'),
-  doneH:L('Nova-ში მოგესალმებით!', 'Welcome aboard!'), doneP:L('ოთხივე ეტაპი გაიარე. ხვალ ყველაფერი გეცოდინება.', 'You finished all four stages. Tomorrow you will know your way around.'),
-  badge:L('ახალი წევრი', 'New member'), buddyT:L('ნია, შენი ბადი', 'Nia, your buddy'), buddyS:L('ხვალ 10:00 · ყავა მესამე სართულზე', 'Tomorrow 10:00 · coffee on the third floor'),
+  team:[{n:'ლევანი', ne:'Levan', c:'#4A3AD8', r:L('გუნდის ლიდერი', 'Team lead'), f:L('ამტკიცებს შვებულებას და პარასკევობით გუნდისთვის ყავას ადუღებს.', 'Approves leave and makes the team coffee on Fridays.')},
+        {n:'მარიამი', ne:'Mariam', c:'#C2410C', r:L('HR', 'HR'), f:L('გიპასუხებს ყველა კითხვაზე, შვებულებისა და დასვენების დღეების ჩათვლით.', 'Answers every question, including leave and days off.')},
+        {n:'დათო', ne:'Dato', c:'#0B7F63', r:L('IT', 'IT'), f:L('შენს ლეპტოპს ამზადებს და პირველ დღეს პაროლის დაყენებაში დაგეხმარება.', 'Prepares your laptop and helps you set your password on day one.')},
+        {n:'ნია', ne:'Nia', c:'#9A5B00', r:L('დიზაინერი · შენი მეგზური', 'Designer · your buddy'), f:L('პირველ თვეს ყოველდღიურ კითხვებში დაგეხმარება.', 'Helps with everyday questions in your first month.')}],
+  // a: index of the right person, or true/false for a rule
+  quiz:[{q:L('ლეპტოპი არ ირთვება. ვის მიმართავ?', 'Your laptop won’t turn on. Who do you ask?'), a:2},
+        {q:L('„კვირაში ორ დღეს სახლიდან შეგიძლია იმუშაო, თუ გუნდის კალენდარში წინასწარ მონიშნავ.“', '“You can work from home two days a week if you mark them in the team calendar in advance.”'), a:true,
+         w:L('სწორია: კალენდარი იმისთვისაა, რომ შეხვედრები ყველასთვის მოსახერხებლად დაიგეგმოს.', 'Right: the calendar lets meetings be planned for everyone.')},
+        {q:L('პირველ თვეს ყოველდღიურ კითხვებში ვინ დაგეხმარება?', 'Who helps with everyday questions in your first month?'), a:3},
+        {q:L('„შვებულებას ლევანი ამტკიცებს, ამიტომ HR სისტემაში შეტანა საჭირო არაა.“', '“Levan approves leave, so you don’t need to enter it in the HR system.”'), a:false,
+         w:L('არასწორია: ლევანი ამტკიცებს, მაგრამ განაცხადი HR სისტემაში უნდა შეიტანო, რომ დღეები დაგერიცხოს.', 'Not quite: Levan approves it, but the request must go into the HR system so the days are counted.')}],
+  yes:L('ასეა', 'True'), no:L('ასე არაა', 'Not true'), firstTry:L('პირველივე ცდით: +10 XP', 'First try: +10 XP'), retry:L('სცადე კიდევ', 'Try again'),
+  prep:[{t:L('ფირმის მაისურის ზომა', 'Company T-shirt size'), o:['S', 'M', 'L', 'XL']},
+        {t:L('ყავა მეგზურთან, ნიასთან', 'Coffee with your buddy Nia'), o:['10:00', '12:30', '16:00']},
+        {t:L('სამუშაო კომპიუტერი', 'Work computer'), o:['Mac', 'Windows']}],
+  doneH:L('ორშაბათს გელოდებით!', 'See you on Monday!'), doneP:L('სამივე ეტაპი გაიარე. პირველ დღეს უკვე იცი, ვის მიმართო და რა გელოდება.', 'You finished all three stages. On day one you already know who to ask and what to expect.'),
+  score:L('{n} / 4 სწორი პირველივე ცდით', '{n} / 4 right first time'), badge:L('ახალი წევრი', 'New member'),
+  buddyT:L('ნია, შენი მეგზური', 'Nia, your buddy'), buddyS:L('ორშაბათი {t} · ყავა მესამე სართულზე', 'Monday {t} · coffee on the third floor'),
+  hrT:L('HR ხედავს', 'HR sees'),
+  hr:[L('ანამ სამივე ეტაპი დაასრულა', 'Ana finished all three stages'), L('მაისური: {s} · კომპიუტერი: {c}', 'T-shirt: {s} · computer: {c}'), L('მეგზურს შეხვედრის დრო ეცნობა', 'Buddy notified of the coffee slot')],
+  hrWeak:L('არ იყო დარწმუნებული შვებულების წესში', 'Unsure about the leave rule'),
   again:L('თავიდან', 'Start over')
 };
 
 const GAME = {
   brand:L('ცისკარი', 'Tsiskari'), h:L('დაიჭირე მარცვლები', 'Catch the beans'),
-  p:L('15 წამი. მოძრაობე ფინჯნით და დააგროვე ქულები. რაც მეტი ქულა, მით დიდი პრიზი.', '15 seconds. Move the cup and collect points. More points, bigger prize.'),
-  how:[L('ყავის მარცვალი: +1', 'Coffee bean: +1'), L('ოქროს მარცვალი: +3', 'Golden bean: +3'), L('ყინული აცივებს ყავას: −2', 'Ice cools the coffee: −2')],
-  start:L('თამაშის დაწყება', 'Start the game'), hint:L('გადაწიე თითი ან გამოიყენე ისრები', 'Drag your finger or use the arrow keys'),
+  p:L('15 წამი. ამოძრავე ფინჯანი და შეაგროვე ქულები. რაც მეტი ქულა, მით უფრო დიდი პრიზი.', '15 seconds. Move the cup and collect points. More points, bigger prize.'),
+  how:[L('ყავის მარცვალი: +1, სამი ზედიზედ: ×2', 'Coffee bean: +1, three in a row: ×2'), L('ოქროს მარცვალი: +3', 'Golden bean: +3'), L('ყინული აცივებს ყავას: −2', 'Ice cools the coffee: −2')],
+  start:L('თამაშის დაწყება', 'Start the game'), hint:L('ამოძრავე თითით ან ისრიანი ღილაკებით', 'Drag with your finger or use the arrow keys'),
   over:L('დრო ამოიწურა!', 'Time’s up!'), you:L('შენ', 'You'), pts:L('ქულა', 'points'),
-  prizes:[[20, L('უფასო ლატე', 'A free latte')], [10, L('−30% ნებისმიერ სასმელზე', '30% off any drink')], [0, L('−10% შემდეგ ყავაზე', '10% off your next coffee')]],
-  scratch:L('გადაფხიკე და ნახე პრიზი', 'Scratch to see your prize'), code:L('აჩვენე კოდი სალაროსთან', 'Show this code at the till'),
-  again:L('კიდევ ითამაშე', 'Play again'), board:L('დღის ლიდერები', 'Today’s leaders')
+  prizes:[[30, L('უფასო ლატე', 'A free latte')], [18, L('−30% ნებისმიერ სასმელზე', '30% off any drink')], [0, L('−10% შემდეგ ყავაზე', '10% off your next coffee')]],
+  scratch:L('გადაფხიკე და ნახე პრიზი', 'Scratch to see your prize'), reveal:L('პრიზის ჩვენება', 'Show my prize'), code:L('აჩვენე კოდი სალაროსთან', 'Show this code at the till'),
+  saved:L('დღევანდელი პრიზი უკვე შენახულია. ახლა ლიდერების ცხრილისთვის თამაშობ.', 'Today’s prize is already saved. Now you are playing for the leaderboard.'),
+  again:L('კიდევ ითამაშე', 'Play again'), board:L('დღის ლიდერები', 'Today’s leaders'),
+  brandT:L('ბრენდი ხედავს', 'The brand sees'),
+  brandSee:[[L('თამაში', 'plays'), '1 240'], [L('კონტაქტი თანხმობით', 'opt-in contacts'), '38%'], [L('გამოყენებული კუპონი', 'coupons redeemed'), '22%']]
 };
 
 const INV = {
@@ -702,14 +899,18 @@ const INV = {
   h:L('Nova 5 წლისაა და ვზეიმობთ!', 'Nova turns 5, let’s celebrate!'),
   p:L('ანა, გეპატიჟებით მთელი გუნდის წვეულებაზე. იქნება ვახშამი, წლის ჯილდოები და ცოცხალი მუსიკა.', 'Ana, you are invited to the whole team’s party. Dinner, the year’s awards and live music.'),
   venue:L('ძველი ქარხანა', 'The Old Factory'), venueS:L('თბილისი · ფოიეში შეგხვდებით', 'Tbilisi · we meet in the foyer'),
-  dress:L('ჩაცმის სტილი: თავისუფალი', 'Dress code: casual'), dressS:L('მთავარია, კომფორტულად იყო', 'Just be comfortable'),
-  prog:[['19:00', L('შეხვედრა და ვახშამი', 'Welcome and dinner')], ['20:00', L('წლის ჯილდოები', 'Awards of the year')], ['21:30', L('ცოცხალი მუსიკა', 'Live music')]],
+  dress:L('ჩაცმის სტილი: თავისუფალი', 'Dress code: casual'), dressS:L('მთავარია, თავი კომფორტულად იგრძნო', 'Just be comfortable'),
+  prog:[['19:00', L('სტუმრების დახვედრა და ვახშამი', 'Welcome and dinner')], ['20:00', L('წლის ჯილდოები', 'Awards of the year')], ['21:30', L('ცოცხალი მუსიკა', 'Live music')]],
   q:L('მოხვალ?', 'Are you coming?'), yes:L('მოვდივარ', 'I’m coming'), no:L('ვერ მოვალ', 'Can’t make it'),
-  plus:L('ვინმე მოგყვება?', 'Bringing someone?'), confirm:L('დადასტურება', 'Confirm'),
+  plus:L('თანმხლები პირი (მაქს. 1)', 'Plus-one (max 1)'), food:L('კვება', 'Food'),
+  foods:[L('ყველაფერს ვჭამ', 'I eat everything'), L('ვეგეტარიანული', 'Vegetarian'), L('ვეგანური', 'Vegan'), L('უგლუტენო', 'Gluten-free')],
+  confirm:L('დადასტურება', 'Confirm'),
   tkH:L('შენი ადგილი დაჯავშნილია', 'Your spot is booked'), guests:L('სტუმარი', 'Guests'), when:L('როდის', 'When'), where:L('სად', 'Where'), code:L('კოდი', 'Code'),
   cal:L('კალენდარში დამატება', 'Add to calendar'), change:L('პასუხის შეცვლა', 'Change my answer'),
   noH:L('მადლობა, რომ გვითხარი', 'Thanks for letting us know'), noP:L('დაგვაკლდები! ჯილდოების ჩანაწერს მეორე დღეს გამოგიგზავნით.', 'We will miss you! We will send you the awards recording the next day.'),
-  cd:[L('დღე', 'days'), L('სთ', 'hrs'), L('წთ', 'min'), L('წმ', 'sec')]
+  cd:[L('დღე', 'days'), L('სთ', 'hrs'), L('წთ', 'min'), L('წმ', 'sec')],
+  orgT:L('ორგანიზატორი ხედავს', 'The organiser sees'),
+  org:[[L('მოდის', 'coming'), '84'], [L('ვერ მოდის', 'not coming'), '12'], [L('ვეგეტარიანული', 'vegetarian'), '9']]
 };
 
 
@@ -723,10 +924,15 @@ let lang = store.get('lang') === 'en' ? 'en' : 'ka';
 const tx = v => v && typeof v === 'object' && 'ka' in v ? v[lang] : v;
 const fill = (s, o) => String(s).replace(/\{(\w+)\}/g, (_, k) => o[k] != null ? o[k] : '');
 const path = (o, p) => p.split('.').reduce((a, k) => a == null ? a : a[k], o);
+const shuffle = a => { const b = a.slice(); for (let i = b.length - 1; i > 0; i--){ const j = Math.floor(Math.random() * (i + 1)); [b[i], b[j]] = [b[j], b[i]]; } return b; };
+const ok = L('სწორია', 'correct'), wrong = L('არასწორია', 'wrong');
+
+/* one polite live region for everything the demos and the form announce */
+function say(msg){ const r = $('#sr'); if (!r) return; r.textContent = ''; setTimeout(() => { r.textContent = msg; }, 60); }
 
 /* ---------- icons: one line set ---------- */
 const P = {
-  arrow:'<path d="M5 12h14M13 6l6 6-6 6"/>', check:'<path d="M5 12.5l4.5 4.5L19 7"/>', mail:'<rect x="3" y="5" width="18" height="14" rx="3"/><path d="M4 7l8 6 8-6"/>',
+  arrow:'<path d="M5 12h14M13 6l6 6-6 6"/>', back:'<path d="M19 12H5M11 6l-6 6 6 6"/>', check:'<path d="M5 12.5l4.5 4.5L19 7"/>', mail:'<rect x="3" y="5" width="18" height="14" rx="3"/><path d="M4 7l8 6 8-6"/>',
   sun:'<circle cx="12" cy="12" r="4"/><path d="M12 2v2M12 20v2M4.9 4.9l1.4 1.4M17.7 17.7l1.4 1.4M2 12h2M20 12h2M4.9 19.1l1.4-1.4M17.7 6.3l1.4-1.4"/>',
   moon:'<path d="M20 14.5A8 8 0 1 1 9.5 4a6.5 6.5 0 0 0 10.5 10.5z"/>',
   learn:'<path d="M3 8l9-4 9 4-9 4-9-4z"/><path d="M7 10v5c0 1.5 2.5 3 5 3s5-1.5 5-3v-5M21 8v6"/>',
@@ -737,242 +943,286 @@ const P = {
   clock:'<circle cx="12" cy="12" r="9"/><path d="M12 7v5l3 2"/>', pin:'<path d="M12 21s-7-6.2-7-11.5A7 7 0 0 1 19 9.5C19 14.8 12 21 12 21z"/><circle cx="12" cy="9.5" r="2.5"/>',
   cal:'<rect x="3.5" y="5" width="17" height="15" rx="3"/><path d="M3.5 10h17M8 3v4M16 3v4"/>', shirt:'<path d="M8 4l-4 3 2 4 2-1v10h8V10l2 1 2-4-4-3c-.5 1.5-2 2.5-4 2.5S8.5 5.5 8 4z"/>',
   users:'<circle cx="9" cy="8" r="3.5"/><path d="M2.5 20a6.5 6.5 0 0 1 13 0M16 4.5a3.5 3.5 0 0 1 0 7M18 14a6 6 0 0 1 3.5 6"/>',
-  flag:'<path d="M5 21V4M5 4h11l-2 4 2 4H5"/>', list:'<path d="M9 6h11M9 12h11M9 18h11"/><path d="M4 6h.01M4 12h.01M4 18h.01" stroke-width="3"/>',
+  list:'<path d="M9 6h11M9 12h11M9 18h11"/><path d="M4 6h.01M4 12h.01M4 18h.01" stroke-width="3"/>',
   heart:'<path d="M12 20s-7.5-4.6-7.5-10A4.5 4.5 0 0 1 12 7a4.5 4.5 0 0 1 7.5 3c0 5.4-7.5 10-7.5 10z"/>', lock:'<rect x="5" y="10" width="14" height="10" rx="2.5"/><path d="M8 10V7a4 4 0 0 1 8 0v3"/>',
   x:'<path d="M6 6l12 12M18 6L6 18"/>', refresh:'<path d="M20 11a8 8 0 1 0-2.3 5.7M20 5v6h-6"/>', bolt:'<path d="M13 3L5 14h6l-1 7 8-11h-6l1-7z"/>', chart:'<path d="M4 20V10M10 20V4M16 20v-7M22 20H2"/>',
-  link:'<path d="M10 14a4 4 0 0 0 5.7 0l3-3a4 4 0 0 0-5.7-5.7l-1 1"/><path d="M14 10a4 4 0 0 0-5.7 0l-3 3a4 4 0 0 0 5.7 5.7l1-1"/>',
-  globe:'<circle cx="12" cy="12" r="9"/><path d="M3 12h18M12 3c2.5 3 2.5 15 0 18M12 3c-2.5 3-2.5 15 0 18"/>', gift:'<rect x="3.5" y="8" width="17" height="5" rx="1.5"/><path d="M5 13v7h14v-7M12 8v12M12 8c-2-3-6-3-5 0M12 8c2-3 6-3 5 0"/>',
-  copy:'<rect x="8" y="8" width="12" height="12" rx="2.5"/><path d="M16 8V6a2 2 0 0 0-2-2H6a2 2 0 0 0-2 2v8a2 2 0 0 0 2 2h2"/>'
+  bag:'<path d="M5 8h14l-1 12H6L5 8z"/><path d="M9 8V6a3 3 0 0 1 6 0v2"/>', eye:'<path d="M2 12s3.5-7 10-7 10 7 10 7-3.5 7-10 7S2 12 2 12z"/><circle cx="12" cy="12" r="3"/>',
+  megaphone:'<path d="M3 10v4l11 5V5L3 10z"/><path d="M14 8a4 4 0 0 1 0 8M6 14l1 5h3l-1-4"/>', copy:'<rect x="8" y="8" width="12" height="12" rx="2.5"/><path d="M16 8V6a2 2 0 0 0-2-2H6a2 2 0 0 0-2 2v8a2 2 0 0 0 2 2h2"/>',
+  plus:'<path d="M12 5v14M5 12h14"/>', minus:'<path d="M5 12h14"/>'
 };
 const ic = (n, cls) => '<svg class="i' + (cls ? ' ' + cls : '') + '" viewBox="0 0 24 24" aria-hidden="true">' + (P[n] || '') + '</svg>';
 const FMT = ['learn', 'onboard', 'engage', 'attend'];
 
 function confetti(host, n){
   if (reduced()) return;
-  const box = document.createElement('div'); box.className = 'confetti';
+  const box = document.createElement('div'); box.className = 'confetti'; box.setAttribute('aria-hidden', 'true');
   const cols = ['#5B4BFF', '#FFB020', '#14A86B', '#FF5A5F', '#2DB7F5', '#C8F04A'];
-  for (let i = 0; i < (n || 60); i++){
+  for (let i = 0; i < (n || 50); i++){
     const p = document.createElement('i');
     p.style.left = Math.random() * 100 + '%'; p.style.background = cols[i % cols.length];
     p.style.setProperty('--dx', (Math.random() * 160 - 80) + 'px'); p.style.setProperty('--r', (Math.random() * 900 - 450) + 'deg');
-    p.style.animationDelay = Math.random() * .4 + 's'; p.style.animationDuration = 1.3 + Math.random() * 1.1 + 's';
+    p.style.animationDelay = Math.random() * .25 + 's'; p.style.animationDuration = .9 + Math.random() * .6 + 's';
     box.appendChild(p);
   }
-  host.appendChild(box); setTimeout(() => box.remove(), 3200);
+  host.appendChild(box); setTimeout(() => box.remove(), 1900);
 }
-const face = (m, col) => { // m: 0 (angry) .. 10 (delighted)
-  const c = (m - 5) * 1.6;
+const face = m => { // 0 (angry) .. 10 (delighted)
+  const c = (m - 5) * 1.6, col = m >= 7 ? '#3DD68C' : m >= 4 ? '#FFC24D' : '#FF6B70';
   return '<svg viewBox="0 0 40 40" aria-hidden="true"><circle cx="20" cy="20" r="18" fill="' + col + '"/><circle cx="14" cy="17" r="2.4" fill="#111"/><circle cx="26" cy="17" r="2.4" fill="#111"/>' +
     (m < 3 ? '<path d="M11 12l6 3M29 12l-6 3" stroke="#111" stroke-width="2.2" stroke-linecap="round"/>' : '') +
     '<path d="M12.5 ' + (27 - c / 2) + ' Q20 ' + (27 + c) + ' 27.5 ' + (27 - c / 2) + '" stroke="#111" stroke-width="2.4" fill="none" stroke-linecap="round"/></svg>';
 };
-const moodCol = m => m >= 7 ? '#3DD68C' : m >= 4 ? '#FFC24D' : '#FF6B70';
+const moodCol = m => m >= 7 ? '#14A86B' : m >= 4 ? '#D18A00' : '#D93C41';
+/* the card every demo ends with: what the buyer would see */
+const seeCard = (title, rows, dark) => '<div class="see' + (dark ? ' dark' : '') + '"><div class="see-h">' + ic('eye') + '<b>' + esc(tx(title)) + '</b><span>' + esc(S[lang].ui.demo) + '</span></div>' +
+  '<div class="see-g">' + rows.map(r => '<div><b>' + esc(tx(r[1])) + '</b><span>' + esc(tx(r[0])) + (r[2] ? ' · ' + esc(tx(r[2])) : '') + '</span></div>').join('') + '</div></div>';
+
+/* shared demo plumbing: render, then move focus and scroll to what just appeared */
+class Demo {
+  constructor(el){ this.el = el; this.focusSel = null; el.addEventListener('click', e => this.click(e)); }
+  after(){
+    const body = $('.app-body,.inv-body', this.el), sel = this.focusSel; this.focusSel = null;
+    if (!sel) return;
+    const t = $(sel, this.el) || $('.a-h,.inv-h', this.el);
+    if (t){ if (!t.matches('button,a,input,[tabindex]')) t.setAttribute('tabindex', '-1'); t.focus({preventScroll:true}); }
+    if (body && sel !== 'top'){
+      const tgt = $(sel, this.el);
+      if (tgt && body.contains(tgt)) setTimeout(() => { const r = tgt.getBoundingClientRect(), b = body.getBoundingClientRect(); if (r.bottom > b.bottom - 8) body.scrollTo({top:body.scrollTop + r.bottom - b.bottom + 24, behavior:reduced() ? 'auto' : 'smooth'}); }, reduced() ? 0 : 420);
+    }
+  }
+  go(sel){ this.focusSel = sel || '.a-h'; this.render(); this.after(); }
+  destroy(){}
+}
 
 /* ========== demo 1: the service simulator (learning) ========== */
 const ACC1 = '#5B4BFF';
-class Learn {
-  constructor(el){ this.el = el; el.addEventListener('click', e => this.click(e)); this.reset(); }
-  reset(){ this.s = {phase:'intro', i:0, mood:5, pts:0, sk:{empathy:[0, 0], ask:[0, 0], solve:[0, 0]}, pick:-1}; this.render(); }
-  top(){ return '<div class="app-top"><span class="logo" style="background:' + ACC1 + '">V</span><div><b>' + esc(tx(LEARN.brand)) + '</b><small>' + esc(tx(LEARN.sub)) + '</small></div>' +
+class Learn extends Demo {
+  constructor(el){ super(el); this.reset(true); }
+  reset(silent){ this.s = {phase:'intro', i:0, mood:5, pts:0, sk:{empathy:[0, 0], ask:[0, 0], solve:[0, 0]}, pick:-1, order:[], best:false}; silent ? this.render() : this.go(); }
+  top(){ return '<div class="app-top"><span class="logo" style="background:' + ACC1 + '">V</span><div class="tt"><b>' + esc(tx(LEARN.brand)) + '</b><small>' + esc(tx(LEARN.sub)) + '</small></div>' +
     '<span class="xp">' + ic('star') + (this.s.pts * 10) + ' XP</span></div>'; }
   render(){
     const s = this.s, D = LEARN;
     let body = '';
     if (s.phase === 'intro'){
-      body = '<div class="pop" style="padding-top:10px"><div style="width:72px;height:72px;border-radius:22px;display:grid;place-items:center;background:#EEEBFF;color:' + ACC1 + ';margin:6px 0 16px">' + ic('learn') + '</div>' +
+      body = '<div class="pop" style="padding-top:6px"><div class="hero-ic" style="background:#EEEBFF;color:' + ACC1 + '">' + ic('learn') + '</div>' +
         '<h3 class="a-h">' + esc(tx(D.introH)) + '</h3><p class="a-p">' + esc(tx(D.introP)) + '</p>' +
-        '<div class="opts" style="margin:0 0 18px">' + D.qs.map((q, k) => '<div style="display:flex;gap:10px;align-items:center;font-size:13.5px;color:#555"><span style="width:28px;height:28px;border-radius:50%;display:grid;place-items:center;background:#F1F1F4;font:700 12px var(--f-label)">' + (k + 1) + '</span>' + esc(tx(q.who)) + '</div>').join('') + '</div>' +
+        '<ol class="who-list">' + D.qs.map(q => '<li>' + esc(tx(q.who)) + '</li>').join('') + '</ol>' +
         '<button type="button" class="abtn" style="background:' + ACC1 + '" data-a="start">' + esc(tx(D.start)) + ic('arrow') + '</button></div>';
     } else if (s.phase === 'end'){
       const max = D.qs.length * 2, stars = s.pts >= max ? 3 : s.pts >= max - 3 ? 2 : 1, title = D.ends[3 - stars];
       body = '<div class="end pop"><svg class="medal" viewBox="0 0 100 100" aria-hidden="true"><path d="M30 6h14l8 26H38zM70 6H56l-8 26h14z" fill="' + ACC1 + '"/><circle cx="50" cy="60" r="32" fill="#FFC24D"/><circle cx="50" cy="60" r="24" fill="#FFD978"/><path d="M50 44l5 10 11 1.5-8 7.5 2 11-10-5.5-10 5.5 2-11-8-7.5 11-1.5z" fill="#fff"/></svg>' +
-        '<div class="stars">' + [0, 1, 2].map(k => '<svg viewBox="0 0 24 24"><path d="M12 2.5l2.9 5.9 6.5 1-4.7 4.6 1.1 6.4L12 17.4l-5.8 3 1.1-6.4L2.6 9.4l6.5-1z" fill="' + (k < stars ? '#FFB020' : '#E6E6EA') + '"/></svg>').join('') + '</div>' +
-        '<h3 class="a-h">' + esc(tx(title)) + '</h3><p class="a-p">' + s.pts + ' / ' + max + ' · ' + esc(tx(D.endP)) + '</p>' +
-        '<div class="skills"><b style="font:700 13px var(--f-label);color:#777">' + esc(tx(D.skillsT)) + '</b>' + Object.keys(s.sk).map(k => { const v = s.sk[k], pc = v[1] ? Math.round(v[0] / v[1] * 100) : 0;
-          return '<div class="skill"><div class="t"><span>' + esc(tx(D.skills[k])) + '</span><span>' + pc + '%</span></div><div class="tr"><i data-w="' + pc + '" style="background:' + (pc >= 75 ? '#14A86B' : pc >= 40 ? '#E0A100' : '#E5484D') + '"></i></div></div>'; }).join('') + '</div>' +
+        '<div class="stars" role="img" aria-label="' + stars + ' / 3">' + [0, 1, 2].map(k => '<svg viewBox="0 0 24 24" aria-hidden="true"><path d="M12 2.5l2.9 5.9 6.5 1-4.7 4.6 1.1 6.4L12 17.4l-5.8 3 1.1-6.4L2.6 9.4l6.5-1z" fill="' + (k < stars ? '#FFB020' : '#E6E6EA') + '"/></svg>').join('') + '</div>' +
+        '<h3 class="a-h">' + esc(tx(title)) + '</h3><p class="a-p">' + s.pts + ' / ' + max + '</p>' +
+        '<div class="skills"><b class="mini">' + esc(tx(D.skillsT)) + '</b>' + Object.keys(s.sk).map(k => { const v = s.sk[k], pc = v[1] ? Math.round(v[0] / v[1] * 100) : 0;
+          return '<div class="skill"><div class="t"><span>' + esc(tx(D.skills[k])) + '</span><span>' + pc + '%</span></div><div class="tr"><i data-w="' + pc + '" style="background:' + (pc >= 75 ? '#14A86B' : pc >= 40 ? '#D18A00' : '#D93C41') + '"></i></div></div>'; }).join('') + '</div>' +
+        seeCard(D.mgrT, D.mgr) +
         '<button type="button" class="abtn light" data-a="again">' + ic('refresh') + esc(tx(D.again)) + '</button></div>';
     } else {
-      const q = D.qs[s.i], done = s.phase === 'fb', o = done ? q.o[s.pick] : null;
-      const kind = o ? (o.q > 0 ? 'good' : o.q === 0 ? 'mid' : 'bad') : '';
-      body = '<div class="l-mood">' + face(s.mood, moodCol(s.mood)) + '<div class="m"><small>' + esc(tx(D.mood)) + ' · ' + esc(tx(q.who)) + '</small><div class="tr"><i style="width:' + (s.mood * 10) + '%;background:' + moodCol(s.mood) + '"></i></div></div></div>' +
-        '<p style="margin:0 0 10px;font:700 12px var(--f-label);color:#999;text-transform:uppercase;letter-spacing:.05em">' + esc(fill(tx(D.of), {n:s.i + 1})) + '</p>' +
+      const q = D.qs[s.i], done = s.phase === 'fb', o = done ? q.o[s.pick] : null, kind = o ? (o.q > 0 ? 'good' : o.q === 0 ? 'mid' : 'bad') : '';
+      const best = q.o.find(x => x.q > 0);
+      body = '<div class="l-mood">' + face(s.mood) + '<div class="m"><small>' + esc(tx(D.mood)) + '</small><div class="tr" role="meter" aria-valuemin="0" aria-valuemax="10" aria-valuenow="' + Math.round(s.mood) + '" aria-label="' + esc(tx(D.mood)) + '"><i style="width:' + (s.mood * 10) + '%;background:' + moodCol(s.mood) + '"></i></div></div></div>' +
+        '<p class="mini" style="margin:0 0 10px">' + esc(fill(tx(D.of), {n:s.i + 1})) + '</p>' +
         '<div class="chat"><div class="msg them pop"><span class="who">' + esc(tx(q.who)) + '</span>' + esc(tx(q.say)) + '</div>' +
-        (o ? '<div class="msg me pop" style="background:' + ACC1 + '"><span class="who">' + esc(tx(D.you)) + '</span>' + esc(tx(o.t)) + '</div><div class="msg them pop" style="animation-delay:.35s"><span class="who">' + esc(tx(q.who)) + '</span>' + esc(tx(o.r)) + '</div>' : '') + '</div>' +
-        (o ? '<div class="fb ' + kind + ' pop" style="animation-delay:.6s"><b>' + ic(kind === 'good' ? 'check' : kind === 'mid' ? 'bolt' : 'x') + esc(tx(D[kind])) + (o.q > 0 ? ' +20 XP' : o.q === 0 ? ' +10 XP' : '') + '</b>' + esc(tx(o.w)) + '</div>' +
-          '<button type="button" class="abtn pop" style="background:' + ACC1 + ';animation-delay:.7s" data-a="next">' + esc(tx(s.i + 1 < D.qs.length ? D.next : D.finish)) + ic('arrow') + '</button>'
-          : '<div class="opts">' + q.o.map((x, k) => '<button type="button" class="opt pop" style="animation-delay:' + (.15 + k * .07) + 's" data-a="pick" data-k="' + k + '">' + esc(tx(x.t)) + '</button>').join('') + '</div>');
+        (o ? '<div class="msg me pop" style="background:' + ACC1 + '"><span class="who">' + esc(tx(D.you)) + '</span>' + esc(tx(o.t)) + '</div><div class="msg them pop" style="animation-delay:.3s"><span class="who">' + esc(tx(q.who)) + '</span>' + esc(tx(o.r)) + '</div>' : '') + '</div>' +
+        (o ? '<div class="fb ' + kind + ' pop" style="animation-delay:.45s"><b>' + ic(kind === 'good' ? 'check' : kind === 'mid' ? 'bolt' : 'x') + esc(tx(D[kind])) + (o.q > 0 ? ' +20 XP' : o.q === 0 ? ' +10 XP' : '') + '</b>' + esc(tx(o.w)) + '</div>' +
+          (o.q <= 0 ? (s.best ? '<div class="fb good pop best"><b>' + ic('star') + esc(tx(D.bestT)) + '</b>„' + esc(tx(best.t)) + '“</div>' : '<button type="button" class="linkbtn" data-a="best">' + ic('eye') + esc(tx(D.best)) + '</button>') : '') +
+          '<button type="button" class="abtn pop nextb" style="background:' + ACC1 + ';animation-delay:.55s" data-a="next">' + esc(tx(s.i + 1 < D.qs.length ? D.next : D.finish)) + ic('arrow') + '</button>'
+          : '<div class="opts">' + s.order.map((k, n) => '<button type="button" class="opt pop" style="animation-delay:' + (.1 + n * .06) + 's" data-a="pick" data-k="' + k + '">' + esc(tx(q.o[k].t)) + '</button>').join('') + '</div>');
     }
     const prog = s.phase === 'intro' ? 0 : s.phase === 'end' ? 100 : Math.round((s.i + (s.phase === 'fb' ? 1 : 0)) / LEARN.qs.length * 100);
-    this.el.innerHTML = '<div class="app">' + this.top() + '<div class="pbar" style="margin-top:10px"><i style="width:' + prog + '%;background:' + ACC1 + '"></i></div><div class="app-body">' + body + '</div></div>';
+    this.el.innerHTML = '<div class="app">' + this.top() + '<div class="pbar"><i style="width:' + prog + '%;background:' + ACC1 + '"></i></div><div class="app-body">' + body + '</div></div>';
     if (s.phase === 'end') requestAnimationFrame(() => requestAnimationFrame(() => $$('.skill i', this.el).forEach(i => { i.style.width = i.dataset.w + '%'; })));
   }
+  ask(i){ this.s.i = i; this.s.phase = 'q'; this.s.best = false; this.s.order = shuffle([0, 1, 2]); this.go('.opt'); }
   click(e){
     const b = e.target.closest('[data-a]'); if (!b) return;
-    const s = this.s, a = b.dataset.a;
-    if (a === 'start'){ s.phase = 'q'; this.render(); }
+    const s = this.s, a = b.dataset.a, D = LEARN;
+    if (a === 'start') this.ask(0);
     else if (a === 'pick'){
-      const q = LEARN.qs[s.i], o = q.o[+b.dataset.k];
+      const q = D.qs[s.i], o = q.o[+b.dataset.k];
       s.pick = +b.dataset.k; s.phase = 'fb';
-      s.mood = Math.max(0, Math.min(10, 5 + o.q * 2.4));
-      const pts = o.q > 0 ? 2 : o.q === 0 ? 1 : 0; s.pts += pts; s.sk[q.skill][0] += pts; s.sk[q.skill][1] += 2;
-      this.render();
+      s.mood = Math.max(0, Math.min(10, s.mood + o.q * 1.2));
+      const pts = o.q > 0 ? 2 : o.q === 0 ? 1 : 0; s.pts += pts; q.sk.forEach(k => { s.sk[k][0] += pts; s.sk[k][1] += 2; });
+      this.go('.nextb');
+      say(tx(D[o.q > 0 ? 'good' : o.q === 0 ? 'mid' : 'bad']) + '. ' + tx(o.w));
       if (o.q < 0){ const m = $('.l-mood', this.el); m && m.classList.add('shake'); }
-      if (o.q > 0) setTimeout(() => confetti(this.el, 26), 500);
+      if (o.q > 0) setTimeout(() => confetti(this.el, 22), 450);
     }
-    else if (a === 'next'){ if (s.i + 1 < LEARN.qs.length){ s.i++; s.phase = 'q'; s.mood = 5; this.render(); } else { s.phase = 'end'; this.render(); confetti(this.el, 90); } }
+    else if (a === 'best'){ s.best = true; this.go('.best'); say(tx(D.bestT) + ': ' + tx(D.qs[s.i].o.find(x => x.q > 0).t)); }
+    else if (a === 'next'){ if (s.i + 1 < D.qs.length) this.ask(s.i + 1); else { s.phase = 'end'; this.go(); confetti(this.el, 70); say(tx(this.el.querySelector('.a-h').textContent)); } }
     else if (a === 'again') this.reset();
   }
-  destroy(){}
 }
 
 /* ========== demo 2: the onboarding journey ========== */
-const ACC2 = '#0FA37F';
-class Onboard {
-  constructor(el){ this.el = el; el.addEventListener('click', e => this.click(e)); this.reset(); }
-  reset(){ this.s = {view:'map', done:[false, false, false, false], xp:0, flip:[], who:0, whoAns:-1, tasks:[], rule:0, ruleAns:null}; this.render(); }
-  next(){ return this.s.done.indexOf(false); }
+const ACC2 = '#0B7F63';
+class Onboard extends Demo {
+  constructor(el){ super(el); this.reset(true); }
+  reset(silent){ this.s = {view:'map', done:[false, false, false], xp:0, flip:[], qi:0, ans:null, tries:0, right:0, weak:false, prep:{}}; silent ? this.render() : this.go(); }
   render(){
-    const s = this.s, D = ONB, n = s.done.filter(Boolean).length;
+    const s = this.s, D = ONB, n = s.done.filter(Boolean).length, nm = m => lang === 'ka' ? m.n : m.ne;
+    const av = m => '<span class="av" style="background:' + m.c + '" aria-hidden="true">' + nm(m)[0] + '</span>';
     let body = '';
-    const av = (m, cls) => '<span class="av' + (cls ? ' ' + cls : '') + '" style="background:' + m.c + '">' + (lang === 'ka' ? m.n : m.ne)[0] + '</span>';
-    const mName = m => lang === 'ka' ? m.n : m.ne;
     if (s.view === 'map'){
-      const now = this.next();
+      const now = s.done.indexOf(false);
       body = '<div class="pop"><h3 class="a-h">' + esc(tx(D.hello)) + '</h3><p class="a-p">' + esc(tx(D.helloP)) + '</p><div class="map">' +
-        D.stops.map((st, k) => { const done = s.done[k], cur = k === now, icn = ['users', 'list', 'check', 'heart'][k];
+        D.stops.map((st, k) => { const done = s.done[k], cur = k === now, icn = ['users', 'list', 'bag'][k];
           return '<button type="button" class="stop' + (done ? ' done' : '') + (cur ? ' now' : '') + '" data-a="stop" data-k="' + k + '"' + (cur ? '' : ' disabled') + '>' +
-            '<span class="dot" style="' + (done || cur ? 'background:' + ACC2 : '') + '">' + ic(done ? 'check' : cur ? icn : 'lock') + '</span><span><b>' + esc(tx(st[0])) + '</b><small>' + esc(tx(st[1])) + (done ? ' · +25 XP' : '') + '</small></span></button>'; }).join('') +
+            '<span class="dot" style="' + (done || cur ? 'background:' + ACC2 : '') + '">' + ic(done ? 'check' : cur ? icn : 'lock') + '</span><span><b>' + esc(tx(st[0])) + '</b><small>' + esc(tx(st[1])) + (done ? ' · ' + esc(tx(ok)) : '') + '</small></span></button>'; }).join('') +
         '</div></div>';
     } else if (s.view === 'team'){
       const all = s.flip.length === D.team.length;
       body = '<div class="pop"><h3 class="a-h">' + esc(tx(D.stops[0][0])) + '</h3><p class="a-p">' + esc(tx(D.tapCard)) + ' · ' + s.flip.length + ' / 4</p><div class="team">' +
-        D.team.map((m, k) => '<button type="button" class="mate' + (s.flip.includes(k) ? ' flip' : '') + '" data-a="flip" data-k="' + k + '"><span class="in"><span class="f">' + av(m) + '<b>' + esc(mName(m)) + '</b><small>' + esc(tx(m.r)) + '</small><span class="tap">' + esc(tx(D.tapCard)) + '</span></span>' +
-          '<span class="b" style="background:' + m.c + '"><b>' + esc(mName(m)) + '</b>' + esc(tx(m.f)) + '</span></span></button>').join('') + '</div>' +
-        (all ? '<button type="button" class="abtn pop" style="background:' + ACC2 + '" data-a="finish" data-k="0">' + esc(tx(D.continue)) + ' · +25 XP</button>' : '') + '</div>';
-    } else if (s.view === 'who'){
-      const q = D.who[s.who], ans = s.whoAns;
-      body = '<div class="pop"><h3 class="a-h">' + esc(tx(D.stops[1][0])) + '</h3><p class="a-p">' + (s.who + 1) + ' / ' + D.who.length + '</p><div class="q"><p>' + esc(tx(q.q)) + '</p><div class="who-row">' +
-        D.team.map((m, k) => '<button type="button" class="who-btn' + (ans >= 0 && k === q.a ? ' right' : '') + (ans === k && k !== q.a ? ' wrong' : '') + '" data-a="who" data-k="' + k + '">' + av(m) + esc(mName(m)) + '</button>').join('') + '</div></div>' +
-        (ans === q.a ? '<button type="button" class="abtn pop" style="background:' + ACC2 + '" data-a="whoNext">' + esc(tx(s.who + 1 < D.who.length ? D.continue : D.continue)) + (s.who + 1 < D.who.length ? '' : ' · +25 XP') + '</button>' : '') + '</div>';
-    } else if (s.view === 'tasks'){
-      const all = s.tasks.length === D.tasks.length;
-      body = '<div class="pop"><h3 class="a-h">' + esc(tx(D.stops[2][0])) + '</h3><p class="a-p">' + s.tasks.length + ' / ' + D.tasks.length + '</p>' +
-        D.tasks.map((t, k) => '<button type="button" class="task' + (s.tasks.includes(k) ? ' on' : '') + '" data-a="task" data-k="' + k + '"><span class="bx">' + ic('check') + '</span><span>' + esc(tx(t)) + '</span></button>').join('') +
-        (all ? '<button type="button" class="abtn pop" style="background:' + ACC2 + ';margin-top:8px" data-a="finish" data-k="2">' + esc(tx(D.continue)) + ' · +25 XP</button>' : '') + '</div>';
-    } else if (s.view === 'rules'){
-      const r = D.rules[s.rule], a = s.ruleAns;
-      body = '<div class="pop"><h3 class="a-h">' + esc(tx(D.stops[3][0])) + '</h3><p class="a-p">' + (s.rule + 1) + ' / ' + D.rules.length + '</p><div class="q"><p>„' + esc(tx(r.t)) + '“</p>' +
-        '<div class="vote"><button type="button" data-a="rule" data-v="1" class="' + (a !== null ? (r.a ? 'right' : (a ? 'wrong' : '')) : '') + '">' + esc(tx(D.yes)) + '</button>' +
-        '<button type="button" data-a="rule" data-v="0" class="' + (a !== null ? (!r.a ? 'right' : (!a ? 'wrong' : '')) : '') + '">' + esc(tx(D.no)) + '</button></div>' +
-        (a !== null ? '<p class="why pop">' + esc(tx(r.w)) + '</p>' : '') + '</div>' +
-        (a !== null ? '<button type="button" class="abtn pop" style="background:' + ACC2 + '" data-a="ruleNext">' + esc(tx(D.continue)) + (s.rule + 1 < D.rules.length ? '' : ' · +25 XP') + '</button>' : '') + '</div>';
+        D.team.map((m, k) => { const f = s.flip.includes(k);
+          return '<button type="button" class="mate' + (f ? ' flip' : '') + '" data-a="flip" data-k="' + k + '" aria-pressed="' + f + '" aria-label="' + esc(nm(m) + ', ' + tx(m.r) + (f ? '. ' + tx(m.f) : '')) + '"><span class="in" aria-hidden="true"><span class="f">' + av(m) + '<b>' + esc(nm(m)) + '</b><small>' + esc(tx(m.r)) + '</small><span class="tap">' + esc(tx(D.tapCard)) + '</span></span>' +
+          '<span class="b" style="background:' + m.c + '"><b>' + esc(nm(m)) + '</b>' + esc(tx(m.f)) + '</span></span></button>'; }).join('') + '</div>' +
+        (all ? '<button type="button" class="abtn pop nextb" style="background:' + ACC2 + '" data-a="finish" data-k="0">' + esc(tx(D.continue)) + ' · +20 XP</button>' : '') + '</div>';
+    } else if (s.view === 'quiz'){
+      const q = D.quiz[s.qi], solved = s.ans !== null && (typeof q.a === 'boolean' ? true : s.ans === q.a);
+      const mark = (isRight, isWrong) => isRight ? ' right' : isWrong ? ' wrong' : '';
+      const sr = (r, w) => r ? '<span class="vh"> (' + esc(tx(ok)) + ')</span>' : w ? '<span class="vh"> (' + esc(tx(wrong)) + ')</span>' : '';
+      body = '<div class="pop"><h3 class="a-h">' + esc(tx(D.stops[1][0])) + '</h3><p class="a-p">' + (s.qi + 1) + ' / ' + D.quiz.length + ' · ' + esc(tx(D.firstTry)) + '</p><div class="q"><p>' + esc(tx(q.q)) + '</p>' +
+        (typeof q.a === 'boolean'
+          ? '<div class="vote">' + [true, false].map(v => { const picked = s.ans === v, r = s.ans !== null && v === q.a, w = picked && v !== q.a;
+              return '<button type="button" data-a="rule" data-v="' + (v ? 1 : 0) + '" class="' + mark(r, w).trim() + '"' + (s.ans !== null ? ' aria-disabled="true"' : '') + '>' + (r ? ic('check') : w ? ic('x') : '') + esc(tx(v ? D.yes : D.no)) + sr(r, w) + '</button>'; }).join('') + '</div>' +
+            (s.ans !== null ? '<p class="why pop">' + esc(tx(q.w)) + '</p>' : '')
+          : '<div class="who-row">' + D.team.map((m, k) => { const r = solved && k === q.a, w = s.ans === k && k !== q.a;
+              return '<button type="button" class="who-btn' + mark(r, w) + '" data-a="who" data-k="' + k + '">' + av(m) + esc(nm(m)) + sr(r, w) + '</button>'; }).join('') + '</div>' +
+            (s.ans !== null && !solved ? '<p class="why pop">' + esc(tx(D.retry)) + '</p>' : '')) + '</div>' +
+        (solved ? '<button type="button" class="abtn pop nextb" style="background:' + ACC2 + '" data-a="qNext">' + esc(tx(D.continue)) + '</button>' : '') + '</div>';
+    } else if (s.view === 'prep'){
+      const all = D.prep.every((_, k) => s.prep[k] != null);
+      body = '<div class="pop"><h3 class="a-h">' + esc(tx(D.stops[2][0])) + '</h3><p class="a-p">' + Object.keys(s.prep).length + ' / ' + D.prep.length + '</p>' +
+        D.prep.map((p, k) => '<div class="q" role="group" aria-label="' + esc(tx(p.t)) + '"><p>' + esc(tx(p.t)) + '</p><div class="seg3">' + p.o.map((o, j) => '<button type="button" data-a="prep" data-k="' + k + '" data-j="' + j + '" aria-pressed="' + (s.prep[k] === j) + '">' + esc(o) + '</button>').join('') + '</div></div>').join('') +
+        (all ? '<button type="button" class="abtn pop nextb" style="background:' + ACC2 + '" data-a="finish" data-k="2">' + esc(tx(D.continue)) + ' · +20 XP</button>' : '') + '</div>';
     } else {
-      const b = D.team[3];
+      const b = D.team[3], slot = D.prep[1].o[s.prep[1]], hr = [[D.hr[0], '3 / 3'], [fill(tx(D.hr[1]), {s:D.prep[0].o[s.prep[0]], c:D.prep[2].o[s.prep[2]]}), '✓'], [s.weak ? D.hrWeak : D.hr[2], s.weak ? '!' : '✓']];
       body = '<div class="end pop"><div class="badge-big" style="background:linear-gradient(140deg,' + ACC2 + ',#5B4BFF)">' + ic('star') + '</div>' +
         '<h3 class="a-h">' + esc(tx(D.doneH)) + '</h3><p class="a-p">' + esc(tx(D.doneP)) + '</p>' +
-        '<div style="display:flex;justify-content:center;gap:8px;margin-bottom:6px"><span class="xp" style="display:inline-flex;align-items:center;gap:4px;padding:6px 12px;border-radius:99px;background:#FFF4D6;color:#8A5A00;font:700 13px var(--f-label)">' + ic('star') + s.xp + ' XP</span>' +
-        '<span style="display:inline-flex;align-items:center;padding:6px 12px;border-radius:99px;background:#E3F6EC;color:#0C5C3A;font:700 13px var(--f-label)">' + esc(tx(D.badge)) + '</span></div>' +
-        '<div class="buddy">' + av(b) + '<div><b>' + esc(tx(D.buddyT)) + '</b><small>' + esc(tx(D.buddyS)) + '</small></div></div>' +
+        '<div class="pills"><span class="pill gold">' + ic('star') + s.xp + ' XP</span><span class="pill green">' + esc(fill(tx(D.score), {n:s.right})) + '</span></div>' +
+        '<div class="buddy">' + av(b) + '<div><b>' + esc(tx(D.buddyT)) + '</b><small>' + esc(fill(tx(D.buddyS), {t:slot})) + '</small></div></div>' +
+        '<div class="see"><div class="see-h">' + ic('eye') + '<b>' + esc(tx(D.hrT)) + '</b><span>' + esc(S[lang].ui.demo) + '</span></div><ul class="see-l">' + hr.map(r => '<li><span>' + esc(tx(r[0])) + '</span><b>' + esc(r[1]) + '</b></li>').join('') + '</ul></div>' +
         '<button type="button" class="abtn light" data-a="again">' + ic('refresh') + esc(tx(D.again)) + '</button></div>';
     }
-    const prog = Math.round(n / 4 * 100);
-    this.el.innerHTML = '<div class="app"><div class="app-top"><span class="logo" style="background:' + ACC2 + '">N</span><div><b>' + esc(tx(D.brand)) + '</b><small>' + n + ' / 4</small></div>' +
-      '<span class="xp">' + ic('star') + s.xp + ' XP</span></div><div class="pbar" style="margin-top:10px"><i style="width:' + prog + '%;background:' + ACC2 + '"></i></div>' +
-      (s.view !== 'map' && s.view !== 'end' ? '<button type="button" data-a="map" style="margin:10px 16px 0;align-self:flex-start;border:0;background:none;color:#777;font:600 13px var(--f-label);display:flex;align-items:center;gap:4px">' + ic('arrow', 'flipx') + esc(tx(D.back)) + '</button>' : '') +
+    this.el.innerHTML = '<div class="app"><div class="app-top"><span class="logo" style="background:' + ACC2 + '">N</span><div class="tt"><b>' + esc(tx(D.brand)) + '</b><small>' + n + ' / 3</small></div>' +
+      '<span class="xp">' + ic('star') + s.xp + ' XP</span></div><div class="pbar"><i style="width:' + Math.round(n / 3 * 100) + '%;background:' + ACC2 + '"></i></div>' +
+      (s.view !== 'map' && s.view !== 'end' ? '<button type="button" class="backbtn" data-a="map">' + ic('back') + esc(tx(D.back)) + '</button>' : '') +
       '<div class="app-body">' + body + '</div></div>';
-    const f = $('.flipx', this.el); if (f) f.style.transform = 'rotate(180deg)';
   }
-  finish(k){ const s = this.s; if (!s.done[k]){ s.done[k] = true; s.xp += 25; } s.view = s.done.every(Boolean) ? 'end' : 'map'; this.render(); confetti(this.el, s.view === 'end' ? 100 : 30); }
+  finish(k){ const s = this.s; if (!s.done[k]){ s.done[k] = true; s.xp += 20; } s.view = s.done.every(Boolean) ? 'end' : 'map'; this.go(s.view === 'map' ? '.stop.now' : null); confetti(this.el, s.view === 'end' ? 80 : 24); }
   click(e){
-    const b = e.target.closest('[data-a]'); if (!b || b.disabled) return;
-    const s = this.s, a = b.dataset.a, k = +b.dataset.k;
-    if (a === 'stop'){ s.view = ['team', 'who', 'tasks', 'rules'][k]; s.who = 0; s.whoAns = -1; s.rule = 0; s.ruleAns = null; this.render(); }
-    else if (a === 'map'){ s.view = 'map'; this.render(); }
-    else if (a === 'flip'){ if (!s.flip.includes(k)) s.flip.push(k); b.classList.add('flip'); setTimeout(() => this.render(), 520); }
+    const b = e.target.closest('[data-a]'); if (!b || b.disabled || b.getAttribute('aria-disabled') === 'true') return;
+    const s = this.s, a = b.dataset.a, k = +b.dataset.k, D = ONB;
+    if (a === 'stop'){ s.view = ['team', 'quiz', 'prep'][k]; s.qi = 0; s.ans = null; s.tries = 0; this.go(); }
+    else if (a === 'map'){ s.view = 'map'; this.go('.stop.now'); }
+    else if (a === 'flip'){ if (!s.flip.includes(k)) s.flip.push(k); b.classList.add('flip'); say(tx(D.team[k].f)); setTimeout(() => this.go(s.flip.length === 4 ? '.nextb' : '[data-a="flip"][data-k="' + k + '"]'), reduced() ? 0 : 480); }
     else if (a === 'finish') this.finish(k);
-    else if (a === 'who'){ if (s.whoAns === ONB.who[s.who].a) return; s.whoAns = k; this.render(); if (k !== ONB.who[s.who].a){ const r = $('.q', this.el); r && r.classList.add('shake'); } }
-    else if (a === 'whoNext'){ if (s.who + 1 < ONB.who.length){ s.who++; s.whoAns = -1; this.render(); } else this.finish(1); }
-    else if (a === 'task'){ const i = s.tasks.indexOf(k); if (i < 0) s.tasks.push(k); else s.tasks.splice(i, 1); this.render(); }
-    else if (a === 'rule'){ if (s.ruleAns !== null) return; s.ruleAns = b.dataset.v === '1'; this.render(); }
-    else if (a === 'ruleNext'){ if (s.rule + 1 < ONB.rules.length){ s.rule++; s.ruleAns = null; this.render(); } else this.finish(3); }
+    else if (a === 'who' || a === 'rule'){
+      const q = D.quiz[s.qi], v = a === 'rule' ? b.dataset.v === '1' : k;
+      if (s.ans !== null && (a === 'rule' || s.ans === q.a)) return;
+      const right = v === q.a; s.tries++;
+      if (right && s.tries === 1){ s.right++; s.xp += 10; }
+      if (!right && a === 'rule' && s.qi === 3) s.weak = true;
+      s.ans = v; this.go(right || a === 'rule' ? '.nextb' : '.who-btn.wrong');
+      say(tx(right ? ok : wrong) + (q.w ? '. ' + tx(q.w) : ''));
+      if (!right){ const r = $('.q', this.el); r && r.classList.add('shake'); }
+    }
+    else if (a === 'qNext'){ if (s.qi + 1 < D.quiz.length){ s.qi++; s.ans = null; s.tries = 0; this.go(); } else this.finish(1); }
+    else if (a === 'prep'){ s.prep[k] = +b.dataset.j; const all = D.prep.every((_, i) => s.prep[i] != null); this.go(all ? '.nextb' : '[data-a="prep"][data-k="' + k + '"][data-j="' + b.dataset.j + '"]'); }
     else if (a === 'again') this.reset();
   }
-  destroy(){}
 }
 
 /* ========== demo 3: the brand game ========== */
-const BEAN = (gold) => '<svg viewBox="0 0 34 34" aria-hidden="true"><ellipse cx="17" cy="17" rx="11" ry="14" transform="rotate(28 17 17)" fill="' + (gold ? '#FFC93C' : '#6B3F22') + '" stroke="' + (gold ? '#C98A00' : '#3A2010') + '" stroke-width="2"/><path d="M12 7c6 6 4 14 10 20" stroke="' + (gold ? '#C98A00' : '#3A2010') + '" stroke-width="2.4" fill="none" stroke-linecap="round"/>' + (gold ? '<path d="M27 4l1 2.5 2.5 1-2.5 1-1 2.5-1-2.5-2.5-1 2.5-1z" fill="#fff"/>' : '') + '</svg>';
+const BEAN = gold => '<svg viewBox="0 0 34 34" aria-hidden="true"><ellipse cx="17" cy="17" rx="11" ry="14" transform="rotate(28 17 17)" fill="' + (gold ? '#FFC93C' : '#6B3F22') + '" stroke="' + (gold ? '#C98A00' : '#3A2010') + '" stroke-width="2"/><path d="M12 7c6 6 4 14 10 20" stroke="' + (gold ? '#C98A00' : '#3A2010') + '" stroke-width="2.4" fill="none" stroke-linecap="round"/>' + (gold ? '<path d="M27 4l1 2.5 2.5 1-2.5 1-1 2.5-1-2.5-2.5-1 2.5-1z" fill="#fff"/>' : '') + '</svg>';
 const ICE = '<svg viewBox="0 0 34 34" aria-hidden="true"><rect x="5" y="5" width="24" height="24" rx="6" fill="#BDEBFF" stroke="#5CB9E0" stroke-width="2"/><path d="M10 11h6M10 15h3" stroke="#fff" stroke-width="2.4" stroke-linecap="round"/></svg>';
-const CUP = '<svg viewBox="0 0 78 64" aria-hidden="true"><path d="M8 8h52l-5 44a8 8 0 0 1-8 7H21a8 8 0 0 1-8-7z" fill="#fff" stroke="#0E3B2C" stroke-width="3"/><path d="M60 16h4a9 9 0 0 1 0 18h-6" stroke="#0E3B2C" stroke-width="4" fill="none"/><rect x="5" y="4" width="58" height="8" rx="4" fill="#C8F04A" stroke="#0E3B2C" stroke-width="3"/><text x="34" y="42" text-anchor="middle" font-family="var(--f-label)" font-weight="800" font-size="13" fill="#0E3B2C">ც</text></svg>';
-class Game {
-  constructor(el){ this.el = el; el.addEventListener('click', e => this.click(e)); this.keys = e => this.key(e); window.addEventListener('keydown', this.keys); this.intro(); }
-  shell(inner){ return '<div class="app" style="background:linear-gradient(180deg,#0E3B2C,#145A43)"><div class="game">' + inner + '</div></div>'; }
+const CUP = '<svg viewBox="0 0 78 64" aria-hidden="true"><path d="M8 8h52l-5 44a8 8 0 0 1-8 7H21a8 8 0 0 1-8-7z" fill="#fff" stroke="#0E3B2C" stroke-width="3"/><path d="M60 16h4a9 9 0 0 1 0 18h-6" stroke="#0E3B2C" stroke-width="4" fill="none"/><rect x="5" y="4" width="58" height="8" rx="4" fill="#C8F04A" stroke="#0E3B2C" stroke-width="3"/><text x="34" y="42" text-anchor="middle" font-family="sans-serif" font-weight="800" font-size="13" fill="#0E3B2C">ც</text></svg>';
+const today = () => new Date().toISOString().slice(0, 10);
+class Game extends Demo {
+  constructor(el){ super(el); this.phase = 'intro'; this.render(); }
+  shell(inner, play){ return '<div class="app gm"><div class="game"' + (play ? ' tabindex="0" role="application" aria-label="' + esc(tx(GAME.h) + '. ' + tx(GAME.hint)) + '"' : '') + '>' + inner + '</div></div>'; }
+  render(){ if (this.phase === 'intro') this.intro(); else if (this.phase === 'over') this.over(true); }
   intro(){
-    this.stop(); const D = GAME;
-    this.el.innerHTML = this.shell('<div class="g-over pop"><div style="width:64px;height:64px;border-radius:20px;background:#C8F04A;color:#0E3B2C;display:grid;place-items:center;margin:0 auto 14px;font:800 30px var(--f-label)">ც</div>' +
-      '<p style="margin:0 0 6px;font:700 12px var(--f-label);letter-spacing:.14em;text-transform:uppercase;color:#C8F04A">' + esc(tx(D.brand)) + '</p><h3 class="a-h">' + esc(tx(D.h)) + '</h3><p class="a-p">' + esc(tx(D.p)) + '</p>' +
+    this.stop(); this.phase = 'intro'; const D = GAME;
+    this.el.innerHTML = this.shell('<div class="g-over pop"><div class="g-logo">ც</div>' +
+      '<p class="g-kick">' + esc(tx(D.brand)) + '</p><h3 class="a-h">' + esc(tx(D.h)) + '</h3><p class="a-p">' + esc(tx(D.p)) + '</p>' +
       '<div class="how3"><div>' + BEAN(false) + esc(tx(D.how[0])) + '</div><div>' + BEAN(true) + esc(tx(D.how[1])) + '</div><div>' + ICE + esc(tx(D.how[2])) + '</div></div>' +
-      '<button type="button" class="abtn" style="background:#C8F04A;color:#0E3B2C;box-shadow:0 3px 0 #8DB52A" data-a="go">' + esc(tx(D.start)) + ic('arrow') + '</button>' +
-      '<p style="margin:12px 0 0;font-size:12px;color:rgba(255,255,255,.6)">' + esc(tx(D.hint)) + '</p></div>');
+      '<button type="button" class="abtn lime" data-a="go">' + esc(tx(D.start)) + ic('arrow') + '</button>' +
+      '<p class="g-hint">' + esc(tx(D.hint)) + '</p></div>');
   }
   play(){
-    this.stop();
-    this.el.innerHTML = this.shell('<div class="hud"><span>' + ic('star') + '<b id="gScore">0</b></span><span>' + ic('clock') + '<b id="gTime">15</b></span></div><div class="cup" id="gCup">' + CUP + '</div>');
+    this.stop(); this.phase = 'play';
+    this.el.innerHTML = this.shell('<div class="hud"><span>' + ic('star') + '<b id="gScore">0</b></span><span class="combo" id="gCombo" hidden>×2</span><span>' + ic('clock') + '<b id="gTime">15</b></span></div><div class="cup" id="gCup">' + CUP + '</div><div class="chill" id="gChill"></div>', true);
     const g = $('.game', this.el), cup = $('#gCup', this.el);
+    g.focus({preventScroll:true});
     const W = g.clientWidth, H = g.clientHeight;
-    const st = this.g = {g, cup, W, H, x:W / 2 - 39, tx:W / 2 - 39, score:0, t0:performance.now(), last:performance.now(), spawn:0, drops:[], on:true};
+    const st = this.g = {g, cup, W, H, x:W / 2 - 39, tx:W / 2 - 39, score:0, streak:0, t0:performance.now(), last:performance.now(), spawn:0, drops:[], on:true, keys:{}};
     const move = e => { const r = g.getBoundingClientRect(); st.tx = Math.max(0, Math.min(W - 78, (e.clientX - r.left) - 39)); };
-    g.addEventListener('pointerdown', e => { move(e); g.setPointerCapture && g.setPointerCapture(e.pointerId); });
+    g.addEventListener('pointerdown', e => { move(e); if (g.setPointerCapture) g.setPointerCapture(e.pointerId); });
     g.addEventListener('pointermove', e => { if (e.pointerType === 'mouse' || e.buttons) move(e); });
+    g.addEventListener('keydown', e => { if (e.key === 'ArrowLeft' || e.key === 'ArrowRight'){ st.keys[e.key] = true; e.preventDefault(); } });
+    g.addEventListener('keyup', e => { st.keys[e.key] = false; });
     const loop = now => {
       if (!st.on) return;
       const dt = Math.min(.05, (now - st.last) / 1000); st.last = now;
-      const el = (now - st.t0) / 1000, left = Math.max(0, 15 - el);
+      const el = (now - st.t0) / 1000, left = Math.max(0, 15 - el), late = el > 7;
       $('#gTime', this.el).textContent = Math.ceil(left);
+      if (st.keys.ArrowLeft) st.tx = Math.max(0, st.tx - 420 * dt);
+      if (st.keys.ArrowRight) st.tx = Math.min(W - 78, st.tx + 420 * dt);
       st.spawn -= dt;
-      if (st.spawn <= 0 && left > .4){
-        st.spawn = Math.max(.28, .62 - el * .02);
-        const r = Math.random(), type = r < .11 ? 'gold' : r < .32 ? 'ice' : 'bean';
+      if (st.spawn <= 0 && left > .5){
+        st.spawn = Math.max(.3, .6 - el * .018);
+        const r = Math.random(), type = r < .1 ? 'gold' : r < (late ? .42 : .3) ? 'ice' : 'bean';
         const d = document.createElement('div'); d.className = 'drop'; d.innerHTML = type === 'ice' ? ICE : BEAN(type === 'gold'); g.appendChild(d);
-        st.drops.push({d, type, x:8 + Math.random() * (W - 50), y:-40, v:(150 + Math.random() * 90 + el * 8) * (type === 'gold' ? 1.25 : 1), rot:Math.random() * 360, vr:Math.random() * 200 - 100});
+        st.drops.push({d, type, x:8 + Math.random() * (W - 50), y:-40, v:(170 + Math.random() * 90 + el * 14) * (type === 'gold' ? 1.3 : 1), rot:Math.random() * 360, vr:Math.random() * 200 - 100});
       }
       st.x += (st.tx - st.x) * Math.min(1, dt * 14);
       cup.style.transform = 'translateX(' + st.x + 'px)';
-      const cupTop = H - 26 - 64;
+      const rim = H - 26 - 64;
       st.drops = st.drops.filter(o => {
-        o.y += o.v * dt; o.rot += o.vr * dt;
+        const prev = o.y; o.y += o.v * dt; o.rot += o.vr * dt;
         o.d.style.transform = 'translate(' + o.x + 'px,' + o.y + 'px) rotate(' + o.rot + 'deg)';
-        if (o.y + 30 >= cupTop && o.y < cupTop + 26 && o.x + 30 > st.x + 6 && o.x + 4 < st.x + 72){
-          const pts = o.type === 'gold' ? 3 : o.type === 'ice' ? -2 : 1;
+        // only a drop that crosses the rim inside the cup's mouth counts
+        const bottom = o.y + 28, prevBottom = prev + 28, cx = o.x + 17;
+        if (prevBottom <= rim + 4 && bottom >= rim && cx > st.x + 12 && cx < st.x + 62){
+          let pts = o.type === 'gold' ? 3 : o.type === 'ice' ? -2 : 1;
+          if (o.type === 'bean'){ st.streak++; if (st.streak >= 3) pts = 2; } else if (o.type === 'ice') st.streak = 0;
+          $('#gCombo', this.el).hidden = st.streak < 3;
           st.score = Math.max(0, st.score + pts); $('#gScore', this.el).textContent = st.score;
-          const f = document.createElement('div'); f.className = 'float'; f.textContent = (pts > 0 ? '+' : '') + pts; f.style.left = (st.x + 30) + 'px'; f.style.top = (cupTop - 10) + 'px';
+          const f = document.createElement('div'); f.className = 'float'; f.textContent = (pts > 0 ? '+' : '') + pts; f.style.left = (st.x + 30) + 'px'; f.style.top = (rim - 10) + 'px';
           if (pts < 0) f.style.color = '#BDEBFF'; g.appendChild(f); setTimeout(() => f.remove(), 800);
-          if (pts < 0){ cup.classList.remove('shake'); void cup.offsetWidth; cup.classList.add('shake'); }
+          if (pts < 0){ cup.classList.remove('shake'); void cup.offsetWidth; cup.classList.add('shake'); const c = $('#gChill', this.el); c.classList.remove('on'); void c.offsetWidth; c.classList.add('on'); }
           o.d.remove(); return false;
         }
-        if (o.y > H){ o.d.remove(); return false; }
+        if (o.y > H){ if (o.type === 'bean') st.streak = 0; $('#gCombo', this.el).hidden = st.streak < 3; o.d.remove(); return false; }
         return true;
       });
-      if (left <= 0 && !st.drops.length) return this.over();
-      if (left <= 0) st.drops.forEach(o => { o.v *= 1.04; });
+      if (left <= 0 && !st.drops.length){ this.result = {score:st.score}; return this.over(); }
       this.raf = requestAnimationFrame(loop);
     };
     this.raf = requestAnimationFrame(loop);
   }
-  key(e){ const st = this.g; if (!st || !st.on) return; if (!this.el.isConnected) return;
-    if (e.key === 'ArrowLeft'){ st.tx = Math.max(0, st.tx - 60); e.preventDefault(); } if (e.key === 'ArrowRight'){ st.tx = Math.min(st.W - 78, st.tx + 60); e.preventDefault(); } }
-  over(){
-    const sc = this.g.score; this.stop(); const D = GAME;
-    const prize = D.prizes.find(p => sc >= p[0])[1], code = 'TSK-' + Math.random().toString(36).slice(2, 6).toUpperCase();
-    const board = [['ნინო', 'Nino', 24], ['გიორგი', 'Giorgi', 19], ['მაკა', 'Maka', 15], ['ლუკა', 'Luka', 11]].map(r => [lang === 'ka' ? r[0] : r[1], r[2], false]);
+  over(again){
+    this.stop(); this.phase = 'over'; const D = GAME, sc = this.result.score;
+    // one prize per phone per day; replays only count for the leaderboard
+    let saved = null; try { saved = JSON.parse(store.get('prize') || 'null'); } catch (e) {}
+    if (!again){
+      if (saved && saved.day === today()) this.result.keep = saved;
+      else { const tier = D.prizes.findIndex(p => sc >= p[0]); saved = {day:today(), tier, code:'TSK-' + Math.random().toString(36).slice(2, 6).toUpperCase(), score:sc}; store.set('prize', JSON.stringify(saved)); this.result.prize = saved; }
+    }
+    const pz = this.result.prize || this.result.keep, prize = D.prizes[pz.tier][1];
+    const board = [['ნინო', 'Nino', 34], ['გიორგი', 'Giorgi', 27], ['მაკა', 'Maka', 21], ['ლუკა', 'Luka', 15]].map(r => [lang === 'ka' ? r[0] : r[1], r[2], false]);
     board.push([tx(D.you), sc, true]); board.sort((a, b) => b[1] - a[1]);
-    this.el.innerHTML = this.shell('<div class="g-over pop" style="justify-content:flex-start;overflow-y:auto"><p style="margin:0 0 4px;font:700 12px var(--f-label);letter-spacing:.14em;text-transform:uppercase;color:#C8F04A">' + esc(tx(D.over)) + '</p>' +
+    this.el.innerHTML = this.shell('<div class="g-over pop" style="justify-content:flex-start;overflow-y:auto"><p class="g-kick">' + esc(tx(D.over)) + '</p>' +
       '<h3 class="a-h" style="font-size:44px;margin:0">' + sc + '</h3><p class="a-p" style="margin-bottom:12px">' + esc(tx(D.pts)) + '</p>' +
-      '<div class="scratch"><b>' + esc(tx(prize)) + '</b><code>' + code + '</code><small style="margin-top:6px;color:#3D6B57;font-size:11.5px">' + esc(tx(D.code)) + '</small><canvas id="gScr" aria-label="' + esc(tx(D.scratch)) + '"></canvas></div>' +
-      '<p style="margin:0 0 8px;font:700 12px var(--f-label);text-align:left;color:rgba(255,255,255,.7)">' + esc(tx(D.board)) + '</p><ol class="lb">' + board.slice(0, 5).map((r, k) => '<li class="' + (r[2] ? 'me' : '') + '"><span>' + (k + 1) + '. ' + esc(r[0]) + '</span><span>' + r[1] + '</span></li>').join('') + '</ol>' +
-      '<button type="button" class="abtn" style="background:#C8F04A;color:#0E3B2C;box-shadow:0 3px 0 #8DB52A" data-a="go">' + ic('refresh') + esc(tx(D.again)) + '</button></div>');
-    this.scratch($('#gScr', this.el), tx(D.scratch));
-    if (sc >= 10) confetti(this.el, 70);
+      (this.result.keep ? '<p class="g-note">' + esc(tx(D.saved)) + '</p>' : '') +
+      '<div class="scratch"><b>' + esc(tx(prize)) + '</b><code>' + pz.code + '</code><small>' + esc(tx(D.code)) + '</small>' + (this.result.keep || again ? '' : '<canvas id="gScr" role="button" tabindex="0" aria-label="' + esc(tx(D.reveal)) + '"></canvas>') + '</div>' +
+      '<p class="g-kick" style="text-align:left;color:rgba(255,255,255,.8)">' + esc(tx(D.board)) + '</p><ol class="lb">' + board.slice(0, 5).map((r, k) => '<li class="' + (r[2] ? 'me' : '') + '"><span>' + (k + 1) + '. ' + esc(r[0]) + '</span><span>' + r[1] + '</span></li>').join('') + '</ol>' +
+      seeCard(D.brandT, D.brandSee, true) +
+      '<button type="button" class="abtn lime" data-a="go">' + ic('refresh') + esc(tx(D.again)) + '</button></div>');
+    const cv = $('#gScr', this.el); if (cv) this.scratch(cv, tx(D.scratch));
+    if (!again){ const h = $('.a-h', this.el); h.setAttribute('tabindex', '-1'); h.focus({preventScroll:true}); say(tx(D.over) + ' ' + sc + ' ' + tx(D.pts) + '. ' + tx(prize)); if (sc >= 18) confetti(this.el, 60); }
   }
   scratch(cv, label){
     const r = cv.getBoundingClientRect(), dpr = window.devicePixelRatio || 1; cv.width = r.width * dpr; cv.height = r.height * dpr;
@@ -982,51 +1232,59 @@ class Game {
     c.fillStyle = '#0E3B2C'; c.font = '700 14px "Google Sans","Noto Sans Georgian",sans-serif'; c.textAlign = 'center'; c.fillText(label, r.width / 2, r.height / 2 + 5);
     c.globalCompositeOperation = 'destination-out';
     let down = false, n = 0;
-    const at = e => { const b = cv.getBoundingClientRect(); c.beginPath(); c.arc(e.clientX - b.left, e.clientY - b.top, 20, 0, Math.PI * 2); c.fill(); if (++n > 28){ cv.style.transition = 'opacity .4s'; cv.style.opacity = 0; setTimeout(() => cv.remove(), 400); } };
-    cv.addEventListener('pointerdown', e => { down = true; at(e); });
-    cv.addEventListener('pointermove', e => { if (down || e.pointerType === 'mouse') at(e); });
-    window.addEventListener('pointerup', () => { down = false; });
-    cv.addEventListener('keydown', e => { if (e.key === 'Enter' || e.key === ' ') cv.remove(); }); cv.tabIndex = 0;
+    const done = () => { cv.style.transition = 'opacity .3s'; cv.style.opacity = 0; setTimeout(() => cv.remove(), 300); };
+    const at = e => { const b = cv.getBoundingClientRect(); c.beginPath(); c.arc(e.clientX - b.left, e.clientY - b.top, 20, 0, Math.PI * 2); c.fill(); if (++n > 28) done(); };
+    cv.addEventListener('pointerdown', e => { down = true; if (cv.setPointerCapture) cv.setPointerCapture(e.pointerId); at(e); });
+    cv.addEventListener('pointermove', e => { if (down) at(e); });
+    cv.addEventListener('pointerup', () => { down = false; });
+    cv.addEventListener('keydown', e => { if (e.key === 'Enter' || e.key === ' '){ e.preventDefault(); done(); } });
   }
   click(e){ const b = e.target.closest('[data-a]'); if (b && b.dataset.a === 'go') this.play(); }
   stop(){ if (this.g) this.g.on = false; cancelAnimationFrame(this.raf); }
-  destroy(){ this.stop(); window.removeEventListener('keydown', this.keys); }
+  destroy(){ this.stop(); }
 }
 
 /* ========== demo 4: the event invitation ========== */
-class Invite {
-  constructor(el){ this.el = el; el.addEventListener('click', e => this.click(e)); const d = new Date(); d.setDate(d.getDate() + 12); d.setHours(19, 0, 0, 0); this.when = d; this.reset(); }
-  reset(){ this.s = {view:'env', guests:0, ans:null, code:'NV-' + Math.floor(1000 + Math.random() * 9000)}; this.render(); }
-  date(){ const d = this.when, D = S[lang]; return D.days[d.getDay()] + ', ' + d.getDate() + ' ' + D.months[d.getMonth()]; }
+// the party is at 19:00 Tbilisi time (UTC+4), 12 days from today
+function partyDate(){ const t = new Date(Date.now() + 4 * 3600e3); return {y:t.getUTCFullYear(), m:t.getUTCMonth(), d:t.getUTCDate() + 12}; }
+class Invite extends Demo {
+  constructor(el){ super(el); const p = partyDate(), u = new Date(Date.UTC(p.y, p.m, p.d, 15, 0)); this.when = u; this.wd = new Date(Date.UTC(p.y, p.m, p.d, 12)); this.reset(true); }
+  reset(silent){ this.s = {view:'env', guests:0, food:0, ans:null, code:'NV-' + Math.floor(1000 + Math.random() * 9000)}; silent ? this.render() : this.go(); }
+  date(short){ const d = this.wd, D = S[lang]; return short ? D.dy[d.getUTCDay()] + ', ' + d.getUTCDate() + ' ' + D.mon[d.getUTCMonth()] : D.days[d.getUTCDay()] + ', ' + d.getUTCDate() + ' ' + D.months[d.getUTCMonth()]; }
   render(){
     clearInterval(this.t);
     const s = this.s, D = INV;
     let body = '';
     if (s.view === 'env'){
-      body = '<div style="text-align:center;padding-top:30px"><p class="inv-kick">' + esc(tx(D.kick)) + '</p><button type="button" class="env" data-a="open" aria-label="' + esc(tx(D.tap)) + '" style="border:0;background:none;padding:0;display:block">' +
+      body = '<div class="env-wrap"><p class="inv-kick">' + esc(tx(D.kick)) + '</p><button type="button" class="env" data-a="open" aria-label="' + esc(tx(D.tap)) + '">' +
         '<span class="back"></span><span class="card">Nova · 5</span><span class="front"></span><span class="flap"></span><span class="seal">N</span></button>' +
-        '<p style="color:#9C98B3;font:600 13px var(--f-label);display:flex;align-items:center;justify-content:center;gap:8px"><span style="width:8px;height:8px;border-radius:50%;background:#FF5A5F;animation:pulse 1.6s infinite"></span>' + esc(tx(D.tap)) + '</p></div>';
+        '<p class="tap-hint"><span></span>' + esc(tx(D.tap)) + '</p></div>';
     } else if (s.view === 'card'){
       body = '<div class="pop"><p class="inv-kick">' + esc(tx(D.kick)) + '</p><h3 class="inv-h">' + esc(tx(D.h)) + '</h3><p class="inv-p">' + esc(tx(D.p)) + '</p>' +
         '<div class="inv-meta"><div>' + ic('cal') + '<span><b>' + esc(this.date()) + '</b><small>19:00</small></span></div><div>' + ic('pin') + '<span><b>' + esc(tx(D.venue)) + '</b><small>' + esc(tx(D.venueS)) + '</small></span></div>' +
         '<div>' + ic('shirt') + '<span><b>' + esc(tx(D.dress)) + '</b><small>' + esc(tx(D.dressS)) + '</small></span></div></div>' +
         '<ul class="prog">' + D.prog.map(p => '<li><b>' + p[0] + '</b>' + esc(tx(p[1])) + '</li>').join('') + '</ul>' +
-        '<p style="margin:0 0 10px;font:800 18px var(--f-label)">' + esc(tx(D.q)) + '</p>' +
-        (s.ans === true ? '<div class="stepper"><span style="font:600 14px var(--f-label)">' + esc(tx(D.plus)) + '</span><div><button type="button" data-a="minus" aria-label="−">−</button><b>' + s.guests + '</b><button type="button" data-a="plus" aria-label="+">+</button></div></div>' +
-          '<button type="button" class="abtn" style="background:#C8B8FF;color:#111018;box-shadow:0 3px 0 #8E7BE0" data-a="confirm">' + ic('check') + esc(tx(D.confirm)) + '</button>'
-          : '<div class="rsvp"><button type="button" data-a="yes" style="background:#C8B8FF;color:#111018">' + esc(tx(D.yes)) + '</button><button type="button" data-a="no" style="background:#26233A;color:#fff">' + esc(tx(D.no)) + '</button></div>') + '</div>';
+        '<p class="inv-q">' + esc(tx(D.q)) + '</p>' +
+        (s.ans === true ? '<div class="stepper"><span id="plusL">' + esc(tx(D.plus)) + '</span><div role="group" aria-labelledby="plusL"><button type="button" data-a="minus" aria-label="−1"' + (s.guests ? '' : ' disabled') + '>' + ic('minus') + '</button><b aria-live="polite">' + s.guests + '</b><button type="button" data-a="plus" aria-label="+1"' + (s.guests >= 1 ? ' disabled' : '') + '>' + ic('plus') + '</button></div></div>' +
+          '<p class="inv-sub" id="foodL">' + esc(tx(D.food)) + '</p><div class="foods" role="group" aria-labelledby="foodL">' + D.foods.map((f, k) => '<button type="button" data-a="food" data-k="' + k + '" aria-pressed="' + (s.food === k) + '">' + esc(tx(f)) + '</button>').join('') + '</div>' +
+          '<button type="button" class="abtn lav nextb" data-a="confirm">' + ic('check') + esc(tx(D.confirm)) + '</button>'
+          : '<div class="rsvp"><button type="button" class="yes" data-a="yes">' + esc(tx(D.yes)) + '</button><button type="button" class="no" data-a="no">' + esc(tx(D.no)) + '</button></div>') + '</div>';
     } else if (s.view === 'ticket'){
-      const qr = Array.from({length:49}, (_, i) => ((i * 7 + s.code.charCodeAt(3 + i % 4)) % 3) ? '' : '<rect x="' + (i % 7) * 8 + '" y="' + Math.floor(i / 7) * 8 + '" width="8" height="8"/>').join('');
+      let h = 0; for (const ch of s.code) h = (h * 31 + ch.charCodeAt(0)) >>> 0;
+      let qr = '';
+      for (let i = 0; i < 21 * 21; i++){ const x = i % 21, y = Math.floor(i / 21); if ((x < 7 && y < 7) || (x > 13 && y < 7) || (x < 7 && y > 13)) continue; h = (h * 1103515245 + 12345) >>> 0; if (h & 0x100) qr += '<rect x="' + x + '" y="' + y + '" width="1" height="1"/>'; }
+      const fnd = (x, y) => '<rect x="' + (x + .5) + '" y="' + (y + .5) + '" width="6" height="6" fill="none" stroke="#111"/><rect x="' + (x + 2) + '" y="' + (y + 2) + '" width="3" height="3"/>';
       body = '<div class="pop"><p class="inv-kick">' + esc(tx(D.kick)) + '</p><h3 class="inv-h" style="font-size:24px">' + esc(tx(D.tkH)) + '</h3>' +
-        '<div class="cd" id="cd">' + D.cd.map(x => '<div><b>0</b><small>' + esc(tx(x)) + '</small></div>').join('') + '</div>' +
-        '<div class="ticket"><svg class="qr" viewBox="0 0 56 56" fill="#111">' + qr + '<rect x="0" y="0" width="16" height="16" fill="none" stroke="#111" stroke-width="4"/><rect x="40" y="0" width="16" height="16" fill="none" stroke="#111" stroke-width="4"/><rect x="0" y="40" width="16" height="16" fill="none" stroke="#111" stroke-width="4"/></svg>' +
-        '<div class="tk-h">Nova · 5</div><div class="tk-s">' + esc(lang === 'ka' ? 'ანა' : 'Ana') + (s.guests ? ' + ' + s.guests : '') + '</div><div class="tk-g">' +
-        '<span>' + esc(tx(D.when)) + '<b>' + esc(this.date()) + ', 19:00</b></span><span>' + esc(tx(D.where)) + '<b>' + esc(tx(D.venue)) + '</b></span>' +
+        '<div class="cd" id="cd" role="timer">' + D.cd.map(x => '<div><b>0</b><small>' + esc(tx(x)) + '</small></div>').join('') + '</div>' +
+        '<div class="ticket"><svg class="qr" viewBox="0 0 21 21" fill="#111" aria-hidden="true">' + qr + fnd(0, 0) + fnd(14, 0) + fnd(0, 14) + '</svg>' +
+        '<div class="tk-h">Nova · 5</div><div class="tk-s">' + esc(lang === 'ka' ? 'ანა' : 'Ana') + (s.guests ? ' + 1' : '') + ' · ' + esc(tx(D.foods[s.food])) + '</div><div class="tk-g">' +
+        '<span>' + esc(tx(D.when)) + '<b>' + esc(this.date(true)) + ' · 19:00</b></span><span>' + esc(tx(D.where)) + '<b>' + esc(tx(D.venue)) + '</b></span>' +
         '<span>' + esc(tx(D.guests)) + '<b>' + (1 + s.guests) + '</b></span><span>' + esc(tx(D.code)) + '<b>' + s.code + '</b></span></div></div>' +
-        '<button type="button" class="abtn" style="background:#C8B8FF;color:#111018;box-shadow:0 3px 0 #8E7BE0;margin-bottom:8px" data-a="ics">' + ic('cal') + esc(tx(D.cal)) + '</button>' +
+        '<button type="button" class="abtn lav" style="margin-bottom:8px" data-a="ics">' + ic('cal') + esc(tx(D.cal)) + '</button>' +
+        seeCard(D.orgT, D.org, true) +
         '<button type="button" class="abtn light" data-a="change">' + esc(tx(D.change)) + '</button></div>';
     } else {
-      body = '<div class="pop" style="text-align:center;padding-top:40px"><div style="width:72px;height:72px;margin:0 auto 18px;border-radius:50%;background:#26233A;display:grid;place-items:center;color:#C8B8FF">' + ic('heart') + '</div>' +
+      body = '<div class="pop" style="text-align:center;padding-top:40px"><div class="no-ic">' + ic('heart') + '</div>' +
         '<h3 class="inv-h" style="font-size:24px">' + esc(tx(D.noH)) + '</h3><p class="inv-p">' + esc(tx(D.noP)) + '</p><button type="button" class="abtn light" data-a="change">' + esc(tx(D.change)) + '</button></div>';
     }
     this.el.innerHTML = '<div class="inv"><div class="inv-body">' + body + '</div></div>';
@@ -1037,22 +1295,24 @@ class Invite {
     $$('b', el).forEach((b, i) => { b.textContent = v[i]; }); }
   ics(){
     const d = this.when, e = new Date(d.getTime() + 4 * 3600e3), f = x => x.toISOString().replace(/[-:]/g, '').replace(/\.\d+/, '');
+    const q = s => String(s).replace(/\\/g, '\\\\').replace(/;/g, '\\;').replace(/,/g, '\\,').replace(/\n/g, '\\n');
     const txt = ['BEGIN:VCALENDAR', 'VERSION:2.0', 'PRODID:-//Gancda//Demo//EN', 'BEGIN:VEVENT', 'UID:' + this.s.code + '@gancda.com', 'DTSTAMP:' + f(new Date()), 'DTSTART:' + f(d), 'DTEND:' + f(e),
-      'SUMMARY:' + tx(INV.h), 'LOCATION:' + tx(INV.venue) + ', Tbilisi', 'DESCRIPTION:Gancda demo invitation', 'END:VEVENT', 'END:VCALENDAR'].join('\r\n');
+      'SUMMARY:' + q(tx(INV.h)), 'LOCATION:' + q(tx(INV.venue) + ', Tbilisi'), 'DESCRIPTION:' + q('Gancda demo invitation'), 'END:VEVENT', 'END:VCALENDAR'].join('\r\n');
     const a = document.createElement('a'); a.href = URL.createObjectURL(new Blob([txt], {type:'text/calendar'})); a.download = 'nova-5.ics'; document.body.appendChild(a); a.click(); a.remove();
     setTimeout(() => URL.revokeObjectURL(a.href), 1000);
   }
   click(e){
-    const b = e.target.closest('[data-a]'); if (!b) return;
+    const b = e.target.closest('[data-a]'); if (!b || b.disabled) return;
     const s = this.s, a = b.dataset.a;
-    if (a === 'open'){ b.classList.add('open'); setTimeout(() => { s.view = 'card'; this.render(); }, reduced() ? 0 : 1100); }
-    else if (a === 'yes'){ s.ans = true; this.render(); }
-    else if (a === 'no'){ s.ans = false; s.view = 'no'; this.render(); }
-    else if (a === 'plus'){ s.guests = Math.min(1, s.guests + 1); this.render(); }
-    else if (a === 'minus'){ s.guests = Math.max(0, s.guests - 1); this.render(); }
-    else if (a === 'confirm'){ s.view = 'ticket'; this.render(); confetti(this.el, 80); }
+    if (a === 'open'){ b.classList.add('open'); setTimeout(() => { s.view = 'card'; this.go(); }, reduced() ? 0 : 1000); }
+    else if (a === 'yes'){ s.ans = true; this.go('[data-a="plus"]'); }
+    else if (a === 'no'){ s.ans = false; s.view = 'no'; this.go(); }
+    else if (a === 'plus'){ s.guests = 1; this.go('[data-a="minus"]'); }
+    else if (a === 'minus'){ s.guests = 0; this.go('[data-a="plus"]'); }
+    else if (a === 'food'){ s.food = +b.dataset.k; this.go('[data-a="food"][data-k="' + s.food + '"]'); }
+    else if (a === 'confirm'){ s.view = 'ticket'; this.go(); confetti(this.el, 36); say(tx(INV.tkH)); }
     else if (a === 'ics') this.ics();
-    else if (a === 'change'){ s.view = 'card'; s.ans = null; this.render(); }
+    else if (a === 'change'){ s.view = 'card'; s.ans = null; this.go(); }
   }
   destroy(){ clearInterval(this.t); }
 }
@@ -1064,6 +1324,7 @@ function mountDemo(k){
   if (inst) inst.destroy();
   const old = $('#phone'), el = old.cloneNode(false); old.replaceWith(el);
   cur = k; inst = new DEMOS[k](el);
+  el.setAttribute('aria-label', S[lang].fmt[k].n);
   $$('#picker .pick').forEach(b => b.setAttribute('aria-pressed', b.dataset.k === k));
 }
 
@@ -1071,34 +1332,37 @@ function mountDemo(k){
 function renderStatic(){
   const D = S[lang];
   document.documentElement.lang = lang;
-  document.title = lang === 'ka' ? 'განცდა · Gancda' : 'Gancda · digital experiences';
+  document.title = D.meta.title;
+  const md = $('meta[name="description"]'); if (md) md.setAttribute('content', D.meta.desc);
   $$('[data-t]').forEach(el => { const v = path(D, el.dataset.t); if (v != null) el.textContent = v; });
   $$('[data-th]').forEach(el => { const v = path(D, el.dataset.th); if (v != null) el.innerHTML = v; });
   $$('[data-tp]').forEach(el => { const v = path(D, el.dataset.tp); if (v != null) el.placeholder = v; });
   $$('[data-ic]').forEach(el => { el.innerHTML = ic(el.dataset.ic); });
   $$('[data-lang]').forEach(b => b.setAttribute('aria-pressed', b.dataset.lang === lang));
   $('#facts').innerHTML = D.hero.facts.map(f => '<li>' + ic('check') + esc(f) + '</li>').join('');
-  $('#picker').innerHTML = FMT.map(k => '<button type="button" class="pick" data-k="' + k + '" aria-pressed="' + (k === cur) + '"><span class="ic">' + ic(k) + '</span><span><b>' + esc(D.fmt[k].n) + '</b><span>' + esc(D.fmt[k].s) + '</span></span></button>').join('');
-  $('#cards').innerHTML = FMT.map(k => { const f = D.fmt[k];
-    return '<article class="card"><div class="ic">' + ic(k) + '</div><h3>' + esc(f.n) + '</h3><p>' + esc(f.p) + '</p><ul>' + f.u.map(u => '<li>' + ic('check') + esc(u) + '</li>').join('') + '</ul>' +
-      '<button type="button" class="btn ghost sm play" data-play="' + k + '">' + ic('bolt') + esc(D.ui.play) + '</button></article>'; }).join('');
-  $('#steps').innerHTML = D.how.steps.map(s => '<li><b>' + esc(s[0]) + '</b><span>' + esc(s[1]) + '</span><small>' + esc(s[2]) + '</small></li>').join('');
+  $('#picker').setAttribute('aria-label', lang === 'ka' ? 'დემოს არჩევა' : 'Choose a demo');
+  $('#picker').innerHTML = FMT.map(k => '<button type="button" class="pick" data-k="' + k + '" aria-pressed="' + (k === cur) + '" aria-controls="phone"><span class="ic">' + ic(k) + '</span><span class="pt"><b>' + esc(D.fmt[k].n) + '</b><span>' + esc(D.fmt[k].s) + '</span></span></button>').join('');
+  $('#whoList').innerHTML = D.who.list.map(w => '<article class="persona"><div class="ic">' + ic(w.k === 'hr' ? 'users' : w.k === 'mkt' ? 'megaphone' : 'cal') + '</div><h3>' + esc(w.n) + '</h3><p>' + esc(w.o) + '</p>' +
+    '<p class="mini2">' + esc(D.who.see) + '</p><ul>' + w.m.map(u => '<li>' + ic('check') + esc(u) + '</li>').join('') + '</ul>' +
+    '<div class="row">' + w.f.map(k => '<button type="button" class="btn ghost sm" data-play="' + k + '">' + ic(k) + esc(D.ui.play + ': ' + D.fmt[k].n) + '</button>').join('') + '</div></article>').join('');
+  $('#steps').innerHTML = D.how.steps.map(s => '<li><b>' + esc(s[0]) + '</b><span>' + esc(s[1]) + '</span></li>').join('');
   const R = D.res;
   $('#resChecks').innerHTML = R.checks.map(c => '<li>' + ic('check') + esc(c) + '</li>').join('');
-  $('#dash').innerHTML = '<div class="dash-top"><b>' + esc(R.title) + '</b><span class="tag">' + ic('chart') + esc(R.tag) + '</span></div>' +
+  $('#dash').innerHTML = '<div class="dash-top"><b>' + esc(R.title) + '</b><span class="tag">' + ic('chart') + esc(D.ui.demo) + '</span></div>' +
     '<div class="kpis">' + R.kpis.map(k => '<div class="kpi"><b>' + esc(k[0]) + '</b><span>' + esc(k[1]) + '</span></div>').join('') + '</div>' +
-    '<p style="margin:0 0 10px;font:600 13px var(--f-label);color:var(--muted)">' + esc(R.barsT) + '</p><div class="bars">' +
+    '<p class="mini2">' + esc(R.barsT) + '</p><div class="bars">' +
     R.bars.map(b => '<div class="bar"><div class="t"><span>' + esc(b[0]) + '</span><b>' + b[1] + '%</b></div><div class="tr"><i data-w="' + b[1] + '"></i></div></div>').join('') + '</div>' +
-    '<p style="margin:16px 0 0;padding:12px 14px;border-radius:12px;background:var(--bad-soft);color:var(--bad);font:600 13px/1.4 var(--f-label)">' + esc(R.hard) + '</p>';
+    '<p class="hard">' + esc(R.hard) + '</p>';
   if (dashSeen) $$('#dash .tr i').forEach(i => { i.style.width = i.dataset.w + '%'; });
   $('#pkgs').innerHTML = D.pk.list.map((p, i) => '<article class="pkg' + (i === 0 ? ' hl' : '') + '">' + (p.b ? '<span class="badge">' + esc(p.b) + '</span>' : '') + '<h3>' + esc(p.n) + '</h3><p class="for">' + esc(p.f) + '</p>' +
-    '<div class="time">' + ic('clock') + esc(p.t) + '</div><ul>' + p.i.map(x => '<li>' + ic('check') + esc(x) + '</li>').join('') + '</ul>' +
+    '<ul>' + p.i.map(x => '<li>' + ic('check') + esc(x) + '</li>').join('') + '</ul>' +
     '<a class="btn ' + (i === 0 ? 'acc' : 'ghost') + '" href="#contact" data-want="' + (i === 0 ? 'pilot' : '') + '">' + esc(p.c) + '</a></article>').join('');
+  $('#faqList').innerHTML = D.faq.list.map(q => '<details><summary>' + esc(q[0]) + ic('plus') + '</summary><p>' + esc(q[1]) + '</p></details>').join('');
   const picked = ($('input[name="what"]:checked') || {}).value;
   $('#whatChips').innerHTML = FMT.concat('unsure').map(k => '<label><input type="radio" name="what" value="' + k + '"' + (k === picked ? ' checked' : '') + '><span>' + esc(k === 'unsure' ? D.f.unsure : D.fmt[k].n) + '</span></label>').join('');
   $('#year').textContent = new Date().getFullYear();
   themeIcon();
-  if (!$('#sent').hidden && lastReq) showSent(lastReq.mode);
+  if (!$('#sent').hidden && lastReq) showSent(lastReq.mode, lastReq.err, true);
 }
 let dashSeen = false;
 if ('IntersectionObserver' in window) new IntersectionObserver((es, ob) => { if (es[0].isIntersecting){ dashSeen = true; $$('#dash .tr i').forEach(i => { i.style.width = i.dataset.w + '%'; }); ob.disconnect(); } }, {threshold:.3}).observe($('#dash'));
@@ -1107,14 +1371,14 @@ else dashSeen = true;
 document.addEventListener('click', e => {
   const p = e.target.closest('#picker .pick'); if (p){ mountDemo(p.dataset.k); if (innerWidth < 980) $('.stage').scrollIntoView({behavior: reduced() ? 'auto' : 'smooth', block:'center'}); return; }
   const c = e.target.closest('[data-play]');
-  if (c){ mountDemo(c.dataset.play); const st = $('.stage'); st.scrollIntoView({behavior: reduced() ? 'auto' : 'smooth', block:'center'}); return; }
+  if (c){ mountDemo(c.dataset.play); $('.stage').scrollIntoView({behavior: reduced() ? 'auto' : 'smooth', block:'center'}); setTimeout(() => { const f = $('#phone button'); f && f.focus({preventScroll:true}); }, reduced() ? 0 : 500); return; }
   const w = e.target.closest('[data-want]'); if (w && w.dataset.want === 'pilot'){ const m = $('#fMsg'); if (m && !m.value) m.value = lang === 'ka' ? 'გვაინტერესებს პილოტი.' : 'We are interested in a pilot.'; }
 });
-$$('[data-lang]').forEach(b => b.addEventListener('click', () => { if (lang === b.dataset.lang) return; lang = b.dataset.lang; store.set('lang', lang); renderStatic(); inst.render ? (inst instanceof Game ? inst.intro() : inst.render()) : 0; }));
+$$('[data-lang]').forEach(b => b.addEventListener('click', () => { if (lang === b.dataset.lang) return; lang = b.dataset.lang; store.set('lang', lang); renderStatic(); if (inst){ inst.render(); $('#phone').setAttribute('aria-label', S[lang].fmt[cur].n); } }));
 
 /* theme */
 function effTheme(){ const a = document.documentElement.getAttribute('data-theme'); if (a === 'dark' || a === 'light') return a; return window.matchMedia && matchMedia('(prefers-color-scheme: dark)').matches ? 'dark' : 'light'; }
-function themeIcon(){ const b = $('#themeBtn'); b.innerHTML = ic(effTheme() === 'dark' ? 'sun' : 'moon'); b.setAttribute('aria-label', S[lang].ui.theme); }
+function themeIcon(){ const b = $('#themeBtn'), d = effTheme() === 'dark'; b.innerHTML = ic(d ? 'sun' : 'moon'); b.setAttribute('aria-label', S[lang].ui.theme); b.setAttribute('aria-pressed', d); }
 const savedTheme = store.get('theme'); if (savedTheme === 'dark' || savedTheme === 'light') document.documentElement.setAttribute('data-theme', savedTheme);
 $('#themeBtn').addEventListener('click', () => { const n = effTheme() === 'dark' ? 'light' : 'dark'; document.documentElement.setAttribute('data-theme', n); store.set('theme', n); themeIcon(); });
 if (window.matchMedia) matchMedia('(prefers-color-scheme: dark)').addEventListener('change', themeIcon);
@@ -1122,26 +1386,30 @@ window.addEventListener('scroll', () => $('#hdr').classList.toggle('scrolled', s
 
 /* ---------- the request form ---------- */
 let lastReq = null;
+// same rule as the server (functions/api/requests.js): an email, an @handle or a phone number
+const contactOk = c => /@/.test(c) && c.replace(/[^\w]/g, '').length >= 3 || c.replace(/\D/g, '').length >= 9;
 function readForm(){
   const what = ($('input[name="what"]:checked') || {}).value || '', company = $('#fCompany').value.trim(), msg = $('#fMsg').value.trim(), F = S[lang].f;
   return {who: FMT.includes(what) ? what : '', interest: what, name:$('#fName').value.trim(), contact:$('#fContact').value.trim(),
     message:(company ? F.company2 + ': ' + company + (msg ? '\n\n' : '') : '') + msg, lang, website:$('#fWeb').value};
 }
 function reqText(r){ const F = S[lang].f, D = S[lang]; return [F.what + ': ' + (r.interest === 'unsure' ? F.unsure : r.interest ? D.fmt[r.interest].n : '-'), F.name + ': ' + r.name, F.contact + ': ' + r.contact, '', r.message].join('\n'); }
-function showSent(mode){
+function showSent(mode, err, quiet){
   const F = S[lang].f, box = $('#sent');
   const h = mode === 'ok' ? F.okH : mode === 'fail' ? F.failH : F.offH, p = mode === 'ok' ? F.ok : fill(mode === 'fail' ? F.fail : F.off, {email:CONFIG.email});
-  box.innerHTML = '<div class="sent"><div class="ok" style="' + (mode === 'ok' ? '' : 'background:var(--surface2);color:var(--ink)') + '">' + ic(mode === 'ok' ? 'check' : 'mail') + '</div><h3>' + esc(h) + '</h3><p>' + esc(p) + '</p>' +
-    (mode !== 'ok' ? '<pre id="reqText">' + esc(reqText(lastReq)) + '</pre><p style="margin-top:12px"><button type="button" class="btn ghost sm" id="copyReq">' + ic('copy') + esc(F.copy) + '</button></p>' : '') +
-    '<button type="button" class="btn ghost sm" id="againReq">' + esc(F.again) + '</button></div>';
+  box.innerHTML = '<div class="sent"><div class="ok' + (mode === 'ok' ? '' : ' warn') + '">' + ic(mode === 'ok' ? 'check' : 'mail') + '</div><h3 tabindex="-1">' + esc(h) + '</h3>' +
+    (err ? '<p class="err-s">' + esc(err) + '</p>' : '') + '<p>' + esc(p) + '</p>' +
+    (mode !== 'ok' ? '<pre id="reqText">' + esc(reqText(lastReq)) + '</pre><p style="margin-top:12px"><button type="button" class="btn ghost sm" id="copyReq">' + ic('copy') + '<span>' + esc(F.copy) + '</span></button></p>' : '') +
+    '<button type="button" class="btn ghost sm" id="againReq">' + esc(mode === 'fail' ? (lang === 'ka' ? 'სცადეთ ხელახლა' : 'Try again') : F.again) + '</button></div>';
   box.hidden = false; $('#form').hidden = true;
+  if (!quiet){ $('#sent h3').focus(); say(h); }
   const cp = $('#copyReq'); if (cp) cp.addEventListener('click', () => { navigator.clipboard && navigator.clipboard.writeText(reqText(lastReq)).then(() => { cp.lastChild.textContent = F.copied; }); });
   $('#againReq').addEventListener('click', () => { box.hidden = true; $('#form').hidden = false; if (mode === 'ok') $('#form').reset(); $('#fName').focus(); });
 }
 function validate(){
-  const F = S[lang].f, name = $('#fName').value.trim(), c = $('#fContact').value.trim(), cOk = /\S+@\S+\.\S+/.test(c) || c.replace(/\D/g, '').length >= 9;
-  $('#fbName').classList.toggle('bad', !name); $('#eName').textContent = name ? '' : F.eName;
-  $('#fbContact').classList.toggle('bad', !cOk); $('#eContact').textContent = cOk ? '' : F.eContact;
+  const F = S[lang].f, name = $('#fName').value.trim(), c = $('#fContact').value.trim(), cOk = contactOk(c);
+  $('#fbName').classList.toggle('bad', !name); $('#eName').textContent = name ? '' : F.eName; $('#fName').setAttribute('aria-invalid', !name);
+  $('#fbContact').classList.toggle('bad', !cOk); $('#eContact').textContent = cOk ? '' : F.eContact; $('#fContact').setAttribute('aria-invalid', !cOk);
   if (!name){ $('#fName').focus(); return false; } if (!cOk){ $('#fContact').focus(); return false; } return true;
 }
 $('#form').addEventListener('submit', e => {
@@ -1150,8 +1418,8 @@ $('#form').addEventListener('submit', e => {
   if (!CONFIG.formEndpoint){ lastReq.mode = 'off'; showSent('off'); return; }
   const sb = $('#sendBtn'), F = S[lang].f; sb.disabled = true; sb.firstChild.textContent = F.sending;
   fetch(CONFIG.formEndpoint, {method:'POST', headers:{'Content-Type':'application/json'}, body:JSON.stringify(Object.assign({summary:reqText(lastReq)}, lastReq))})
-    .then(r => { if (!r.ok) throw new Error(r.status); lastReq.mode = 'ok'; showSent('ok'); })
-    .catch(() => { lastReq.mode = 'fail'; showSent('fail'); })
+    .then(r => r.json().catch(() => ({})).then(d => { if (!r.ok) throw new Error(d.error || ('HTTP ' + r.status)); lastReq.mode = 'ok'; lastReq.err = ''; showSent('ok'); }))
+    .catch(err => { lastReq.mode = 'fail'; lastReq.err = err.message; showSent('fail', err.message); })
     .finally(() => { sb.disabled = false; sb.firstChild.textContent = S[lang].f.send; });
 });
 ['#fName', '#fContact'].forEach(id => $(id).addEventListener('input', () => { if ($(id).closest('.field').classList.contains('bad')) validate(); }));
