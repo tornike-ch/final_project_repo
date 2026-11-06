@@ -6,7 +6,8 @@
   <meta name="description" content="Gancda is a Tbilisi interactive experiences studio. Play lessons, onboarding, brand games and invitations in Georgian and English.">
   <meta name="theme-color" content="#1A0B2E">
   <meta name="color-scheme" content="light dark">
-  <title>gancda — Interactive Experiences Studio</title>
+  <title>gancda — ინტერაქტიული გამოცდილებების სტუდია</title>
+  <script>try{var t=localStorage.getItem("gancda.theme");if(t==="dark"||t==="light")document.documentElement.setAttribute("data-theme",t);if(localStorage.getItem("gancda.lang")==="en")document.documentElement.lang="en"}catch(e){}</script>
   <link rel="icon" href="assets/favicon.svg" type="image/svg+xml">
   <link rel="icon" href="assets/favicon.ico" sizes="32x32">
   <link rel="apple-touch-icon" href="assets/apple-touch-icon.png">
@@ -40,11 +41,13 @@
   <a href="#top" class="skip" data-i18n="skip">მთავარ ნაწილზე გადასვლა</a>
   <header class="masthead">
     <div class="wrap navrow">
-      <a class="brand" href="#top"><img class="logo" src="assets/gancda-primary-dark.svg" alt="gancda" width="176" height="47"></a>
+      <a class="brand" href="#top"><img class="logo" src="assets/gancda-lockup-ka.png" alt="განცდა" width="176" height="48"></a>
       <nav class="navlinks" id="mainNav" aria-label="Navigation">
         <a href="#play" data-i18n="navPlay">გამოცდილებები</a>
         <a href="#report" data-i18n="navResults">შედეგები</a>
         <a href="#start" data-i18n="navProcess">პროცესი</a>
+        <div class="navlangs" role="group" aria-label="Language"><button type="button" lang="en" data-lang="en" aria-pressed="false">English</button><button type="button" lang="ka" data-lang="ka" aria-pressed="true">ქართული</button></div>
+        <button type="button" class="navtheme" data-theme-toggle><svg aria-hidden="true"><use href="#moon"/></svg><span data-i18n="themeLabel">თემა</span></button>
       </nav>
       <div class="navright">
         <div class="languages" role="group" aria-label="Language">
@@ -72,8 +75,8 @@
           <div class="art-frame">
             <svg viewBox="0 0 560 448" aria-hidden="true" focusable="false">
                             <rect width="560" height="448" fill="#26143A"/>
-              <g fill="none" stroke="#C7B3FF" stroke-width="2.5" opacity=".28"><path d="M-10 64c30-16 60 16 90 0s60 16 90 0 60 16 90 0"/><path d="M-10 86c30-16 60 16 90 0s60 16 90 0 60 16 90 0"/><path d="M-10 108c30-16 60 16 90 0s60 16 90 0 60 16 90 0"/><path d="M-10 130c30-16 60 16 90 0s60 16 90 0 60 16 90 0"/></g>
-              <path d="M-60 360C40 230 170 470 290 340S500 270 620 370V470H-60Z" fill="#C7B3FF" opacity=".16"/>
+              <g fill="none" stroke="#C8B6FF" stroke-width="2.5" opacity=".28"><path d="M-10 64c30-16 60 16 90 0s60 16 90 0 60 16 90 0"/><path d="M-10 86c30-16 60 16 90 0s60 16 90 0 60 16 90 0"/><path d="M-10 108c30-16 60 16 90 0s60 16 90 0 60 16 90 0"/><path d="M-10 130c30-16 60 16 90 0s60 16 90 0 60 16 90 0"/></g>
+              <path d="M-60 360C40 230 170 470 290 340S500 270 620 370V470H-60Z" fill="#C8B6FF" opacity=".16"/>
               <g class="hero-mark"><use href="#star" x="218" y="35" width="340" height="340" style="color:#D7FF52"/></g>
               <use href="#star" x="96" y="160" width="70" height="70" style="color:#F8F4EB" opacity=".9"/>
             </svg>
@@ -88,8 +91,8 @@
     <section id="start" aria-label="Process"></section>
   </main>
   <footer class="sitefooter"><div class="wrap">
-    <div class="footer-main"><div><a class="brand" href="#top"><img class="logo" src="assets/gancda-primary-dark.svg" alt="gancda" width="200" height="54"></a><p data-i18n="meaning">განცდა — ის, რასაც თავად განიცდი.</p></div><div class="foot-contact"><span data-i18n="studioCity">ინტერაქტიული გამოცდილებების სტუდია · თბილისი</span><a href="mailto:hello@gancda.com">hello@gancda.com <svg aria-hidden="true"><use href="#diagonal"/></svg></a></div></div>
-    <div class="footer-meta"><span>© 2026 Gancda</span><span data-i18n="demoNotice">მაგალითებში წარმოდგენილი ბრენდები, სახელები და მონაცემები საჩვენებელია.</span><a href="#top" data-i18n="back">თავში დაბრუნება ↑</a></div>
+    <div class="footer-main"><div><a class="brand" href="#top"><img class="logo" src="assets/gancda-lockup-ka.png" alt="განცდა" width="200" height="54"></a><p class="footer-tagline" data-i18n="tagline">გრძნობ, როცა მოქმედებ.</p><p class="footer-meaning" data-i18n="meaning">განცდა — ის, რასაც თავად განიცდი.</p></div><div class="foot-contact"><span data-i18n="studioCity">ინტერაქტიული გამოცდილებების სტუდია · თბილისი</span><a href="mailto:hello@gancda.com">hello@gancda.com <svg aria-hidden="true"><use href="#diagonal"/></svg></a></div></div>
+    <div class="footer-meta"><span>© 2026 gancda</span><span data-i18n="demoNotice">მაგალითებში წარმოდგენილი ბრენდები, სახელები და მონაცემები საჩვენებელია.</span><a href="#top" data-i18n="back">თავში დაბრუნება ↑</a></div>
   </div></footer>
 </body>
 </html>

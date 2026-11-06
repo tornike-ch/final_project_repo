@@ -63,7 +63,7 @@ html[lang="ka"] .gp-title { font-weight: 800; letter-spacing: -.02em; line-heigh
 /* the offer: no packages, one conversation */
 .gp-offer { position: relative; overflow: hidden; display: grid; grid-template-columns: minmax(0, 1fr) minmax(0, 1fr); gap: clamp(2rem, 5vw, 5rem); align-items: start;
   padding: clamp(1.8rem, 4vw, 3.5rem); border-radius: 28px; background: var(--surface); border: 1px solid var(--line); color: var(--ink); }
-.gp-offer::after { content: ""; position: absolute; width: 40%; aspect-ratio: 1; right: -12%; top: -26%; background: var(--accent); opacity: .07; -webkit-mask: url(assets/gancda-symbol-lime.svg) center/contain no-repeat; mask: url(assets/gancda-symbol-lime.svg) center/contain no-repeat; pointer-events: none; }
+.gp-offer::after { content: ""; position: absolute; width: 40%; aspect-ratio: 1; right: -12%; top: -26%; background: var(--mark, #C8B6FF); opacity: var(--wm-o, .2); -webkit-mask: url(assets/gancda-symbol-lime.svg) center/contain no-repeat; mask: url(assets/gancda-symbol-lime.svg) center/contain no-repeat; pointer-events: none; }
 .gp-offer > * { position: relative; z-index: 1; min-width: 0; }
 .gp-offer-mark { display: inline-grid; place-items: center; width: 3rem; height: 3rem; border-radius: 50%; color: var(--accent); box-shadow: inset 0 0 0 1.5px var(--accent); margin-bottom: 1.3rem; }
 .gp-offer-mark svg { width: 1.6rem; height: 1.6rem; }
@@ -104,7 +104,7 @@ html[lang="ka"] .gp-title { font-weight: 800; letter-spacing: -.02em; line-heigh
   color: var(--ink);
   padding-block: clamp(3.5rem, 7vw, 6.7rem);
 }
-.gp-request::before { content: ""; position: absolute; width: min(520px, 70vw); aspect-ratio: 1; left: -12%; bottom: -36%; background: var(--accent); opacity: .05; -webkit-mask: url(assets/gancda-symbol-lime.svg) center/contain no-repeat; mask: url(assets/gancda-symbol-lime.svg) center/contain no-repeat; pointer-events: none; }
+.gp-request::before { content: ""; position: absolute; width: min(520px, 70vw); aspect-ratio: 1; left: -12%; bottom: -36%; background: var(--mark, #C8B6FF); opacity: var(--wm-o, .2); -webkit-mask: url(assets/gancda-symbol-lime.svg) center/contain no-repeat; mask: url(assets/gancda-symbol-lime.svg) center/contain no-repeat; pointer-events: none; }
 .gp-request-layout { position: relative; }
 .gp-request-layout { display: grid; grid-template-columns: minmax(0, .82fr) minmax(0, 1fr); gap: clamp(2.5rem, 7vw, 8rem); }
 .gp-request-intro .gp-title { max-width: 13ch; }
@@ -123,7 +123,7 @@ html[lang="ka"] .gp-request-intro .gp-title { max-width: 14ch; }
   box-sizing: border-box;
   width: 100%;
   max-width: 100%;
-  border: 1.5px solid var(--line);
+  border: 1.5px solid var(--field-line, var(--line));
   border-radius: 12px;
   background: var(--paper);
   color: var(--ink);

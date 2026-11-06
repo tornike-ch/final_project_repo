@@ -366,7 +366,7 @@ class Invite {
     this.set(id);
   }
   set(id){ this.t = TBY[id]; this.reset(); }
-  reset(){ this.clear(); this.s = {step:0, picks:[], fortune:-1, stamped:false, tries:0}; this.render(); }
+  reset(){ this.clear(); this.lastStep = -1; this.s = {step:0, picks:[], fortune:-1, stamped:false, tries:0}; this.render(); this.step(0); }
   clear(){ this.timers.forEach(clearTimeout); this.timers = []; }
   later(fn, ms){ this.timers.push(setTimeout(fn, ms)); }
   render(){
@@ -377,17 +377,17 @@ class Invite {
     if (s.step === 2) this.tray();
     tick();
   }
-  go(n){ this.s.step = n; this.render(); if (this.inner) this.inner.scrollTop = 0; }
+  go(n){ this.s.step = n; this.render(); if (this.inner) this.inner.scrollTop = 0; this.step(Math.max(0, n - 1)); }
   onClick(e){
     const b = e.target.closest('[data-act]'); if (!b || !this.el.contains(b)) return;
     const a = b.dataset.act, s = this.s;
-    if (a === 'open'){ if (b.classList.contains('open')) return; b.classList.add('open'); this.later(() => this.go(1), reduced() ? 50 : 1050); }
-    else if (a === 'yes'){ this.burst(36); this.later(() => this.go(2), 380); }
+    if (a === 'open'){ if (b.classList.contains('open')) return; b.classList.add('open'); sfx('whoosh'); this.later(() => this.go(1), reduced() ? 50 : 1050); }
+    else if (a === 'yes'){ this.burst(36); sfx('win'); buzz([15, 30, 15]); this.later(() => this.go(2), 380); }
     else if (a === 'no'){ this.flee(b); }
-    else if (a === 'pick'){ this.pick(+b.dataset.i, b); }
+    else if (a === 'pick'){ sfx('tap'); this.pick(+b.dataset.i, b); }
     else if (a === 'next'){ if (s.step === 2 && !s.picks.length) return; this.go(s.step + 1); }
-    else if (a === 'reveal'){ b.classList.add('shake'); this.later(() => { s.fortune = Math.floor(Math.random() * tx(this.t.sp.lines).length); this.render(); this.burst(18); }, 520); }
-    else if (a === 'stamp'){ s.stamped = true; this.render(); this.later(() => this.burst(40), 380); }
+    else if (a === 'reveal'){ b.classList.add('shake'); sfx('clack'); buzz([20, 40, 20]); this.later(() => { s.fortune = Math.floor(Math.random() * tx(this.t.sp.lines).length); this.render(); sfx('ding'); this.burst(18); }, 520); }
+    else if (a === 'stamp'){ s.stamped = true; this.render(); this.later(() => { sfx('stamp'); buzz(30); this.shake(); }, 260); this.later(() => { sfx('win'); this.burst(40); }, 380); this.won(); }
     else if (a === 'again'){ this.reset(); }
   }
   flee(b){
@@ -463,7 +463,8 @@ Object.assign(I, {
   spoon:'<ellipse class="f" cx="12" cy="7" rx="3.6" ry="4.6"/><path d="M12 11.6V21"/>',
   knife:'<rect class="f" x="2.5" y="12.5" width="13" height="8.5" rx="2"/><path d="M11 10.5 20.5 3c1 1.6.4 4-1.4 5.4L14 12.5"/>',
   tag:'<path class="f" d="M3.5 12V4.5a1 1 0 0 1 1-1H12l8.5 8.5-8 8z"/><circle cx="8" cy="8" r="1.5"/>',
-  send2:'<path d="M4 12 20 4l-4 16-4-6z"/><path d="M12 14l8-10"/>'
+  send2:'<path d="M4 12 20 4l-4 16-4-6z"/><path d="M12 14l8-10"/>',
+  calendar:'<rect x="3.5" y="5" width="17" height="15.5" rx="2.5"/><path d="M8 3v4M16 3v4M3.5 10h17"/><path d="M12 13v5M9.5 15.5h5"/>'
 });
 
 /* small shared helpers */
@@ -487,7 +488,57 @@ function face(p, cls){
     (p.beard ? '<path d="M21.5 34c1 8 5 11 10.5 11s9.5-3 10.5-11c-2 3-5 4-10.5 4s-8.5-1-10.5-4z" fill="'+h+'"/>' : '')+'</svg>';
 }
 
-/* the base every new demo shares: timers, painting, keyboard for drawn controls */
+/* ---------- the juice kit: sound, touch and ink, shared by every demo ----------
+   Sounds are synthesised with Web Audio (no files), start only after a tap, and can be switched off. */
+let soundOn = (() => { try { return localStorage.getItem('gancda.sound') !== 'off'; } catch (e) { return true; } })();
+let actx = null;
+function audio(){
+  if (!soundOn) return null;
+  try {
+    if (!actx){ const A = window.AudioContext || window.webkitAudioContext; if (!A) return null; actx = new A(); }
+    if (actx.state === 'suspended') actx.resume();
+    return actx;
+  } catch (e) { return null; }
+}
+function tone(c, o){
+  const t0 = c.currentTime + (o.t || 0), d = o.d || .15, v = o.v || .12, osc = c.createOscillator(), g = c.createGain();
+  osc.type = o.type || 'sine'; osc.frequency.setValueAtTime(o.f, t0); if (o.f2) osc.frequency.exponentialRampToValueAtTime(o.f2, t0 + d);
+  g.gain.setValueAtTime(.0001, t0); g.gain.exponentialRampToValueAtTime(v, t0 + (o.a || .006)); g.gain.exponentialRampToValueAtTime(.0001, t0 + d);
+  osc.connect(g); g.connect(c.destination); osc.start(t0); osc.stop(t0 + d + .03);
+}
+function hiss(c, o){
+  const d = o.d || .08, n = Math.max(1, Math.floor(c.sampleRate * d)), b = c.createBuffer(1, n, c.sampleRate), x = b.getChannelData(0);
+  for (let i = 0; i < n; i++) x[i] = (Math.random() * 2 - 1) * Math.pow(1 - i / n, 2);
+  const s = c.createBufferSource(), g = c.createGain(), f = c.createBiquadFilter();
+  f.type = o.lp ? 'lowpass' : 'highpass'; f.frequency.value = o.lp || o.hp || 1200;
+  s.buffer = b; g.gain.value = o.v || .1; s.connect(f); f.connect(g); g.connect(c.destination); s.start(c.currentTime + (o.t || 0));
+}
+const SFX = {
+  tap: c => tone(c, {f:700, d:.05, v:.06, type:'triangle'}),
+  pop: c => tone(c, {f:380, f2:880, d:.09, v:.09}),
+  ok: c => { tone(c, {f:660, d:.12, v:.1, type:'triangle'}); tone(c, {f:990, t:.08, d:.2, v:.1, type:'triangle'}); },
+  bad: c => { tone(c, {f:196, f2:140, d:.26, v:.09, type:'sawtooth'}); hiss(c, {d:.08, v:.05, lp:600}); },
+  stamp: c => { tone(c, {f:150, f2:48, d:.2, v:.32}); hiss(c, {d:.07, v:.16, lp:900}); },
+  ding: c => { tone(c, {f:1318, d:1.3, v:.1}); tone(c, {f:1976, d:.9, v:.04}); },
+  win: c => [523, 659, 784, 1047, 1319].forEach((f, i) => tone(c, {f, t:i * .075, d:.55, v:.08, type:'triangle'})),
+  whoosh: c => hiss(c, {d:.28, v:.07, hp:700}),
+  scratch: c => hiss(c, {d:.05, v:.035, hp:3200}),
+  print: c => { for (let i = 0; i < 9; i++) hiss(c, {t:i * .07, d:.035, v:.05, hp:2200}); },
+  flip: c => hiss(c, {d:.06, v:.06, hp:1600}),
+  shutter: c => { hiss(c, {d:.03, v:.2, hp:1800}); hiss(c, {t:.07, d:.05, v:.14, hp:1200}); },
+  clack: c => { hiss(c, {d:.03, v:.3, lp:2600}); hiss(c, {t:.11, d:.03, v:.24, lp:2600}); },
+  siren: c => {
+    const t0 = c.currentTime, o = c.createOscillator(), g = c.createGain(); o.type = 'sawtooth';
+    for (let k = 0; k < 4; k++){ o.frequency.setValueAtTime(620, t0 + k * .5); o.frequency.linearRampToValueAtTime(960, t0 + k * .5 + .25); o.frequency.linearRampToValueAtTime(620, t0 + k * .5 + .5); }
+    g.gain.setValueAtTime(.0001, t0); g.gain.exponentialRampToValueAtTime(.045, t0 + .05); g.gain.setValueAtTime(.045, t0 + 1.9); g.gain.exponentialRampToValueAtTime(.0001, t0 + 2);
+    o.connect(g); g.connect(c.destination); o.start(t0); o.stop(t0 + 2.05);
+  }
+};
+function sfx(n){ const c = audio(); if (c && SFX[n]) try { SFX[n](c); } catch (e) {} }
+function buzz(p){ try { if (navigator.vibrate && navigator.userActivation && navigator.userActivation.hasBeenActive) navigator.vibrate(p); } catch (e) {} }
+const FLAME = '<svg class="flame" viewBox="0 0 24 24" aria-hidden="true"><path d="M12 2.5c.8 3.6 5.5 5.7 5.5 11a5.5 5.5 0 0 1-11 0c0-2.8 1.6-4.3 2.3-6.6 1.5 1.1 2.4 2.6 2.6 4.4 1.3-2.4 1.4-5.5.6-8.8z"/><path class="in" d="M12 12.5c.4 1.8 2.6 2.6 2.6 4.8a2.6 2.6 0 0 1-5.2 0c0-1.4 1-2.2 1.4-3.2.6.4 1 .9 1.2 1.6.3-1.1.3-2.2 0-3.2z"/></svg>';
+
+/* the base every new demo shares: timers, painting, keyboard for drawn controls, and the juice */
 class Demo {
   constructor(el, id){
     this.el = el; this.timers = []; this.iv = 0;
@@ -500,39 +551,50 @@ class Demo {
     this.set(id);
   }
   set(id){ this.t = TBY[id]; this.reset(); }
-  reset(){ this.clear(); this.s = this.init(); this.render(); }
+  reset(){ this.clear(); this.lastStep = -1; this.s = this.init(); this.render(); this.step(0); }
   clear(){ this.timers.forEach(clearTimeout); this.timers = []; if (this.iv){ clearInterval(this.iv); this.iv = 0; } }
   later(fn, ms){ this.timers.push(setTimeout(fn, ms)); }
   paint(inner){ this.el.innerHTML = '<div class="dm dm-'+this.t.mech+'">'+inner+'<div class="i-fx"></div></div>'; }
   q(s){ return this.el.querySelector(s); }
   svgPt(e, svg, w, h){ const r = svg.getBoundingClientRect(); return {x:(e.clientX - r.left) / r.width * w, y:(e.clientY - r.top) / r.height * h}; }
+  /* progress for the player's side rail: n is the index of the step the visitor has reached */
+  step(n){ if (n <= this.lastStep) return; this.lastStep = n; this.el.dispatchEvent(new CustomEvent('gancda:step', {bubbles:true, detail:{id:this.t.id, n}})); }
+  won(){ this.step((this.t.steps || []).length); this.el.dispatchEvent(new CustomEvent('gancda:done', {bubbles:true, detail:{id:this.t.id}})); }
+  shake(){ const r = this.q('.dm, .scr'); if (!r || reduced()) return; r.classList.remove('dm-shake'); void r.offsetWidth; r.classList.add('dm-shake'); }
+  flash(c){ const r = this.q('.dm'); if (!r) return; const f = document.createElement('i'); f.className = 'dm-flash'; f.style.background = c; r.appendChild(f); setTimeout(() => f.remove(), 700); }
+  /* the moment a stamp lands: a thud, a buzz and a small shake */
+  thud(ms){ this.later(() => { sfx('stamp'); buzz(28); this.shake(); }, reduced() ? 0 : ms); }
+  good(){ sfx('ok'); buzz(12); }
+  bad(){ sfx('bad'); buzz([40, 40, 40]); this.flash('rgba(229,64,42,.35)'); }
 }
 Demo.prototype.burst = Invite.prototype.burst;
+['step', 'won', 'shake', 'q'].forEach(k => { Invite.prototype[k] = Demo.prototype[k]; });
 
 /* ---------- 1 · swipe: safe or not? ---------- */
 const SW = {
-  ka:{yes:'უსაფრთხოა', no:'არ არის', right:'სწორია.', wrong:'არა.', hint:'გადაწიე ბარათი: მარჯვნივ, თუ უსაფრთხოა, მარცხნივ, თუ არა.', pass:'სამზარეულოსთვის მზად', fail:'კიდევ ერთი ცდა', used:'წამი', streak:'საუკეთესო სერია', review:'გაიმეორე:', clean:'ერთი შეცდომაც არ დაგიშვია.'},
-  en:{yes:'Safe', no:'Not safe', right:'Right.', wrong:'Not quite.', hint:'Swipe the card: right if it’s safe, left if it isn’t.', pass:'Kitchen ready', fail:'One more try', used:'seconds', streak:'best streak', review:'Worth another look:', clean:'Not a single mistake.'}
+  ka:{yes:'უსაფრთხოა', no:'არ არის', right:'სწორია.', wrong:'არა.', hint:'გადაწიე ბარათი: მარჯვნივ, თუ უსაფრთხოა, მარცხნივ, თუ არა.', pass:'სამზარეულოსთვის მზად', fail:'კიდევ ერთი ცდა', used:'წამი', streak:'საუკეთესო სერია', review:'გაიმეორე:', clean:'ერთი შეცდომაც არ დაგიშვია.', grade:'ჰიგიენის შეფასება', insp:'ინსპექცია', hot:'სერია'},
+  en:{yes:'Safe', no:'Not safe', right:'Right.', wrong:'Not quite.', hint:'Swipe the card: right if it’s safe, left if it isn’t.', pass:'Kitchen ready', fail:'One more try', used:'seconds', streak:'best streak', review:'Worth another look:', clean:'Not a single mistake.', grade:'Hygiene grade', insp:'Inspection', hot:'streak'}
 };
+const SWC = ['#FFD23F', '#8FD3F4', '#FF9F7A', '#B9E39B', '#F7A9BE', '#C9B8F0'];
 class Swipe extends Demo {
   init(){ return {i:0, score:0, streak:0, best:0, left:this.t.time, run:false, done:false, busy:false, last:null, wrong:[]}; }
   bind(){
     let d = null;
     this.el.addEventListener('pointerdown', e => {
       const c = e.target.closest('.sw-card.top'); if (!c || this.s.done || this.s.busy) return;
-      d = {c, x:e.clientX, dx:0, id:e.pointerId}; try { c.setPointerCapture(e.pointerId); } catch (err) {} c.classList.add('drag');
+      d = {c, x:e.clientX, y:e.clientY, dx:0, dy:0, id:e.pointerId}; try { c.setPointerCapture(e.pointerId); } catch (err) {} c.classList.add('drag');
     });
     this.el.addEventListener('pointermove', e => {
       if (!d || e.pointerId !== d.id) return;
-      d.dx = e.clientX - d.x;
-      d.c.style.transform = 'translateX('+d.dx+'px) rotate('+(d.dx / 14)+'deg)';
+      d.dx = e.clientX - d.x; d.dy = (e.clientY - d.y) * .25;
+      d.c.style.transform = 'translate('+d.dx+'px,'+d.dy+'px) rotate('+(d.dx / 12)+'deg)';
       d.c.style.setProperty('--yes', Math.max(0, Math.min(1, d.dx / 80)));
       d.c.style.setProperty('--no', Math.max(0, Math.min(1, -d.dx / 80)));
     });
     const end = e => {
       if (!d || e.pointerId !== d.id) return;
       const x = d; d = null; x.c.classList.remove('drag');
-      if (Math.abs(x.dx) > 70) this.answer(x.dx > 0);
+      if (Math.abs(x.dx) > 70) this.answer(x.dx > 0, true);
       else { x.c.style.transform = ''; x.c.style.setProperty('--yes', 0); x.c.style.setProperty('--no', 0); }
     };
     this.el.addEventListener('pointerup', end); this.el.addEventListener('pointercancel', end);
@@ -543,36 +605,47 @@ class Swipe extends Demo {
     this.iv = setInterval(() => { s.left = Math.max(0, (end - Date.now()) / 1000); this.hud(); if (!s.left) this.finish(); }, 200);
   }
   hud(){ const b = this.q('.sw-time i'), n = this.q('.sw-sec'); if (b) b.style.width = (this.s.left / this.t.time * 100) + '%'; if (n) n.textContent = secs(this.s.left); }
-  answer(safe){
+  answer(safe, dragged){
     const s = this.s, t = this.t; if (s.done || s.busy) return;
-    this.go();
+    this.go(); this.step(1);
     const ok = t.cards[s.i].ok === safe;
-    if (ok){ s.score++; s.streak++; s.best = Math.max(s.best, s.streak); } else { s.streak = 0; s.wrong.push(s.i); }
+    if (ok){ s.score++; s.streak++; s.best = Math.max(s.best, s.streak); this.good(); } else { s.streak = 0; s.wrong.push(s.i); this.bad(); }
     s.last = {ok, i:s.i}; s.busy = true;
-    const el = this.q('.sw-card.top'); if (el){ el.style.transform = ''; el.classList.add(safe ? 'out-r' : 'out-l'); }
-    this.later(() => { s.busy = false; s.i++; if (s.i >= t.cards.length) this.finish(); else this.render(); }, reduced() ? 0 : 280);
+    const el = this.q('.sw-card.top'), slow = reduced() ? 0 : 1;
+    if (el){
+      /* the stamp lands on the card first, then the card flies off the way it was sent */
+      el.style.setProperty(safe ? '--yes' : '--no', 1); el.classList.add('stamped', safe ? 'say-yes' : 'say-no');
+      if (!dragged) el.style.transform = 'rotate('+(safe ? 3 : -3)+'deg) scale(1.03)';
+      this.later(() => { el.style.transform = ''; el.classList.add(safe ? 'out-r' : 'out-l'); sfx('whoosh'); }, 230 * slow);
+    }
+    this.later(() => { s.busy = false; s.i++; if (s.i >= t.cards.length) this.finish(); else { this.render(); this.step(2); } }, 520 * slow);
   }
   finish(){
     const s = this.s; if (s.done) return; s.done = true; this.clear(); this.render();
-    if (s.score >= this.t.cards.length - 1) this.later(() => this.burst(40), 120);
+    this.thud(420); this.later(() => { sfx('win'); if (s.score >= this.t.cards.length - 1) this.burst(40); }, reduced() ? 0 : 700);
+    this.won();
   }
   render(){
     const t = this.t, s = this.s, g = SW[lang];
     if (s.done) return this.paint(this.result());
-    const cards = t.cards.slice(s.i, s.i + 3).map((c, k) => '<div class="sw-card'+(k === 0 ? ' top' : '')+'" style="--k:'+k+'">'+
+    const cards = t.cards.slice(s.i, s.i + 3).map((c, k) => '<div class="sw-card'+(k === 0 ? ' top' : '')+'" style="--k:'+k+';--cc:'+SWC[(s.i + k) % SWC.length]+'">'+
+      '<div class="sw-art"><span class="sw-ic">'+ic(c.ic)+'</span></div>'+
       '<span class="sw-stamp yes">'+esc(g.yes)+'</span><span class="sw-stamp no">'+esc(g.no)+'</span>'+
-      '<span class="sw-ic">'+ic(c.ic)+'</span><p>'+esc(tx(c.s))+'</p><span class="sw-n">'+(s.i + k + 1)+' / '+t.cards.length+'</span></div>').reverse().join('');
-    const last = s.last ? t.cards[s.last.i] : null;
-    this.paint('<div class="dm-in sw-in"><div class="sw-top"><b>'+esc(tx(t.brand))+'</b><span class="sw-sc">'+ic('check')+s.score+(s.streak > 1 ? ' <em>×'+s.streak+'</em>' : '')+'</span></div>'+
+      '<p>'+esc(tx(c.s))+'</p><span class="sw-n">'+(s.i + k + 1)+' / '+t.cards.length+'</span></div>').reverse().join('');
+    const last = s.last ? t.cards[s.last.i] : null, heat = Math.min(s.streak, 6);
+    this.paint('<div class="dm-in sw-in"><div class="sw-top"><b>'+esc(tx(t.brand))+'</b><span class="sw-sc'+(s.streak > 1 ? ' hot' : '')+'" style="--h:'+heat+'">'+ic('check')+s.score+
+        (s.streak > 1 ? ' <em>'+FLAME+'×'+s.streak+'</em>' : '')+'</span></div>'+
       '<div class="sw-time"><i style="width:'+(s.left / t.time * 100)+'%"></i></div><span class="sw-sec">'+secs(s.left)+'</span>'+
       '<h2 class="sw-h">'+esc(tx(t.name))+'</h2><div class="sw-stack">'+cards+'</div>'+
-      '<div class="sw-fb'+(last ? (s.last.ok ? ' ok' : ' bad') : '')+'" aria-live="polite">'+(last ? '<b>'+esc(s.last.ok ? g.right : g.wrong)+'</b> '+esc(tx(last.why)) : esc(g.hint))+'</div>'+
+      '<div class="sw-fb'+(last ? (s.last.ok ? ' ok' : ' bad') : '')+'" aria-live="polite">'+(last ? '<span class="sw-fbi">'+ic(s.last.ok ? 'check' : 'close')+'</span><span><b>'+esc(s.last.ok ? g.right : g.wrong)+'</b> '+esc(tx(last.why))+'</span>' : '<span>'+esc(g.hint)+'</span>')+'</div>'+
       '<div class="sw-btns"><button type="button" class="sw-b no" data-act="no" aria-label="'+esc(g.no)+'">'+ic('close')+'</button>'+
-      '<button type="button" class="sw-b yes" data-act="yes" aria-label="'+esc(g.yes)+'">'+ic('check')+'</button></div></div>');
+      '<button type="button" class="sw-b yes" data-act="yes" aria-label="'+esc(g.yes)+'">'+ic('check')+'</button></div>'+
+      '<div class="sw-hob'+(heat ? ' on' : '')+'" aria-hidden="true" style="--h:'+heat+'">'+[0, 1, 2, 3, 4].map(k => '<i style="--d:'+(k * .13).toFixed(2)+'s">'+FLAME+'</i>').join('')+'</div></div>');
   }
   result(){
-    const t = this.t, s = this.s, g = SW[lang], n = t.cards.length, pass = s.score >= n - 1;
-    return '<div class="dm-in sw-in sw-res"><div class="sw-badge'+(pass ? ' pass' : '')+'"><b>'+s.score+'<small>/'+n+'</small></b><span>'+esc(pass ? g.pass : g.fail)+'</span></div>'+
+    const t = this.t, s = this.s, g = SW[lang], n = t.cards.length, pass = s.score >= n - 1, grade = s.score >= n - 1 ? 'A' : s.score >= n - 2 ? 'B' : 'C';
+    return '<div class="dm-in sw-in sw-res"><div class="sw-grade g-'+grade+'"><small>'+esc(tx(t.brand))+' · '+esc(g.insp)+'</small><b>'+grade+'</b><span>'+esc(g.grade)+'</span></div>'+
+      '<div class="sw-badge'+(pass ? ' pass' : '')+'"><b>'+s.score+'<small>/'+n+'</small></b><span>'+esc(pass ? g.pass : g.fail)+'</span></div>'+
       '<div class="sw-stats"><div><b>'+Math.round(t.time - s.left)+'</b><span>'+esc(g.used)+'</span></div><div><b>×'+s.best+'</b><span>'+esc(g.streak)+'</span></div></div>'+
       (s.wrong.length ? '<p class="sw-lbl">'+esc(g.review)+'</p><ul class="sw-rev">'+s.wrong.map(i => '<li><b>'+esc(tx(t.cards[i].s))+'</b><span>'+esc(tx(t.cards[i].why))+'</span></li>').join('')+'</ul>'
         : '<p class="sw-lbl">'+esc(g.clean)+'</p>')+
@@ -580,34 +653,55 @@ class Swipe extends Demo {
   }
 }
 
-/* ---------- 2 · spot the mistakes: hotel room 214 ---------- */
+/* ---------- 2 · spot the mistakes: hotel room 214, which fixes itself as you find things ---------- */
 const SP = {
-  ka:{q:'იპოვე {n} შეცდომა.', hint0:'შეეხე ყველაფერს, რაც სტუმრის მოსვლამდე უნდა გასწორდეს. არასწორი შეხება 3 წამი ჯდება.', hintB:'მინიშნება (−10 წმ)', scene:'სასტუმროს ოთახი, შეეხე შეცდომებს', done:'ოთახი 214 მზადაა', late:'დრო ამოიწურა', left:'დარჩა {n} წამი'},
-  en:{q:'Find {n} mistakes.', hint0:'Tap anything that must be fixed before the guest arrives. A wrong tap costs 3 seconds.', hintB:'Hint (−10 s)', scene:'A hotel room. Tap the mistakes.', done:'Room 214 is ready', late:'Time’s up', left:'{n} seconds to spare'}
+  ka:{q:'იპოვე {n} შეცდომა.', hint0:'შეეხე ყველაფერს, რაც სტუმრის მოსვლამდე უნდა გასწორდეს. არასწორი შეხება 3 წამი ჯდება.', hintB:'მინიშნება (−10 წმ)', scene:'სასტუმროს ოთახი, შეეხე შეცდომებს', done:'ოთახი 214 მზადაა', late:'დრო ამოიწურა', left:'დარჩა {n} წამი',
+      lift:'სტუმარი უკვე ლიფტშია!', review:'„უნაკლო ოთახი. თავი შინ ვიგრძენი.“', guest:'სტუმარი, ოთახი 214'},
+  en:{q:'Find {n} mistakes.', hint0:'Tap anything that must be fixed before the guest arrives. A wrong tap costs 3 seconds.', hintB:'Hint (−10 s)', scene:'A hotel room. Tap the mistakes.', done:'Room 214 is ready', late:'Time’s up', left:'{n} seconds to spare',
+      lift:'The guest is already in the lift!', review:'“Spotless. It felt like home.”', guest:'Guest, room 214'}
 };
 /* where each mistake sits in the drawing (viewBox 300 × 330) */
 const SPOTS = {frame:{x:75, y:62, r:30}, cup:{x:50, y:168, r:12}, towel:{x:165, y:278, r:22}, bin:{x:263, y:256, r:20}, slipper:{x:93, y:300, r:15}};
-const ROOM = '<rect width="300" height="214" fill="#DCCFEA"/><rect y="214" width="300" height="116" fill="#C8996A"/>'+
+const ROOM_BASE = '<rect width="300" height="214" fill="#DCCFEA"/><rect y="214" width="300" height="116" fill="#C8996A"/>'+
   '<g stroke="#B3855A" stroke-width="1"><path d="M0 240H300M0 268H300M0 298H300"/><path d="M60 214V240M180 214V240M120 240V268M240 240V268M40 268V298M200 268V298M100 298V330M260 298V330"/></g>'+
   '<rect y="208" width="300" height="7" fill="#F4EFE8"/>'+
-  '<rect x="196" y="30" width="80" height="92" fill="#F4EFE8"/><rect x="202" y="36" width="68" height="80" fill="#BFE0F2"/><path d="M202 100l18-16 14 10 16-18 20 20V116H202z" fill="#9CC8A9"/><path d="M236 36V116M202 76H270" stroke="#F4EFE8" stroke-width="4"/>'+
+  '<rect x="196" y="30" width="80" height="92" fill="#F4EFE8"/><rect class="sp-sky" x="202" y="36" width="68" height="80" fill="#BFE0F2"/><path d="M202 100l18-16 14 10 16-18 20 20V116H202z" fill="#9CC8A9"/><path d="M236 36V116M202 76H270" stroke="#F4EFE8" stroke-width="4"/>'+
   '<rect x="184" y="20" width="104" height="5" rx="2" fill="#6F5590"/><path d="M188 24h14v104c-6 0-10-2-14-4z" fill="#A98BC9"/><path d="M284 24h-14v104c6 0 10-2 14-4z" fill="#A98BC9"/>'+
-  '<circle cx="75" cy="34" r="2" fill="#6F5590"/><path d="M75 34 52 43M75 34l27 9" stroke="#6F5590" stroke-width="1"/>'+
-  '<g transform="rotate(9 75 62)"><rect x="45" y="40" width="60" height="44" fill="#F4EFE8" stroke="#6F5590" stroke-width="3"/><path d="M50 79l16-18 10 10 10-8 14 16z" fill="#7FB0C9"/><circle cx="88" cy="52" r="5" fill="#F2C14E"/></g>'+
-  '<rect x="76" y="118" width="160" height="56" rx="8" fill="#6F5590"/>'+
+  '<circle cx="75" cy="34" r="2" fill="#6F5590"/><path d="M75 34 52 43M75 34l27 9" stroke="#6F5590" stroke-width="1"/>';
+const ROOM_MID = '<rect x="76" y="118" width="160" height="56" rx="8" fill="#6F5590"/>'+
   '<rect x="90" y="140" width="62" height="24" rx="11" fill="#FFFFFF"/><rect x="160" y="140" width="62" height="24" rx="11" fill="#FFFFFF"/>'+
   '<rect x="66" y="160" width="180" height="58" rx="8" fill="#FFFFFF"/><path d="M66 182h180v34a8 8 0 0 1-8 8H74a8 8 0 0 1-8-8z" fill="#B9A3D9"/><rect x="66" y="180" width="180" height="6" fill="#F4EFE8"/>'+
   '<rect x="74" y="224" width="6" height="10" fill="#5A4476"/><rect x="232" y="224" width="6" height="10" fill="#5A4476"/>'+
   '<path d="M262 178h22l-3 32h-16z" fill="#D9744A"/><path d="M273 178c-10-10-8-24 0-30 8 6 10 20 0 30zM273 178c-14-2-22-12-20-20 10 0 18 8 20 20zM273 178c4-14 14-18 20-16 0 10-8 16-20 16z" fill="#5E9E6A"/>'+
   '<rect x="12" y="176" width="50" height="50" rx="3" fill="#B07D4F"/><rect x="16" y="196" width="42" height="2" fill="#8E6038"/><circle cx="37" cy="211" r="2" fill="#5A3A22"/>'+
   '<path d="M14 140h22l4 22H10z" fill="#F2E3C2"/><rect x="22" y="162" width="6" height="12" fill="#8E6038"/><rect x="16" y="172" width="18" height="4" rx="2" fill="#8E6038"/>'+
-  '<path d="M44 162h12l-1.5 12h-9z" fill="#FFFFFF" stroke="#6F5590" stroke-width="1.2"/><path d="M56 165a3 3 0 0 1 0 6" fill="none" stroke="#6F5590" stroke-width="1.2"/><path d="M47 164.5h6" stroke="#8A5A3A" stroke-width="2"/>'+
   '<ellipse cx="156" cy="262" rx="90" ry="22" fill="#E7D9C6"/>'+
-  '<path d="M146 272c8-8 24-10 34-4 8 5 4 14-6 16-10 3-26 2-30-4-2-3-1-6 2-8z" fill="#FFFFFF" stroke="#D6CCE3" stroke-width="1.5"/><path d="M156 276c6-3 14-3 18 0" stroke="#D6CCE3" fill="none"/>'+
-  '<path d="M250 246h26l-3 32h-20z" fill="#8E8A9C"/><rect x="248" y="243" width="30" height="5" rx="2" fill="#6E6A7D"/><circle cx="258" cy="241" r="5" fill="#FFFFFF"/><circle cx="268" cy="239" r="6" fill="#F7F3EE"/><circle cx="263" cy="234" r="4" fill="#FFFFFF"/>'+
-  '<path d="M80 300c0-6 6-10 14-10s12 4 12 8-4 8-12 8H86c-4 0-6-2-6-6z" fill="#FFFFFF" stroke="#C9B9E0" stroke-width="1.5"/><path d="M84 300c4-5 14-6 18-2" fill="none" stroke="#A98BC9" stroke-width="3"/>';
+  '<path d="M250 246h26l-3 32h-20z" fill="#8E8A9C"/><rect x="248" y="243" width="30" height="5" rx="2" fill="#6E6A7D"/>';
+/* each mistake drawn messy, then fixed: the picture straightens, the cup is swapped, the towel folds onto the bed, the bin empties, the slippers pair up */
+const SPART = {
+  frame:[f => '<g class="sp-o sp-frame'+f+'"><rect x="45" y="40" width="60" height="44" fill="#F4EFE8" stroke="#6F5590" stroke-width="3"/><path d="M50 79l16-18 10 10 10-8 14 16z" fill="#7FB0C9"/><circle cx="88" cy="52" r="5" fill="#F2C14E"/></g>'],
+  cup:['<g class="sp-o sp-cup"><path d="M44 162h12l-1.5 12h-9z" fill="#FFFFFF" stroke="#6F5590" stroke-width="1.2"/><path d="M56 165a3 3 0 0 1 0 6" fill="none" stroke="#6F5590" stroke-width="1.2"/><path d="M47 164.5h6" stroke="#8A5A3A" stroke-width="2"/></g>',
+       '<g class="sp-o sp-new"><path d="M43 174h14l-2-12h-10z" fill="#E6F4FB" stroke="#6F5590" stroke-width="1.2"/><path d="M41 174.5h18" stroke="#6F5590" stroke-width="1.6" stroke-linecap="round"/></g>'],
+  towel:['<g class="sp-o sp-towel"><path d="M146 272c8-8 24-10 34-4 8 5 4 14-6 16-10 3-26 2-30-4-2-3-1-6 2-8z" fill="#FFFFFF" stroke="#D6CCE3" stroke-width="1.5"/><path d="M156 276c6-3 14-3 18 0" stroke="#D6CCE3" fill="none"/></g>',
+         '<g class="sp-o sp-new sp-fly"><rect x="190" y="190" width="40" height="12" rx="3" fill="#FFFFFF" stroke="#D6CCE3" stroke-width="1.5"/><rect x="194" y="186" width="32" height="7" rx="2.5" fill="#FFFFFF" stroke="#D6CCE3" stroke-width="1.5"/></g>'],
+  bin:['<g class="sp-o sp-trash"><circle cx="258" cy="241" r="5" fill="#FFFFFF"/><circle cx="268" cy="239" r="6" fill="#F7F3EE"/><circle cx="263" cy="234" r="4" fill="#FFFFFF"/></g>',
+       '<g class="sp-o sp-new"><path d="M252 248.5h22" stroke="#B9B5C6" stroke-width="2" stroke-linecap="round"/></g>'],
+  slipper:['<g class="sp-o sp-slip"><path d="M80 300c0-6 6-10 14-10s12 4 12 8-4 8-12 8H86c-4 0-6-2-6-6z" fill="#FFFFFF" stroke="#C9B9E0" stroke-width="1.5"/><path d="M84 300c4-5 14-6 18-2" fill="none" stroke="#A98BC9" stroke-width="3"/></g>',
+           '<g class="sp-o sp-new">'+[84, 106].map(x => '<g transform="translate('+x+' 240)"><path d="M0 8c0-5 4-8 9-8s8 3 8 7-3 7-8 7H5c-3 0-5-2-5-6z" fill="#FFFFFF" stroke="#C9B9E0" stroke-width="1.5"/><path d="M3 7c3-4 9-4 12-1" fill="none" stroke="#A98BC9" stroke-width="2.6"/></g>').join('')+'</g>']
+};
+function roomSVG(t, found, just){
+  const fixed = id => found.some(i => t.spots[i].id === id), part = id => {
+    const p = SPART[id], f = fixed(id), j = just === id ? ' just' : '';
+    if (id === 'frame') return p[0](f ? ' fix'+j : '');
+    if (!f) return p[0];
+    return (j ? p[0].replace('class="sp-o', 'class="sp-o sp-out') : '')+p[1].replace('class="sp-o', 'class="sp-o'+j);
+  };
+  const spark = just ? (() => { const s = SPOTS[just], to = just === 'towel' ? {x:210, y:194} : just === 'slipper' ? {x:100, y:248} : s;
+    return '<g transform="translate('+to.x+' '+to.y+')"><g class="sp-spark">'+[0, 60, 120, 180, 240, 300].map(a => '<path d="M0-9V-15" transform="rotate('+a+')"/>').join('')+'</g></g>'; })() : '';
+  return ROOM_BASE+part('frame')+ROOM_MID+part('bin')+part('cup')+part('towel')+part('slipper')+spark;
+}
 class Spot extends Demo {
-  init(){ return {found:[], left:this.t.time, run:false, done:false, last:-1, hint:-1, end:0}; }
+  init(){ return {found:[], left:this.t.time, run:false, done:false, last:-1, hint:-1, end:0, lift:false}; }
   act(a, b, e){
     const s = this.s, t = this.t;
     if (a === 'again') return this.reset();
@@ -616,13 +710,13 @@ class Spot extends Demo {
       const i = +b.dataset.i; this.go();
       if (s.found.includes(i)) return;
       s.found.push(i); s.last = i; if (s.hint === i) s.hint = -1;
-      this.render(); this.burst(10);
-      if (s.found.length === t.spots.length) this.later(() => this.finish(), 700);
+      this.render(true); this.good(); this.step(2);
+      if (s.found.length === t.spots.length) this.later(() => this.finish(), reduced() ? 300 : 1100);
     } else if (a === 'miss'){
-      this.go(); this.penalty(3);
+      this.go(); this.penalty(3); sfx('bad'); buzz(30);
       const svg = this.q('.sp-scene svg'); if (!svg || !e || e.clientX == null) return;
       const p = this.svgPt(e, svg, 300, 330);
-      svg.insertAdjacentHTML('beforeend', '<g class="sp-x" transform="translate('+p.x.toFixed(1)+' '+p.y.toFixed(1)+')"><path d="M-6-6 6 6M6-6-6 6"/><text y="-11">'+esc(SP[lang].hintB.match(/−\d+/) ? '−3' : '−3')+'</text></g>');
+      svg.insertAdjacentHTML('beforeend', '<g class="sp-x" transform="translate('+p.x.toFixed(1)+' '+p.y.toFixed(1)+')"><path d="M-6-6 6 6M6-6-6 6"/><text y="-11">−3</text></g>');
       const x = svg.lastElementChild; setTimeout(() => x && x.remove(), 900);
     } else if (a === 'hint'){
       const i = t.spots.findIndex((sp, k) => !s.found.includes(k)); if (i < 0) return;
@@ -631,45 +725,62 @@ class Spot extends Demo {
   }
   penalty(n){ const s = this.s; if (s.run){ s.end -= n * 1000; s.left = Math.max(0, (s.end - Date.now()) / 1000); } else s.left = Math.max(0, s.left - n); this.hud(); }
   go(){
-    const s = this.s; if (s.run) return; s.run = true; s.end = Date.now() + s.left * 1000;
+    const s = this.s; if (s.run) return; s.run = true; s.end = Date.now() + s.left * 1000; this.step(1);
     this.iv = setInterval(() => { s.left = Math.max(0, (s.end - Date.now()) / 1000); this.hud(); if (!s.left) this.finish(); }, 200);
   }
-  hud(){ const r = this.q('.sp-ring .v'), n = this.q('.sp-sec'); if (r) r.style.strokeDashoffset = ((1 - this.s.left / this.t.time) * 100.5).toFixed(2); if (n) n.textContent = Math.ceil(this.s.left); }
-  finish(){ const s = this.s; if (s.done) return; s.done = true; this.clear(); this.render(); if (s.found.length === this.t.spots.length) this.later(() => this.burst(40), 120); }
-  render(){
+  hud(){
+    const s = this.s, r = this.q('.sp-ring .v'), n = this.q('.sp-sec'), sc = this.q('.sp-scene');
+    if (r) r.style.strokeDashoffset = ((1 - s.left / this.t.time) * 100.5).toFixed(2); if (n) n.textContent = Math.ceil(s.left);
+    /* the pressure builds: under 15 seconds the light drops; at 10 the lift dings */
+    if (sc) sc.classList.toggle('late', s.left <= 15);
+    const ring = this.q('.sp-ring'); if (ring) ring.classList.toggle('late', s.left <= 15);
+    if (!s.lift && s.left <= 10 && s.left > 0){ s.lift = true; sfx('ding'); const fb = this.q('.sp-fb'); if (fb){ fb.classList.add('lift'); fb.textContent = SP[lang].lift; } }
+  }
+  finish(){
+    const s = this.s, t = this.t; if (s.done) return; s.done = true; this.clear(); this.render();
+    const all = s.found.length === t.spots.length, stars = this.stars();
+    for (let k = 0; k < stars; k++) this.later(() => { sfx('pop'); buzz(10); }, reduced() ? 0 : 900 + k * 220);
+    if (all) this.later(() => { sfx('win'); this.burst(40); }, reduced() ? 0 : 1600);
+    this.won();
+  }
+  stars(){ const s = this.s, all = s.found.length === this.t.spots.length; return all ? (s.left > 20 ? 3 : 2) : (s.found.length >= 3 ? 1 : 0); }
+  render(fresh){
     const t = this.t, s = this.s, g = SP[lang];
     if (s.done) return this.paint(this.result());
-    const P = sp => SPOTS[sp.id];
+    const P = sp => SPOTS[sp.id], just = fresh && s.last >= 0 ? t.spots[s.last].id : null;
     const marks = s.found.map((i, n) => { const p = P(t.spots[i]); return '<g class="sp-mark" transform="translate('+p.x+' '+p.y+')"><ellipse rx="'+(p.r + 5)+'" ry="'+(p.r + 1)+'" transform="rotate(-12)"/><text y="'+(-p.r - 7)+'">'+(n + 1)+'</text></g>'; }).join('');
     const hint = s.hint >= 0 ? '<circle class="sp-hint" cx="'+P(t.spots[s.hint]).x+'" cy="'+P(t.spots[s.hint]).y+'" r="'+(P(t.spots[s.hint]).r + 10)+'"/>' : '';
     const hits = t.spots.map((sp, i) => s.found.includes(i) ? '' : '<circle class="sp-hit" data-act="spot" data-i="'+i+'" cx="'+P(sp).x+'" cy="'+P(sp).y+'" r="'+(P(sp).r + 8)+'"/>').join('');
-    const last = s.last >= 0 ? t.spots[s.last] : null;
+    const last = s.last >= 0 ? t.spots[s.last] : null, late = s.left <= 15 ? ' late' : '';
     this.paint('<div class="dm-in sp-in"><div class="sp-top"><div><b>'+esc(tx(t.brand))+'</b><span>'+esc(tx(t.name))+'</span></div>'+
-      '<div class="sp-ring"><svg viewBox="0 0 36 36" aria-hidden="true"><circle cx="18" cy="18" r="16"/><circle class="v" cx="18" cy="18" r="16" pathLength="100.5" style="stroke-dashoffset:'+((1 - s.left / t.time) * 100.5).toFixed(2)+'"/></svg><span class="sp-sec">'+Math.ceil(s.left)+'</span></div></div>'+
+      '<div class="sp-ring'+late+'"><svg viewBox="0 0 36 36" aria-hidden="true"><circle cx="18" cy="18" r="16"/><circle class="v" cx="18" cy="18" r="16" pathLength="100.5" style="stroke-dashoffset:'+((1 - s.left / t.time) * 100.5).toFixed(2)+'"/></svg><span class="sp-sec">'+Math.ceil(s.left)+'</span></div></div>'+
       '<p class="sp-q">'+esc(fill(g.q, {n:t.spots.length}))+'<b>'+s.found.length+' / '+t.spots.length+'</b></p>'+
-      '<div class="sp-scene"><svg viewBox="0 0 300 330" role="img" aria-label="'+esc(g.scene)+'"><g pointer-events="none">'+ROOM+'</g>'+
+      '<div class="sp-scene'+late+'"><svg viewBox="0 0 300 330" role="img" aria-label="'+esc(g.scene)+'"><g pointer-events="none">'+roomSVG(t, s.found, just)+'</g>'+
       '<rect class="sp-miss" data-act="miss" width="300" height="330"/>'+hits+'<g pointer-events="none">'+hint+marks+'</g></svg></div>'+
-      '<div class="sp-fb" aria-live="polite">'+(last ? '<b>'+esc(tx(last.n))+'.</b> '+esc(tx(last.why)) : esc(g.hint0))+'</div>'+
+      '<div class="sp-fb'+(s.lift && !last ? ' lift' : '')+'" aria-live="polite">'+(last ? '<b>'+esc(tx(last.n))+'.</b> '+esc(tx(last.why)) : esc(s.lift ? g.lift : g.hint0))+'</div>'+
       '<div class="sp-row"><button type="button" class="sp-hintb" data-act="hint">'+ic('bulb')+esc(g.hintB)+'</button></div></div>');
   }
   result(){
-    const t = this.t, s = this.s, g = SP[lang], all = s.found.length === t.spots.length;
-    const stars = all ? (s.left > 20 ? 3 : 2) : (s.found.length >= 3 ? 1 : 0);
-    return '<div class="dm-in sp-in sp-res"><p class="sp-kick">'+esc(tx(t.brand))+'</p><h2>'+esc(all ? g.done : g.late)+'</h2>'+
-      '<div class="sp-stars">'+[0, 1, 2].map(k => '<span'+(k < stars ? ' class="on"' : '')+'>'+ic('star')+'</span>').join('')+'</div>'+
+    const t = this.t, s = this.s, g = SP[lang], all = s.found.length === t.spots.length, stars = this.stars();
+    return '<div class="dm-in sp-in sp-res"><div class="sp-after'+(all ? ' warm' : '')+'"><svg viewBox="0 0 300 330" aria-hidden="true">'+roomSVG(t, s.found, null)+'</svg>'+
+        (all ? '<div class="sp-review"><span class="sp-rs">'+'<i>★</i>'.repeat(5)+'</span><p>'+esc(g.review)+'</p><small>'+esc(g.guest)+'</small></div>' : '')+'</div>'+
+      '<p class="sp-kick">'+esc(tx(t.brand))+'</p><h2>'+esc(all ? g.done : g.late)+'</h2>'+
+      '<div class="sp-stars">'+[0, 1, 2].map(k => '<span class="'+(k < stars ? 'on' : '')+'" style="--k:'+k+'">'+ic('star')+'</span>').join('')+'</div>'+
       (all ? '<p class="sp-left">'+esc(fill(g.left, {n:Math.floor(s.left)}))+'</p>' : '')+
       '<ul class="sp-list">'+t.spots.map((sp, i) => { const f = s.found.includes(i); return '<li class="'+(f ? 'ok' : 'miss')+'"><span>'+ic(f ? 'check' : 'close')+'</span><div><b>'+esc(tx(sp.n))+'</b><small>'+esc(tx(sp.why))+'</small></div></li>'; }).join('')+'</ul>'+
       '<button type="button" class="sp-again" data-act="again">'+ic('restart')+esc(dg().again)+'</button></div>';
   }
 }
 
-/* ---------- 3 · build the order: Menu Academy ---------- */
+/* ---------- 3 · build the order: Menu Academy. The roll assembles on the mat, rolls, and is sliced onto the plate ---------- */
 const BD = {
-  ka:{how:'გადაიტანე ინგრედიენტები ხალიჩაზე ან შეეხე მათ. ამოსაღებად შეეხე ხალიჩაზე.', drop:'ინგრედიენტები აქ', rm:'ამოღება:', clear:'გასუფთავება', serve:'მიტანა', okT:'სწორია. შემდეგი შეკვეთა.', miss:'აკლია:', extra:'ზედმეტია:', cert:'მენიუს აკადემია · დონე 1', first:'შეკვეთა პირველივე ცდით'},
-  en:{how:'Drag ingredients onto the mat, or tap them. Tap one on the mat to take it off.', drop:'Ingredients go here', rm:'Remove:', clear:'Clear', serve:'Serve', okT:'Correct. Next order.', miss:'Missing:', extra:'Shouldn’t be there:', cert:'Menu Academy · Level 1', first:'orders right first time'}
+  ka:{how:'გადაიტანე ინგრედიენტები ხალიჩაზე ან შეეხე მათ. ამოსაღებად შეეხე ჩიპს.', drop:'ინგრედიენტები აქ', rm:'ამოღება:', clear:'გასუფთავება', serve:'მიტანა', okT:'სწორია. შემდეგი შეკვეთა.', miss:'აკლია:', extra:'ზედმეტია:', cert:'მენიუს აკადემია · დონე 1', first:'შეკვეთა პირველივე ცდით',
+      back:'{t}: თეფში უკან დაბრუნდა.', allergy:'{t}: სტუმარს ალერგია აქვს!', up:'შეკვეთა მზადაა!'},
+  en:{how:'Drag ingredients onto the mat, or tap them. Tap a chip to take it off.', drop:'Ingredients go here', rm:'Remove:', clear:'Clear', serve:'Serve', okT:'Correct. Next order.', miss:'Missing:', extra:'Shouldn’t be there:', cert:'Menu Academy · Level 1', first:'orders right first time',
+      back:'{t}: the plate came back.', allergy:'{t}: the guest has an allergy!', up:'Order up!'}
 };
 class Build extends Demo {
-  init(){ return {o:0, plate:[], tries:0, firstOk:0, fb:null, busy:false, done:false}; }
+  init(){ return {o:0, plate:[], tries:0, firstOk:0, fb:null, busy:false, done:false, phase:'', just:'', fresh:true}; }
   bind(){
     let d = null;
     const overMat = e => { const m = this.q('.bd-mat'); if (!m) return false; const r = m.getBoundingClientRect(); return e.clientX > r.left && e.clientX < r.right && e.clientY > r.top && e.clientY < r.bottom; };
@@ -694,120 +805,170 @@ class Build extends Demo {
     };
     this.el.addEventListener('pointerup', end); this.el.addEventListener('pointercancel', end);
   }
-  add(id){ const s = this.s; if (s.done || s.busy || s.plate.includes(id)) return; s.plate.push(id); s.fb = null; this.render(); }
+  add(id){ const s = this.s; if (s.done || s.busy || s.plate.includes(id)) return; s.plate.push(id); s.just = id; s.fb = null; sfx('pop'); buzz(8); this.render(); this.step(1); }
   act(a, b, e){
     const s = this.s, t = this.t;
     if (a === 'again') return this.reset();
     if (s.busy || s.done) return;
     if (a === 'ing'){ if (e && e.detail === 0) this.add(b.dataset.ing); return; }
-    if (a === 'rm'){ s.plate = s.plate.filter(x => x !== b.dataset.id); s.fb = null; this.render(); return; }
+    if (a === 'rm'){ s.plate = s.plate.filter(x => x !== b.dataset.id); s.fb = null; sfx('tap'); this.render(); return; }
     if (a === 'clear'){ s.plate = []; s.fb = null; this.render(); return; }
     if (a === 'serve'){
-      const need = t.orders[s.o].need, miss = need.filter(x => !s.plate.includes(x)), extra = s.plate.filter(x => !need.includes(x));
-      s.tries++;
+      const o = t.orders[s.o], need = o.need, miss = need.filter(x => !s.plate.includes(x)), extra = s.plate.filter(x => !need.includes(x));
+      s.tries++; this.step(2);
       if (!miss.length && !extra.length){
         if (s.tries === 1) s.firstOk++;
-        s.fb = {ok:true}; s.busy = true; this.render(); this.burst(16);
-        this.later(() => { s.busy = false; s.o++; s.plate = []; s.tries = 0; s.fb = null; if (s.o >= t.orders.length){ s.done = true; this.render(); this.burst(40); } else this.render(); }, reduced() ? 300 : 1100);
+        const slow = reduced() ? 0 : 1;
+        /* roll it, slice it, plate it, ring the bell */
+        s.busy = true; s.phase = 'roll'; this.render(); sfx('whoosh');
+        this.later(() => { s.phase = 'plate'; s.fb = {ok:true}; this.render(); sfx('ding'); buzz(15); this.burst(14); }, 750 * slow);
+        this.later(() => {
+          s.busy = false; s.phase = ''; s.o++; s.plate = []; s.tries = 0; s.fb = null; s.fresh = true;
+          if (s.o >= t.orders.length){ s.done = true; this.render(); this.thud(520); this.later(() => { sfx('win'); this.burst(24); }, reduced() ? 0 : 1000); this.won(); }
+          else { this.render(); sfx('print'); }
+        }, 2300 * slow);
       } else {
-        s.fb = {ok:false, miss, extra}; this.render();
+        s.fb = {ok:false, miss, extra, allergy:!!(o.allergy && extra.includes(o.allergy))}; this.render(); this.bad();
         const m = this.q('.bd-mat'); if (m){ m.classList.remove('shake'); void m.offsetWidth; m.classList.add('shake'); }
       }
     }
+  }
+  /* the sheet on the bamboo mat: nori, then rice spread to the edges, fillings laid in a line, sesame on top */
+  sheet(){
+    const t = this.t, s = this.s, has = id => s.plate.includes(id), J = id => s.just === id ? ' just' : '';
+    const fills = s.plate.filter(id => !['nori', 'rice', 'sesame'].includes(id));
+    const col = id => t.ings.find(x => x.id === id).col;
+    return '<div class="bd-sheet'+(s.phase === 'roll' ? ' roll' : '')+'">'+
+      (has('nori') ? '<i class="ly nori'+J('nori')+'"></i>' : '')+(has('rice') ? '<i class="ly rice'+J('rice')+'"></i>' : '')+
+      '<span class="ly fills">'+fills.map((id, k) => '<i class="fl'+J(id)+'" style="--c:'+col(id)+';--k:'+k+'"></i>').join('')+'</span>'+
+      (has('sesame') ? '<i class="ly sesame'+J('sesame')+'"></i>' : '')+'</div>';
+  }
+  dish(){
+    const t = this.t, o = t.orders[this.s.o], col = id => t.ings.find(x => x.id === id).col;
+    const f = o.need.filter(id => !['nori', 'rice', 'sesame'].includes(id)).map(col), sesame = o.need.includes('sesame');
+    const pos = [[50, 34], [34, 58], [66, 58], [50, 66], [38, 40], [62, 40]];
+    const core = f.map((c, k) => 'radial-gradient(circle at '+pos[k][0]+'% '+pos[k][1]+'%,'+c+' 0 13%,transparent 14%)').join(',');
+    const bg = (core ? core+',' : '')+(sesame ? 'radial-gradient(circle at 30% 30%,#E8D9B0 0 4%,transparent 5%),radial-gradient(circle at 70% 26%,#E8D9B0 0 4%,transparent 5%),' : '')+'radial-gradient(circle,#FBF8F0 0 66%,#1F3B2C 67%)';
+    return '<div class="bd-dish"><div class="bd-plate-w">'+Array.from({length:8}, (_, k) => '<i style="--k:'+k+';background:'+bg+'"></i>').join('')+'</div><b>'+esc(BD[lang].up)+'</b></div>';
   }
   render(){
     const t = this.t, s = this.s, g = BD[lang];
     if (s.done) return this.paint(this.result());
     const o = t.orders[s.o], ING = id => t.ings.find(x => x.id === id), nm = id => esc(tx(ING(id).n));
     const plate = s.plate.map(id => '<button type="button" class="bd-chip" data-act="rm" data-id="'+id+'" style="--c:'+ING(id).col+'" aria-label="'+esc(g.rm)+' '+nm(id)+'"><i></i>'+nm(id)+'</button>').join('');
+    const who = tx(o.t);
     const fb = !s.fb ? '<div class="bd-fb">'+esc(g.how)+'</div>' : s.fb.ok ? '<div class="bd-fb ok"><span class="bd-hanko">OK</span>'+esc(g.okT)+'</div>' :
-      '<div class="bd-fb bad" aria-live="polite">'+(s.fb.miss.length ? '<b>'+esc(g.miss)+'</b> '+s.fb.miss.map(nm).join(', ')+'<br>' : '')+(s.fb.extra.length ? '<b>'+esc(g.extra)+'</b> '+s.fb.extra.map(nm).join(', ') : '')+'</div>';
+      '<div class="bd-fb bad" aria-live="polite"><b class="bd-guest">'+esc(fill(s.fb.allergy ? g.allergy : g.back, {t:who}))+'</b>'+(s.fb.miss.length ? '<span><b>'+esc(g.miss)+'</b> '+s.fb.miss.map(nm).join(', ')+'</span>' : '')+(s.fb.extra.length ? '<span><b>'+esc(g.extra)+'</b> '+s.fb.extra.map(nm).join(', ')+'</span>' : '')+'</div>';
     const tray = t.ings.map(x => '<button type="button" class="bd-ing'+(s.plate.includes(x.id) ? ' used' : '')+'" data-act="ing" data-ing="'+x.id+'"><span class="bd-bowl" style="--c:'+x.col+'"></span><span>'+esc(tx(x.n))+'</span></button>').join('');
+    const mat = s.phase === 'plate' ? this.dish() : this.sheet()+(s.plate.length ? '' : '<span class="bd-empty">'+esc(g.drop)+'</span>');
     this.paint('<div class="dm-in bd-in"><div class="bd-top"><b>'+esc(tx(t.brand))+'</b><span>'+esc(tx(t.name))+'</span></div>'+
-      '<div class="bd-rail"><div class="bd-tk"><div class="bd-tk-h"><span>'+esc(tx(o.t))+'</span><span>'+(s.o + 1)+' / '+t.orders.length+'</span></div><b>'+esc(tx(o.d))+'</b>'+(o.note ? '<em>'+esc(tx(o.note))+'</em>' : '')+'</div></div>'+
-      '<div class="bd-mat"><div class="bd-plate">'+(plate || '<span class="bd-empty">'+esc(g.drop)+'</span>')+'</div></div>'+fb+
+      '<div class="bd-rail"><div class="bd-tk'+(s.fresh ? ' print' : '')+'"><div class="bd-tk-h"><span>'+esc(who)+'</span><span>'+(s.o + 1)+' / '+t.orders.length+'</span></div><b>'+esc(tx(o.d))+'</b>'+(o.note ? '<em>'+esc(tx(o.note))+'</em>' : '')+'</div></div>'+
+      '<div class="bd-mat'+(s.phase === 'plate' ? ' plated' : '')+'">'+mat+'</div><div class="bd-plate">'+(s.phase ? '' : plate)+'</div>'+fb+
       '<div class="bd-tray">'+tray+'</div><div class="bd-row"><button type="button" class="bd-clear" data-act="clear">'+esc(g.clear)+'</button>'+
-      '<button type="button" class="bd-serve" data-act="serve"'+(s.plate.length ? '' : ' disabled')+'>'+esc(g.serve)+'</button></div></div>');
+      '<button type="button" class="bd-serve" data-act="serve"'+(s.plate.length && !s.busy ? '' : ' disabled')+'>'+esc(g.serve)+'</button></div></div>');
+    s.just = ''; s.fresh = false;
   }
   result(){
     const t = this.t, s = this.s, g = BD[lang];
-    return '<div class="dm-in bd-in bd-res"><div class="bd-cert"><span class="bd-cert-k">'+esc(tx(t.brand))+'</span><b>'+esc(g.cert)+'</b><span class="bd-big">'+s.firstOk+'<small>/'+t.orders.length+'</small></span><span class="bd-sub">'+esc(g.first)+'</span><span class="bd-hanko big">合格</span></div>'+
+    return '<div class="dm-in bd-in bd-res"><div class="bd-cert"><span class="bd-cert-k">'+esc(tx(t.brand))+'</span><b>'+esc(g.cert)+'</b><span class="bd-big">'+s.firstOk+'<small>/'+t.orders.length+'</small></span><span class="bd-sub">'+esc(g.first)+'</span><span class="bd-hanko big"><span>合格</span></span></div>'+
       '<ul class="bd-rules">'+t.orders.map(o => '<li><b>'+esc(tx(o.d))+'</b>'+(o.note ? ' · '+esc(tx(o.note)) : '')+'<small>'+o.need.map(id => esc(tx(t.ings.find(x => x.id === id).n))).join(' + ')+'</small></li>').join('')+'</ul>'+
       '<button type="button" class="bd-again" data-act="again">'+ic('restart')+esc(dg().again)+'</button></div>';
   }
 }
 
-/* ---------- 4 · a buddy chat with a memory game inside ---------- */
+/* ---------- 4 · a buddy chat with a memory game inside; the team photo assembles as you match ---------- */
 const CH = {
   ka:{online:'ონლაინ', typing:'წერს', msg:'შეტყობინება', voiceT:'„ყველა ელოდება შენს გაცნობას. ორშაბათს ტორტი გვექნება.“', memH:'ვინ ვინაა?', memP:'გადააბრუნე ორი ბარათი: სახე და სახელი.', moves:'{n} სვლა', card:'ბარათი {n}',
-      pass:'პირველი დღე', role:'Product Designer', day:'დაწყება', dayV:'ორშაბათი, 9:30', coffee:'ყავა ნინოსთან', desk:'მაგიდა', floor:'სართული', again:'ჩატის თავიდან დაწყება', play:'ხმოვანის მოსმენა'},
+      pass:'პირველი დღე', role:'პროდუქტის დიზაინერი', day:'დაწყება', dayV:'ორშაბათი, 9:30', coffee:'ყავა ნინოსთან', desk:'მაგიდა', floor:'სართული', again:'ჩატის თავიდან დაწყება', play:'ხმოვანის მოსმენა',
+      wallet:'საფულეში დამატება', inWallet:'საფულეშია', photo:'გუნდის ფოტო'},
   en:{online:'online', typing:'typing', msg:'Message', voiceT:'“Everyone can’t wait to meet you. There’ll be cake on Monday.”', memH:'Who’s who?', memP:'Flip two cards: a face and a name.', moves:'{n} moves', card:'Card {n}',
-      pass:'Day one', role:'Product Designer', day:'Starts', dayV:'Monday, 9:30', coffee:'Coffee with Nino', desk:'Desk', floor:'Floor', again:'Restart the chat', play:'Play the voice note'}
+      pass:'Day one', role:'Product Designer', day:'Starts', dayV:'Monday, 9:30', coffee:'Coffee with Nino', desk:'Desk', floor:'Floor', again:'Restart the chat', play:'Play the voice note',
+      wallet:'Add to Wallet', inWallet:'In your wallet', photo:'Team photo'}
 };
 const MAPART = '<svg viewBox="0 0 200 84" aria-hidden="true"><rect width="200" height="84" fill="#E3EAF3"/><path d="M0 58H200M70 0V84M142 0V84M0 22 200 38" stroke="#FFFFFF" stroke-width="8"/>'+
   '<rect x="82" y="44" width="46" height="12" rx="3" fill="#CFE3D4"/><path d="M106 12a10 10 0 0 1 10 10c0 8-10 18-10 18s-10-10-10-18a10 10 0 0 1 10-10z" fill="#2F5BD3"/><circle cx="106" cy="22" r="3.5" fill="#fff"/></svg>';
 const WAVE = [6,10,16,9,13,18,8,12,17,11,7,14,10,16,9,6,12,8].map((h, i) => '<i style="--h:'+h+'px;--d:'+(i * .05).toFixed(2)+'s"></i>').join('');
+const REACT = ['❤️', '👍', '😄', '🙌', '✨'];
 class Chat extends Demo {
-  init(){ const sc = this.t.script; return {log:[{w:'b', k:'text', v:sc.hello[0]}, {w:'b', k:'text', v:sc.hello[1]}], ch:'nerv', typing:false, coffee:'', desk:'', mem:null, playing:false, heard:false}; }
+  init(){ const sc = this.t.script; this.shown = 0; return {log:[{w:'b', k:'text', v:sc.hello[0]}, {w:'b', k:'text', v:sc.hello[1]}], ch:'nerv', typing:false, coffee:'', desk:'', mem:null, playing:false, heard:false, wallet:false, rNew:-1}; }
   say(list, next){
     const s = this.s; s.ch = null; let k = 0;
     const step = () => {
       if (k >= list.length){ s.typing = false; s.ch = next; this.render(); return; }
       s.typing = true; this.render();
-      this.later(() => { s.typing = false; s.log.push(list[k++]); this.render(); this.later(step, reduced() ? 0 : 320); }, reduced() ? 0 : 750);
+      this.later(() => { s.typing = false; s.log.push(list[k++]); sfx('pop'); this.render(); if (list[k - 1].k === 'pass'){ this.later(() => sfx('ding'), reduced() ? 0 : 500); this.won(); } this.later(step, reduced() ? 0 : 320); }, reduced() ? 0 : 750);
     };
     this.later(step, 250);
   }
-  newMem(){ const c = []; this.t.team.forEach((p, i) => { c.push({p:i, f:'face'}); c.push({p:i, f:'name'}); }); return {cards:shuffle(c), open:[], got:[], moves:0, lock:false, done:false}; }
+  newMem(){ const c = []; this.t.team.forEach((p, i) => { c.push({p:i, f:'face'}); c.push({p:i, f:'name'}); }); return {cards:shuffle(c), open:[], got:[], moves:0, lock:false, done:false, just:-1}; }
+  voice(){
+    const s = this.s; if (s.playing) return; s.playing = true; this.render();
+    let ended = false; const stop = () => { if (ended) return; ended = true; s.playing = false; s.heard = true; this.render(); };
+    /* the note speaks, where the browser has a voice for the language; otherwise it plays as a waveform */
+    try {
+      const ss = window.speechSynthesis, want = lang === 'ka' ? 'ka' : 'en';
+      const v = ss && ss.getVoices().find(x => x.lang && x.lang.toLowerCase().startsWith(want));
+      if (ss && v && soundOn){ const u = new SpeechSynthesisUtterance(CH[lang].voiceT.replace(/[“”„"]/g, '')); u.voice = v; u.lang = v.lang; u.rate = 1.04; u.pitch = 1.1; u.onend = stop; ss.cancel(); ss.speak(u); this.later(stop, 6000); return; }
+    } catch (e) {}
+    this.later(stop, reduced() ? 0 : 2600);
+  }
   act(a, b){
     const s = this.s, sc = this.t.script;
-    if (a === 'voice'){ if (s.playing) return; s.playing = true; this.render(); this.later(() => { s.playing = false; s.heard = true; this.render(); }, reduced() ? 0 : 2600); return; }
+    if (a === 'voice') return this.voice();
     if (a === 'flip') return this.flip(+b.dataset.c);
+    if (a === 'wallet'){ if (s.wallet) return; s.wallet = true; sfx('ding'); buzz([10, 40, 10]); this.render(); return; }
     if (a !== 'opt' || !s.ch) return;
     const i = +b.dataset.i, B = (v, k) => ({w:'b', k:k || 'text', v}), U = v => s.log.push({w:'u', k:'text', v});
+    /* the buddy reacts to your answer with an emoji on her last message */
+    if (s.ch !== 'end'){ for (let k = s.log.length - 1; k >= 0; k--) if (s.log[k].w === 'b' && s.log[k].k === 'text'){ s.log[k].r = REACT[s.log.length % REACT.length]; s.rNew = k; break; } sfx('tap'); this.step(1); }
     if (s.ch === 'nerv'){ U(sc.nerv[i][0]); this.say([B(sc.nerv[i][1]), B(sc.coffeeQ)], 'coffee'); }
     else if (s.ch === 'coffee'){ s.coffee = sc.coffeeA[i]; U(sc.coffeeA[i]); this.say([B(sc.coffeeR), B(null, 'loc'), B(sc.deskQ)], 'desk'); }
     else if (s.ch === 'desk'){ s.desk = sc.deskA[i][1]; U(sc.deskA[i][0]); this.say([B(sc.deskR), B(sc.team), B(null, 'team'), B(null, 'voice'), B(sc.gameQ)], 'game'); }
-    else if (s.ch === 'game'){ U(sc.gameA); s.ch = null; this.later(() => { s.mem = this.newMem(); this.render(); }, reduced() ? 0 : 450); }
+    else if (s.ch === 'game'){ U(sc.gameA); s.ch = null; this.step(2); this.later(() => { s.mem = this.newMem(); sfx('whoosh'); this.render(); }, reduced() ? 0 : 450); }
     else if (s.ch === 'end') return this.reset();
     this.render();
   }
   flip(c){
     const m = this.s.mem; if (!m || m.lock || m.done) return;
     const card = m.cards[c]; if (m.got.includes(card.p) || m.open.includes(c)) return;
-    m.open.push(c);
+    m.open.push(c); sfx('flip');
     if (m.open.length < 2) return this.render();
     m.moves++;
     const [x, y] = m.open.map(i => m.cards[i]);
     if (x.p === y.p){
-      m.got.push(x.p); m.open = []; this.render(); this.burst(8);
+      m.got.push(x.p); m.just = x.p; m.open = []; this.render(); m.just = -1; this.good(); this.burst(8);
       if (m.got.length === this.t.team.length){
         m.done = true; const sc = this.t.script;
-        this.later(() => { this.render(); this.burst(30); this.say([{w:'b', k:'text', v:sc.won}, {w:'b', k:'text', v:sc.bye}, {w:'b', k:'pass'}], 'end'); }, reduced() ? 0 : 700);
+        this.later(() => { const ph = this.q('.ch-photo'); if (ph) ph.classList.add('snap'); sfx('shutter'); }, reduced() ? 0 : 450);
+        this.later(() => { this.render(); this.burst(30); this.say([{w:'b', k:'text', v:sc.won}, {w:'b', k:'text', v:sc.bye}, {w:'b', k:'pass'}], 'end'); }, reduced() ? 0 : 1300);
       }
       return;
     }
-    m.lock = true; this.render();
+    m.lock = true; this.render(); buzz(20);
     this.later(() => { m.open = []; m.lock = false; this.render(); }, 850);
   }
   render(){
     const t = this.t, s = this.s, g = CH[lang], sc = t.script;
     const vars = {to:tx(t.to), time:s.coffee || '10:00', desk:s.desk, moves:s.mem ? s.mem.moves : 0};
-    const T = v => esc(fill(tx(v), vars));
-    const msg = m => {
-      if (m.k === 'text') return '<div class="ch-m '+m.w+'"><p>'+T(m.v)+'</p></div>';
-      if (m.k === 'loc') return '<div class="ch-m b card"><div class="ch-map">'+MAPART+'</div><p><b>'+T(sc.loc.t)+'</b><small>'+T(sc.loc.d)+'</small></p></div>';
-      if (m.k === 'team') return '<div class="ch-m b card"><div class="ch-team">'+t.team.map(p => '<span>'+face(p)+'<small>'+esc(tx(p.n))+'</small></span>').join('')+'</div></div>';
-      if (m.k === 'voice') return '<div class="ch-m b"><button type="button" class="ch-voice'+(s.playing ? ' on' : '')+'" data-act="voice" aria-label="'+esc(g.play)+'">'+ic('play')+'<span class="wave">'+WAVE+'</span><small>0:04</small></button>'+(s.heard ? '<p class="ch-tr">'+esc(g.voiceT)+'</p>' : '')+'</div>';
-      return '<div class="ch-pass"><div class="ch-pass-band"><span>'+esc(tx(t.co))+'</span><span>'+esc(g.pass)+'</span></div><div class="ch-pass-in">'+face(t.me)+
+    const T = v => esc(fill(tx(v), vars)), seen = this.shown || 0;
+    const msg = (m, i) => {
+      const nw = i >= seen ? ' new' : '', r = m.r ? '<span class="ch-r'+(s.rNew === i ? ' pop' : '')+'">'+m.r+'</span>' : '';
+      if (m.k === 'text') return '<div class="ch-m '+m.w+nw+'"><p>'+T(m.v)+'</p>'+r+'</div>';
+      if (m.k === 'loc') return '<div class="ch-m b card'+nw+'"><div class="ch-map">'+MAPART+'</div><p><b>'+T(sc.loc.t)+'</b><small>'+T(sc.loc.d)+'</small></p></div>';
+      if (m.k === 'team') return '<div class="ch-m b card'+nw+'"><div class="ch-team">'+t.team.map(p => '<span>'+face(p)+'<small>'+esc(tx(p.n))+'</small></span>').join('')+'</div></div>';
+      if (m.k === 'voice') return '<div class="ch-m b'+nw+'"><button type="button" class="ch-voice'+(s.playing ? ' on' : '')+'" data-act="voice" aria-label="'+esc(g.play)+'">'+ic('play')+'<span class="wave">'+WAVE+'</span><small>0:04</small></button>'+(s.heard ? '<p class="ch-tr">'+esc(g.voiceT)+'</p>' : '')+'</div>';
+      return '<div class="ch-passw'+nw+(s.wallet ? ' saved' : '')+'"><div class="ch-pass"><div class="ch-pass-band"><span>'+esc(tx(t.co))+'</span><span>'+esc(g.pass)+'</span></div><div class="ch-pass-in">'+face(t.me)+
         '<div><b>'+esc(tx(t.to))+'</b><small>'+esc(g.role)+'</small></div><dl><div><dt>'+esc(g.day)+'</dt><dd>'+esc(g.dayV)+'</dd></div><div><dt>'+esc(g.coffee)+'</dt><dd>'+esc(vars.time)+'</dd></div>'+
-        '<div><dt>'+esc(g.desk)+'</dt><dd>'+esc(s.desk)+'</dd></div><div><dt>'+esc(g.floor)+'</dt><dd>5</dd></div></dl></div></div>';
+        '<div><dt>'+esc(g.desk)+'</dt><dd>'+esc(s.desk)+'</dd></div><div><dt>'+esc(g.floor)+'</dt><dd>5</dd></div></dl></div><i class="ch-holo" aria-hidden="true"></i></div>'+
+        '<button type="button" class="ch-wallet" data-act="wallet"'+(s.wallet ? ' aria-pressed="true"' : '')+'>'+ic(s.wallet ? 'check' : 'plus')+esc(s.wallet ? g.inWallet : g.wallet)+'</button></div>';
     };
     const opts = s.ch === 'nerv' ? sc.nerv.map(o => o[0]) : s.ch === 'coffee' ? sc.coffeeA : s.ch === 'desk' ? sc.deskA.map(o => o[0]) : s.ch === 'game' ? [sc.gameA] : s.ch === 'end' ? [g.again] : [];
     let mem = '';
     if (s.mem && !s.mem.done){
       const m = s.mem;
-      mem = '<div class="ch-mem"><div class="ch-sheet" role="dialog" aria-label="'+esc(g.memH)+'"><h3>'+esc(g.memH)+'</h3><p>'+esc(g.memP)+'</p><div class="ch-grid">'+
+      mem = '<div class="ch-mem"><div class="ch-sheet" role="dialog" aria-label="'+esc(g.memH)+'"><h3>'+esc(g.memH)+'</h3><p>'+esc(g.memP)+'</p>'+
+        '<div class="ch-photo" aria-label="'+esc(g.photo)+'">'+t.team.map((p, i) => '<span class="'+(m.got.includes(i) ? 'in' : '')+(m.just === i ? ' just' : '')+'">'+(m.got.includes(i) ? face(p) : '')+'</span>').join('')+'</div>'+
+        '<div class="ch-grid">'+
         m.cards.map((cd, i) => { const p = t.team[cd.p], st = m.got.includes(cd.p) ? ' got' : (m.open.includes(i) ? ' open' : '');
           return '<button type="button" class="ch-card'+st+'" data-act="flip" data-c="'+i+'" aria-label="'+esc(fill(g.card, {n:i + 1}))+'"><span class="fc"><span class="bk"><i></i></span><span class="fr">'+
             (cd.f === 'face' ? face(p) : '<b>'+esc(tx(p.n))+'</b><small>'+esc(tx(p.r))+'</small>')+'</span></span></button>'; }).join('')+
@@ -817,42 +978,51 @@ class Chat extends Demo {
       '<div class="ch-body" aria-live="polite">'+s.log.map(msg).join('')+(s.typing ? '<div class="ch-typing" aria-label="'+esc(g.typing)+'"><i></i><i></i><i></i></div>' : '')+'</div>'+
       '<div class="ch-foot">'+(opts.length ? '<div class="ch-opts">'+opts.map((o, i) => '<button type="button" class="ch-opt" data-act="opt" data-i="'+i+'">'+esc(fill(tx(o), vars))+'</button>').join('')+'</div>' : '')+
       '<div class="ch-input"><span>'+esc(g.msg)+'</span>'+ic('send2')+'</div></div>'+mem);
+    this.shown = s.log.length; s.rNew = -1;
     const body = this.q('.ch-body'); if (body) body.scrollTop = body.scrollHeight;
   }
 }
 
-/* ---------- 5 · the store map ---------- */
+/* ---------- 5 · the store map: the blueprint draws itself, rooms light up, the alarm is real ---------- */
 const MP = {
   ka:{prog:'{n} / {m}', tap:'შეეხე ნომრებს რუკაზე და გაიცანი მაღაზია.', got:'გასაგებია', alarm:'განგაში! შეეხე რუკაზე იქ, სადაც უნდა წახვიდე.', wrong:'არა იქ. გარეთ, პარკინგზე, ბოძთან A.', ready:'მზადაა',
-      learned:'რა ისწავლე', till:'სალარო', from:'პირველი დღე', fromV:'ორშაბათი, 9:00', locker:'კარადა', code:'კარის კოდი', drill:'განგაშის დროს: პარკინგი, ბოძი A', plan:'მაღაზიის გეგმა', park:'პარკინგი'},
+      learned:'რა ისწავლე', till:'სალარო', from:'პირველი დღე', fromV:'ორშაბათი, 9:00', locker:'კარადა', code:'კარის კოდი', drill:'განგაშის დროს: პარკინგი, ბოძი A', plan:'მაღაზიის გეგმა', park:'პარკინგი', out:'სწორია. ასე გადიხარ.'},
   en:{prog:'{n} of {m}', tap:'Tap the numbers on the map to get to know the store.', got:'Got it', alarm:'Alarm! Tap the map where you go.', wrong:'Not there. Outside, in the car park, at post A.', ready:'READY',
-      learned:'What you learned', till:'Till', from:'First day', fromV:'Monday, 9:00', locker:'Locker', code:'Door code', drill:'If the alarm rings: car park, post A', plan:'Store floor plan', park:'CAR PARK'}
+      learned:'What you learned', till:'Till', from:'First day', fromV:'Monday, 9:00', locker:'Locker', code:'Door code', drill:'If the alarm rings: car park, post A', plan:'Store floor plan', park:'CAR PARK', out:'Right. This is your way out.'}
 };
-const PLAN = '<path class="wall" d="M14 14H266V100M266 118V264H240M200 264H14V170M14 150V14"/>'+
-  '<path class="wall" d="M118 14V100H100M40 100H14M172 14V84H198M224 84H266M228 84V134H266"/>'+
+const PLAN = '<path class="wall" pathLength="1" d="M14 14H266V100M266 118V264H240M200 264H14V170M14 150V14"/>'+
+  '<path class="wall" pathLength="1" d="M118 14V100H100M40 100H14M172 14V84H198M224 84H266M228 84V134H266"/>'+
   '<g class="thin">'+[44, 80, 116, 152].map(x => '<rect x="'+x+'" y="122" width="14" height="70"/>').join('')+'<rect x="190" y="160" width="56" height="14"/><rect x="190" y="184" width="56" height="14"/>'+
   '<rect x="34" y="220" width="40" height="24"/><rect x="84" y="220" width="40" height="24"/><rect x="134" y="220" width="40" height="24"/>'+
   '<path d="M220 300V272M214 278l6-6 6 6"/><path d="M14 286H266"/>'+[30, 62, 94, 190, 222, 254].map(x => '<path d="M'+x+' 292V322"/>').join('')+'</g>'+
-  '<rect x="18" y="134" width="20" height="10" fill="#2BB673"/><text class="exit" x="28" y="141.5">EXIT</text>'+
+  '<g class="mp-exit"><rect x="18" y="134" width="20" height="10" fill="#2BB673"/><text class="exit" x="28" y="141.5">EXIT</text></g>'+
   '<g class="mp-post"><circle cx="142" cy="306" r="9"/><text x="142" y="309.5">A</text></g>';
+const ROUTE = 'M104 206H28V160H4V300H130';
 class MapHunt extends Demo {
-  init(){ return {seen:[], open:-1, phase:'explore', wrong:null}; }
+  init(){ return {seen:[], open:-1, phase:'explore', wrong:null, intro:true, just:-1}; }
   act(a, b, e){
     const s = this.s, t = this.t;
     if (a === 'again') return this.reset();
-    if (a === 'pin'){ s.open = +b.dataset.i; this.render(); const g = this.q('.mp-got'); if (g) g.focus({preventScroll:true}); }
+    if (s.phase === 'walk') return;
+    if (a === 'pin'){ s.open = +b.dataset.i; sfx('pop'); this.render(); const g = this.q('.mp-got'); if (g) g.focus({preventScroll:true}); }
     else if (a === 'got'){
-      if (!s.seen.includes(s.open)) s.seen.push(s.open);
-      s.open = -1;
-      if (s.seen.length === t.rooms.length){ s.phase = 'alarm'; this.burst(10); }
+      if (!s.seen.includes(s.open)){ s.seen.push(s.open); s.just = s.open; }
+      s.open = -1; sfx('ok'); this.step(1);
+      if (s.seen.length === t.rooms.length){ s.phase = 'alarm'; this.render(); this.alarm(); return; }
       this.render();
     } else if (a === 'where'){
       const svg = this.q('.mp-plan svg'); if (!svg || !e || e.clientX == null) return;
       const p = this.svgPt(e, svg, 280, 330);
-      if (Math.hypot(p.x - 142, p.y - 306) < 30){ s.phase = 'done'; this.render(); this.burst(40); }
-      else { s.wrong = p; this.render(); }
+      if (Math.hypot(p.x - 142, p.y - 306) < 30){
+        if (reduced()){ s.phase = 'done'; this.render(); this.thud(300); this.won(); return; }
+        /* you walk the route out: path draws, the dot follows it, then the badge */
+        s.phase = 'walk'; s.wrong = null; this.good(); this.render();
+        this.later(() => { s.phase = 'done'; this.render(); this.thud(420); this.later(() => { sfx('win'); this.burst(40); }, 700); this.won(); }, 2700);
+      }
+      else { s.wrong = p; this.bad(); this.render(); }
     }
   }
+  alarm(){ this.step(2); sfx('siren'); buzz([200, 100, 200, 100, 200]); }
   render(){
     const t = this.t, s = this.s, g = MP[lang], R = t.rooms;
     if (s.phase === 'done') return this.paint(this.result());
@@ -860,14 +1030,18 @@ class MapHunt extends Demo {
     const pins = s.phase === 'explore' ? R.map((r, i) => { const seen = s.seen.includes(i);
       return '<g class="mp-pin'+(seen ? ' seen' : '')+'" data-act="pin" data-i="'+i+'" transform="translate('+r.px+' '+r.py+')" role="button" tabindex="0" aria-label="'+(i + 1)+'. '+esc(tx(r.n))+'"><circle r="9.5"/>'+
         (seen ? '<path d="M-4 0l3 3 5-6" fill="none" stroke="#1638B8" stroke-width="2.4"/>' : '<text y="3.6">'+(i + 1)+'</text>')+'</g>'; }).join('') :
+      s.phase === 'walk' ? '<path class="mp-route" pathLength="1" d="'+ROUTE+'"/><g class="mp-me"><circle r="8"/><circle r="3" fill="#fff"/><animateMotion begin="indefinite" dur="2.2s" fill="freeze" path="'+ROUTE+'" calcMode="linear"/></g>' :
       '<rect class="mp-where" data-act="where" width="280" height="330"/>'+(s.wrong ? '<g class="mp-wrong" transform="translate('+s.wrong.x.toFixed(1)+' '+s.wrong.y.toFixed(1)+')"><path d="M-6-6 6 6M6-6-6 6"/></g>' : '');
-    const svg = '<svg viewBox="0 0 280 330" role="img" aria-label="'+esc(g.plan)+'">'+R.map((r, i) => '<rect class="mp-room'+(s.seen.includes(i) ? ' seen' : '')+'" x="'+r.r[0]+'" y="'+r.r[1]+'" width="'+r.r[2]+'" height="'+r.r[3]+'"/>').join('')+PLAN+
+    const svg = '<svg viewBox="0 0 280 330" role="img" aria-label="'+esc(g.plan)+'"'+(s.intro ? ' class="draw"' : '')+'>'+R.map((r, i) => '<rect class="mp-room'+(s.seen.includes(i) ? ' seen' : '')+(s.just === i ? ' just' : '')+'" x="'+r.r[0]+'" y="'+r.r[1]+'" width="'+r.r[2]+'" height="'+r.r[3]+'"/>').join('')+PLAN+
       lab(20, 26, tx(R[2].lab))+lab(178, 26, tx(R[1].lab))+lab(196, 150, tx(R[0].lab))+lab(34, 212, tx(R[3].lab))+lab(18, 186, tx(R[4].lab))+lab(196, 282, g.park)+pins+'</svg>';
-    const room = s.open >= 0 ? R[s.open] : null;
+    const room = s.open >= 0 ? R[s.open] : null, alarm = s.phase !== 'explore';
     this.paint('<div class="dm-in mp-in"><div class="mp-top"><b>'+esc(tx(t.co))+'</b><span>'+esc(fill(g.prog, {n:s.seen.length, m:R.length}))+'</span></div>'+
-      (s.phase === 'alarm' ? '<p class="mp-alarm" aria-live="assertive">'+esc(g.alarm)+'</p>' : '<p class="mp-q">'+esc(g.tap)+'</p>')+
+      (alarm ? '<p class="mp-alarm" aria-live="assertive">'+esc(s.phase === 'walk' ? g.out : g.alarm)+'</p>' : '<p class="mp-q">'+esc(g.tap)+'</p>')+
       '<div class="mp-plan">'+svg+'</div><p class="mp-fb" aria-live="polite">'+(s.wrong ? esc(g.wrong) : '')+'</p></div>'+
       (room ? '<div class="mp-sheet" role="dialog" aria-label="'+esc(tx(room.n))+'"><span class="no">'+(s.open + 1)+' / '+R.length+'</span><h3>'+esc(tx(room.n))+'</h3><p>'+esc(tx(room.txt))+'</p><button type="button" class="mp-got" data-act="got">'+esc(g.got)+'</button></div>' : ''));
+    if (alarm && s.phase === 'alarm' && !reduced()){ const r = this.q('.dm'); if (r) r.classList.add('alarm-on'); }
+    if (s.phase === 'walk'){ const am = this.q('animateMotion'); try { if (am && am.beginElement) am.beginElement(); } catch (e) {} }
+    s.intro = false; s.just = -1;
   }
   result(){
     const t = this.t, g = MP[lang];
@@ -878,18 +1052,22 @@ class MapHunt extends Demo {
   }
 }
 
-/* ---------- 6 · scratch, stamp, coupon ---------- */
+/* ---------- 6 · scratch, stamp, coupon: foil flakes fly, the cup fills, the coupon prints ---------- */
 const SC = {
   ka:{title:'გაფხეკე და მოიგე', scratch:'გაფხეკე', how:'გაფხეკე ვერცხლისფერი ფენა თითით.', reveal:'ყველაფრის ჩვენება', won:'მოიგე!', add:'ჩემს ბარათზე დამატება', card:'შენი ბეჭდების ბარათი', left:'უფასო ყავამდე დარჩა {n}', free:'მეათე ყავა საჩუქარია.', coupon:'კუპონის აღება', cpn:'კუპონი', show:'აჩვენე სალაროსთან.', valid:'მოქმედებს {d}-მდე'},
   en:{title:'Scratch and win', scratch:'SCRATCH', how:'Scratch off the silver with your finger.', reveal:'Reveal it all', won:'You won!', add:'Add to my card', card:'Your stamp card', left:'{n} more to a free coffee', free:'The tenth coffee is on us.', coupon:'Get my coupon', cpn:'COUPON', show:'Show this at the till.', valid:'Valid until {d}'}
 };
+const CUP = (lv, lv0) => '<svg class="sc-cupsvg" viewBox="0 0 60 70" aria-hidden="true"><defs><clipPath id="scclip"><path d="M10 14h40l-5 48a4 4 0 0 1-4 4H19a4 4 0 0 1-4-4z"/></clipPath></defs>'+
+  '<g clip-path="url(#scclip)"><rect x="0" y="0" width="60" height="70" fill="#F3EAD6"/><rect class="liq" x="0" y="0" width="60" height="70" fill="#6B3E26" style="--lv:'+lv+';--lv0:'+lv0+'"/><rect class="foam" x="0" y="0" width="60" height="3" fill="#E8C9A0" style="--lv:'+lv+';--lv0:'+lv0+'"/></g>'+
+  '<path d="M10 14h40l-5 48a4 4 0 0 1-4 4H19a4 4 0 0 1-4-4z" fill="none" stroke="#0E3B2C" stroke-width="3"/><path d="M49 24h4a7 7 0 0 1 0 14h-5" fill="none" stroke="#0E3B2C" stroke-width="3"/><rect x="7" y="9" width="46" height="6" rx="2" fill="#0E3B2C"/>'+
+  '<g class="steam" fill="none" stroke="#0E3B2C" stroke-width="2" stroke-linecap="round" opacity=".5"><path d="M22 6c-3-3 3-4 0-7"/><path d="M31 6c-3-3 3-4 0-7"/><path d="M40 6c-3-3 3-4 0-7"/></g></svg>';
 class Scratch extends Demo {
-  init(){ return {step:'card', p:Math.floor(Math.random() * this.t.prizes.length), revealed:false, shown:this.t.have, code:'TSK-'+Math.floor(1000 + Math.random() * 8999)}; }
+  init(){ return {step:'card', p:Math.floor(Math.random() * this.t.prizes.length), revealed:false, shown:this.t.have, prev:this.t.have, code:'TSK-'+Math.floor(1000 + Math.random() * 8999), flip:false}; }
   bind(){
     this.el.addEventListener('pointerdown', e => {
       const cv = e.target.closest('.sc-foil'); if (!cv || this.s.revealed) return;
       e.preventDefault(); if (!this.cv || this.cv.el !== cv || cv.width < 4) this.setup(cv); if (!this.cv) return;
-      this.sp = {id:e.pointerId, last:null}; try { cv.setPointerCapture(e.pointerId); } catch (err) {} this.rub(e);
+      this.sp = {id:e.pointerId, last:null}; try { cv.setPointerCapture(e.pointerId); } catch (err) {} this.step(1); this.rub(e);
     });
     this.el.addEventListener('pointermove', e => { if (this.sp && e.pointerId === this.sp.id) this.rub(e); });
     const end = e => { if (this.sp && e.pointerId === this.sp.id){ this.sp = null; this.measure(); } };
@@ -906,19 +1084,31 @@ class Scratch extends Demo {
     c.strokeStyle = 'rgba(255,255,255,.28)'; c.lineWidth = 2 * dpr;
     for (let x = -H; x < W; x += 9 * dpr){ c.beginPath(); c.moveTo(x, H); c.lineTo(x + H, 0); c.stroke(); }
     c.fillStyle = '#5E616B'; c.textAlign = 'center'; c.textBaseline = 'middle';
-    c.font = '800 '+Math.round(H * .16)+'px "Google Sans","Noto Sans Georgian",sans-serif';
+    c.font = '800 '+Math.round(H * .13)+'px "Google Sans","Noto Sans Georgian",sans-serif';
     c.fillText(SC[lang].scratch, W / 2, H / 2);
-    c.globalCompositeOperation = 'destination-out'; c.lineCap = 'round'; c.lineJoin = 'round'; c.lineWidth = 30 * dpr;
-    this.cv = {el:cv, c, dpr, n:0};
+    c.globalCompositeOperation = 'destination-out'; c.lineCap = 'round'; c.lineJoin = 'round'; c.lineWidth = 34 * dpr;
+    this.cv = {el:cv, c, dpr, n:0, t:0};
   }
   rub(e){
     const k = this.cv; if (!k) return;
     const r = k.el.getBoundingClientRect(), x = (e.clientX - r.left) * k.dpr, y = (e.clientY - r.top) * k.dpr, c = k.c;
     c.beginPath();
     if (this.sp.last){ c.moveTo(this.sp.last.x, this.sp.last.y); c.lineTo(x, y); c.stroke(); }
-    else { c.arc(x, y, 15 * k.dpr, 0, Math.PI * 2); c.fill(); }
+    else { c.arc(x, y, 17 * k.dpr, 0, Math.PI * 2); c.fill(); }
     this.sp.last = {x, y};
+    /* silver flakes fly off under the finger, with a soft scratch */
+    const now = Date.now();
+    if (now - k.t > 60){ k.t = now; sfx('scratch'); if (!reduced()) this.flakes(e.clientX - r.left, e.clientY - r.top); }
     if (++k.n % 8 === 0) this.measure();
+  }
+  flakes(x, y){
+    const box = this.q('.sc-box'); if (!box) return;
+    for (let i = 0; i < 3; i++){
+      const f = document.createElement('i'); f.className = 'sc-flake';
+      f.style.left = x+'px'; f.style.top = y+'px';
+      f.style.setProperty('--dx', (Math.random() * 60 - 30).toFixed(0)+'px'); f.style.setProperty('--dy', (20 + Math.random() * 50).toFixed(0)+'px'); f.style.setProperty('--r', (Math.random() * 540 - 270).toFixed(0)+'deg');
+      box.appendChild(f); setTimeout(() => f.remove(), 750);
+    }
   }
   measure(){
     const k = this.cv; if (!k || this.s.revealed) return;
@@ -926,56 +1116,60 @@ class Scratch extends Demo {
     for (let i = 3; i < d.length; i += 96){ n++; if (d[i] < 100) clear++; }
     if (n && clear / n > .5) this.reveal();
   }
-  reveal(){ const s = this.s; if (s.revealed) return; s.revealed = true; this.cv = null; this.sp = null; this.render(); this.burst(36); }
+  reveal(){ const s = this.s; if (s.revealed) return; s.revealed = true; s.flip = true; this.cv = null; this.sp = null; this.step(1); this.render(); s.flip = false; sfx('win'); buzz([20, 30, 60]); this.burst(36); }
   act(a){
     const s = this.s, t = this.t;
     if (a === 'reveal') return this.reveal();
     if (a === 'again') return this.reset();
     if (a === 'stamps'){
-      s.step = 'stamps'; s.shown = t.have; this.render();
+      s.step = 'stamps'; s.shown = t.have; s.prev = t.have; this.render(); this.step(2);
       const total = t.have + t.prizes[s.p].stamps;
-      const add = () => { if (s.step !== 'stamps' || s.shown >= total) return; s.shown++; this.render(); if (s.shown < total) this.later(add, 450); else this.burst(14); };
+      /* each stamp thuds in and the cup fills a little more */
+      const add = () => { if (s.step !== 'stamps' || s.shown >= total) return; s.prev = s.shown; s.shown++; this.render(); sfx('stamp'); buzz(18); if (s.shown < total) this.later(add, 600); else this.later(() => sfx('ok'), 300); };
       this.later(add, reduced() ? 0 : 500);
-    } else if (a === 'coupon'){ s.step = 'coupon'; this.render(); this.burst(30); }
+    } else if (a === 'coupon'){ s.step = 'coupon'; this.render(); sfx('print'); this.later(() => { this.burst(30); sfx('ding'); }, reduced() ? 0 : 1300); this.won(); }
   }
   render(){
     const t = this.t, s = this.s, g = SC[lang], p = t.prizes[s.p];
     let body = '';
     if (s.step === 'card'){
-      body = '<h2 class="sc-h">'+esc(g.title)+'</h2><div class="sc-ticket"><div class="sc-box"><span class="big">'+esc(tx(p.big))+'</span><b>'+esc(tx(p.n))+'</b><small>'+esc(tx(p.d))+'</small>'+
+      body = '<h2 class="sc-h">'+esc(g.title)+'</h2><div class="sc-ticket"><div class="sc-box'+(s.flip ? ' flip' : '')+'"><span class="big">'+esc(tx(p.big))+'</span><b>'+esc(tx(p.n))+'</b><small>'+esc(tx(p.d))+'</small>'+
         (s.revealed ? '' : '<canvas class="sc-foil" aria-hidden="true"></canvas>')+'</div>'+
         '<div class="sc-how">'+(s.revealed ? '<b>'+esc(g.won)+'</b>' : '<span>'+esc(g.how)+'</span><button type="button" class="sc-link" data-act="reveal">'+esc(g.reveal)+'</button>')+'</div></div>'+
         (s.revealed ? '<button type="button" class="sc-btn" data-act="stamps">'+esc(g.add)+'</button>' : '');
     } else if (s.step === 'stamps'){
       const total = t.have + p.stamps;
-      body = '<div class="sc-card"><h3>'+esc(g.card)+'</h3><div class="sc-slots">'+Array.from({length:t.of}, (_, i) => {
+      body = '<div class="sc-card"><div class="sc-cardh"><h3>'+esc(g.card)+'</h3>'+CUP((s.shown / t.of).toFixed(3), (s.prev / t.of).toFixed(3))+'</div><div class="sc-slots">'+Array.from({length:t.of}, (_, i) => {
           const on = i < s.shown, nw = on && i >= t.have && i === s.shown - 1, gift = i === t.of - 1;
           return '<span class="sc-slot'+(on ? ' on' : '')+(nw ? ' new' : '')+(gift && !on ? ' gift' : '')+'">'+(on ? ic('coffee') : (gift ? ic('gift') : ''))+'</span>'; }).join('')+'</div>'+
         '<p class="sc-left">'+esc(fill(g.left, {n:t.of - total}))+'</p><p class="sc-free">'+esc(g.free)+'</p></div>'+
         '<button type="button" class="sc-btn" data-act="coupon"'+(s.shown < total ? ' disabled' : '')+'>'+esc(g.coupon)+'</button>';
     } else {
       const d = new Date(); d.setDate(d.getDate() + 7);
-      body = '<div class="sc-cp"><div class="sc-brand"><b>'+esc(tx(t.brand))+'</b><span>'+esc(g.cpn)+'</span></div><span class="big">'+esc(tx(p.big))+'</span><b>'+esc(tx(p.n))+'</b>'+
-        '<p class="sc-valid">'+esc(fill(g.valid, {d:d.getDate()+' '+S[lang].months[d.getMonth()]}))+'</p><hr><div class="sc-bar"></div><p class="sc-code">'+esc(s.code)+'</p><p class="sc-valid">'+esc(g.show)+'</p></div>'+
+      body = '<div class="sc-printer"><div class="sc-mouth"></div><div class="sc-paper"><div class="sc-cp"><div class="sc-brand"><b>'+esc(tx(t.brand))+'</b><span>'+esc(g.cpn)+'</span></div><span class="big">'+esc(tx(p.big))+'</span><b>'+esc(tx(p.n))+'</b>'+
+        '<p class="sc-valid">'+esc(fill(g.valid, {d:d.getDate()+' '+S[lang].months[d.getMonth()]}))+'</p><hr><div class="sc-bar"></div><p class="sc-code">'+esc(s.code)+'</p><p class="sc-valid">'+esc(g.show)+'</p></div></div></div>'+
         '<button type="button" class="sc-again" data-act="again">'+ic('restart')+esc(dg().again)+'</button>';
     }
-    this.paint('<div class="dm-in sc-in"><div class="sc-check" aria-hidden="true"></div><div class="sc-brand"><b>'+esc(tx(t.brand))+'</b><span>'+esc(tx(t.kind2))+'</span></div>'+body+'</div>');
+    this.paint('<div class="dm-in sc-in scs-'+s.step+'"><div class="sc-check" aria-hidden="true"></div><div class="sc-brand"><b>'+esc(tx(t.brand))+'</b><span>'+esc(tx(t.kind2))+'</span></div>'+body+'</div>');
     if (s.step === 'card' && !s.revealed) requestAnimationFrame(() => { const cv = this.q('.sc-foil'); if (cv) this.setup(cv); });
   }
 }
 
-/* ---------- 7 · pick your seat ---------- */
+/* ---------- 7 · pick your seat: break the seal, the hall lights up, the neighbours wave, the place card catches the light ---------- */
 const ST = {
   ka:{dear:'ძვირფასო {to},', when:'პარასკევი, 19:30', where:'შუშის დარბაზი, ვაკე', dress:'დრესკოდი: საღამოს, თავისუფალი', yes:'მოვდივარ', no:'ვერ მოვალ', noMsg:'მოგვენატრები. ოთხშაბათამდე შეგიძლია გადაიფიქრო.',
       seatH:'აირჩიე შენი ადგილი', seatHint:'გადაიტანე შენი ბარათი თავისუფალ ადგილზე ან შეეხე მას.', next:'შემდეგი: კერძი', dishH:'რას მიირთმევ?', card:'ჩემი ბარათი', table:'მაგიდა {t} · ადგილი {k}', tableN:'მაგიდა {n}',
-      seatN:'მაგიდა {t}, ადგილი {k}, თავისუფალი', near:'გვერდით გიზის: {a}.', nearNone:'შენ გვერდით ჯერ თავისუფალია.', see:'პარასკევს გნახავთ.', and:' და '},
+      seatN:'მაგიდა {t}, ადგილი {k}, თავისუფალი', near:'გვერდით გიზის: {a}.', nearNone:'შენ გვერდით ჯერ თავისუფალია.', see:'პარასკევს გნახავთ.', and:' და ',
+      seal:'გატეხე ბეჭედი', env:'შენთვის მოსაწვევია', cal:'კალენდარში დამატება', days:'{n} დღე დარჩა', tilt:'დახარე ბარათი'},
   en:{dear:'Dear {to},', when:'Friday, 19:30', where:'The Glass Hall, Vake', dress:'Dress code: evening, relaxed', yes:'I’m coming', no:'Can’t make it', noMsg:'We’ll miss you. You can change your mind until Wednesday.',
       seatH:'Pick your seat', seatHint:'Drag your card to a free seat, or tap one.', next:'Next: your dish', dishH:'What will you have?', card:'My place card', table:'Table {t} · Seat {k}', tableN:'TABLE {n}',
-      seatN:'Table {t}, seat {k}, free', near:'You’re next to {a}.', nearNone:'The seats next to you are still free.', see:'See you on Friday.', and:' and '}
+      seatN:'Table {t}, seat {k}, free', near:'You’re next to {a}.', nearNone:'The seats next to you are still free.', see:'See you on Friday.', and:' and ',
+      seal:'Break the seal', env:'An invitation for you', cal:'Add to calendar', days:'{n} days to go', tilt:'Tilt the card'}
 };
 const seatPos = (T, k) => { const a = (-90 + k * 60) * Math.PI / 180; return [T.x + 44 * Math.cos(a), T.y + 44 * Math.sin(a)]; };
+const nextFriday = () => { const d = new Date(); d.setDate(d.getDate() + ((5 - d.getDay() + 7) % 7 || 7)); d.setHours(19, 30, 0, 0); return d; };
 class Seats extends Demo {
-  init(){ return {step:'rsvp', no:false, seat:null, dish:-1, tip:''}; }
+  init(){ return {step:'env', no:false, seat:null, dish:-1, tip:'', opening:false, lit:false, sat:false}; }
   bind(){
     let d = null;
     const seatAt = e => { const el = document.elementFromPoint(e.clientX, e.clientY); return el && el.closest ? el.closest('.se-seat.free') : null; };
@@ -984,6 +1178,12 @@ class Seats extends Demo {
       e.preventDefault(); d = {pid:e.pointerId, x:e.clientX, y:e.clientY, ghost:null, moved:false, c}; try { c.setPointerCapture(e.pointerId); } catch (err) {}
     });
     this.el.addEventListener('pointermove', e => {
+      /* the place card follows the pointer: it tilts and the gold foil catches the light */
+      const tent = e.target.closest && e.target.closest('.se-tent');
+      if (tent && !d && !reduced()){
+        const r = tent.getBoundingClientRect(), px = (e.clientX - r.left) / r.width, py = (e.clientY - r.top) / r.height;
+        tent.style.setProperty('--ry', ((px - .5) * 22).toFixed(1)+'deg'); tent.style.setProperty('--rx', ((.5 - py) * 16).toFixed(1)+'deg'); tent.style.setProperty('--mx', (px * 100).toFixed(0));
+      }
       if (!d || e.pointerId !== d.pid) return;
       if (!d.moved && Math.hypot(e.clientX - d.x, e.clientY - d.y) < 6) return;
       const root = this.q('.dm'), r = root.getBoundingClientRect();
@@ -992,6 +1192,7 @@ class Seats extends Demo {
       this.el.querySelectorAll('.se-seat.drop').forEach(x => x.classList.remove('drop'));
       const st = seatAt(e); if (st) st.classList.add('drop');
     });
+    this.el.addEventListener('pointerleave', () => { const tent = this.q('.se-tent'); if (tent){ tent.style.setProperty('--rx', '0deg'); tent.style.setProperty('--ry', '0deg'); } });
     const end = e => {
       if (!d || e.pointerId !== d.pid) return;
       const x = d; d = null; if (x.ghost) x.ghost.remove(); x.c.style.opacity = '';
@@ -1001,40 +1202,59 @@ class Seats extends Demo {
     };
     this.el.addEventListener('pointerup', end); this.el.addEventListener('pointercancel', end);
   }
-  sit(ti, k){ const s = this.s; s.seat = {t:ti, k}; s.tip = ''; this.render(); this.burst(10); }
+  sit(ti, k){ const s = this.s; s.seat = {t:ti, k}; s.tip = ''; s.sat = true; this.render(); s.sat = false; sfx('ok'); buzz(15); this.burst(10); }
   near(){
     const g = ST[lang], T = this.t.tables[this.s.seat.t], k = this.s.seat.k, ns = [T.seats[(k + 5) % 6], T.seats[(k + 1) % 6]].filter(Boolean);
     return ns.length ? fill(g.near, {a:ns.map(p => tx(p.n)+' ('+tx(p.r)+')').join(g.and)}) : g.nearNone;
   }
   act(a, b){
-    const s = this.s, t = this.t, g = ST[lang];
+    const s = this.s, t = this.t;
     if (a === 'again') return this.reset();
-    if (a === 'yes'){ s.step = 'seat'; s.no = false; this.render(); this.burst(18); }
+    if (a === 'seal'){
+      if (s.opening) return; s.opening = true; this.render(); sfx('clack'); buzz(20);
+      this.later(() => sfx('whoosh'), reduced() ? 0 : 450);
+      this.later(() => { s.step = 'rsvp'; s.opening = false; this.render(); }, reduced() ? 0 : 1500);
+    }
+    else if (a === 'yes'){ s.step = 'seat'; s.no = false; this.render(); this.burst(18); this.step(1); sfx('ok');
+      if (!reduced()) t.tables.forEach((T, i) => this.later(() => sfx('tap'), 300 + i * 380)); this.later(() => { s.lit = true; }, 1600); }
     else if (a === 'no'){ s.no = true; this.render(); }
     else if (a === 'sit') this.sit(+b.dataset.t, +b.dataset.k);
     else if (a === 'who'){ const p = t.tables[+b.dataset.t].seats[+b.dataset.k]; s.tip = tx(p.n)+' · '+tx(p.r); this.render(); }
-    else if (a === 'dishes'){ if (s.seat){ s.step = 'dish'; this.render(); } }
-    else if (a === 'dish'){ s.dish = +b.dataset.i; this.render(); }
-    else if (a === 'card'){ if (s.dish >= 0){ s.step = 'card'; this.render(); this.burst(36); } }
-    void g;
+    else if (a === 'dishes'){ if (s.seat){ s.step = 'dish'; this.render(); this.step(2); } }
+    else if (a === 'dish'){ s.dish = +b.dataset.i; sfx('tap'); this.render(); }
+    else if (a === 'card'){ if (s.dish >= 0){ s.step = 'card'; this.render(); this.thud(700); this.later(() => { sfx('win'); this.burst(36); }, reduced() ? 0 : 900); this.won(); } }
   }
   plan(){
-    const t = this.t, s = this.s, g = ST[lang];
-    return '<svg viewBox="0 0 268 290" role="group" aria-label="'+esc(g.seatH)+'">'+t.tables.map((T, ti) =>
-      '<circle class="se-tab" cx="'+T.x+'" cy="'+T.y+'" r="28"/><text class="se-tab-n" x="'+T.x+'" y="'+(T.y + 3)+'">'+esc(fill(g.tableN, {n:ti + 1}))+'</text>'+
-      T.seats.map((p, k) => { const [x, y] = seatPos(T, k), me = s.seat && s.seat.t === ti && s.seat.k === k;
+    const t = this.t, s = this.s, g = ST[lang], me = s.seat, T0 = me ? t.tables[me.t] : null;
+    const nb = me ? [(me.k + 5) % 6, (me.k + 1) % 6] : [];
+    /* the camera leans in towards your table */
+    const zoom = T0 ? ' style="transform-origin:'+(T0.x / 268 * 100).toFixed(1)+'% '+(T0.y / 290 * 100).toFixed(1)+'%"' : '';
+    return '<svg viewBox="0 0 268 290" role="group" aria-label="'+esc(g.seatH)+'" class="'+(s.lit ? '' : 'lighting')+(me ? ' zoom' : '')+(s.sat ? ' zooming' : '')+'"'+zoom+'>'+t.tables.map((T, ti) =>
+      '<g class="se-tg" style="--i:'+ti+'"><circle class="se-glow" cx="'+T.x+'" cy="'+T.y+'" r="60"/><circle class="se-tab" cx="'+T.x+'" cy="'+T.y+'" r="28"/><text class="se-tab-n" x="'+T.x+'" y="'+(T.y + 3)+'">'+esc(fill(g.tableN, {n:ti + 1}))+'</text>'+
+      T.seats.map((p, k) => { const [x, y] = seatPos(T, k), mine = me && me.t === ti && me.k === k, wave = me && me.t === ti && nb.includes(k) && p;
         const c = '<circle cx="'+x.toFixed(1)+'" cy="'+y.toFixed(1)+'" r="11"/>', lt = v => '<text x="'+x.toFixed(1)+'" y="'+(y + 3.2).toFixed(1)+'">'+esc(v.charAt(0))+'</text>';
-        if (me) return '<g class="se-seat me">'+c+lt(tx(t.to))+'</g>';
-        if (p) return '<g class="se-seat taken" data-act="who" data-t="'+ti+'" data-k="'+k+'" role="button" tabindex="0" aria-label="'+esc(tx(p.n)+', '+tx(p.r))+'">'+c+lt(tx(p.n))+'</g>';
-        return '<g class="se-seat free" data-act="sit" data-t="'+ti+'" data-k="'+k+'" role="button" tabindex="0" aria-label="'+esc(fill(g.seatN, {t:ti + 1, k:k + 1}))+'">'+c+'</g>'; }).join('')).join('')+'</svg>';
+        if (mine) return '<g class="se-seat me">'+c+lt(tx(t.to))+'</g>';
+        if (p) return '<g class="se-seat taken'+(wave ? ' wave' : '')+'" data-act="who" data-t="'+ti+'" data-k="'+k+'" role="button" tabindex="0" aria-label="'+esc(tx(p.n)+', '+tx(p.r))+'" style="transform-origin:'+x.toFixed(1)+'px '+y.toFixed(1)+'px">'+c+lt(tx(p.n))+
+          (wave ? '<text class="hi" x="'+x.toFixed(1)+'" y="'+(y - 14).toFixed(1)+'">👋</text>' : '')+'</g>';
+        return '<g class="se-seat free" data-act="sit" data-t="'+ti+'" data-k="'+k+'" role="button" tabindex="0" aria-label="'+esc(fill(g.seatN, {t:ti + 1, k:k + 1}))+'">'+c+'</g>'; }).join('')+'</g>').join('')+'</svg>';
+  }
+  ics(){
+    const t = this.t, d = nextFriday(), p = n => String(n).padStart(2, '0'), f = x => x.getFullYear()+p(x.getMonth() + 1)+p(x.getDate())+'T'+p(x.getHours())+p(x.getMinutes())+'00';
+    const e = new Date(d.getTime() + 4 * 3600e3), g = ST[lang];
+    const body = ['BEGIN:VCALENDAR', 'VERSION:2.0', 'PRODID:-//gancda//demo//EN', 'BEGIN:VEVENT', 'UID:gancda-demo-'+d.getTime()+'@gancda.com', 'DTSTAMP:'+f(new Date()), 'DTSTART:'+f(d), 'DTEND:'+f(e),
+      'SUMMARY:'+tx(t.co)+' · '+tx(t.name), 'LOCATION:'+g.where, 'DESCRIPTION:'+fill(g.table, {t:this.s.seat.t + 1, k:this.s.seat.k + 1})+' · '+tx(t.dishes[this.s.dish].n), 'END:VEVENT', 'END:VCALENDAR'].join('\r\n');
+    return 'data:text/calendar;charset=utf-8,'+encodeURIComponent(body);
   }
   render(){
     const t = this.t, s = this.s, g = ST[lang];
     const head = '<p class="se-kick">'+esc(tx(t.co))+'</p>';
     let body = '';
-    if (s.step === 'rsvp'){
-      body = head+'<h2 class="se-h">'+esc(tx(t.name))+'</h2><div class="se-rule"><i></i></div><div class="se-inv"><span>'+esc(fill(g.dear, {to:tx(t.to)}))+'</span><span>'+esc(tx(t.ask))+'</span><b>'+esc(g.when)+'</b><span>'+esc(g.where)+'</span><span>'+esc(g.dress)+'</span></div>'+
-        '<div class="se-btns"><button type="button" class="se-yes" data-act="yes">'+esc(g.yes)+'</button><button type="button" class="se-no" data-act="no">'+esc(g.no)+'</button></div><p class="se-msg" aria-live="polite">'+(s.no ? esc(g.noMsg) : '')+'</p>';
+    if (s.step === 'env'){
+      body = head+'<p class="se-envt">'+esc(g.env)+'</p><div class="se-env'+(s.opening ? ' open' : '')+'"><div class="se-env-back"></div><div class="se-env-card"><span>'+esc(tx(t.name))+'</span></div><div class="se-env-front"></div><div class="se-env-flap"></div>'+
+        '<button type="button" class="se-wax" data-act="seal" aria-label="'+esc(g.seal)+'"><span class="l">'+esc(tx(t.co)).charAt(0)+'</span><i class="h1"></i><i class="h2"></i></button></div><p class="se-envh">'+esc(g.seal)+'</p>';
+    } else if (s.step === 'rsvp'){
+      body = '<div class="se-rise">'+head+'<h2 class="se-h">'+esc(tx(t.name))+'</h2><div class="se-rule"><i></i></div><div class="se-inv"><span>'+esc(fill(g.dear, {to:tx(t.to)}))+'</span><span>'+esc(tx(t.ask))+'</span><b>'+esc(g.when)+'</b><span>'+esc(g.where)+'</span><span>'+esc(g.dress)+'</span></div>'+
+        '<div class="se-btns"><button type="button" class="se-yes" data-act="yes">'+esc(g.yes)+'</button><button type="button" class="se-no" data-act="no">'+esc(g.no)+'</button></div><p class="se-msg" aria-live="polite">'+(s.no ? esc(g.noMsg) : '')+'</p></div>';
     } else if (s.step === 'seat'){
       body = head+'<h2 class="se-h sm">'+esc(g.seatH)+'</h2><div class="se-plan">'+this.plan()+'</div><p class="se-tip" aria-live="polite">'+esc(s.seat ? this.near() : (s.tip || g.seatHint))+'</p>'+
         (s.seat ? '<button type="button" class="se-next" data-act="dishes">'+esc(g.next)+'</button>' : '<div class="se-me"><button type="button" class="se-card">'+esc(lang === 'ka' ? mt(tx(t.to)) : tx(t.to).toUpperCase())+'</button></div>');
@@ -1042,11 +1262,14 @@ class Seats extends Demo {
       body = head+'<h2 class="se-h sm">'+esc(g.dishH)+'</h2><div class="se-dishes">'+t.dishes.map((x, i) => '<button type="button" class="se-dish" data-act="dish" data-i="'+i+'" aria-pressed="'+(s.dish === i)+'"><span class="pl">'+ic(x.ic)+'</span><span><b>'+esc(tx(x.n))+'</b><small>'+esc(tx(x.d))+'</small></span></button>').join('')+'</div>'+
         '<button type="button" class="se-yes" data-act="card"'+(s.dish < 0 ? ' disabled' : '')+'>'+esc(g.card)+'</button>';
     } else {
-      body = head+'<div class="se-tent"><div class="back"></div><div class="front"><span class="k">'+esc(tx(t.co))+' · '+new Date().getFullYear()+'</span><b>'+esc(tx(t.to))+'</b>'+
-        '<span class="tb">'+esc(fill(g.table, {t:s.seat.t + 1, k:s.seat.k + 1}))+'</span><span class="dish">'+esc(tx(t.dishes[s.dish].n))+'</span><span class="se-seal">RSVP</span></div></div>'+
-        '<p class="se-near">'+esc(this.near())+'</p><p class="se-near"><b>'+esc(g.when)+'</b> · '+esc(g.where)+'</p><p class="se-see">'+esc(g.see)+'</p><button type="button" class="se-again" data-act="again">'+esc(dg().again)+'</button>';
+      const days = Math.max(1, Math.round((nextFriday() - new Date()) / 864e5));
+      body = head+'<div class="se-tent" style="--rx:0deg;--ry:0deg;--mx:30"><div class="se-tent-in"><div class="back"></div><div class="front"><span class="k">'+esc(tx(t.co))+' · '+new Date().getFullYear()+'</span><b>'+esc(tx(t.to))+'</b>'+
+        '<span class="tb">'+esc(fill(g.table, {t:s.seat.t + 1, k:s.seat.k + 1}))+'</span><span class="dish">'+esc(tx(t.dishes[s.dish].n))+'</span><i class="foil" aria-hidden="true"></i><span class="se-seal">RSVP</span></div></div></div>'+
+        '<p class="se-near">'+esc(this.near())+'</p><p class="se-near"><b>'+esc(g.when)+'</b> · '+esc(g.where)+' · '+esc(fill(g.days, {n:days}))+'</p>'+
+        '<a class="se-cal" href="'+this.ics()+'" download="'+esc(tx(t.co)).toLowerCase()+'-dinner.ics">'+ic('calendar')+esc(g.cal)+'</a>'+
+        '<p class="se-see">'+esc(g.see)+'</p><button type="button" class="se-again" data-act="again">'+esc(dg().again)+'</button>';
     }
-    this.paint('<div class="dm-in se-in">'+body+'</div>');
+    this.paint('<div class="dm-in se-in ses-'+s.step+'">'+body+'</div>');
   }
 }
 
@@ -1055,6 +1278,7 @@ const MECH = {invite:Invite, swipe:Swipe, spot:Spot, build:Build, chat:Chat, map
 /* ---------- the demo line-up: eight demos, eight ways to play ---------- */
 TBY.omakase.mech = 'invite'; TBY.omakase.goal = 'attend';
 TBY.omakase.tag = L('სუშის ბარი: მოსაწვევი','Sushi bar: an invitation');
+TBY.omakase.steps = [L('ფარდა და კითხვა','The curtain and the question'), L('მენიუდან არჩევა','Pick from the menu'), L('ომიკუჯის ბედისწერა','An omikuji fortune'), L('ბილეთი 確定 ბეჭდით','A ticket with a 確定 stamp')];
 [
 { id:'spot', mech:'spot', goal:'learn', time:60,
   name:L('ოთახი 214','Room 214'), kind:L('სწავლება · სასტუმროს დასუფთავება','Learning · Hotel housekeeping'), tag:L('სასტუმრო: იპოვე შეცდომები','Hotel: find the mistakes'), brand:L('სასტუმრო ლილა','Hotel Lila'),
@@ -1080,7 +1304,7 @@ TBY.omakase.tag = L('სუშის ბარი: მოსაწვევი',
     {ic:'steak', ok:false, s:L('ხორცის გალღობა მაგიდაზე, ოთახის ტემპერატურაზე.','Thawing meat on the counter at room temperature.'), why:L('ხორცი მაცივარში ლღვება, ღამით.','Meat thaws in the fridge, overnight.')},
     {ic:'tag', ok:true, s:L('გახსნილ ქილაზე გახსნის თარიღის დაწერა.','Writing the opening date on an opened jar.'), why:L('თარიღი გეუბნება, როდის უნდა გადააგდო.','The date tells you when to throw it out.')}]},
 { id:'build', mech:'build', goal:'learn',
-  name:L('მენიუს აკადემია','Menu Academy'), kind:L('სწავლება · სუშის ბარის გუნდი','Learning · Sushi bar team'), tag:L('სუშის ბარი: ააწყე შეკვეთა','Sushi bar: build the order'), brand:L('NAMI'),
+  name:L('მენიუს აკადემია','Menu Academy'), kind:L('სწავლება · სუშის ბარის გუნდი','Learning · Sushi bar team'), tag:L('სუშის ბარი: ააწყე შეკვეთა','Sushi bar: build the order'), brand:L('UMI'),
   desc:L('ოფიციანტები და მზარეულები მენიუს ერთად სწავლობენ: წაიკითხე შეკვეთა, ჩააწყე ინგრედიენტები და მიიტანე. სამი შეკვეთა, ერთი ალერგიით.','Waiters and cooks learn the menu together: read the order, lay out the ingredients, serve it. Three orders, one with an allergy.'),
   steps:[L('შეკვეთა რელსზე','An order on the rail'), L('ინგრედიენტების ჩაწყობა','Lay out the ingredients'), L('მიტანა და მყისიერი შემოწმება','Serve it and get an instant check'), L('სერტიფიკატი 合格 ბეჭდით','A certificate with a 合格 stamp')],
   c:{acc:'#C8312B', acc2:'#9CC27A', paper:'#FFFDF7'}, fx:'petal', fxc:['#f6c1cc','#C8312B','#FFFDF7'],
@@ -1088,9 +1312,9 @@ TBY.omakase.tag = L('სუშის ბარი: მოსაწვევი',
         {id:'cheese', n:L('ნაღების ყველი','Cream cheese'), col:'#FFF1CC'}, {id:'avocado', n:L('ავოკადო','Avocado'), col:'#9CC27A'}, {id:'cucumber', n:L('კიტრი','Cucumber'), col:'#4E9A4A'}, {id:'sesame', n:L('სეზამი','Sesame'), col:'#E8D9B0'}],
   orders:[{t:L('მაგიდა 4','Table 4'), d:L('ფილადელფია როლი','Philadelphia roll'), note:null, need:['nori','rice','salmon','cheese','avocado']},
           {t:L('მაგიდა 7','Table 7'), d:L('კაპა მაკი','Kappa maki'), note:L('ვეგეტარიანელი სტუმარი','Vegetarian guest'), need:['nori','rice','cucumber','sesame']},
-          {t:L('მაგიდა 2','Table 2'), d:L('ფილადელფია როლი','Philadelphia roll'), note:L('ალერგია ავოკადოზე','Avocado allergy'), need:['nori','rice','salmon','cheese']}]},
+          {t:L('მაგიდა 2','Table 2'), d:L('ფილადელფია როლი','Philadelphia roll'), note:L('ალერგია ავოკადოზე','Avocado allergy'), allergy:'avocado', need:['nori','rice','salmon','cheese']}]},
 { id:'buddy', mech:'chat', goal:'onboard',
-  name:L('შენი ბადი','Your buddy'), kind:L('ონბორდინგი · პროდუქტის გუნდი','Onboarding · Product team'), tag:L('ჩატი ბადისთან და გუნდის გაცნობა','A chat with your buddy'), co:L('ORBITA'),
+  name:L('შენი ბადი','Your buddy'), kind:L('ადაპტაცია · პროდუქტის გუნდი','Onboarding · Product team'), tag:L('ჩატი ბადისთან და გუნდის გაცნობა','A chat with your buddy'), co:L('ORBITA'),
   desc:L('ახალ თანამშრომელს პირველ დღემდე ბადი წერს: პასუხობ, ირჩევ ყავის დროს და მაგიდას, ხვდები გუნდს და თამაშობ „ვინ ვინაა“.','A buddy messages the new hire before day one: you answer, pick a coffee time and a desk, meet the team and play “who’s who”.'),
   steps:[L('ბადი პირველი წერს','Your buddy writes first'), L('შენი პასუხები ცვლის საუბარს','Your answers change the chat'), L('თამაში „ვინ ვინაა“','A “who’s who” game'), L('საშვი ორშაბათისთვის','A pass for Monday')],
   c:{acc:'#2F5BD3', acc2:'#2BB673', paper:'#FFFFFF'}, fx:'rect', fxc:['#2F5BD3','#FFD23F','#F7A9BE'],
@@ -1114,7 +1338,7 @@ TBY.omakase.tag = L('სუშის ბარი: მოსაწვევი',
     won:L('{moves} სვლაში! ორშაბათს ყველას სახელით მიესალმები.','{moves} moves! You’ll greet everyone by name on Monday.'),
     bye:L('აი, შენი საშვი. ორშაბათს გნახავ!','Here’s your pass. See you Monday!')}},
 { id:'map', mech:'map', goal:'onboard',
-  name:L('მაღაზიის რუკა','The store map'), kind:L('ონბორდინგი · მაღაზიების ქსელი','Onboarding · Retail chain'), tag:L('მაღაზია: რუკა პირველ დღემდე','Store: a map before day one'), co:L('BAZARI'),
+  name:L('მაღაზიის რუკა','The store map'), kind:L('ადაპტაცია · მაღაზიების ქსელი','Onboarding · Retail chain'), tag:L('მაღაზია: რუკა პირველ დღემდე','Store: a map before day one'), co:L('BAZARI'),
   desc:L('ახალი მოლარე მაღაზიას პირველ დღემდე ეცნობა: ხსნის ოთახებს რუკაზე და ამოწმებს, სად წავა განგაშის დროს.','A new cashier gets to know the store before day one: open the rooms on the map, then show where to go if the alarm rings.'),
   steps:[L('მაღაზიის გეგმა','The store plan'), L('ხუთი ოთახი, ხუთი წესი','Five rooms, five rules'), L('განგაშის შემოწმება','An alarm drill'), L('ბეჯი პირველი დღისთვის','A badge for day one')],
   c:{acc:'#FFB13B', acc2:'#FFFFFF', paper:'#1638B8'}, fx:'rect', fxc:['#FFB13B','#FFFFFF','#FF7A1A'],
@@ -1158,6 +1382,9 @@ window.GancdaDemos = {
   setLanguage(value){ lang = value === 'en' ? 'en' : 'ka'; invites.forEach(i => { if (i.el && i.el.isConnected) i.render(); }); },
   info(id){ const t = TBY[id]; if (!t) return null;
     return {id, goal:t.goal, name:tx(t.name), kind:tx(t.kind), tag:tx(t.tag), desc:tx(t.desc), brand:tx(t.brand || t.co || (t.tk && t.tk.venue) || ''), steps:(t.steps || []).map(tx)}; },
-  ids(){ return TPL.map(t => t.id); }
+  ids(){ return TPL.map(t => t.id); },
+  colors(id){ const t = TBY[id]; return t ? {acc:t.c.acc, acc2:t.c.acc2, paper:t.c.paper} : null; },
+  sound(on){ if (on != null){ soundOn = !!on; try { localStorage.setItem('gancda.sound', soundOn ? 'on' : 'off'); } catch (e) {} if (!soundOn) try { window.speechSynthesis && speechSynthesis.cancel(); } catch (e) {} } return soundOn; },
+  unlock(){ audio(); }
 };
 })();
