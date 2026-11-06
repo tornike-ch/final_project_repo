@@ -10,25 +10,27 @@ icon is inline SVG. All brands, names and figures on the page are demo data.
 A lesson-type template can set `glab` to rename the lesson labels per language (the campaign demo
 uses it to turn the certificate into a coupon).
 
-## The story (top of the page)
+## The site
 
-The page opens with an illustrated story you scroll through: a paper plane Nini sends from her
-balcony crosses Tbilisi and passes the four things Gancda makes (a lesson, a first day at work, a
-brand game, an event), ending at a long table where everyone it met has come. Light mode tells the
-day story; dark mode is the same town at night with its own story (a library before an exam, a
-bakery night shift, a night market, fireworks on a rooftop), its own props, lit windows, stars and
-fireflies. The sun/moon in the sky switches between them. Tapping people makes them jump; tapping
-the sky throws confetti by day and fireworks by night.
+`public/index.html` is the site: a clean one-page studio site with four playable demos on a live
+phone, each with its own mechanics:
 
-The people are [Open Peeps](https://www.openpeeps.com) by Pablo Stanley (CC0, free for commercial
-use), from the `@opeepsfun/open-peeps` package. `tools/peeps/build.js` turns the bodies, hair styles
-and faces the scenes use into `src/peeps.json`, with their colours as CSS variables so day and night
-recolour them; to add a character, list its parts there, run
-`cd invite_site/tools/peeps && npm install && npm run build`, then use `peep()` in `src/story.js`.
+- **Learning game**: a customer-service simulator. Four customers, three answers each; every choice
+  changes the customer's mood, earns points and is explained. Ends with a score and skill breakdown.
+- **Onboarding journey**: a first-week map with four stages: flip cards to meet the team, pick who
+  does what, tick off first-day tasks, true/false on how the team works. XP, a badge and a buddy.
+- **Brand game**: catch falling coffee beans for 15 seconds (gold +3, ice −2), then scratch a card
+  for a prize tied to the score, with a leaderboard.
+- **Event invitation**: envelope, details and programme, RSVP with a plus-one, a ticket with a
+  countdown and a real calendar file (.ics).
 
-Sources: `src/story.css` and `src/story.js` (the whole town is drawn in code as SVG layers that move
-at different speeds). After editing them run `python3 invite_site/tools/build_story.py`, which
-copies them into `public/index.html` between markers.
+Then formats, how we work, results (demo dashboard), packages and a contact form that posts to
+`/api/requests`. Georgian and English, light and dark. Sources are in `src/site/` (`index.html`,
+`app.css`, `copy.js` with every string, `app.js`); build with `python3 invite_site/tools/build_site.py`.
+
+`public/play.html` is the earlier page, kept only to play shared experience links (`/e/<code>`,
+served by `functions/e/[slug].js`); it carries the old template engine and the scroll story
+(`src/story.*`, `tools/build_story.py`, `tools/peeps/`). Opened at any other path it redirects home.
 
 ## Layout
 

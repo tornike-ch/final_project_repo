@@ -1,0 +1,124 @@
+<!DOCTYPE html>
+<html lang="ka">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<title>განცდა · Gancda</title>
+<meta name="description" content="განცდა ქმნის ინტერაქტიულ ციფრულ გამოცდილებებს: სასწავლო თამაშებს, ონბორდინგის მოგზაურობებს, ბრენდის თამაშებს და მოსაწვევებს. ბმულით, აპის გარეშე.">
+<meta name="theme-color" content="#FAFAF7" media="(prefers-color-scheme: light)">
+<meta name="theme-color" content="#0B0B0E" media="(prefers-color-scheme: dark)">
+<link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 32 32'%3E%3Crect width='32' height='32' rx='9' fill='%235B4BFF'/%3E%3Ctext x='16' y='22.5' text-anchor='middle' font-size='18' font-weight='800' fill='white' font-family='sans-serif'%3E%E1%83%92%3C/text%3E%3C/svg%3E">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Google+Sans:wght@400..800&family=Noto+Sans+Georgian:wght@400..800&display=swap">
+<style>
+/*APP_CSS*/
+</style>
+</head>
+<body>
+<header class="hdr" id="hdr">
+  <div class="wrap">
+    <a class="brand" href="#top" aria-label="Gancda"><span class="mk">გ</span><span>Gancda</span></a>
+    <nav class="nav" aria-label="Main">
+      <a href="#demos" data-t="nav.demos"></a>
+      <a href="#how" data-t="nav.how"></a>
+      <a href="#results" data-t="nav.results"></a>
+      <a href="#packages" data-t="nav.packages"></a>
+    </nav>
+    <div class="tools">
+      <div class="seg2" role="group" aria-label="Language"><button type="button" data-lang="ka">ქა</button><button type="button" data-lang="en">EN</button></div>
+      <button type="button" class="ibtn" id="themeBtn"></button>
+      <a class="btn sm acc cta" href="#contact" data-t="nav.cta"></a>
+    </div>
+  </div>
+</header>
+
+<main id="top">
+  <section class="hero">
+    <div class="wrap hero-grid">
+      <div>
+        <p class="eyebrow"><i></i><span data-t="hero.eyebrow"></span></p>
+        <h1 data-th="hero.h"></h1>
+        <p class="lede" data-t="hero.lede"></p>
+        <div class="picker" id="picker" role="group"></div>
+        <div class="row">
+          <a class="btn acc" href="#contact"><span data-t="hero.cta"></span><span data-ic="arrow"></span></a>
+          <a class="btn ghost" href="#demos" data-t="hero.more"></a>
+        </div>
+        <ul class="facts" id="facts"></ul>
+      </div>
+      <div class="stage">
+        <div class="phone"><div class="screen" id="phone"></div></div>
+        <p class="cap"><i></i><span data-t="hero.cap"></span></p>
+      </div>
+    </div>
+  </section>
+
+  <section class="sec" id="demos">
+    <div class="wrap">
+      <div class="sec-h"><p class="kick" data-t="demos.kick"></p><h2 data-t="demos.h"></h2><p data-t="demos.p"></p></div>
+      <div class="cards" id="cards"></div>
+    </div>
+  </section>
+
+  <section class="sec" id="how">
+    <div class="wrap">
+      <div class="sec-h"><p class="kick" data-t="how.kick"></p><h2 data-t="how.h"></h2><p data-t="how.p"></p></div>
+      <ol class="steps" id="steps"></ol>
+    </div>
+  </section>
+
+  <section class="sec" id="results">
+    <div class="wrap dash-grid">
+      <div>
+        <p class="kick" data-t="res.kick"></p><h2 data-t="res.h"></h2><p class="lede" data-t="res.p"></p>
+        <ul class="checks" id="resChecks"></ul>
+      </div>
+      <div class="dash" id="dash"></div>
+    </div>
+  </section>
+
+  <section class="sec" id="packages">
+    <div class="wrap">
+      <div class="sec-h"><p class="kick" data-t="pk.kick"></p><h2 data-t="pk.h"></h2><p data-t="pk.p"></p></div>
+      <div class="pkgs" id="pkgs"></div>
+      <p class="note" data-t="pk.note"></p>
+    </div>
+  </section>
+
+  <section class="sec" id="contact">
+    <div class="wrap contact">
+      <div>
+        <p class="kick" data-t="ct.kick"></p><h2 data-t="ct.h"></h2><p class="lede" data-t="ct.p"></p>
+        <a class="mail" id="mail" href="mailto:hello@gancda.com"><span data-ic="mail"></span><span>hello@gancda.com</span></a>
+      </div>
+      <div class="form">
+        <form id="form" novalidate>
+          <div class="fgrid">
+            <fieldset class="field full"><legend data-t="f.what"></legend><div class="chips" id="whatChips"></div></fieldset>
+            <div class="field" id="fbName"><label for="fName" data-t="f.name"></label><input id="fName" name="name" autocomplete="name"><span class="err" id="eName"></span></div>
+            <div class="field" id="fbContact"><label for="fContact" data-t="f.contact"></label><input id="fContact" name="contact" autocomplete="email" data-tp="f.contactPh"><span class="err" id="eContact"></span></div>
+            <div class="field full"><label for="fCompany" data-t="f.company"></label><input id="fCompany" name="company" autocomplete="organization"></div>
+            <div class="field full"><label for="fMsg" data-t="f.msg"></label><textarea id="fMsg" name="message" data-tp="f.msgPh"></textarea></div>
+          </div>
+          <div class="hp" aria-hidden="true"><label for="fWeb">Website</label><input id="fWeb" name="website" tabindex="-1" autocomplete="off"></div>
+          <div class="form-foot"><small data-t="f.note"></small><button type="submit" class="btn acc" id="sendBtn"><span data-t="f.send"></span><span data-ic="arrow"></span></button></div>
+        </form>
+        <div id="sent" hidden></div>
+      </div>
+    </div>
+  </section>
+</main>
+
+<footer>
+  <div class="wrap">
+    <span>© <span id="year"></span> Gancda · <span data-t="foot.made"></span></span>
+    <span data-t="foot.demo"></span>
+  </div>
+</footer>
+
+<script>
+/*APP_JS*/
+</script>
+</body>
+</html>

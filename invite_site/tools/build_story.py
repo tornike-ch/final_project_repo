@@ -8,7 +8,7 @@ relative asset paths would break). Re-running replaces the previous copy between
 import pathlib, re
 
 root = pathlib.Path(__file__).resolve().parent.parent
-page = root / 'public' / 'index.html'
+page = root / 'public' / 'play.html'
 css = (root / 'src' / 'story.css').read_text()
 js = (root / 'src' / 'story.js').read_text()
 peeps = (root / 'src' / 'peeps.json').read_text().strip()
