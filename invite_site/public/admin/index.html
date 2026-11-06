@@ -1,0 +1,325 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<meta name="robots" content="noindex, nofollow">
+<title>Gancda admin</title>
+<style>
+:root{--bg:#f6f3ec;--card:#fffdf8;--ink:#1d1a16;--mut:#6f675c;--line:#e2dccf;--acc:#b8322b;--ok:#2f7a4f;--warn:#a26a12;--chip:#efe9dc;color-scheme:light}
+@media (prefers-color-scheme:dark){:root{--bg:#141210;--card:#1d1a17;--ink:#f1ebe0;--mut:#a39a8c;--line:#35302a;--acc:#e0574e;--ok:#5bb882;--warn:#e0a84a;--chip:#2a2622;color-scheme:dark}}
+*{box-sizing:border-box}
+body{margin:0;background:var(--bg);color:var(--ink);font:15px/1.5 system-ui,-apple-system,"Segoe UI",sans-serif}
+a{color:inherit}
+button,input,select,textarea{font:inherit;color:inherit}
+.wrap{max-width:1080px;margin:0 auto;padding:0 16px}
+header{border-bottom:1px solid var(--line);background:var(--card)}
+header .wrap{display:flex;align-items:center;gap:16px;min-height:58px;flex-wrap:wrap}
+.brand{font-weight:800;letter-spacing:.02em;text-decoration:none}
+nav{display:flex;gap:4px;margin-right:auto}
+nav button{background:none;border:0;padding:8px 12px;border-radius:8px;cursor:pointer;color:var(--mut)}
+nav button[aria-current="page"]{background:var(--chip);color:var(--ink);font-weight:600}
+main{padding:24px 0 60px}
+h1{font-size:22px;margin:0 0 4px}
+h2{font-size:17px;margin:0 0 12px}
+.sub{color:var(--mut);margin:0 0 18px}
+.card{background:var(--card);border:1px solid var(--line);border-radius:14px;padding:18px;margin-bottom:16px}
+.btn{display:inline-flex;align-items:center;gap:6px;border:1px solid var(--ink);background:var(--ink);color:var(--bg);padding:8px 14px;border-radius:9px;cursor:pointer;font-weight:600;text-decoration:none}
+.btn.ghost{background:none;color:var(--ink);border-color:var(--line)}
+.btn.small{padding:4px 10px;font-size:13px}
+.btn.danger{background:none;color:var(--acc);border-color:var(--acc)}
+.btn:disabled{opacity:.5;cursor:default}
+label{display:block;font-size:13px;font-weight:600;margin-bottom:4px}
+.hint{font-weight:400;color:var(--mut)}
+input,select,textarea{width:100%;background:var(--bg);border:1px solid var(--line);border-radius:9px;padding:9px 11px}
+textarea{min-height:84px;resize:vertical}
+input:focus,select:focus,textarea:focus,button:focus-visible{outline:2px solid var(--acc);outline-offset:1px}
+.grid{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:14px}
+.grid .full{grid-column:1/-1}
+@media (max-width:640px){.grid{grid-template-columns:1fr}}
+.row{display:flex;gap:10px;align-items:center;flex-wrap:wrap}
+.filters{display:flex;gap:6px;flex-wrap:wrap;margin-bottom:14px}
+.filters button{border:1px solid var(--line);background:var(--card);padding:5px 12px;border-radius:99px;cursor:pointer;font-size:13px}
+.filters button[aria-pressed="true"]{background:var(--ink);color:var(--bg);border-color:var(--ink)}
+.req{display:grid;grid-template-columns:minmax(0,1fr) auto;gap:6px 16px}
+.req h3{margin:0;font-size:16px}
+.req .meta{color:var(--mut);font-size:13px}
+.req .msg{grid-column:1/-1;white-space:pre-wrap;overflow-wrap:anywhere;margin:4px 0 0}
+.req .acts{grid-column:1/-1;display:flex;gap:8px;flex-wrap:wrap;align-items:center}
+.req select{width:auto}
+.req .note{flex:1;min-width:180px}
+.chips{display:flex;gap:6px;flex-wrap:wrap}
+.chip{background:var(--chip);border-radius:99px;padding:2px 10px;font-size:12px}
+.st-new{color:var(--acc);font-weight:700}
+.st-won{color:var(--ok);font-weight:700}
+.groups{display:grid;gap:10px}
+.grp{display:grid;grid-template-columns:minmax(0,1fr) auto;gap:4px 14px;align-items:center;text-align:left;width:100%;background:var(--card);border:1px solid var(--line);border-radius:12px;padding:14px 16px;cursor:pointer}
+.grp:hover{border-color:var(--mut)}
+.grp b{font-size:15px}
+.grp .meta{color:var(--mut);font-size:13px}
+.off{opacity:.55}
+.funnel{display:grid;gap:8px;margin:6px 0 4px}
+.fun{display:grid;grid-template-columns:150px minmax(0,1fr) 70px;gap:10px;align-items:center;font-size:14px}
+.bar{height:10px;background:var(--chip);border-radius:99px;overflow:hidden}
+.bar i{display:block;height:100%;background:var(--acc);border-radius:99px}
+.fun .n{text-align:right;font-variant-numeric:tabular-nums}
+@media (max-width:520px){.fun{grid-template-columns:100px minmax(0,1fr) 54px}}
+.kpis{display:grid;grid-template-columns:repeat(auto-fit,minmax(130px,1fr));gap:10px;margin-bottom:16px}
+.kpi{background:var(--bg);border:1px solid var(--line);border-radius:12px;padding:12px}
+.kpi b{display:block;font-size:24px;line-height:1.2;font-variant-numeric:tabular-nums}
+.kpi span{color:var(--mut);font-size:13px}
+.tbl{width:100%;border-collapse:collapse;font-size:14px}
+.tbl th{text-align:left;color:var(--mut);font-weight:600;font-size:12px;text-transform:uppercase;letter-spacing:.04em;padding:8px 6px;border-bottom:1px solid var(--line)}
+.tbl td{padding:9px 6px;border-bottom:1px solid var(--line);vertical-align:middle}
+.tbl code{font-size:13px;overflow-wrap:anywhere}
+.scroll{overflow-x:auto}
+.state{display:inline-block;padding:2px 9px;border-radius:99px;font-size:12px;background:var(--chip);white-space:nowrap}
+.state.done{background:color-mix(in srgb,var(--ok) 20%,transparent);color:var(--ok);font-weight:600}
+.state.mid{background:color-mix(in srgb,var(--warn) 18%,transparent);color:var(--warn)}
+.empty{color:var(--mut);text-align:center;padding:30px 10px}
+.err{color:var(--acc);font-size:14px;min-height:1.2em;margin:8px 0 0}
+.login{max-width:380px;margin:12vh auto}
+.created{background:color-mix(in srgb,var(--ok) 10%,var(--card));border-color:var(--ok)}
+.toast{position:fixed;bottom:18px;left:50%;transform:translateX(-50%);background:var(--ink);color:var(--bg);padding:9px 16px;border-radius:9px;font-size:14px;opacity:0;transition:opacity .2s;pointer-events:none}
+.toast.on{opacity:1}
+@media (max-width:640px){.tbl .lk{display:none}.tbl td,.tbl th{padding:8px 4px}header .wrap{gap:8px}nav button{padding:8px}}
+[hidden]{display:none!important}
+</style>
+</head>
+<body>
+<div id="login" class="wrap login" hidden>
+  <form class="card" id="loginForm">
+    <h1>Gancda admin</h1>
+    <p class="sub">Requests, experience links and results.</p>
+    <label for="pw">Password</label>
+    <input id="pw" type="password" autocomplete="current-password" required>
+    <p class="err" id="loginErr"></p>
+    <button class="btn" type="submit">Sign in</button>
+  </form>
+</div>
+
+<div id="app" hidden>
+  <header><div class="wrap">
+    <a class="brand" href="/">GANCDA</a>
+    <nav>
+      <button type="button" data-tab="requests">Requests</button>
+      <button type="button" data-tab="links">Experience links</button>
+    </nav>
+    <button type="button" class="btn ghost small" id="logout">Sign out</button>
+  </div></header>
+  <main class="wrap" id="view"></main>
+</div>
+<div class="toast" id="toast" role="status" aria-live="polite"></div>
+
+<script>
+(function(){
+'use strict';
+const $ = s => document.querySelector(s);
+const esc = s => String(s == null ? '' : s).replace(/[&<>"']/g, c => ({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]));
+const KEY = 'gancda.admin';
+let pw = '';
+try { pw = sessionStorage.getItem(KEY) || ''; } catch (e) {}
+
+const TPL_NAMES = {
+  omakase:'Omakase · sushi date invite', supra:'Supra · Georgian feast invite', trattoria:'Trattoria · dinner invite',
+  qvevri:'Qvevri · wine bar invite', embers:'Embers · grill invite', golden:'Golden · cocktail invite',
+  proposal:'Proposal', birthday:'Birthday party', interview:'Onboarding · first day', corporate:'Corporate event',
+  academy:'Menu Academy · training quiz', campaign:'Brand campaign game · coupon'
+};
+const WHO = {learn:'Learning and training', onboard:'Onboarding', engage:'Brand campaign', attend:'Events and invitations'};
+const STEP = {view:'Opened the link', start:'Started', yes:'Said yes', picks:'Made their picks', confirm:'Confirmed', answer:'Answered a question', complete:'Finished'};
+
+function toast(t){ const el = $('#toast'); el.textContent = t; el.classList.add('on'); clearTimeout(toast.t); toast.t = setTimeout(() => el.classList.remove('on'), 1800); }
+async function api(path, opt = {}){
+  const r = await fetch('/api/admin' + path, Object.assign({}, opt, {headers: Object.assign({'authorization':'Bearer ' + pw}, opt.body ? {'content-type':'application/json'} : {})}));
+  const d = await r.json().catch(() => ({ok:false, error:'unexpected response (' + r.status + ')'}));
+  if (r.status === 401){ signOut(d.error); throw new Error(d.error); }
+  if (!r.ok || d.ok === false) throw new Error(d.error || ('error ' + r.status));
+  return d;
+}
+const when = iso => { if (!iso) return '—'; const d = new Date(iso); return d.toLocaleDateString(undefined, {day:'numeric', month:'short'}) + ' ' + d.toLocaleTimeString(undefined, {hour:'2-digit', minute:'2-digit'}); };
+const linkUrl = slug => location.origin + '/e/' + slug;
+function copy(text){ (navigator.clipboard ? navigator.clipboard.writeText(text) : Promise.reject()).then(() => toast('Copied'), () => prompt('Copy this:', text)); }
+
+/* ---------- sign in ---------- */
+function signOut(msg){ pw = ''; try { sessionStorage.removeItem(KEY); } catch (e) {} $('#app').hidden = true; $('#login').hidden = false; $('#loginErr').textContent = msg && msg !== 'wrong password' ? msg : (msg ? 'Wrong password.' : ''); $('#pw').focus(); }
+$('#loginForm').addEventListener('submit', async e => {
+  e.preventDefault(); pw = $('#pw').value; $('#loginErr').textContent = '';
+  try { await api('/requests?status=new'); try { sessionStorage.setItem(KEY, pw); } catch (e) {} $('#pw').value = ''; start(); }
+  catch (err) { $('#loginErr').textContent = err.message === 'wrong password' ? 'Wrong password.' : err.message; }
+});
+$('#logout').addEventListener('click', () => signOut(''));
+
+/* ---------- tabs ---------- */
+document.querySelectorAll('[data-tab]').forEach(b => b.addEventListener('click', () => { location.hash = b.dataset.tab; }));
+window.addEventListener('hashchange', route);
+function route(){
+  if (!pw) return;
+  const h = location.hash.slice(1) || 'requests', [tab, arg] = h.split('/');
+  document.querySelectorAll('[data-tab]').forEach(b => { if (b.dataset.tab === tab) b.setAttribute('aria-current', 'page'); else b.removeAttribute('aria-current'); });
+  if (tab === 'links' && arg) showGroup(arg); else if (tab === 'links') showLinks(); else showRequests();
+}
+function start(){ $('#login').hidden = true; $('#app').hidden = false; route(); }
+
+/* ---------- requests ---------- */
+let reqFilter = 'new';
+async function showRequests(){
+  const v = $('#view');
+  v.innerHTML = '<h1>Requests</h1><p class="sub">Sent from the form on gancda.com.</p><div class="filters" id="rf"></div><div id="rl"><p class="empty">Loading…</p></div>';
+  try {
+    const d = await api('/requests' + (reqFilter === 'all' ? '' : '?status=' + reqFilter));
+    const c = d.counts, tot = Object.entries(c).filter(([k]) => k !== 'spam').reduce((a, [, n]) => a + n, 0);
+    $('#rf').innerHTML = [['new','New'],['contacted','Contacted'],['won','Won'],['closed','Closed'],['spam','Spam'],['all','All']].map(([k, l]) =>
+      '<button type="button" data-f="'+k+'" aria-pressed="'+(k === reqFilter)+'">'+l+' '+(k === 'all' ? tot : (c[k] || 0))+'</button>').join('');
+    $('#rf').onclick = e => { const b = e.target.closest('[data-f]'); if (b){ reqFilter = b.dataset.f; showRequests(); } };
+    $('#rl').innerHTML = d.requests.length ? d.requests.map(reqCard).join('') : '<p class="empty card">Nothing here yet.</p>';
+  } catch (err) { $('#rl').innerHTML = '<p class="err">'+esc(err.message)+'</p>'; }
+}
+function reqCard(r){
+  const tags = [WHO[r.who], r.interest, r.template && (TPL_NAMES[r.template] || r.template), r.lang === 'en' ? 'English' : 'Georgian'].filter(Boolean);
+  const mail = /@.+\./.test(r.contact) && !/^@/.test(r.contact) ? '<a class="btn small ghost" href="mailto:'+esc(r.contact)+'">Email</a>' : '';
+  const tel = !/@/.test(r.contact) && r.contact.replace(/\D/g,'').length >= 9 ? '<a class="btn small ghost" href="tel:'+esc(r.contact.replace(/[^\d+]/g,''))+'">Call</a>' : '';
+  return '<article class="card req" data-id="'+r.id+'"><div><h3>'+esc(r.name)+'</h3><div class="meta">'+esc(r.contact)+' · #'+r.id+(r.slip ? ' · slip '+esc(r.slip) : '')+'</div></div>'+
+    '<div class="meta">'+when(r.created_at)+'</div>'+
+    '<div class="chips" style="grid-column:1/-1">'+tags.map(t => '<span class="chip">'+esc(t)+'</span>').join('')+'</div>'+
+    (r.message ? '<p class="msg">'+esc(r.message)+'</p>' : '')+
+    '<div class="acts"><select aria-label="Status" data-st>'+['new','contacted','won','closed','spam'].map(s => '<option value="'+s+'"'+(s === r.status ? ' selected' : '')+'>'+s[0].toUpperCase()+s.slice(1)+'</option>').join('')+'</select>'+
+    '<input class="note" data-note placeholder="Private note" value="'+esc(r.note || '')+'" aria-label="Private note">'+mail+tel+
+    '<button type="button" class="btn small danger" data-del>Delete</button></div></article>';
+}
+document.addEventListener('change', async e => {
+  const card = e.target.closest('.req'); if (!card) return;
+  const id = card.dataset.id;
+  try {
+    if (e.target.matches('[data-st]')){ await api('/requests/' + id, {method:'PATCH', body:JSON.stringify({status:e.target.value})}); toast('Saved'); }
+    if (e.target.matches('[data-note]')){ await api('/requests/' + id, {method:'PATCH', body:JSON.stringify({note:e.target.value})}); toast('Note saved'); }
+  } catch (err) { toast(err.message); }
+});
+document.addEventListener('click', async e => {
+  const del = e.target.closest('.req [data-del]'); if (!del) return;
+  if (!confirm('Delete this request for good?')) return;
+  try { await api('/requests/' + del.closest('.req').dataset.id, {method:'DELETE'}); toast('Deleted'); showRequests(); } catch (err) { toast(err.message); }
+});
+
+/* ---------- experience links ---------- */
+async function showLinks(){
+  const v = $('#view');
+  v.innerHTML = '<h1>Experience links</h1><p class="sub">Make an experience for a client, send each person their own link, see what they did.</p>'+
+    '<form class="card" id="newForm"><h2>New experience</h2><div class="grid">'+
+    '<div><label for="nTitle">Name <span class="hint">(only you see it)</span></label><input id="nTitle" required maxlength="120" placeholder="Nami staff training, March"></div>'+
+    '<div><label for="nTpl">Template</label><select id="nTpl">'+Object.entries(TPL_NAMES).map(([k, n]) => '<option value="'+k+'">'+esc(n)+'</option>').join('')+'</select></div>'+
+    '<div class="full"><label for="nTo">People <span class="hint">(one name per line, each gets a personal link; leave empty for one shared link)</span></label><textarea id="nTo" placeholder="ნინო&#10;გიორგი&#10;ანა"></textarea></div>'+
+    '<div><label for="nFrom">From</label><input id="nFrom" maxlength="80" placeholder="The Nami team"></div>'+
+    '<div><label for="nLang">Opens in</label><select id="nLang"><option value="ka">Georgian</option><option value="en">English</option></select></div>'+
+    '<div class="full"><label for="nIntro">Opening message</label><textarea id="nIntro" maxlength="400" placeholder="Leave empty to keep the template text"></textarea></div>'+
+    '<div class="full inv"><label for="nQ">Question <span class="hint">(invites)</span></label><input id="nQ" maxlength="200" placeholder="Will you join us?"></div>'+
+    '<div><label for="nVenue">Venue or brand</label><input id="nVenue" maxlength="80"></div>'+
+    '<div class="inv"><label for="nSub">Venue line <span class="hint">(address, city)</span></label><input id="nSub" maxlength="120"></div>'+
+    '<div class="inv"><label for="nAt">Date and time <span class="hint">(invites)</span></label><input id="nAt" type="datetime-local"></div>'+
+    '<div><label for="nSign">Closing line</label><input id="nSign" maxlength="200"></div>'+
+    '</div><p class="err" id="nErr"></p><div class="row"><button class="btn" type="submit">Create links</button><span class="hint" id="nCount"></span></div></form>'+
+    '<div id="made"></div><h2>All experiences</h2><div class="groups" id="gl"><p class="empty">Loading…</p></div>';
+  const kind = () => { const lesson = ['academy','campaign'].includes($('#nTpl').value); document.querySelectorAll('#newForm .inv').forEach(el => el.hidden = lesson); };
+  const count = () => { const n = $('#nTo').value.split('\n').filter(x => x.trim()).length; $('#nCount').textContent = n ? n + ' personal link' + (n > 1 ? 's' : '') : '1 shared link'; };
+  $('#nTpl').addEventListener('change', kind); $('#nTo').addEventListener('input', count); kind(); count();
+  $('#newForm').addEventListener('submit', createGroup);
+  loadGroups();
+}
+async function createGroup(e){
+  e.preventDefault(); $('#nErr').textContent = '';
+  const val = id => $(id).value.trim();
+  const lesson = ['academy','campaign'].includes(val('#nTpl'));
+  const body = {title:val('#nTitle'), template:val('#nTpl'), lang:val('#nLang'), recipients:val('#nTo').split('\n').map(x => x.trim()).filter(Boolean),
+    overrides:{from:val('#nFrom'), intro:val('#nIntro'), venue:val('#nVenue'), sign:val('#nSign'), q: lesson ? '' : val('#nQ'), sub: lesson ? '' : val('#nSub'), at: lesson ? '' : val('#nAt')}};
+  const btn = e.submitter || $('#newForm button[type=submit]'); btn.disabled = true;
+  try {
+    const d = await api('/experiences', {method:'POST', body:JSON.stringify(body)});
+    $('#made').innerHTML = '<div class="card created"><h2>'+d.links.length+' link'+(d.links.length > 1 ? 's' : '')+' ready</h2>'+linkTable(d.links.map(l => Object.assign({active:true}, l)), false)+
+      '<div class="row" style="margin-top:12px"><button type="button" class="btn small" data-copyall>Copy all links</button><a class="btn small ghost" href="#links/'+d.grp+'">Open results</a></div></div>';
+    $('#made [data-copyall]').addEventListener('click', () => copy(d.links.map(l => (l.recipient ? l.recipient + ': ' : '') + linkUrl(l.slug)).join('\n')));
+    $('#newForm').reset(); $('#nTo').dispatchEvent(new Event('input'));
+    $('#made').scrollIntoView({behavior:'smooth', block:'start'});
+    loadGroups();
+  } catch (err) { $('#nErr').textContent = err.message; }
+  finally { btn.disabled = false; }
+}
+async function loadGroups(){
+  try {
+    const d = await api('/experiences');
+    $('#gl').innerHTML = d.groups.length ? d.groups.map(g => {
+      const r = g.stats.reached, done = r.complete || r.confirm || 0;
+      return '<button type="button" class="grp'+(g.active ? '' : ' off')+'" data-g="'+g.grp+'"><b>'+esc(g.title)+'</b><span class="meta">'+when(g.created_at)+'</span>'+
+        '<span class="meta">'+esc(TPL_NAMES[g.template] || g.template)+' · '+g.links+' link'+(g.links > 1 ? 's' : '')+(g.active ? '' : ' · switched off')+'</span>'+
+        '<span class="meta">'+(r.view || 0)+' opened · '+done+' '+(['academy','campaign'].includes(g.template) ? 'finished' : 'confirmed')+'</span></button>';
+    }).join('') : '<p class="empty card">No experiences yet. Make the first one above.</p>';
+    $('#gl').onclick = e => { const b = e.target.closest('[data-g]'); if (b) location.hash = 'links/' + b.dataset.g; };
+  } catch (err) { $('#gl').innerHTML = '<p class="err">'+esc(err.message)+'</p>'; }
+}
+function linkState(l, lesson){
+  const r = l.reached || {};
+  if (lesson){
+    if (r.complete) return '<span class="state done">Finished'+(l.best ? ' · '+l.best.score+' / '+l.best.n : '')+'</span>';
+    if (r.answer || r.start) return '<span class="state mid">In progress</span>';
+  } else {
+    if (r.confirm) return '<span class="state done">Confirmed</span>';
+    if (r.yes) return '<span class="state mid">Said yes</span>';
+    if (r.start) return '<span class="state mid">Opened the invite</span>';
+  }
+  return r.view ? '<span class="state">Opened the link</span>' : '<span class="state">Not opened</span>';
+}
+function linkTable(links, withState, lesson){
+  return '<div class="scroll"><table class="tbl"><thead><tr><th>Person</th><th class="lk">Link</th>'+(withState ? '<th>Status</th><th>Last seen</th>' : '')+'<th></th></tr></thead><tbody>'+
+    links.map(l => '<tr><td>'+esc(l.recipient || 'Everyone')+'</td><td class="lk"><code>'+esc(linkUrl(l.slug))+'</code></td>'+
+      (withState ? '<td>'+linkState(l, lesson)+'</td><td>'+when(l.last)+'</td>' : '')+
+      '<td><div class="row" style="flex-wrap:nowrap"><button type="button" class="btn small ghost" data-copy="'+esc(linkUrl(l.slug))+'">Copy</button><a class="btn small ghost" href="/e/'+esc(l.slug)+'" target="_blank" rel="noopener">Open</a></div></td></tr>').join('')+
+    '</tbody></table></div>';
+}
+document.addEventListener('click', e => { const b = e.target.closest('[data-copy]'); if (b) copy(b.dataset.copy); });
+
+async function showGroup(grp){
+  const v = $('#view');
+  v.innerHTML = '<p><a href="#links">← All experiences</a></p><p class="empty">Loading…</p>';
+  try {
+    const d = await api('/experiences/' + grp), g = d.group, s = g.stats, lesson = ['academy','campaign'].includes(g.template);
+    const n = d.links.length, r = s.reached;
+    const steps = lesson ? ['view','start','answer','complete'] : ['view','start','yes','picks','confirm'];
+    const top = Math.max(1, r.view || 0, ...steps.map(k => r[k] || 0));
+    const pct = (a, b) => b ? Math.round(a / b * 100) + '%' : '—';
+    v.innerHTML = '<p><a href="#links">← All experiences</a></p>'+
+      '<div class="row" style="justify-content:space-between;align-items:flex-start"><div><h1>'+esc(g.title)+'</h1><p class="sub">'+esc(TPL_NAMES[g.template] || g.template)+' · created '+when(g.created_at)+(g.active ? '' : ' · <b>switched off</b>')+'</p></div>'+
+      '<div class="row"><button type="button" class="btn small ghost" id="gRefresh">Refresh</button><button type="button" class="btn small ghost" id="gCsv">Download CSV</button>'+
+      '<button type="button" class="btn small ghost" id="gToggle">'+(g.active ? 'Switch links off' : 'Switch links on')+'</button><button type="button" class="btn small danger" id="gDel">Delete</button></div></div>'+
+      '<div class="kpis">'+
+        '<div class="kpi"><b>'+n+'</b><span>link'+(n > 1 ? 's' : '')+' sent</span></div>'+
+        '<div class="kpi"><b>'+(r.view || 0)+'</b><span>opened'+(n > 1 ? ' ('+pct(d.links.filter(l => l.reached.view).length, n)+' of people)' : '')+'</span></div>'+
+        (lesson ? '<div class="kpi"><b>'+(r.complete || 0)+'</b><span>finished</span></div><div class="kpi"><b>'+(s.avgScore == null ? '—' : s.avgScore + (s.maxScore ? ' / ' + s.maxScore : ''))+'</b><span>average score</span></div>'
+                : '<div class="kpi"><b>'+(r.confirm || 0)+'</b><span>confirmed</span></div><div class="kpi"><b>'+pct(r.confirm || 0, r.view || 0)+'</b><span>of openers confirmed</span></div>')+
+      '</div>'+
+      '<section class="card"><h2>How far people got</h2><div class="funnel">'+steps.map(k => '<div class="fun"><span>'+STEP[k]+'</span><span class="bar"><i style="width:'+Math.round((r[k] || 0) / top * 100)+'%"></i></span><span class="n">'+(r[k] || 0)+'</span></div>').join('')+'</div>'+
+      '<p class="hint" style="margin:10px 0 0">Counts unique devices. Someone who opens the link on two phones counts twice.</p></section>'+
+      (s.questions.length ? '<section class="card"><h2>Questions</h2><div class="funnel">'+s.questions.map(q => '<div class="fun"><span>Question '+(q.q + 1)+'</span><span class="bar"><i style="width:'+Math.round(q.ok / Math.max(1, q.n) * 100)+'%;background:var(--ok)"></i></span><span class="n">'+pct(q.ok, q.n)+'</span></div>').join('')+'</div><p class="hint" style="margin:10px 0 0">Share of first answers that were right.</p></section>' : '')+
+      (s.picks.length ? '<section class="card"><h2>What people picked</h2><div class="funnel">'+s.picks.slice(0, 12).map(p => '<div class="fun"><span>'+esc(p.item)+'</span><span class="bar"><i style="width:'+Math.round(p.n / s.picks[0].n * 100)+'%"></i></span><span class="n">'+p.n+'</span></div>').join('')+'</div></section>' : '')+
+      '<section class="card"><h2>People</h2>'+linkTable(d.links, true, lesson)+'</section>';
+    $('#gRefresh').onclick = () => showGroup(grp);
+    $('#gCsv').onclick = () => csv(g, d.links, lesson);
+    $('#gToggle').onclick = async () => { try { await api('/experiences/' + grp, {method:'PATCH', body:JSON.stringify({active:!g.active})}); toast(g.active ? 'Links switched off' : 'Links switched on'); showGroup(grp); } catch (err) { toast(err.message); } };
+    $('#gDel').onclick = async () => { if (!confirm('Delete "' + g.title + '", its ' + n + ' link(s) and all results? The links stop working.')) return; try { await api('/experiences/' + grp, {method:'DELETE'}); toast('Deleted'); location.hash = 'links'; } catch (err) { toast(err.message); } };
+  } catch (err) { v.innerHTML = '<p><a href="#links">← All experiences</a></p><p class="err">'+esc(err.message)+'</p>'; }
+}
+function csv(g, links, lesson){
+  const q = x => '"' + String(x == null ? '' : x).replace(/"/g, '""') + '"';
+  const rows = [['Person','Link','Opened','Started', lesson ? 'Finished' : 'Said yes', lesson ? 'Best score' : 'Confirmed','Last seen']].concat(links.map(l => {
+    const r = l.reached || {};
+    return [l.recipient || 'Everyone', linkUrl(l.slug), r.view ? 'yes' : 'no', r.start ? 'yes' : 'no', lesson ? (r.complete ? 'yes' : 'no') : (r.yes ? 'yes' : 'no'),
+      lesson ? (l.best ? l.best.score + ' / ' + l.best.n : '') : (r.confirm ? 'yes' : 'no'), l.last || ''];
+  }));
+  const blob = new Blob(['﻿' + rows.map(r => r.map(q).join(',')).join('\n')], {type:'text/csv;charset=utf-8'});
+  const a = document.createElement('a'); a.href = URL.createObjectURL(blob); a.download = g.title.replace(/[^\p{L}\p{N}]+/gu, '-').toLowerCase() + '.csv'; a.click();
+  setTimeout(() => URL.revokeObjectURL(a.href), 1000);
+}
+
+if (pw) start(); else signOut('');
+})();
+</script>
+</body>
+</html>

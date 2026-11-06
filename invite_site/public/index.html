@@ -746,6 +746,29 @@ dialog.stage::backdrop{background:transparent}
   *,*::before,*::after{animation-duration:.01ms!important;animation-iteration-count:1!important;transition-duration:.01ms!important}
   .i-fx{display:none}
 }
+
+/* honeypot for the request form */
+.hp{position:absolute;left:-9999px;width:1px;height:1px;overflow:hidden}
+/* shared experience player */
+body.player .page,body.player dialog{display:none}
+#player{min-height:100vh;min-height:100dvh;display:flex;flex-direction:column;align-items:center;justify-content:center;gap:14px;padding:24px 16px;background:var(--ground,#111)}
+#player .phone{width:min(360px,100%)}
+.pl-bar{display:flex;gap:18px;align-items:center;font:600 13px/1 var(--f-label,system-ui);color:var(--ink,#eee)}
+.pl-lang{display:inline-flex;border:1px solid currentColor;border-radius:99px;overflow:hidden}
+.pl-lang button{font:inherit;color:inherit;background:none;border:0;padding:7px 12px;cursor:pointer}
+.pl-lang button[aria-pressed="true"]{background:var(--ink,#eee);color:var(--ground,#111)}
+@media (max-width:520px){.pl-lang button[aria-pressed="true"]{background:#fff;color:#000}}
+.pl-by{color:inherit;opacity:.7;text-decoration:none}
+.pl-msg{position:absolute;inset:0;display:flex;flex-direction:column;align-items:center;justify-content:center;gap:12px;padding:28px;text-align:center;color:#eee;font:500 15px/1.5 var(--f-body,system-ui)}
+.pl-msg a{color:inherit;opacity:.7}
+@media (max-width:520px){
+  #player{padding:0;gap:0;justify-content:flex-start}
+  #player .phone{width:100%;height:100vh;height:100dvh;aspect-ratio:auto;border-radius:0;padding:0;box-shadow:none}
+  #player .phone::before{display:none}
+  #player .screen{border-radius:0}
+  .pl-bar{position:fixed;top:10px;right:10px;z-index:20;gap:10px;font-size:12px;color:#fff;mix-blend-mode:difference}
+  .pl-by{display:none}
+}
 </style>
 </head>
 <body>
@@ -858,6 +881,7 @@ dialog.stage::backdrop{background:transparent}
                   <textarea id="fMsg" name="message" data-tp="f.msgPh"></textarea>
                 </div>
               </div>
+              <div class="hp" aria-hidden="true"><label for="fWeb">Website</label><input id="fWeb" name="website" tabindex="-1" autocomplete="off"></div>
               <div class="form-foot">
                 <p class="fine" data-t="f.note"></p>
                 <button type="submit" class="send" id="sendBtn"><span class="send-ring" id="sendRing" aria-hidden="true"></span><span class="lbl"><span data-t="f.send"></span><span data-ic="arrowR"></span></span></button>
@@ -920,12 +944,16 @@ dialog.stage::backdrop{background:transparent}
 'use strict';
 
 /* ------------------------------------------------------------------
-   CONFIG: fill these in before going live.
-   formEndpoint: a form service URL that accepts a JSON POST (Formspree, Getform, your own API).
-   Leave empty and the form shows the request as text the visitor can copy and send.
+   CONFIG
+   formEndpoint: where the request form POSTs its JSON. On gancda.com that is the site's own API
+   (functions/api/requests.js). Opened as a local file there is no API, so the form shows the
+   request as text the visitor can copy and send instead.
+   api: base path of the backend, used by shared experience links (/e/<code>).
 ------------------------------------------------------------------- */
+const ONLINE = location.protocol === 'https:' || location.protocol === 'http:';
 const CONFIG = {
-  formEndpoint: '',
+  formEndpoint: ONLINE ? '/api/requests' : '',
+  api: ONLINE ? '/api' : '',
   email: 'hello@gancda.com'
 };
 
@@ -1466,6 +1494,7 @@ const $$ = s => Array.from(document.querySelectorAll(s));
 const reduced = () => window.matchMedia && matchMedia('(prefers-reduced-motion: reduce)').matches;
 
 function demoDate(t){
+  if (t.tk.at) return new Date(t.tk.at);
   const d = new Date(); d.setDate(d.getDate() + (t.tk.days || 3));
   const p = t.tk.time.split(':'); d.setHours(+p[0], +p[1], 0, 0); return d;
 }
@@ -1668,6 +1697,7 @@ class Invite {
   reset(){ this.clear(); this.s = {step:0, picks:[], fortune:-1, stamped:false, tries:0}; this.render(); }
   clear(){ this.timers.forEach(clearTimeout); this.timers = []; }
   later(fn, ms){ this.timers.push(setTimeout(fn, ms)); }
+  emit(type, data){ if (this.onEvent) this.onEvent(type, data); }
   render(){
     const t = this.t, s = this.s;
     const views = [() => vCover(t, false), () => vAsk(t), () => vPick(t, s), () => vSurprise(t, s), () => vTicket(t, s)];
@@ -1680,13 +1710,13 @@ class Invite {
   onClick(e){
     const b = e.target.closest('[data-act]'); if (!b || !this.el.contains(b)) return;
     const a = b.dataset.act, s = this.s;
-    if (a === 'open'){ if (b.classList.contains('open')) return; b.classList.add('open'); this.later(() => this.go(1), reduced() ? 50 : 1050); }
-    else if (a === 'yes'){ this.burst(36); this.later(() => this.go(2), 380); }
-    else if (a === 'no'){ this.flee(b); }
+    if (a === 'open'){ if (b.classList.contains('open')) return; b.classList.add('open'); this.emit('start'); this.later(() => this.go(1), reduced() ? 50 : 1050); }
+    else if (a === 'yes'){ this.emit('yes', {tries:s.tries}); this.burst(36); this.later(() => this.go(2), 380); }
+    else if (a === 'no'){ if (!s.tries) this.emit('no'); this.flee(b); }
     else if (a === 'pick'){ this.pick(+b.dataset.i, b); }
-    else if (a === 'next'){ if (s.step === 2 && !s.picks.length) return; this.go(s.step + 1); }
-    else if (a === 'reveal'){ b.classList.add('shake'); this.later(() => { s.fortune = Math.floor(Math.random() * tx(this.t.sp.lines).length); this.render(); this.burst(18); }, 520); }
-    else if (a === 'stamp'){ s.stamped = true; this.render(); this.later(() => this.burst(40), 380); }
+    else if (a === 'next'){ if (s.step === 2 && !s.picks.length) return; if (s.step === 2) this.emit('picks', {items:s.picks.map(i => tx(this.t.items[i].n))}); this.go(s.step + 1); }
+    else if (a === 'reveal'){ b.classList.add('shake'); this.later(() => { s.fortune = Math.floor(Math.random() * tx(this.t.sp.lines).length); this.render(); this.burst(18); this.emit('reveal'); }, 520); }
+    else if (a === 'stamp'){ if (!s.stamped) this.emit('confirm', {items:s.picks.map(i => tx(this.t.items[i].n))}); s.stamped = true; this.render(); this.later(() => this.burst(40), 380); }
     else if (a === 'again'){ this.reset(); }
   }
   flee(b){
@@ -1834,18 +1864,20 @@ class Lesson {
   onClick(e){
     const b = e.target.closest('[data-act]'); if (!b || !this.el.contains(b)) return;
     const a = b.dataset.act, s = this.s, t = this.t;
-    if (a === 'open'){ if (b.classList.contains('open')) return; b.classList.add('open'); this.later(() => this.go('learn'), reduced() ? 50 : 1050); }
+    if (a === 'open'){ if (b.classList.contains('open')) return; b.classList.add('open'); this.emit('start'); this.later(() => this.go('learn'), reduced() ? 50 : 1050); }
     else if (a === 'start'){ this.go('quiz'); }
     else if (a === 'ans' && s.ans < 0){
       s.ans = +b.dataset.i;
+      this.emit('answer', {q:s.q, ok:s.ans === t.quiz[s.q].a});
       if (s.ans === t.quiz[s.q].a){ s.score++; this.render(); this.burst(16); }
       else { this.render(); const bad = this.el.querySelector('.l-opt.bad'); if (bad){ bad.classList.add('shake'); } }
     }
-    else if (a === 'nextq'){ if (s.q + 1 < t.quiz.length){ s.q++; s.ans = -1; this.go('quiz'); } else { this.go('result'); this.later(() => this.burst(40), 200); } }
+    else if (a === 'nextq'){ if (s.q + 1 < t.quiz.length){ s.q++; s.ans = -1; this.go('quiz'); } else { this.emit('complete', {score:s.score, n:t.quiz.length}); this.go('result'); this.later(() => this.burst(40), 200); } }
     else if (a === 'again'){ this.reset(); }
   }
 }
 Lesson.prototype.burst = Invite.prototype.burst;
+Lesson.prototype.emit = Invite.prototype.emit;
 
 /* ---------- site ---------- */
 Object.assign(I, {
@@ -2116,7 +2148,7 @@ function readForm(){
   const F = S[lang].f, who = (document.querySelector('input[name="who"]:checked') || {}).value || '';
   return {who, whoLabel:(F.whoOpts.find(o => o[0] === who) || ['', ''])[1], interest, interestLabel:F.interest[interest] || '',
     template:interestTpl, templateLabel: interestTpl && TBY[interestTpl] ? tx(TBY[interestTpl].name) : '',
-    name:$('#fName').value.trim(), contact:$('#fContact').value.trim(), message:$('#fMsg').value.trim(), lang};
+    name:$('#fName').value.trim(), contact:$('#fContact').value.trim(), message:$('#fMsg').value.trim(), lang, website:$('#fWeb').value};
 }
 function reqText(r){
   const F = S[lang].f, n = v => v || F.none;
@@ -2183,12 +2215,81 @@ $('#themeBtn').addEventListener('click', () => { const next = effTheme() === 'da
 if (window.matchMedia) matchMedia('(prefers-color-scheme: dark)').addEventListener('change', themeIcon);
 $$('[data-lang]').forEach(b => b.addEventListener('click', () => { if (lang === b.dataset.lang) return; lang = b.dataset.lang; store.set('lang', lang); renderAll(); }));
 
+/* ---------- shared experience links: gancda.com/e/<code> plays one experience full screen ---------- */
+const PLAY = ONLINE && /^\/e\/([a-z0-9]{5,16})\/?$/.exec(location.pathname);
+// Georgian genitive for a name: ანი → ანის, ნინა → ნინას, ლევან → ლევანის.
+const kaGen = n => /[აეიოუ]$/.test(n) ? n + 'ს' : n + 'ის';
+// Copy a template and put the link's own text in: names, message, venue, date.
+function personalize(base, o){
+  const swap = [];
+  // whole words only: the demo name ანი must not change ბანი or Animation
+  const pair = (from, to) => { if (from && to && from.length > 2 && from !== to) swap.push([new RegExp('(?<!\\p{L})' + from.replace(/[.*+?^${}()|[\]\\]/g, '\\$&') + '(?!\\p{L})', 'gu'), to]); };
+  if (o.to){ pair(base.toGen && base.toGen.ka, kaGen(o.to)); pair(base.toGen && base.toGen.en, o.to + '’s'); pair(base.to.ka, o.to); pair(base.to.en, o.to); }
+  if (o.from && base.from){ pair(base.from.ka, o.from); pair(base.from.en, o.from); }
+  const walk = v => {
+    if (typeof v === 'string') return swap.reduce((x, [re, b]) => x.replace(re, () => b), v);
+    if (Array.isArray(v)) return v.map(walk);
+    if (v && typeof v === 'object'){ const out = {}; for (const k in v) out[k] = k === 'c' || k === 'ui' || k === 'op' ? v[k] : walk(v[k]); return out; }
+    return v;
+  };
+  const t = walk(base), both = x => L(x, x);
+  if (o.to){ t.to = both(o.to); t.toGen = L(kaGen(o.to), o.to + '’s'); }
+  ['from', 'intro', 'q', 'sign'].forEach(k => { if (o[k]) t[k] = both(o[k]); });
+  if (t.tk){
+    t.tk = Object.assign({}, t.tk);
+    if (o.venue) t.tk.venue = both(o.venue);
+    if (o.sub) t.tk.sub = both(o.sub);
+    if (o.at){ t.tk.at = o.at; t.tk.time = o.at.slice(11, 16); }
+  }
+  if (t.cert && o.venue) t.cert = Object.assign({}, t.cert, {venue: both(o.venue)});
+  t.id = 'live';
+  return t;
+}
+const visitor = (() => {
+  let v = store.get('vid');
+  if (!/^[a-z0-9]{8,32}$/.test(v || '')){ v = Array.from(crypto.getRandomValues(new Uint8Array(12)), b => 'abcdefghijklmnopqrstuvwxyz0123456789'[b % 36]).join(''); store.set('vid', v); }
+  return v;
+})();
+function track(code, type, data){
+  try {
+    fetch(CONFIG.api + '/e/' + code + '/events', {method:'POST', keepalive:true, headers:{'Content-Type':'application/json'},
+      body:JSON.stringify({type, visitor, data: data || null})}).catch(() => {});
+  } catch (e) {}
+}
+function startPlayer(code){
+  document.body.classList.add('player');
+  const box = document.createElement('main');
+  box.id = 'player';
+  box.innerHTML = '<div class="phone"><div class="screen" id="livePhone"></div></div>'+
+    '<div class="pl-bar"><span class="pl-lang"><button type="button" data-pl="ka">ქარ</button><button type="button" data-pl="en">EN</button></span>'+
+    '<a class="pl-by" href="/">Gancda</a></div>';
+  document.body.appendChild(box);
+  const msg = text => { $('#livePhone').innerHTML = '<div class="pl-msg"><p>'+esc(text)+'</p><a href="/">gancda.com</a></div>'; };
+  msg(lang === 'en' ? 'Loading…' : 'იტვირთება…');
+  fetch(CONFIG.api + '/e/' + code).then(r => r.ok ? r.json() : Promise.reject(r.status)).then(d => {
+    const base = TBY[d.template]; if (!base) throw 404;
+    if (!store.get('lang')) lang = d.lang === 'en' ? 'en' : 'ka';
+    document.documentElement.lang = lang;
+    TBY.live = personalize(base, d.overrides || {});
+    const inst = mount($('#livePhone'), 'live', null);
+    inst.onEvent = (type, data) => track(code, type, data);
+    const title = () => { document.title = tx(TBY.live.from) ? tx(TBY.live.from) + ' · Gancda' : 'Gancda'; };
+    const langBtns = () => $$('[data-pl]').forEach(b => b.setAttribute('aria-pressed', b.dataset.pl === lang));
+    $$('[data-pl]').forEach(b => b.addEventListener('click', () => { lang = b.dataset.pl; store.set('lang', lang); document.documentElement.lang = lang; langBtns(); title(); inst.render(); }));
+    langBtns(); title();
+    track(code, 'view');
+  }).catch(st => msg(st === 404
+    ? (lang === 'en' ? 'This link is not active. Ask whoever sent it for a new one.' : 'ეს ბმული აქტიური აღარ არის. სთხოვე გამომგზავნს ახალი.')
+    : (lang === 'en' ? 'Could not load. Check your connection and refresh.' : 'ვერ ჩაიტვირთა. შეამოწმე ინტერნეტი და განაახლე გვერდი.')));
+}
+
 /* ---------- go ---------- */
 function renderAll(){
   applyStatic(); renderPoster(); renderGoals(); renderBrief(); renderDash(false); renderStart(); renderForm();
   invites.forEach(i => i.render());
   if (dlg.open && dlgInv) fillStage(dlgInv.t);
 }
+if (PLAY){ startPlayer(PLAY[1]); return; }
 pickGoal('learn');
 renderAll();
 let fitT = 0;

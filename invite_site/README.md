@@ -10,27 +10,92 @@ icon is inline SVG. All brands, names and figures on the page are demo data.
 A lesson-type template can set `glab` to rename the lesson labels per language (the campaign demo
 uses it to turn the certificate into a coupon).
 
+## Layout
+
+```
+invite_site/
+  public/index.html        the site, and the player for shared links (/e/<code>)
+  public/admin/index.html  the private admin page (/admin)
+  public/_headers          response headers (admin is noindex, no-store)
+  functions/               Cloudflare Pages Functions: the backend
+    api/requests.js            POST  /api/requests             the site's request form
+    api/e/[slug].js            GET   /api/e/:code              what a shared link shows
+    api/e/[slug]/events.js     POST  /api/e/:code/events       what a player did
+    api/admin/_middleware.js   every /api/admin/* call needs ADMIN_PASSWORD
+    api/admin/requests.js      GET   the request inbox; requests/[id].js PATCH status/note, DELETE
+    api/admin/experiences.js   GET   groups of links with totals; POST create links
+    api/admin/experiences/[grp].js  GET results per person; PATCH on/off; DELETE
+    e/[slug].js                GET   /e/:code serves the page, which opens the player
+  lib/                     shared helpers: schema, auth, results queries
+```
+
 ## Run it
 
-Open `index.html` in a browser. Nothing to build or install.
+Open `public/index.html` in a browser to see the site; nothing to build. Opened as a file there is
+no backend, so the form shows the request as text to copy instead of sending it.
 
-To host it, any static host works (GitHub Pages, Netlify, Cloudflare Pages). For GitHub Pages:
-Settings → Pages → deploy from branch → folder `/invite_site` is not selectable, so either move
-the file to `/docs` or the repo root, or use Netlify/Cloudflare and point them at `invite_site/`.
+With the backend, locally:
 
-## Before going live
+```sh
+npx wrangler pages dev public --d1 DB=gancda-local --binding ADMIN_PASSWORD=a-long-test-password
+```
 
-At the top of the `<script>` in `index.html`:
+The database tables are created on first use, so a new D1 database needs no setup.
+
+## Hosting on Cloudflare Pages (connected to GitHub)
+
+One-time setup in the Cloudflare dashboard:
+
+1. **Storage & Databases → D1 → Create** a database named `gancda`.
+2. **Workers & Pages → Create → Pages → Connect to Git**, pick this repository, then:
+   production branch: the branch to publish; framework preset: None; build command: empty;
+   build output directory: `public`; root directory: `invite_site`.
+3. In the new project, **Settings → Bindings → Add → D1 database**: variable name `DB`, database `gancda`.
+4. **Settings → Variables and Secrets → Add**: `ADMIN_PASSWORD`, type Secret, 12+ characters.
+5. **Deployments → retry the latest deployment** so the binding and secret take effect.
+6. **Custom domains**: remove `gancda.com` and `www.gancda.com` from any older Pages project first,
+   then add them here.
+
+Every push to the production branch then deploys the site and the backend.
+
+Optional email notice for each new request (via [Resend](https://resend.com)): add the secret
+`RESEND_API_KEY` and the variable `NOTIFY_TO` (comma-separated addresses), and verify gancda.com in
+Resend so it can send as `hello@gancda.com` (override with `NOTIFY_FROM`). Without them, requests
+are saved and shown in `/admin` only.
+
+## The admin page
+
+`gancda.com/admin`, signed in with `ADMIN_PASSWORD`.
+
+- **Requests**: every form submission, with status (new, contacted, won, closed, spam) and a private note.
+- **Experience links**: pick a template, enter one name per line, and each person gets a personal
+  link (`gancda.com/e/<code>`) with their name in it; with no names you get one shared link. A link can
+  change: who it is for, who it is from, the opening message, the question, venue, venue line,
+  date and time (invites) and the closing line. Demo names in the template text are swapped for the
+  real ones.
+- **Results** per group: how far people got (opened, started, said yes, picked, confirmed, or
+  answered and finished), right answers per question, what people picked, each person's status and
+  score, and a CSV download. Counts are per device. Links can be switched off or deleted.
+
+## What the player records
+
+Each shared link sends small events to `/api/e/:code/events`: `view`, `start`, `yes`, `no`, `picks`
+(item names), `reveal`, `confirm`, `answer` (question number, right or not) and `complete` (score).
+The visitor is a random id kept in the browser; no names, IPs or other personal data are stored with
+events. Form requests store a daily-rotating hash of the IP only, to limit a sender to 5 requests per
+10 minutes.
+
+## Settings in the page
+
+At the top of the `<script>` in `public/index.html`:
 
 ```js
 const CONFIG = {
-  formEndpoint: '',            // a URL that accepts a JSON POST (Formspree, Getform, your own API)
-  email: 'hello@gancda.com'    // placeholder: replace with the real address
+  formEndpoint: ONLINE ? '/api/requests' : '',  // the backend when served, copy-as-text when opened as a file
+  api: ONLINE ? '/api' : '',
+  email: 'hello@gancda.com'
 };
 ```
-
-With `formEndpoint` empty, the form validates and then shows the request as text with a
-Copy button, so nothing is lost but nothing is sent either.
 
 ## The template engine
 
