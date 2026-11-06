@@ -5,50 +5,41 @@
 <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
 <title>განცდა · Gancda</title>
 <meta name="claude:viewport-fit-sides" content="cover">
-<meta name="description" content="აქციეთ ყოველი მომენტი შთაბეჭდილებად. ციფრული გამოცდილებები ბიზნესისთვის: მოსაწვევები, სწავლება, ახალი თანამშრომლის პირველი დღე და კამპანიები.">
+<meta name="description" content="Gancda · განცდა: ციფრული გამოცდილებები ბიზნესისთვის. მოსაწვევები, სწავლება, ახალი თანამშრომლის პირველი დღე და კამპანიები, თქვენი ბრენდით, ნებისმიერ ტელეფონზე.">
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Google+Sans:wght@400..700&family=DM+Mono:wght@400;500&family=Playfair+Display:ital,wght@1,700&family=Noto+Sans+Georgian:wdth,wght@62.5..100,400..800&family=Noto+Serif+Georgian:wdth,wght@62.5..100,500..900&family=Shippori+Mincho:wght@800&display=swap">
 <style>
 :root{
-  /* Layout: a poster, then the product told through its own five steps.
-     The headline is a fitted block of Mtavruli (Georgian capitals, no ascenders) with a "yes" stamp pressed on it.
-     The collection rides a conveyor like the sushi belt the first invite had.
-     Pricing is a printed menu card; the request form is a reservation card you seal to send. */
-  --ground:#F3EDEC; --ground2:#EAE1E1; --ink:#2A0F15; --ink2:#55363E; --muted:#7A6066; --line:#D9C9CA;
-  --seal:#C8341F; --seal-btn:#B92F1B; --seal-ink:#FFF8F0; --brass:#86652A; --blend:multiply;
-  --card:#221017; --card-ink:#F1E8DA; --card-ink2:#D6C7B8; --card-muted:#AE9C91; --card-line:#4A2D35;
-  --card-seal:#EB5A3F; --card-brass:#CFA563; --card-scheme:dark; --card-blend:normal;
-  --hdr:rgba(243,237,236,.88); --device:#0B0608; --scrim:rgba(243,237,236,.975);
-  --grain:url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='220' height='220'%3E%3Cfilter id='g'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='.85' numOctaves='3' stitchTiles='stitch'/%3E%3CfeColorMatrix values='0 0 0 0 1 0 0 0 0 1 0 0 0 0 1 .5 0 0 0 -.2'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23g)'/%3E%3C/svg%3E");
-  --shadow-card:0 40px 70px -40px rgba(42,15,21,.55);
-  --f-disp:"Google Sans","Noto Sans Georgian",system-ui,-apple-system,"Segoe UI",sans-serif;
-  --f-body:"Google Sans","Noto Sans Georgian",system-ui,-apple-system,"Segoe UI",sans-serif;
+  /* Layout: "the score". The site is itself one gancda in four chapters (open, choose, surprise, keep).
+     A neutral graphite/chalk stage; all colour comes from the experience on stage; stamp red marks only "the moment". */
+  --ground:#F1EEE8; --ground2:#E8E4DC; --surface:#FBFAF7; --ink:#141414; --ink2:#3D3A35; --muted:#6A655D; --line:#D8D2C7;
+  --seal:#C4202A; --seal-btn:#C4202A; --seal-ink:#FFFFFF; --brass:#6A655D; --blend:multiply;
+  --card:#FBFAF7; --card-ink:#141414; --card-ink2:#3D3A35; --card-muted:#6A655D; --card-line:#D8D2C7; --card-seal:#C4202A; --card-brass:#6A655D; --card-scheme:light; --card-blend:multiply;
+  --hdr:rgba(241,238,232,.9); --device:#0D0D0D; --ghost:rgba(20,20,20,.055); --shadow-card:0 30px 60px -36px rgba(0,0,0,.35);
+  --f-disp:"Noto Serif Georgian",Georgia,"Times New Roman",serif;
+  --f-body:"Noto Sans Georgian",system-ui,-apple-system,"Segoe UI",sans-serif;
+  --f-label:"Google Sans","Noto Sans Georgian",system-ui,sans-serif;
   --fi-serif:"Noto Serif Georgian",Georgia,"Times New Roman",serif;
   --fi-sans:"Noto Sans Georgian",system-ui,-apple-system,"Segoe UI",sans-serif;
   --fi-geo:"Google Sans","Noto Sans Georgian",system-ui,sans-serif;
   --f-jp:"Shippori Mincho","Hiragino Mincho ProN","Yu Mincho",serif;
+  --ease:cubic-bezier(.2,.7,.2,1);
 }
 @media (prefers-color-scheme: dark){
   :root:not([data-theme="light"]){
-    --ground:#150A0D; --ground2:#1D0F13; --ink:#F3E9DD; --ink2:#D3C4B6; --muted:#A08D84; --line:#3A232A;
-    --seal:#E2462F; --seal-btn:#C93A24; --seal-ink:#FFF8F0; --brass:#CFA563; --blend:normal;
-    --card:#F1E8DA; --card-ink:#2A0F15; --card-ink2:#563A3F; --card-muted:#735A55; --card-line:#D3C2AF;
-    --card-seal:#C0321D; --card-brass:#86652A; --card-scheme:light; --card-blend:multiply;
-    --hdr:rgba(21,10,13,.86); --device:#050203; --scrim:rgba(21,10,13,.975);
-    --grain:url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='220' height='220'%3E%3Cfilter id='g'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='.85' numOctaves='3' stitchTiles='stitch'/%3E%3CfeColorMatrix values='0 0 0 0 .16 0 0 0 0 .06 0 0 0 0 .08 .55 0 0 0 -.22'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23g)'/%3E%3C/svg%3E");
-    --shadow-card:0 40px 80px -36px rgba(0,0,0,.8);
+    --ground:#121212; --ground2:#181817; --surface:#1B1B1A; --ink:#F1EEE8; --ink2:#D2CEC6; --muted:#9E988F; --line:#2D2C2A;
+    --seal:#E3343C; --seal-btn:#D02A33; --seal-ink:#FFFFFF; --brass:#9E988F; --blend:normal;
+    --card:#1B1B1A; --card-ink:#F1EEE8; --card-ink2:#D2CEC6; --card-muted:#9E988F; --card-line:#33322F; --card-seal:#E3343C; --card-brass:#9E988F; --card-scheme:dark; --card-blend:normal;
+    --hdr:rgba(18,18,18,.88); --device:#000; --ghost:rgba(241,238,232,.05); --shadow-card:0 30px 60px -30px rgba(0,0,0,.8);
     color-scheme:dark;
   }
 }
 :root[data-theme="dark"]{
-  --ground:#150A0D; --ground2:#1D0F13; --ink:#F3E9DD; --ink2:#D3C4B6; --muted:#A08D84; --line:#3A232A;
-  --seal:#E2462F; --seal-btn:#C93A24; --seal-ink:#FFF8F0; --brass:#CFA563; --blend:normal;
-  --card:#F1E8DA; --card-ink:#2A0F15; --card-ink2:#563A3F; --card-muted:#735A55; --card-line:#D3C2AF;
-  --card-seal:#C0321D; --card-brass:#86652A; --card-scheme:light; --card-blend:multiply;
-  --hdr:rgba(21,10,13,.86); --device:#050203; --scrim:rgba(21,10,13,.975);
-  --grain:url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='220' height='220'%3E%3Cfilter id='g'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='.85' numOctaves='3' stitchTiles='stitch'/%3E%3CfeColorMatrix values='0 0 0 0 .16 0 0 0 0 .06 0 0 0 0 .08 .55 0 0 0 -.22'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23g)'/%3E%3C/svg%3E");
-  --shadow-card:0 40px 80px -36px rgba(0,0,0,.8);
+  --ground:#121212; --ground2:#181817; --surface:#1B1B1A; --ink:#F1EEE8; --ink2:#D2CEC6; --muted:#9E988F; --line:#2D2C2A;
+  --seal:#E3343C; --seal-btn:#D02A33; --seal-ink:#FFFFFF; --brass:#9E988F; --blend:normal;
+  --card:#1B1B1A; --card-ink:#F1EEE8; --card-ink2:#D2CEC6; --card-muted:#9E988F; --card-line:#33322F; --card-seal:#E3343C; --card-brass:#9E988F; --card-scheme:dark; --card-blend:normal;
+  --hdr:rgba(18,18,18,.88); --device:#000; --ghost:rgba(241,238,232,.05); --shadow-card:0 30px 60px -30px rgba(0,0,0,.8);
   color-scheme:dark;
 }
 :root[data-theme="light"]{color-scheme:light}
@@ -56,279 +47,300 @@
 *{box-sizing:border-box}
 [hidden]{display:none!important}
 html{-webkit-text-size-adjust:100%;scroll-behavior:smooth}
-body{margin:0;background:var(--ground);color:var(--ink);font-family:var(--f-body);font-size:17px;line-height:1.6;-webkit-tap-highlight-color:transparent}
+body{margin:0;background:var(--ground);color:var(--ink);font-family:var(--f-body);font-size:17px;line-height:1.62;-webkit-tap-highlight-color:transparent}
+html[lang="en"] body{font-family:var(--f-label)}
 body::before{content:"";position:fixed;inset:0 0 auto;height:env(safe-area-inset-top,0px);z-index:60;background:var(--ground)}
 .page{overflow-x:clip}
 a{color:inherit}
 button{font:inherit;color:inherit}
 p{margin:0}
 :focus-visible{outline:2px solid var(--seal);outline-offset:3px}
-.wrap{max-width:1280px;margin:0 auto;padding-left:max(20px,env(safe-area-inset-left,0px));padding-right:max(20px,env(safe-area-inset-right,0px))}
-[id]{scroll-margin-top:84px}
+.wrap{max-width:1240px;margin:0 auto;padding-left:max(20px,env(safe-area-inset-left,0px));padding-right:max(20px,env(safe-area-inset-right,0px))}
+[id]{scroll-margin-top:80px}
 .ico{width:22px;height:22px;fill:none;stroke:currentColor;stroke-width:1.6;stroke-linecap:round;stroke-linejoin:round;flex-shrink:0}
 .ico .f{fill:var(--f,none)}
 .ico .s{fill:currentColor;stroke:none}
 @keyframes pulse{50%{opacity:.25}}
 
 /* type */
-.label{font-weight:700;font-size:12.5px;letter-spacing:.16em;color:var(--brass);margin:0 0 18px}
-html[lang="en"] .label,html[lang="en"] .caps{text-transform:uppercase}
-.say{font-family:var(--f-disp);font-weight:500;font-size:clamp(28px,3.3vw,48px);line-height:1.24;letter-spacing:-.015em;margin:0;max-width:21ch;text-wrap:balance}
-.sub{color:var(--ink2);max-width:44ch;font-size:16.5px}
+.label{font-family:var(--f-label);font-weight:700;font-size:12.5px;letter-spacing:.06em;color:var(--muted);margin:0 0 16px}
+html[lang="en"] .label,html[lang="en"] .caps{text-transform:uppercase;letter-spacing:.1em}
+.say{font-family:var(--f-disp);font-weight:600;font-size:clamp(30px,3.6vw,52px);line-height:1.2;letter-spacing:-.012em;margin:0;max-width:20ch;text-wrap:balance}
+.say em{font-style:normal;color:var(--seal)}
+.sub{color:var(--ink2);max-width:46ch;font-size:17px}
 .fine{font-size:12.5px;color:var(--muted)}
-.sec{padding-block:clamp(88px,10vw,150px)}
+.chap{display:flex;align-items:baseline;gap:14px;margin:0 0 clamp(28px,4vw,48px);font-family:var(--f-label);font-weight:700;font-size:13px;letter-spacing:.06em;color:var(--muted)}
+.chap b{font-variant-numeric:tabular-nums;color:var(--seal);font-size:14px}
+.chap::after{content:"";flex:1;height:1px;background:var(--line);transform:translateY(-4px)}
+.sec{padding-block:clamp(84px,10vw,150px)}
+.sec.tight{padding-top:clamp(40px,5vw,70px)}
 
-/* buttons: a ticket and a plain underlined link */
-.tix{--n:8px;position:relative;display:inline-flex;align-items:center;gap:14px;padding:15px 22px 15px 24px;background:var(--seal-btn);color:var(--seal-ink);font-weight:700;font-size:16px;line-height:1.2;text-decoration:none;border:0;border-radius:3px;cursor:pointer;transition:transform .15s;
-  -webkit-mask:radial-gradient(circle var(--n) at 0 50%,#0000 97%,#000) 0 0/51% 100% no-repeat,radial-gradient(circle var(--n) at 100% 50%,#0000 97%,#000) 100% 0/51% 100% no-repeat;
-  mask:radial-gradient(circle var(--n) at 0 50%,#0000 97%,#000) 0 0/51% 100% no-repeat,radial-gradient(circle var(--n) at 100% 50%,#0000 97%,#000) 100% 0/51% 100% no-repeat}
-.tix:active{transform:scale(.97)}
-.tix:focus-visible{outline:none;box-shadow:inset 0 0 0 3px var(--seal-ink)}
-.tix .perf{align-self:stretch;margin-block:-15px;border-left:2px dashed rgba(255,248,240,.45)}
-.tix .ico{width:18px;height:18px}
-.tlink{display:inline-flex;align-items:center;gap:8px;padding:0 0 3px;font-weight:700;font-size:15.5px;text-decoration:none;background:none;border:0;border-bottom:1.5px solid currentColor;cursor:pointer;color:var(--ink)}
-.tlink .ico{width:17px;height:17px}
+/* buttons */
+.btn{display:inline-flex;align-items:center;gap:12px;padding:15px 22px;border-radius:3px;border:0;background:var(--seal-btn);color:var(--seal-ink);font-family:var(--f-label);font-weight:700;font-size:15.5px;line-height:1.2;text-decoration:none;cursor:pointer;transition:transform .15s,background-color .2s}
+.btn:active{transform:scale(.97)}
+.btn .ico{width:18px;height:18px}
+.btn small{display:block;font-weight:500;font-size:12px;opacity:.85}
+.btn.dark{background:var(--ink);color:var(--ground)}
+.tlink{display:inline-flex;align-items:center;gap:8px;padding:0 0 3px;font-family:var(--f-label);font-weight:700;font-size:15px;text-decoration:none;background:none;border:0;border-bottom:1.5px solid currentColor;cursor:pointer;color:var(--ink)}
+.tlink .ico{width:16px;height:16px}
 .tlink:hover{color:var(--seal)}
+.tlink .s{fill:currentColor}
 .ibtn{width:40px;height:40px;display:grid;place-items:center;border:0;background:none;cursor:pointer;color:var(--ink);border-radius:50%}
-.ibtn:hover{background:color-mix(in srgb,var(--ink) 9%,transparent)}
+.ibtn:hover{background:var(--ghost)}
 .ibtn .ico{width:20px;height:20px}
 .ibtn.ring{box-shadow:inset 0 0 0 1.5px var(--line)}
 
 /* header */
 .hdr{position:sticky;top:env(safe-area-inset-top,0px);z-index:50;background:var(--hdr);backdrop-filter:blur(10px);-webkit-backdrop-filter:blur(10px)}
-.hdr .wrap{display:flex;align-items:center;gap:32px;height:68px}
+.hdr .wrap{display:flex;align-items:center;gap:28px;height:66px}
 .brand{display:flex;align-items:center;gap:10px;text-decoration:none;color:var(--ink);flex-shrink:0}
-.brand .mk{width:36px;height:36px;color:var(--seal);transform:rotate(-10deg)}
-.brand b{font-family:var(--f-disp);font-weight:900;font-size:25px;line-height:1}
+.brand .mk{width:30px;height:30px;color:var(--seal)}
+.brand b{font-family:var(--f-label);font-weight:700;font-size:21px;letter-spacing:-.01em;line-height:1}
+.brand i{font-style:normal;font-family:var(--f-disp);font-weight:600;font-size:15px;color:var(--muted);line-height:1}
 nav.main{display:flex;gap:26px;margin-left:auto}
 nav.main a{font-size:15px;text-decoration:none;color:var(--ink2);padding-block:5px;background:linear-gradient(currentColor,currentColor) 0 100%/0 1.5px no-repeat;transition:background-size .25s,color .2s}
 nav.main a:hover{color:var(--ink);background-size:100% 1.5px}
 nav.main a.go{color:var(--seal);font-weight:700}
 .tools{display:flex;align-items:center;gap:12px}
 .lang{display:flex;gap:10px}
-.lang button{border:0;background:none;padding:4px 0;cursor:pointer;font-size:13px;font-weight:700;letter-spacing:.08em;color:var(--muted);border-bottom:2px solid transparent}
+.lang button{border:0;background:none;padding:4px 0;cursor:pointer;font-family:var(--f-label);font-size:13px;font-weight:700;letter-spacing:.06em;color:var(--muted);border-bottom:2px solid transparent}
 .lang button[aria-pressed="true"]{color:var(--ink);border-color:var(--seal)}
 .menu-btn{display:none}
 .mnav{display:none;background:var(--ground);border-top:1px solid var(--line)}
 .mnav.open{display:block}
 .mnav .wrap{display:grid;padding-block:10px 28px}
-.mnav a{font-family:var(--f-disp);font-weight:800;font-size:30px;line-height:1.25;text-decoration:none;padding-block:7px}
+.mnav a{font-family:var(--f-disp);font-weight:600;font-size:28px;line-height:1.3;text-decoration:none;padding-block:7px}
 .mnav a.go{color:var(--seal)}
 @media (max-width:980px){nav.main{display:none}.menu-btn{display:grid}.tools{margin-left:auto}}
-@media (max-width:420px){.hdr .wrap{gap:10px}.tools{gap:2px}.lang{gap:8px;margin-right:4px}.brand b{font-size:22px}.brand .mk{width:32px;height:32px}}
+@media (max-width:420px){.hdr .wrap{gap:10px}.tools{gap:2px}.lang{gap:8px;margin-right:4px}.brand i{display:none}}
 
-/* hero poster */
-.hero{padding-top:clamp(40px,6.4vw,100px)}
-.hero-grid{display:grid;grid-template-columns:minmax(0,1fr) 290px;gap:clamp(40px,5vw,72px);align-items:end}
-.poster-wrap{position:relative;min-width:0}
-.poster{margin:0;font-family:var(--f-disp);font-weight:700;line-height:.92;letter-spacing:-.018em;color:var(--ink)}
-.poster .ln{display:block;white-space:nowrap;font-size:clamp(38px,8vw,120px)}
-.poster .lt{display:inline-block}
-.poster .ln.acc{color:var(--seal)}
-html[lang="en"] .poster{text-transform:uppercase;line-height:.86}
-.hero-seal{position:absolute;right:-18px;top:-66px;width:clamp(96px,11vw,166px);aspect-ratio:1;color:var(--seal);mix-blend-mode:var(--blend);transform:rotate(-14deg);animation:press .6s cubic-bezier(.3,1.5,.5,1) .5s both;cursor:pointer;z-index:2}
-.hero-seal.again{animation:none}
-@keyframes press{0%{transform:rotate(-14deg) scale(1.75);opacity:.2}70%{transform:rotate(-14deg) scale(.95);opacity:1}100%{transform:rotate(-14deg) scale(1);opacity:1}}
-.seal-svg{display:block;width:100%;height:100%;overflow:visible}
-.hero-aside{display:grid;gap:24px;padding-bottom:6px}
-.hero-aside p{font-size:16.5px;color:var(--ink2);line-height:1.62}
-.ctas{display:flex;flex-wrap:wrap;align-items:center;gap:16px 24px}
-@media (max-width:900px){.hero-grid{grid-template-columns:1fr;gap:34px}.hero-seal{right:-6px;top:-30px;width:88px}}
+/* beat rail (wide screens) */
+.rail{position:fixed;left:18px;top:50%;transform:translateY(-50%);z-index:20;display:none;flex-direction:column;gap:14px;list-style:none;margin:0;padding:0}
+.rail a{display:flex;align-items:center;gap:10px;text-decoration:none;font-family:var(--f-label);font-size:11.5px;font-weight:700;color:var(--muted);opacity:.6;transition:opacity .3s,color .3s}
+.rail a b{font-variant-numeric:tabular-nums;width:22px}
+.rail a span{max-width:0;overflow:hidden;white-space:nowrap;transition:max-width .4s var(--ease)}
+.rail a.on{opacity:1;color:var(--seal)}
+.rail a:hover span,.rail a:focus-visible span{max-width:120px}
+@media (min-width:1380px){.rail{display:flex}}
 
-/* the conveyor */
-.belt-head{display:flex;flex-wrap:wrap;justify-content:space-between;align-items:baseline;gap:6px 24px;margin-top:clamp(52px,6vw,84px);padding-top:18px;border-top:1.5px solid var(--ink)}
-.belt-head .label{margin:0}
-.belt-head .hint{font-size:14px;color:var(--muted)}
-.belt{overflow-x:auto;overflow-y:hidden;scrollbar-width:none;padding-block:30px 52px;cursor:grab;user-select:none;-webkit-user-select:none}
-.belt::-webkit-scrollbar{display:none}
-.belt.dragging{cursor:grabbing}
-.belt-track{display:flex;width:max-content;padding-left:max(20px,calc((100vw - 1280px) / 2 + 20px))}
-.belt .set{display:flex;gap:clamp(18px,2.2vw,30px);padding-right:clamp(18px,2.2vw,30px)}
-.card{flex:0 0 auto;width:clamp(168px,16.5vw,226px);margin:0;display:grid;gap:14px;align-content:start;transform:rotate(var(--r,0deg));transition:transform .35s cubic-bezier(.2,.8,.2,1)}
-.card:nth-child(even){margin-top:26px}
-.card:hover,.card:focus-within{transform:rotate(0deg) translateY(-6px)}
-.face{position:relative;display:block;width:100%;aspect-ratio:300/500;border:0;padding:0;border-radius:12px;overflow:hidden;cursor:pointer;box-shadow:0 26px 40px -22px rgba(0,0,0,.7),0 0 0 1px color-mix(in srgb,var(--ink) 10%,transparent)}
-.face .pv{position:absolute;left:0;top:0;width:300px;height:620px;transform:scale(var(--k,.7));transform-origin:0 0;pointer-events:none}
-.face .play{position:absolute;right:10px;bottom:10px;width:40px;height:40px;border-radius:50%;display:grid;place-items:center;background:var(--seal-btn);color:var(--seal-ink);opacity:0;transform:scale(.8);transition:opacity .25s,transform .25s}
-.face .play .ico{width:16px;height:16px;margin-left:2px}
-.card:hover .play,.face:focus-visible .play{opacity:1;transform:none}
-@media (hover:none){.face .play{opacity:1;transform:none}}
-.face .orig{position:absolute;left:10px;top:10px;padding:3px 8px;border-radius:3px;background:var(--seal-btn);color:var(--seal-ink);font-size:10.5px;font-weight:800;letter-spacing:.08em}
-.card figcaption{display:grid;grid-template-columns:auto minmax(0,1fr);gap:0 10px;align-items:baseline}
-.card .no{grid-row:span 2;font-size:12px;font-weight:700;letter-spacing:.04em;color:var(--brass);font-variant-numeric:tabular-nums}
-.card .nm{font-family:var(--f-disp);font-weight:800;font-size:19px;line-height:1.25}
-.card .kd{font-size:13px;color:var(--muted);line-height:1.4}
+/* hero */
+.hero{position:relative;padding-top:clamp(28px,4vw,56px)}
+.hero-word{position:absolute;left:50%;top:clamp(40px,7vw,90px);transform:translateX(-50%);font-family:var(--f-disp);font-weight:800;font-size:clamp(120px,24vw,360px);line-height:1;color:var(--ghost);white-space:nowrap;pointer-events:none;user-select:none;z-index:0}
+.hero-grid{position:relative;z-index:1;display:grid;grid-template-columns:minmax(0,1.05fr) minmax(0,.95fr);gap:clamp(32px,5vw,72px);align-items:center}
+.hero h1{font-family:var(--f-disp);font-weight:700;font-size:clamp(40px,5.6vw,82px);line-height:1.1;letter-spacing:-.015em;margin:0;text-wrap:balance}
+.hero h1 em{font-style:normal;color:var(--seal)}
+.hero .sub{margin-top:22px;font-size:18px}
+.ctas{display:flex;flex-wrap:wrap;align-items:center;gap:16px 26px;margin-top:32px}
+.hstage{display:grid;justify-items:center;gap:16px}
+.chooser{display:flex;flex-wrap:wrap;justify-content:center;gap:8px}
+.chooser span{font-family:var(--f-label);font-size:13px;color:var(--muted);align-self:center;margin-right:4px}
+.chooser button{min-height:44px;padding:0 16px;border-radius:999px;border:1.5px solid var(--line);background:var(--surface);font-family:var(--f-label);font-weight:700;font-size:14px;cursor:pointer;color:var(--ink2)}
+.chooser button[aria-pressed="true"]{border-color:var(--seal);color:var(--seal)}
+.router{position:relative;z-index:1;display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:14px;margin-top:clamp(44px,6vw,80px)}
+.router button{display:grid;grid-template-columns:auto minmax(0,1fr) auto;align-items:center;gap:4px 16px;padding:20px 22px;min-height:44px;border:0;border-top:2px solid var(--ink);background:var(--surface);text-align:left;cursor:pointer;color:var(--ink);transition:background-color .2s}
+.router button:hover{background:var(--ground2)}
+.router .ico{width:24px;height:24px;color:var(--seal);grid-row:span 2}
+.router b{font-family:var(--f-disp);font-weight:700;font-size:20px;line-height:1.25}
+.router small{font-size:13.5px;color:var(--muted);grid-column:2}
+.router .arr{grid-row:1/span 2;grid-column:3;width:18px;height:18px;color:var(--muted)}
+@media (max-width:900px){.hero-grid{grid-template-columns:1fr}.router{grid-template-columns:1fr}.hero-word{top:auto;bottom:40%}}
 
-/* phone */
-.phone{position:relative;width:300px;max-width:100%;aspect-ratio:300/620;background:var(--device);border-radius:46px;padding:10px;box-shadow:0 44px 70px -34px rgba(0,0,0,.7),0 0 0 1px color-mix(in srgb,var(--ink) 14%,transparent)}
-.phone::before{content:"";position:absolute;top:18px;left:50%;width:82px;height:22px;margin-left:-41px;background:var(--device);border-radius:12px;z-index:6}
-.screen{position:relative;width:100%;height:100%;border-radius:37px;overflow:hidden;background:#000}
+/* beats */
+.beats{list-style:none;margin:clamp(70px,8vw,110px) 0 0;padding:0;display:grid;grid-template-columns:repeat(4,minmax(0,1fr));gap:0;border-top:1px solid var(--line)}
+.beats li{position:relative;padding:26px 24px 0 0;display:grid;gap:10px;align-content:start}
+.beats li:not(:last-child){border-right:1px solid var(--line);margin-right:24px}
+.beats .n{font-family:var(--f-label);font-weight:700;font-size:13px;color:var(--seal);font-variant-numeric:tabular-nums}
+.beats h3{font-family:var(--f-disp);font-weight:700;font-size:26px;line-height:1.2;margin:0}
+.beats p{font-size:15px;color:var(--ink2)}
+.beats .ex{font-size:13px;color:var(--muted)}
+.beats-h{margin-top:clamp(70px,8vw,110px)}
+.beats-h + .beats{margin-top:28px}
+@media (max-width:900px){.beats{grid-template-columns:1fr 1fr;row-gap:30px}.beats li:nth-child(2){border-right:0;margin-right:0}}
+@media (max-width:520px){.beats{grid-template-columns:1fr}.beats li{border-right:0!important;margin-right:0!important;padding-right:0}}
 
-/* story: the phone stays, the five steps scroll past */
-.story-top{display:grid;grid-template-columns:minmax(0,1fr) minmax(0,.62fr);gap:24px 64px;align-items:end;margin-bottom:clamp(30px,5vw,70px)}
-.story-grid{display:grid;grid-template-columns:330px minmax(0,1fr);gap:clamp(40px,7vw,120px);align-items:start}
-.story-stage{position:sticky;top:calc(68px + env(safe-area-inset-top,0px) + max(16px, (100vh - 68px - 690px) / 2));display:grid;justify-items:center;gap:14px}
-.sw-l{font-size:12.5px;color:var(--muted)}
-.sw{display:flex;flex-wrap:wrap;justify-content:center;gap:9px;max-width:330px}
-.sw button{width:24px;height:24px;border-radius:50%;border:0;padding:0;cursor:pointer;background:linear-gradient(135deg,var(--a) 50%,var(--b) 50%);box-shadow:0 0 0 1px color-mix(in srgb,var(--ink) 22%,transparent)}
-.sw button[aria-pressed="true"]{box-shadow:0 0 0 2px var(--ground),0 0 0 4px var(--seal)}
+/* blocks */
+.blk-top{display:grid;grid-template-columns:minmax(0,1fr) minmax(0,.7fr);gap:24px 64px;align-items:end;margin-bottom:clamp(32px,4vw,56px)}
+@media (max-width:900px){.blk-top{grid-template-columns:1fr}}
+.outs{list-style:none;margin:0;padding:0;display:grid;grid-template-columns:repeat(4,minmax(0,1fr));gap:24px}
+.outs li{display:grid;gap:8px;align-content:start}
+.outs .ico{width:26px;height:26px;color:var(--seal)}
+.outs b{font-family:var(--f-disp);font-weight:700;font-size:19px;line-height:1.3}
+.outs p{font-size:15px;color:var(--muted)}
+@media (max-width:900px){.outs{grid-template-columns:1fr 1fr}}
+@media (max-width:520px){.outs{grid-template-columns:1fr}}
+.addon{display:grid;grid-template-columns:auto minmax(0,1fr) auto;gap:10px 24px;align-items:center;margin-top:clamp(40px,5vw,64px);padding:24px;border:1.5px solid var(--ink);border-radius:4px}
+.addon .ico{width:34px;height:34px;color:var(--seal)}
+.addon h3{font-family:var(--f-disp);font-weight:700;font-size:22px;margin:0}
+.addon p{font-size:15px;color:var(--ink2);max-width:60ch}
+.addon .side{display:grid;gap:10px;justify-items:end}
+.addon .pr{font-family:var(--f-label);font-weight:700}
+@media (max-width:760px){.addon{grid-template-columns:1fr}.addon .side{justify-items:start}}
+.cards3{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:18px}
+.card3{display:flex;flex-direction:column;gap:12px;padding:24px;background:var(--surface);border-top:3px solid var(--ink)}
+.card3 .ico{width:28px;height:28px;color:var(--seal)}
+.card3 h3{font-family:var(--f-disp);font-weight:700;font-size:23px;line-height:1.2;margin:0}
+.card3 p{font-size:15px;color:var(--ink2)}
+.card3 .meta{margin-top:auto;padding-top:12px;border-top:1px solid var(--line);display:flex;flex-wrap:wrap;justify-content:space-between;align-items:center;gap:10px}
+.pill{font-family:var(--f-label);font-size:11px;font-weight:700;letter-spacing:.06em;padding:3px 8px;border-radius:3px;box-shadow:inset 0 0 0 1px var(--muted);color:var(--muted)}
+.pill.live{box-shadow:none;background:var(--seal-btn);color:var(--seal-ink)}
+.blk-cta{margin-top:28px}
+@media (max-width:900px){.cards3{grid-template-columns:1fr}}
+.personal{display:grid;grid-template-columns:minmax(0,1fr) auto;gap:16px 40px;align-items:center;padding:clamp(24px,3vw,36px);background:var(--ink);color:var(--ground);border-radius:4px}
+.personal h3{font-family:var(--f-disp);font-weight:700;font-size:clamp(24px,2.6vw,32px);margin:0 0 6px}
+.personal p{color:color-mix(in srgb,var(--ground) 80%,transparent)}
+.personal .acts{display:flex;flex-wrap:wrap;gap:14px 22px;align-items:center}
+.personal .tlink{color:var(--ground)}
+.personal .pr{font-family:var(--f-label);font-weight:700;font-size:20px}
+@media (max-width:760px){.personal{grid-template-columns:1fr}}
+
+/* story (case: an invite) */
+.case-h{margin:clamp(60px,7vw,100px) 0 0}
+.story-grid{display:grid;grid-template-columns:330px minmax(0,1fr);gap:clamp(40px,7vw,120px);align-items:start;margin-top:20px}
+.story-stage{position:sticky;top:calc(66px + env(safe-area-inset-top,0px) + max(16px, (100vh - 66px - 690px) / 2));display:grid;justify-items:center;gap:14px}
 .steps{list-style:none;margin:0;padding:0}
-.steps li{min-height:76vh;display:flex;flex-direction:column;justify-content:center;gap:16px;padding-block:24px;opacity:.26;transition:opacity .45s}
+.steps li{min-height:72vh;display:flex;flex-direction:column;justify-content:center;gap:14px;padding-block:24px;opacity:.26;transition:opacity .45s}
 .steps li.on{opacity:1}
-.steps .mark{width:58px;height:58px;border-radius:50%;border:2px solid var(--seal);color:var(--seal);display:grid;place-items:center;font-family:var(--f-disp);font-weight:800;font-size:25px;line-height:1;transform:rotate(-8deg)}
-.steps h3{font-family:var(--f-disp);font-weight:900;font-size:clamp(36px,4.6vw,68px);line-height:1.08;margin:0}
+.steps .mark{width:52px;height:52px;border-radius:50%;border:2px solid var(--seal);color:var(--seal);display:grid;place-items:center;font-family:var(--f-label);font-weight:700;font-size:20px}
+.steps h3{font-family:var(--f-disp);font-weight:700;font-size:clamp(32px,4vw,56px);line-height:1.12;margin:0}
 .steps p{font-size:18px;color:var(--ink2);max-width:42ch}
 .steps .gain{font-size:15px;color:var(--ink)}
-.steps .gain b{color:var(--brass);font-weight:700;margin-right:6px}
+.steps .gain b{color:var(--seal);font-weight:700;margin-right:6px}
 @media (max-width:900px){
-  .story-top{grid-template-columns:1fr}
   .story-grid{grid-template-columns:1fr;gap:0}
   .story-stage{top:calc(64px + env(safe-area-inset-top,0px));z-index:3;background:var(--ground);padding-top:6px;margin-inline:-20px;padding-inline:20px}
   .story-stage::after{content:"";position:absolute;left:0;right:0;bottom:-34px;height:34px;background:linear-gradient(var(--ground),transparent);pointer-events:none}
-  .story-stage .phone{transform:scale(.64);transform-origin:top center;margin-bottom:-223px}
-  .story-stage .sw,.story-stage .sw-l{display:none}
-  .steps li{min-height:64vh;justify-content:flex-start;padding-top:28px}
-  .steps h3{font-size:36px}
+  .story-stage .phone{transform:scale(.62);transform-origin:top center;margin-bottom:-236px}
+  .steps li{min-height:62vh;justify-content:flex-start;padding-top:30px}
+  .steps h3{font-size:32px}
   .steps p{font-size:16.5px}
 }
 
-/* occasions */
-.occ-top{display:grid;grid-template-columns:minmax(0,1fr) minmax(0,.62fr);gap:24px 64px;align-items:end;margin-bottom:clamp(36px,5vw,64px)}
-.occ{list-style:none;margin:0;padding:0;border-top:1.5px solid var(--ink)}
-.occ li{border-bottom:1px solid var(--line)}
-.occ button{width:100%;display:grid;grid-template-columns:minmax(0,1.1fr) minmax(0,1fr) auto 26px;align-items:center;gap:6px 32px;padding:24px 0;background:none;border:0;cursor:pointer;text-align:left;color:var(--ink)}
-.occ-name{font-family:var(--f-disp);font-weight:900;font-size:clamp(32px,4.2vw,60px);line-height:1.08;transition:color .2s,transform .35s cubic-bezier(.2,.8,.2,1)}
-.occ-desc{color:var(--muted);font-size:15.5px}
-.occ-price{font-weight:700;white-space:nowrap;font-variant-numeric:tabular-nums}
-.occ button .ico{transition:transform .3s,color .2s}
-.occ button:hover .occ-name,.occ button:focus-visible .occ-name{color:var(--seal);transform:translateX(12px)}
-.occ button:hover .ico{transform:translateX(6px);color:var(--seal)}
-.proc{display:flex;flex-wrap:wrap;align-items:center;gap:10px 14px;margin-top:34px;color:var(--ink2);font-size:15px}
-.proc .st{display:inline-flex;align-items:baseline;gap:8px}
-.proc .st b{font-family:var(--f-disp);color:var(--seal);font-weight:800}
-.proc .ar{color:var(--muted);display:inline-flex}
-.proc .ar .ico{width:16px;height:16px}
-.proc .pn{color:var(--muted);flex-basis:100%;font-size:14px}
-@media (max-width:900px){.occ-top{grid-template-columns:1fr}}
-@media (max-width:760px){.occ button{grid-template-columns:minmax(0,1fr) auto;gap:4px 16px;padding:20px 0}.occ-desc{grid-column:1;grid-row:2}.occ-price{grid-column:2;grid-row:1/span 2;font-size:14px}.occ button .ico{display:none}}
+/* phone */
+.phone{position:relative;width:300px;max-width:100%;aspect-ratio:300/620;background:var(--device);border-radius:46px;padding:10px;box-shadow:0 44px 70px -34px rgba(0,0,0,.6),0 0 0 1px color-mix(in srgb,var(--ink) 14%,transparent)}
+.phone::before{content:"";position:absolute;top:18px;left:50%;width:82px;height:22px;margin-left:-41px;background:var(--device);border-radius:12px;z-index:6}
+.screen{position:relative;width:100%;height:100%;border-radius:37px;overflow:hidden;background:#000}
 
-/* paper objects: menu card and reservation card */
-.paper{--ink:var(--card-ink);--ink2:var(--card-ink2);--muted:var(--card-muted);--line:var(--card-line);--seal:var(--card-seal);--brass:var(--card-brass);--blend:var(--card-blend);
-  color-scheme:var(--card-scheme);background-color:var(--card);background-image:var(--grain);color:var(--ink);box-shadow:var(--shadow-card)}
-.menu-card{position:relative;max-width:900px;margin:0 auto;padding:clamp(44px,6vw,84px) clamp(22px,7vw,96px) clamp(36px,5vw,64px);border-radius:3px}
-.menu-card::before{content:"";position:absolute;inset:12px;border:1px solid var(--line);pointer-events:none}
-.mc-head{text-align:center;display:grid;grid-template-columns:minmax(0,1fr);justify-items:center;gap:10px;margin-bottom:clamp(36px,5vw,60px)}
-.mc-head .label{margin:0}
-.mc-title{font-family:var(--f-disp);font-weight:900;font-size:clamp(64px,10vw,140px);line-height:1.16;margin:0 0 4px;text-wrap:balance}
-.mc-sub{color:var(--muted)}
-.bill{display:flex;flex-wrap:wrap;justify-content:center;gap:4px 22px;margin-top:10px}
-.bill button{border:0;background:none;padding:6px 0;font-weight:700;font-size:14.5px;color:var(--muted);border-bottom:2px solid transparent;cursor:pointer}
+/* one story, ten styles */
+.styles{display:grid;grid-template-columns:auto minmax(0,1fr);gap:clamp(32px,6vw,100px);align-items:center}
+.sty-stage .screen .scr{transition:opacity .35s}
+.sty-info{display:grid;gap:16px;align-content:center;min-width:0}
+.sty-now{display:grid;gap:4px;padding:18px 0;border-top:1px solid var(--line);border-bottom:1px solid var(--line)}
+.sty-now .no{font-family:var(--f-label);font-size:12.5px;font-weight:700;color:var(--seal);font-variant-numeric:tabular-nums}
+.sty-now b{font-family:var(--f-disp);font-weight:700;font-size:clamp(30px,3.4vw,46px);line-height:1.1}
+.sty-now span{color:var(--muted);font-size:15px}
+.sty-ctl{display:flex;flex-wrap:wrap;align-items:center;gap:10px 18px}
+.strip-h{display:flex;flex-wrap:wrap;justify-content:space-between;align-items:center;gap:12px;margin-top:clamp(44px,5vw,70px)}
+.filters{display:flex;flex-wrap:wrap;gap:8px}
+.filters button{min-height:40px;padding:0 15px;border:1.5px solid var(--line);border-radius:999px;background:none;font-family:var(--f-label);font-weight:700;font-size:13.5px;cursor:pointer;color:var(--ink2)}
+.filters button[aria-pressed="true"]{background:var(--ink);border-color:var(--ink);color:var(--ground)}
+.strip{display:flex;gap:16px;overflow-x:auto;padding:18px 2px 26px;scrollbar-width:thin;scroll-snap-type:x mandatory}
+.mini{flex:0 0 auto;width:150px;scroll-snap-align:start;display:grid;gap:10px;border:0;padding:0;background:none;cursor:pointer;text-align:left;color:var(--ink)}
+.mini .face{position:relative;display:block;width:100%;aspect-ratio:300/500;border-radius:10px;overflow:hidden;box-shadow:0 0 0 1px var(--line);transition:transform .25s var(--ease),box-shadow .25s}
+.mini .pv{position:absolute;left:0;top:0;width:300px;height:620px;transform:scale(.5);transform-origin:0 0;pointer-events:none}
+.mini b{font-family:var(--f-disp);font-weight:700;font-size:15px;line-height:1.25}
+.mini small{display:block;font-size:12px;color:var(--muted);font-family:var(--f-body)}
+.mini[aria-pressed="true"] .face{box-shadow:0 0 0 3px var(--seal);transform:translateY(-4px)}
+.mini:hover .face{transform:translateY(-4px)}
+@media (max-width:900px){.styles{grid-template-columns:1fr;justify-items:center}.sty-info{justify-self:stretch}}
+
+/* pricing */
+.bill{display:flex;flex-wrap:wrap;gap:4px 22px;margin:0 0 26px}
+.bill button{border:0;background:none;padding:6px 0;font-family:var(--f-label);font-weight:700;font-size:14.5px;color:var(--muted);border-bottom:2px solid transparent;cursor:pointer}
 .bill button[aria-pressed="true"]{color:var(--ink);border-color:var(--seal)}
-.courses{list-style:none;margin:0;padding:0;display:grid;gap:clamp(30px,4vw,48px)}
-.course{position:relative}
-.c-line{display:flex;align-items:baseline;gap:14px}
-.c-rom{font-family:var(--f-disp);font-weight:700;color:var(--seal);font-size:18px;min-width:32px}
-.c-name{font-family:var(--f-disp);font-weight:900;font-size:clamp(27px,3.3vw,42px);line-height:1.12;min-width:0}
-.dots{flex:1;min-width:18px;border-bottom:2px dotted var(--line);transform:translateY(-7px)}
-.c-price{font-family:var(--f-disp);font-weight:800;font-size:clamp(30px,3.7vw,48px);line-height:1;font-variant-numeric:tabular-nums;white-space:nowrap}
-.c-price small{font-size:.5em;margin-left:3px;font-weight:700}
-.c-body{padding-left:46px;display:grid;gap:6px;margin-top:10px}
-.c-ing{font-size:15.5px;color:var(--ink2);max-width:62ch}
-.c-for{font-size:14.5px;color:var(--muted)}
-.c-act{display:flex;flex-wrap:wrap;align-items:baseline;gap:10px 22px;margin-top:6px}
-.c-pick{display:inline-flex;align-items:center;gap:6px;border:0;background:none;padding:0 0 2px;font-weight:700;font-size:14.5px;color:var(--seal);border-bottom:1.5px solid currentColor;cursor:pointer}
-.c-pick .ico{width:15px;height:15px}
-.c-yr{font-size:13px;color:var(--muted);font-variant-numeric:tabular-nums}
-.chef{position:absolute;left:-86px;top:-14px;width:66px;height:66px;border-radius:50%;border:2px solid var(--seal);color:var(--seal);display:grid;place-items:center;text-align:center;font-size:10px;font-weight:800;line-height:1.15;padding:6px;transform:rotate(-14deg);mix-blend-mode:var(--blend)}
-.chef::before{content:"";position:absolute;inset:3px;border-radius:50%;border:1px solid currentColor}
-.orn{display:flex;align-items:center;gap:16px;margin:clamp(40px,5vw,64px) 0 clamp(22px,3vw,34px);color:var(--line)}
-.orn::before,.orn::after{content:"";flex:1;border-top:1px solid currentColor}
-.orn .ico{width:14px;height:14px;color:var(--seal)}
-.alc-h{text-align:center;font-family:var(--f-disp);font-weight:900;font-size:clamp(26px,2.8vw,34px);margin:0 0 22px}
-.menu-list{list-style:none;margin:0 auto;padding:0;display:grid;gap:14px;max-width:640px}
-.menu-list li{display:flex;align-items:baseline;gap:10px;font-size:15.5px}
-.menu-list .nm{min-width:0}
-.menu-list .dots{min-width:20px;transform:translateY(-5px)}
-.menu-list .pr{font-weight:700;white-space:nowrap;font-variant-numeric:tabular-nums}
-.mc-foot{text-align:center;margin:clamp(32px,4vw,46px) auto 0;max-width:46ch;font-size:14.5px;color:var(--ink2)}
-.mc-seal{position:absolute;top:-34px;right:-22px;width:clamp(112px,13vw,150px);aspect-ratio:1;color:var(--seal);transform:rotate(12deg);z-index:2}
-@media (max-width:1060px){.chef{position:static;width:58px;height:58px;font-size:9px;margin-top:-4px}.course{display:grid}.course .chef{order:3}}
-@media (max-width:600px){.c-body{padding-left:0}.c-rom{min-width:20px;font-size:15px}.c-line{gap:10px}.mc-seal{right:-6px;top:-40px;width:104px}}
-
-/* experience types */
-.xp-grid{display:grid;grid-template-columns:repeat(4,minmax(0,1fr));gap:18px}
-.xp{display:flex;flex-direction:column;gap:12px;padding:24px 22px 20px;border-top:3px solid var(--ink);background:color-mix(in srgb,var(--ink) 4%,transparent)}
-.xp .xi{width:46px;height:46px;border-radius:50%;border:2px solid var(--seal);color:var(--seal);display:grid;place-items:center}
-.xp h3{font-family:var(--f-disp);font-weight:700;font-size:24px;line-height:1.15;margin:0}
-.xp .who{font-size:13px;color:var(--muted)}
-.xp p{font-size:15px;color:var(--ink2)}
-.xp .meta{margin-top:auto;display:flex;flex-wrap:wrap;justify-content:space-between;align-items:center;gap:8px;padding-top:12px;border-top:1px solid var(--line)}
-.xp .pr{font-weight:700;font-size:14.5px}
-.xp .stt{font-size:11px;font-weight:800;letter-spacing:.08em;padding:3px 8px;border-radius:3px;background:var(--seal-btn);color:var(--seal-ink)}
-.xp .stt.pilot{background:transparent;color:var(--brass);box-shadow:inset 0 0 0 1px var(--brass)}
-.xp .tlink{align-self:flex-start}
-@media (max-width:1060px){.xp-grid{grid-template-columns:repeat(2,minmax(0,1fr))}}
-@media (max-width:560px){.xp-grid{grid-template-columns:1fr}}
+.tiers{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:0;border:1.5px solid var(--ink);border-radius:4px;overflow:hidden}
+.tier{position:relative;display:flex;flex-direction:column;gap:14px;padding:26px 24px}
+.tier:not(:last-child){border-right:1px solid var(--line)}
+.tier.rec{background:var(--surface)}
+.tier .rec-b{position:absolute;top:16px;right:16px}
+.tier h3{font-family:var(--f-label);font-weight:700;font-size:20px;margin:0}
+.tier .for{font-size:14px;color:var(--muted);min-height:3.4em}
+.price{display:flex;align-items:baseline;gap:8px}
+.price b{font-family:var(--f-label);font-weight:700;font-size:52px;line-height:1;font-variant-numeric:tabular-nums}
+.price span{color:var(--muted);font-size:14px}
+.tier .yr{font-size:12.5px;color:var(--muted);margin-top:-6px;min-height:1.4em}
+.tier ul{list-style:none;margin:0;padding:0;display:grid;gap:9px;font-size:15px}
+.tier li{display:grid;grid-template-columns:18px minmax(0,1fr);gap:10px}
+.tier li .ico{width:16px;height:16px;color:var(--seal);margin-top:4px}
+.tier .btn,.tier .tlink{margin-top:auto;align-self:flex-start}
+@media (max-width:900px){.tiers{grid-template-columns:1fr}.tier:not(:last-child){border-right:0;border-bottom:1px solid var(--line)}.tier .for{min-height:0}}
+.under{display:grid;grid-template-columns:minmax(0,1fr) minmax(0,1fr);gap:32px 64px;margin-top:clamp(40px,5vw,64px)}
+.under h3{font-family:var(--f-label);font-weight:700;font-size:15px;letter-spacing:.04em;margin:0 0 16px;color:var(--muted)}
+.rows{list-style:none;margin:0;padding:0;display:grid}
+.rows li{display:flex;align-items:baseline;gap:10px;padding:12px 0;border-bottom:1px solid var(--line);font-size:15.5px}
+.rows .nm{flex:1;min-width:0}
+.rows .pr{font-family:var(--f-label);font-weight:700;white-space:nowrap}
+.checks{list-style:none;margin:0;padding:0;display:grid;gap:12px}
+.checks li{display:grid;grid-template-columns:22px minmax(0,1fr);gap:10px;font-size:15.5px}
+.checks .ico{width:18px;height:18px;color:var(--seal);margin-top:3px}
+.founding{display:flex;flex-wrap:wrap;align-items:center;gap:12px 24px;margin-top:22px;padding:18px 20px;border:2px dashed color-mix(in srgb,var(--seal) 60%,var(--line));border-radius:4px}
+.founding .cnt{display:flex;gap:6px}
+.founding .cnt i{width:14px;height:14px;border-radius:50%;border:2px solid var(--seal)}
+.founding .cnt i.f{background:var(--seal)}
+.founding b{font-family:var(--f-label)}
+.founding p{color:var(--ink2);font-size:15px;flex:1;min-width:220px}
+@media (max-width:900px){.under{grid-template-columns:1fr}}
 
 /* faq */
 .faq-grid{display:grid;grid-template-columns:minmax(0,.8fr) minmax(0,1.2fr);gap:40px 72px;align-items:start}
-.faq-head{position:sticky;top:120px}
+.qtabs{display:flex;flex-wrap:wrap;gap:8px;margin-bottom:18px}
 .qa{margin:0;border-top:1.5px solid var(--ink)}
-.qa div{display:grid;grid-template-columns:minmax(0,1fr) minmax(0,1.15fr);gap:8px 36px;padding:24px 0;border-bottom:1px solid var(--line)}
-.qa dt{font-family:var(--f-disp);font-weight:700;font-size:18.5px;line-height:1.4}
+.qa div{display:grid;grid-template-columns:minmax(0,1fr) minmax(0,1.15fr);gap:8px 36px;padding:22px 0;border-bottom:1px solid var(--line)}
+.qa dt{font-family:var(--f-disp);font-weight:700;font-size:18px;line-height:1.4}
 .qa dd{margin:0;color:var(--ink2);font-size:16px}
-@media (max-width:900px){.faq-grid{grid-template-columns:1fr}.faq-head{position:static}.qa div{grid-template-columns:1fr}}
+@media (max-width:900px){.faq-grid{grid-template-columns:1fr}.qa div{grid-template-columns:1fr}}
 
-/* request: a reservation card */
-.req-grid{display:grid;grid-template-columns:minmax(0,.85fr) minmax(0,1.15fr);gap:52px 80px;align-items:start}
-.contact{margin-top:40px;display:grid;gap:22px}
-.contact .k{display:block;font-size:12.5px;letter-spacing:.14em;color:var(--brass);font-weight:700}
-.contact .v{display:block;font-family:var(--f-disp);font-weight:700;font-size:23px;line-height:1.35;user-select:all;word-break:break-all}
-.req-note{margin-top:30px;color:var(--ink2);max-width:40ch}
-.res-card{position:relative;border-radius:3px}
-.rc-stub{position:relative;display:flex;justify-content:space-between;align-items:center;gap:12px;padding:22px clamp(22px,4vw,44px);border-bottom:2px dashed var(--line)}
+/* request: the "keep" beat */
+.req-grid{display:grid;grid-template-columns:minmax(0,.85fr) minmax(0,1.15fr);gap:48px 80px;align-items:start}
+.nextl{list-style:none;margin:32px 0 0;padding:0;display:grid;gap:0;counter-reset:n}
+.nextl li{display:grid;grid-template-columns:36px minmax(0,1fr);gap:12px;padding:14px 0;border-bottom:1px solid var(--line);font-size:15.5px;color:var(--ink2)}
+.nextl li::before{counter-increment:n;content:counter(n,decimal-leading-zero);font-family:var(--f-label);font-weight:700;color:var(--seal);font-variant-numeric:tabular-nums}
+.contact{margin-top:28px;display:grid;gap:4px}
+.contact .k{font-family:var(--f-label);font-size:12.5px;font-weight:700;color:var(--muted)}
+.contact .v{font-family:var(--f-disp);font-weight:700;font-size:22px;user-select:all;word-break:break-all}
+.paper{--ink:var(--card-ink);--ink2:var(--card-ink2);--muted:var(--card-muted);--line:var(--card-line);--seal:var(--card-seal);--brass:var(--card-brass);--blend:var(--card-blend);color-scheme:var(--card-scheme);background:var(--card);color:var(--ink);box-shadow:var(--shadow-card)}
+.res-card{position:relative;border-radius:4px}
+.rc-stub{position:relative;display:flex;justify-content:space-between;align-items:center;gap:12px;padding:20px clamp(22px,4vw,40px);border-bottom:2px dashed var(--line)}
 .rc-stub::before,.rc-stub::after{content:"";position:absolute;bottom:-12px;width:22px;height:22px;border-radius:50%;background:var(--ground)}
 .rc-stub::before{left:-11px}.rc-stub::after{right:-11px}
-.rc-stub b{font-family:var(--f-disp);font-weight:900;font-size:22px;letter-spacing:.06em}
+.rc-stub b{font-family:var(--f-label);font-weight:700;font-size:18px;letter-spacing:.04em}
 .rc-stub span{font-size:13px;color:var(--muted);font-variant-numeric:tabular-nums;text-align:right}
-.rc-body{padding:clamp(24px,4vw,44px)}
-.fgrid{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:26px 30px;align-items:end}
+.rc-body{padding:clamp(22px,4vw,40px)}
+.fgrid{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:24px 28px;align-items:end}
 .field{display:grid;gap:2px;min-width:0;align-content:start}
 .field.full{grid-column:1/-1}
-.field>label,.field legend{font-size:12.5px;font-weight:700;letter-spacing:.1em;color:var(--muted);padding:0}
-html[lang="en"] .field>label,html[lang="en"] .field legend{text-transform:uppercase}
-.field .opt{font-weight:400;letter-spacing:0;text-transform:none}
+.field>label,.field legend{font-family:var(--f-label);font-size:12.5px;font-weight:700;color:var(--muted);padding:0}
+.field .opt{font-weight:400}
 fieldset.field{border:0;margin:0;padding:0;min-width:0}
-.paper input,.paper select,.paper textarea{font:inherit;font-size:17px;width:100%;min-width:0;padding:8px 0 9px;background:transparent;border:0;border-bottom:1.5px solid var(--line);border-radius:0;color:var(--ink);-webkit-appearance:none;appearance:none}
-.paper textarea{min-height:92px;resize:vertical;line-height:1.5}
-.paper input:focus,.paper select:focus,.paper textarea:focus{outline:none;border-bottom-color:var(--seal);box-shadow:0 1.5px 0 var(--seal)}
+.paper input,.paper textarea{font:inherit;font-size:17px;width:100%;min-width:0;padding:8px 0 9px;background:transparent;border:0;border-bottom:1.5px solid var(--line);border-radius:0;color:var(--ink);-webkit-appearance:none;appearance:none}
+.paper textarea{min-height:84px;resize:vertical;line-height:1.5}
+.paper input:focus,.paper textarea:focus{outline:none;border-bottom-color:var(--seal);box-shadow:0 1.5px 0 var(--seal)}
 .paper ::placeholder{color:var(--muted);opacity:.85}
-.paper option{background:var(--card);color:var(--card-ink)}
-.fsel{position:relative}
-.fsel select{padding-right:26px;cursor:pointer}
-.fsel>span{position:absolute;right:0;bottom:11px;pointer-events:none;color:var(--muted);display:flex}
-.fsel>span .ico{width:18px;height:18px}
 .field.bad input{border-bottom-color:var(--seal)}
 .err{font-size:13px;color:var(--seal)}
 .circs{display:flex;flex-wrap:wrap;gap:8px 30px;padding-top:10px}
-.circ{position:relative;cursor:pointer;padding:6px 4px;font-size:17px;font-weight:600}
+.circ{position:relative;cursor:pointer;padding:6px 4px;font-size:16.5px;font-weight:600;min-height:44px;display:inline-flex;align-items:center}
 .circ input{position:absolute;opacity:0;width:1px;height:1px}
-.circ .ring{position:absolute;left:-14px;top:-5px;width:calc(100% + 28px);height:calc(100% + 10px);overflow:visible;pointer-events:none}
+.circ .ring{position:absolute;left:-14px;top:-2px;width:calc(100% + 28px);height:calc(100% + 4px);overflow:visible;pointer-events:none}
 .circ .ring path{fill:none;stroke:var(--seal);stroke-width:2.2;stroke-linecap:round;stroke-dasharray:420;stroke-dashoffset:420;transition:stroke-dashoffset .55s ease;vector-effect:non-scaling-stroke}
 .circ input:checked ~ .ring path{stroke-dashoffset:0}
 .circ input:focus-visible ~ .t{outline:2px solid var(--seal);outline-offset:6px}
-.form-foot{display:flex;flex-wrap:wrap;align-items:center;justify-content:space-between;gap:20px;margin-top:30px}
+.interest{display:inline-flex;align-items:center;gap:8px;margin-top:4px;padding:6px 8px 6px 12px;border-radius:999px;background:color-mix(in srgb,var(--seal) 12%,transparent);font-family:var(--f-label);font-size:13.5px;font-weight:700}
+.interest button{width:26px;height:26px;border-radius:50%;border:0;background:none;cursor:pointer;display:grid;place-items:center;color:var(--ink)}
+.interest .ico{width:14px;height:14px}
+.form-foot{display:flex;flex-wrap:wrap;align-items:center;justify-content:space-between;gap:20px;margin-top:28px}
 .form-foot .fine{max-width:30ch}
-.send{position:relative;width:136px;height:136px;border:0;padding:0;background:none;cursor:pointer;color:var(--seal);transform:rotate(-10deg);transition:transform .25s;mix-blend-mode:var(--blend);border-radius:50%}
+.send{position:relative;width:132px;height:132px;border:0;padding:0;background:none;cursor:pointer;color:var(--seal);transform:rotate(-10deg);transition:transform .25s;mix-blend-mode:var(--blend);border-radius:50%}
 .send:hover{transform:rotate(0deg) scale(1.04)}
 .send .send-ring{position:absolute;inset:0}
-.send .lbl{position:relative;display:grid;justify-items:center;gap:2px;font-family:var(--f-disp);font-weight:800;font-size:16px;line-height:1.1}
+.send .lbl{position:relative;display:grid;justify-items:center;gap:2px;font-family:var(--f-label);font-weight:700;font-size:15px;line-height:1.1}
 .send .lbl .ico{width:18px;height:18px}
 .send.thump{animation:thump .45s ease}
 @keyframes thump{0%{transform:rotate(-10deg) scale(1)}40%{transform:rotate(-10deg) scale(.84)}100%{transform:rotate(-10deg) scale(1)}}
-.result{display:grid;gap:18px;justify-items:start}
-.result .rs{width:132px;aspect-ratio:1;color:var(--seal);mix-blend-mode:var(--blend);transform:rotate(-12deg);animation:press .55s cubic-bezier(.3,1.5,.5,1) both}
-.result h3{font-family:var(--f-disp);font-weight:900;font-size:clamp(28px,3vw,38px);line-height:1.15;margin:0}
+@keyframes press{0%{transform:rotate(-12deg) scale(1.75);opacity:.2}70%{transform:rotate(-12deg) scale(.95);opacity:1}100%{transform:rotate(-12deg) scale(1);opacity:1}}
+.seal-svg{display:block;width:100%;height:100%;overflow:visible}
+.result{display:grid;gap:16px;justify-items:start}
+.result .rs{width:128px;aspect-ratio:1;color:var(--seal);mix-blend-mode:var(--blend);transform:rotate(-12deg);animation:press .55s cubic-bezier(.3,1.5,.5,1) both}
+.result h3{font-family:var(--f-disp);font-weight:700;font-size:clamp(26px,3vw,36px);line-height:1.2;margin:0}
 .result p{color:var(--ink2);max-width:52ch}
 .result pre{margin:0;width:100%;white-space:pre-wrap;word-break:break-word;font-family:var(--f-body);font-size:14px;line-height:1.55;border-top:1.5px solid var(--line);border-bottom:1.5px solid var(--line);padding:14px 0;max-height:260px;overflow:auto;color:var(--ink)}
 .result .row{display:flex;flex-wrap:wrap;gap:14px 26px;align-items:center}
@@ -338,12 +350,17 @@ fieldset.field{border:0;margin:0;padding:0;min-width:0}
 /* footer */
 footer{padding-block:56px 48px;border-top:1.5px solid var(--ink)}
 .foot{display:grid;grid-template-columns:minmax(0,1fr) auto;gap:28px 48px;align-items:end}
-.foot .slogan{font-family:var(--f-disp);font-weight:900;font-size:clamp(28px,3.4vw,46px);line-height:1.1;max-width:16ch;margin-top:22px;text-wrap:balance}
+.foot .mean{font-family:var(--f-disp);font-weight:700;font-size:clamp(26px,3vw,40px);line-height:1.2;max-width:18ch;margin-top:20px}
 .foot nav{display:flex;flex-wrap:wrap;gap:8px 24px;font-size:15px}
 .foot nav a{text-decoration:none;color:var(--ink2)}
 .foot nav a:hover{color:var(--seal)}
 .fine-row{grid-column:1/-1;display:flex;flex-wrap:wrap;justify-content:space-between;gap:10px 30px;padding-top:22px;border-top:1px solid var(--line);font-size:12.5px;color:var(--muted)}
 @media (max-width:700px){.foot{grid-template-columns:1fr}}
+
+/* sticky mobile CTA */
+.sticky{position:fixed;left:0;right:0;bottom:0;z-index:45;display:none;padding:10px max(16px,env(safe-area-inset-right,0px)) calc(10px + env(safe-area-inset-bottom,0px)) max(16px,env(safe-area-inset-left,0px));background:var(--hdr);backdrop-filter:blur(10px);-webkit-backdrop-filter:blur(10px);border-top:1px solid var(--line)}
+.sticky .btn{width:100%;justify-content:center;min-height:48px}
+@media (max-width:760px){.sticky{display:block}.sticky.away{display:none}body{padding-bottom:76px}}
 
 /* demo stage */
 dialog.stage{position:fixed;inset:0;width:100%;height:100%;max-width:none;max-height:none;margin:0;padding:0;border:0;background:var(--ground);color:var(--ink);overflow:auto;overscroll-behavior:contain}
@@ -351,16 +368,15 @@ dialog.stage::backdrop{background:transparent}
 .st-close{position:fixed;z-index:5;top:calc(env(safe-area-inset-top,0px) + 14px);right:max(16px,env(safe-area-inset-right,0px))}
 .st-in{min-height:100%;display:grid;grid-template-columns:minmax(0,1fr) auto minmax(0,1fr);gap:clamp(28px,4vw,72px);align-items:center;padding:calc(env(safe-area-inset-top,0px) + 64px) max(20px,env(safe-area-inset-right,0px)) calc(env(safe-area-inset-bottom,0px) + 44px) max(20px,env(safe-area-inset-left,0px))}
 .st-info{display:grid;gap:12px;justify-items:start;max-width:420px;justify-self:end;min-width:0}
-.st-no{font-size:12.5px;letter-spacing:.14em;color:var(--brass);font-weight:700}
-.st-name{font-family:var(--f-disp);font-weight:900;font-size:clamp(46px,5.6vw,92px);line-height:1;margin:0}
-.st-kind{color:var(--muted);font-size:15px}
+.st-no{font-family:var(--f-label);font-size:12.5px;font-weight:700;color:var(--seal)}
+.st-name{font-family:var(--f-disp);font-weight:700;font-size:clamp(40px,4.6vw,72px);line-height:1.05;margin:0}
 .st-desc{color:var(--ink2);font-size:16.5px;margin-top:6px}
 .st-steps{list-style:none;margin:10px 0 0;padding:0;display:grid;gap:7px;font-size:15px;color:var(--ink2)}
 .st-steps li{display:grid;grid-template-columns:26px minmax(0,1fr);gap:8px}
-.st-steps li b{color:var(--seal);font-family:var(--f-disp)}
+.st-steps li b{color:var(--seal);font-family:var(--f-label)}
 .st-side{display:grid;gap:16px;justify-items:start;max-width:340px;min-width:0}
 .st-nav{display:flex;align-items:center;gap:10px}
-.st-nav span{font-size:13px;color:var(--muted);font-variant-numeric:tabular-nums;min-width:52px}
+.st-nav span{font-family:var(--f-label);font-size:13px;color:var(--muted);font-variant-numeric:tabular-nums;min-width:52px}
 .st-cust{margin:0;padding:0;list-style:none;display:grid;gap:6px;font-size:14.5px;color:var(--ink2)}
 .st-cust li{display:grid;grid-template-columns:18px minmax(0,1fr);gap:8px}
 .st-cust li .ico{width:16px;height:16px;color:var(--seal);margin-top:4px}
@@ -369,6 +385,7 @@ dialog.stage::backdrop{background:transparent}
   .st-phone{order:-1}
   .st-info,.st-side{justify-self:stretch;max-width:none}
 }
+@media (max-width:420px){.hero h1{font-size:31px}.hero .sub{font-size:16.5px}}
 
 /* ============ invite engine (inside the phone) ============ */
 .scr{position:absolute;inset:0;background:var(--ibg);color:var(--iink);font-family:var(--fi-sans);overflow:hidden;line-height:1.5;text-align:center}
@@ -790,15 +807,14 @@ dialog.stage::backdrop{background:transparent}
 
 <header class="hdr">
   <div class="wrap">
-    <a class="brand" href="#top">
-      <svg class="mk" viewBox="0 0 40 40" aria-hidden="true"><circle cx="20" cy="20" r="18" fill="none" stroke="currentColor" stroke-width="2.6"/><circle cx="20" cy="20" r="14.6" fill="none" stroke="currentColor" stroke-width="1"/><text x="20" y="27" text-anchor="middle" fill="currentColor" style="font-family:var(--f-disp);font-weight:900;font-size:20px">გ</text></svg>
-      <b data-t="brand"></b>
+    <a class="brand" href="#top" aria-label="Gancda">
+      <svg class="mk" viewBox="0 0 40 40" aria-hidden="true"><circle cx="20" cy="20" r="18" fill="none" stroke="currentColor" stroke-width="2.6"/><circle cx="20" cy="20" r="14.6" fill="none" stroke="currentColor" stroke-width="1"/><text x="20" y="26.5" text-anchor="middle" fill="currentColor" style="font-family:var(--f-disp);font-weight:800;font-size:19px">გ</text></svg>
+      <b>Gancda</b><i>განცდა</i>
     </a>
     <nav class="main" aria-label="Main">
-      <a href="#experiences" data-t="nav.xp"></a>
-      <a href="#templates" data-t="nav.templates"></a>
-      <a href="#how" data-t="nav.how"></a>
-      <a href="#custom" data-t="nav.custom"></a>
+      <a href="#restaurants" data-t="nav.rest"></a>
+      <a href="#teams" data-t="nav.teams"></a>
+      <a href="#styles" data-t="nav.demos"></a>
       <a href="#pricing" data-t="nav.pricing"></a>
       <a class="go" href="#request" data-t="nav.request"></a>
     </nav>
@@ -813,129 +829,145 @@ dialog.stage::backdrop{background:transparent}
   </div>
   <div class="mnav" id="mnav">
     <div class="wrap">
-      <a href="#experiences" data-t="nav.xp"></a>
-      <a href="#templates" data-t="nav.templates"></a>
-      <a href="#how" data-t="nav.how"></a>
-      <a href="#custom" data-t="nav.custom"></a>
+      <a href="#restaurants" data-t="nav.rest"></a>
+      <a href="#teams" data-t="nav.teams"></a>
+      <a href="#styles" data-t="nav.demos"></a>
       <a href="#pricing" data-t="nav.pricing"></a>
       <a class="go" href="#request" data-t="nav.request"></a>
     </div>
   </div>
 </header>
 
+<ol class="rail" id="rail" aria-label="Chapters">
+  <li><a href="#top" data-ch="1"><b>01</b><span class="caps" data-t="beat.0"></span></a></li>
+  <li><a href="#restaurants" data-ch="2"><b>02</b><span class="caps" data-t="beat.1"></span></a></li>
+  <li><a href="#styles" data-ch="3"><b>03</b><span class="caps" data-t="beat.2"></span></a></li>
+  <li><a href="#pricing" data-ch="4"><b>04</b><span class="caps" data-t="beat.3"></span></a></li>
+</ol>
+
 <main id="top">
-  <section class="hero">
+  <section class="hero" data-ch="1">
+    <div class="hero-word" aria-hidden="true">განცდა</div>
     <div class="wrap">
+      <p class="chap"><b>01</b><span class="caps" data-t="beat.0"></span></p>
       <div class="hero-grid">
-        <div class="poster-wrap">
-          <h1 class="poster" id="posterH"></h1>
-          <div class="hero-seal" id="heroSeal" aria-hidden="true"></div>
-        </div>
-        <div class="hero-aside">
-          <p data-t="hero.lead"></p>
+        <div>
+          <p class="label caps" data-t="hero.kick"></p>
+          <h1 data-th="hero.h1"></h1>
+          <p class="sub" data-t="hero.sub"></p>
           <div class="ctas">
-            <a class="tix" href="#how"><span data-t="hero.cta"></span><i class="perf"></i><span data-ic="arrowD"></span></a>
-            <a class="tlink" href="#pricing" data-t="hero.cta2"></a>
+            <button type="button" class="btn" data-req="founding" data-who="restaurant"><span><span data-t="hero.cta"></span><small data-t="hero.ctaS"></small></span><span data-ic="arrowR"></span></button>
+            <a class="tlink" href="#styles" data-t="hero.cta2"></a>
           </div>
         </div>
-      </div>
-      <div class="belt-head" id="templates">
-        <p class="label" data-t="belt.label"></p>
-        <p class="hint" data-t="belt.hint"></p>
-      </div>
-    </div>
-    <div class="belt" id="belt"><div class="belt-track" id="beltTrack"></div></div>
-  </section>
-
-  <section class="sec" id="experiences">
-    <div class="wrap">
-      <div class="occ-top">
-        <div>
-          <p class="label" data-t="xp.label"></p>
-          <h2 class="say" data-t="xp.h"></h2>
+        <div class="hstage">
+          <div class="phone"><div class="screen" id="heroPhone"></div></div>
+          <div class="chooser" id="chooser" role="group"></div>
         </div>
-        <p class="sub" data-t="xp.sub"></p>
       </div>
-      <div class="xp-grid" id="xpGrid"></div>
+      <div class="router" id="router"></div>
+      <h2 class="say beats-h" data-t="beats.h"></h2>
+      <ol class="beats" id="beats"></ol>
     </div>
   </section>
 
-  <section class="sec story" id="how">
+  <section class="sec" id="restaurants" data-ch="2">
     <div class="wrap">
-      <div class="story-top">
-        <div>
-          <p class="label" data-t="story.label"></p>
-          <h2 class="say" data-t="story.h"></h2>
-        </div>
-        <p class="sub" data-t="story.sub"></p>
+      <p class="chap"><b>02</b><span class="caps" data-t="beat.1"></span></p>
+      <div class="blk-top">
+        <div><p class="label caps" data-t="rest.label"></p><h2 class="say" data-t="rest.h"></h2></div>
+        <p class="sub" data-t="rest.sub"></p>
       </div>
+      <ul class="outs" id="outs"></ul>
+      <p class="label caps case-h" data-t="rest.case"></p>
       <div class="story-grid">
-        <div class="story-stage">
-          <div class="phone"><div class="screen" id="storyPhone"></div></div>
-          <p class="sw-l" data-t="ui.styles"></p>
-          <div class="sw" id="storySw"></div>
-        </div>
+        <div class="story-stage"><div class="phone"><div class="screen" id="storyPhone"></div></div></div>
         <ol class="steps" id="steps"></ol>
       </div>
-    </div>
-  </section>
-
-  <section class="sec" id="custom">
-    <div class="wrap">
-      <div class="occ-top">
-        <div>
-          <p class="label" data-t="cus.label"></p>
-          <h2 class="say" data-t="cus.h"></h2>
-        </div>
-        <p class="sub" data-t="cus.sub"></p>
+      <div class="addon">
+        <span data-ic="bulb"></span>
+        <div><h3 data-t="rest.addH"></h3><p data-t="rest.addP"></p></div>
+        <div class="side"><span class="pr" data-t="rest.addPr"></span><button type="button" class="tlink" data-demo="academy"><span data-ic="play"></span><span data-t="ui.play"></span></button></div>
       </div>
-      <ul class="occ" id="occ"></ul>
-      <p class="proc" id="proc"></p>
     </div>
   </section>
 
-  <section class="sec" id="pricing">
+  <section class="sec tight" id="teams" data-ch="2">
     <div class="wrap">
-      <div class="menu-card paper">
-        <div class="mc-seal" id="mcSeal" aria-hidden="true"></div>
-        <div class="mc-head">
-          <p class="label" data-t="pr.label"></p>
-          <h2 class="mc-title" data-t="pr.title"></h2>
-          <p class="mc-sub" data-t="pr.sub"></p>
-          <div class="bill" id="bill" role="group">
-            <button type="button" data-bill="m" data-t="pr.monthly"></button>
-            <button type="button" data-bill="y" data-t="pr.yearly"></button>
+      <div class="blk-top">
+        <div><p class="label caps" data-t="teams.label"></p><h2 class="say" data-t="teams.h"></h2></div>
+        <p class="sub" data-t="teams.sub"></p>
+      </div>
+      <div class="cards3" id="teamCards"></div>
+      <div class="blk-cta"><button type="button" class="btn dark" data-req="learning" data-who="team"><span data-t="teams.cta"></span><span data-ic="arrowR"></span></button></div>
+    </div>
+  </section>
+
+  <section class="sec tight" id="personal" data-ch="2">
+    <div class="wrap">
+      <div class="personal">
+        <div><h3 data-t="pers.h"></h3><p data-t="pers.p"></p></div>
+        <div class="acts"><span class="pr" data-t="pers.pr"></span><button type="button" class="tlink" data-demo="proposal"><span data-ic="play"></span><span data-t="pers.demo"></span></button><button type="button" class="tlink" data-req="custom-personal" data-who="personal"><span data-t="pers.order"></span><span data-ic="arrowR"></span></button></div>
+      </div>
+    </div>
+  </section>
+
+  <section class="sec" id="styles" data-ch="3">
+    <div class="wrap">
+      <p class="chap"><b>03</b><span class="caps" data-t="beat.2"></span></p>
+      <div class="styles">
+        <div class="sty-stage"><div class="phone"><div class="screen" id="styPhone"></div></div></div>
+        <div class="sty-info">
+          <p class="label caps" data-t="sty.label"></p>
+          <h2 class="say" data-t="sty.h"></h2>
+          <p class="sub" data-t="sty.sub"></p>
+          <div class="sty-now" aria-live="polite"><span class="no" id="styNo"></span><b id="styName"></b><span id="styKind"></span></div>
+          <div class="sty-ctl">
+            <button type="button" class="ibtn ring" id="styPrev"></button>
+            <button type="button" class="ibtn ring" id="styNext"></button>
+            <button type="button" class="btn" id="styPlay"><span data-ic="play"></span><span data-t="sty.play"></span></button>
           </div>
         </div>
-        <ol class="courses" id="courses"></ol>
-        <div class="orn" aria-hidden="true"><span data-ic="diamond"></span></div>
-        <h3 class="alc-h" data-t="pr.alcH"></h3>
-        <ul class="menu-list" id="alc"></ul>
-        <p class="mc-foot" data-t="pr.foot"></p>
+      </div>
+      <div class="strip-h"><p class="label caps" style="margin:0" data-t="sty.all"></p><div class="filters" id="filters" role="group"></div></div>
+      <div class="strip" id="strip"></div>
+    </div>
+  </section>
+
+  <section class="sec" id="pricing" data-ch="4">
+    <div class="wrap">
+      <p class="chap"><b>04</b><span class="caps" data-t="beat.3"></span></p>
+      <div class="blk-top">
+        <div><p class="label caps" data-t="pr.label"></p><h2 class="say" data-t="pr.h"></h2></div>
+        <p class="sub" data-t="pr.sub"></p>
+      </div>
+      <div class="bill" id="bill" role="group">
+        <button type="button" data-bill="m" data-t="pr.monthly"></button>
+        <button type="button" data-bill="y" data-t="pr.yearly"></button>
+      </div>
+      <div class="tiers" id="tiers"></div>
+      <div class="founding" id="founding"></div>
+      <div class="under">
+        <div><h3 data-t="pr.moreH"></h3><ul class="rows" id="more"></ul></div>
+        <div><h3 data-t="pr.trustH"></h3><ul class="checks" id="trust"></ul></div>
       </div>
     </div>
   </section>
 
-  <section class="sec" id="faq">
+  <section class="sec tight" id="faq" data-ch="4">
     <div class="wrap faq-grid">
-      <div class="faq-head">
-        <p class="label" data-t="faq.label"></p>
-        <h2 class="say" data-t="faq.h"></h2>
-      </div>
-      <dl class="qa" id="qa"></dl>
+      <div><p class="label caps" data-t="faq.label"></p><h2 class="say" data-t="faq.h"></h2></div>
+      <div><div class="qtabs filters" id="qtabs" role="group"></div><dl class="qa" id="qa"></dl></div>
     </div>
   </section>
 
-  <section class="sec" id="request">
+  <section class="sec" id="request" data-ch="4">
     <div class="wrap req-grid">
       <div>
-        <p class="label" data-t="req.label"></p>
+        <p class="label caps" data-t="req.label"></p>
         <h2 class="say" data-t="req.h"></h2>
-        <div class="contact">
-          <div><span class="k" data-t="req.email"></span><span class="v" id="cEmail"></span></div>
-          <div><span class="k" data-t="req.based"></span><span class="v" data-t="req.city"></span></div>
-        </div>
-        <p class="req-note" data-t="req.note"></p>
+        <ol class="nextl" id="nextl"></ol>
+        <div class="contact"><span class="k" data-t="req.email"></span><span class="v" id="cEmail"></span></div>
       </div>
       <div class="res-card paper">
         <div class="rc-stub"><b class="caps" data-t="req.stub"></b><span id="slipNo"></span></div>
@@ -945,15 +977,8 @@ dialog.stage::backdrop{background:transparent}
               <fieldset class="field full">
                 <legend data-t="f.who"></legend>
                 <div class="circs" id="whoSeg"></div>
+                <div id="interestBox"></div>
               </fieldset>
-              <div class="field">
-                <label for="fType" data-t="f.type"></label>
-                <div class="fsel"><select id="fType" name="type"></select><span data-ic="chevD"></span></div>
-              </div>
-              <div class="field">
-                <label for="fTpl" data-t="f.tpl"></label>
-                <div class="fsel"><select id="fTpl" name="template"></select><span data-ic="chevD"></span></div>
-              </div>
               <div class="field" id="fbName">
                 <label for="fName" data-t="f.name"></label>
                 <input id="fName" name="name" autocomplete="name">
@@ -963,21 +988,13 @@ dialog.stage::backdrop{background:transparent}
                 <label for="fOrg"><span data-t="f.org"></span> <span class="opt" data-t="f.opt"></span></label>
                 <input id="fOrg" name="org" autocomplete="organization">
               </div>
-              <div class="field" id="fbContact">
+              <div class="field full" id="fbContact">
                 <label for="fContact" data-t="f.contact"></label>
-                <input id="fContact" name="contact" autocomplete="email">
+                <input id="fContact" name="contact" autocomplete="tel" data-tp="f.contactPh">
                 <span class="err" id="eContact"></span>
               </div>
-              <div class="field">
-                <label for="fDate"><span data-t="f.date"></span> <span class="opt" data-t="f.opt"></span></label>
-                <input id="fDate" name="date" type="date">
-              </div>
               <div class="field full">
-                <label for="fBudget" data-t="f.budget"></label>
-                <div class="fsel"><select id="fBudget" name="budget"></select><span data-ic="chevD"></span></div>
-              </div>
-              <div class="field full">
-                <label for="fMsg" data-t="f.msg"></label>
+                <label for="fMsg"><span data-t="f.msg"></span> <span class="opt" data-t="f.opt"></span></label>
                 <textarea id="fMsg" name="message" data-tp="f.msgPh"></textarea>
               </div>
             </div>
@@ -996,22 +1013,25 @@ dialog.stage::backdrop{background:transparent}
 <footer>
   <div class="wrap foot">
     <div>
-      <a class="brand" href="#top">
-        <svg class="mk" viewBox="0 0 40 40" aria-hidden="true"><circle cx="20" cy="20" r="18" fill="none" stroke="currentColor" stroke-width="2.6"/><circle cx="20" cy="20" r="14.6" fill="none" stroke="currentColor" stroke-width="1"/><text x="20" y="27" text-anchor="middle" fill="currentColor" style="font-family:var(--f-disp);font-weight:900;font-size:20px">გ</text></svg>
-        <b data-t="brand"></b>
+      <a class="brand" href="#top" aria-label="Gancda">
+        <svg class="mk" viewBox="0 0 40 40" aria-hidden="true"><circle cx="20" cy="20" r="18" fill="none" stroke="currentColor" stroke-width="2.6"/><circle cx="20" cy="20" r="14.6" fill="none" stroke="currentColor" stroke-width="1"/><text x="20" y="26.5" text-anchor="middle" fill="currentColor" style="font-family:var(--f-disp);font-weight:800;font-size:19px">გ</text></svg>
+        <b>Gancda</b><i>განცდა</i>
       </a>
-      <p class="slogan" data-t="foot.slogan"></p>
+      <p class="mean" data-t="foot.mean"></p>
+      <p class="fine" style="margin-top:10px" data-t="foot.say"></p>
     </div>
     <nav aria-label="Footer">
-      <a href="#templates" data-t="nav.templates"></a>
-      <a href="#how" data-t="nav.how"></a>
+      <a href="#restaurants" data-t="nav.rest"></a>
+      <a href="#teams" data-t="nav.teams"></a>
+      <a href="#styles" data-t="nav.demos"></a>
       <a href="#pricing" data-t="nav.pricing"></a>
-      <a href="#faq" data-t="nav.faq"></a>
       <a href="#request" data-t="nav.request"></a>
     </nav>
     <div class="fine-row"><span data-t="foot.demo"></span><span data-t="foot.copy"></span></div>
   </div>
 </footer>
+
+<div class="sticky" id="sticky"><button type="button" class="btn" data-req="founding" data-who="restaurant"><span data-t="ui.sticky"></span><span data-ic="arrowR"></span></button></div>
 
 <dialog class="stage" id="dlg" aria-labelledby="stName">
   <button type="button" class="ibtn ring st-close" id="stClose"></button>
@@ -1019,7 +1039,6 @@ dialog.stage::backdrop{background:transparent}
     <div class="st-info">
       <p class="st-no" id="stNo"></p>
       <h2 class="st-name" id="stName"></h2>
-      <p class="st-kind" id="stKind"></p>
       <p class="st-desc" id="stDesc"></p>
       <ol class="st-steps" id="stSteps"></ol>
     </div>
@@ -1030,9 +1049,9 @@ dialog.stage::backdrop{background:transparent}
         <button type="button" class="ibtn ring" id="stNext"></button>
         <span id="stCount"></span>
       </div>
-      <p class="label" style="margin:8px 0 0" data-t="st.custom"></p>
+      <p class="label caps" style="margin:8px 0 0" data-t="st.custom"></p>
       <ul class="st-cust" id="stCust"></ul>
-      <button type="button" class="tix" id="stReq"><span data-t="st.req"></span><i class="perf"></i><span data-ic="arrowR"></span></button>
+      <button type="button" class="btn" id="stReq"><span data-t="st.req"></span><span data-ic="arrowR"></span></button>
       <button type="button" class="tlink" id="stRestart"><span data-ic="restart"></span><span data-t="st.restart"></span></button>
       <p class="fine" data-t="st.fict"></p>
     </div>
@@ -1461,138 +1480,162 @@ const G = {
 /* ---------- site copy ---------- */
 const S = {
 ka:{
-  brand:'განცდა',
-  nav:{xp:'გამოცდილებები', templates:'კოლექცია', how:'როგორ მუშაობს', custom:'ინდივიდუალური', pricing:'ფასები', faq:'კითხვები', request:'მოთხოვნა'},
-  ui:{theme:'თემის შეცვლა', menu:'მენიუ', close:'დახურვა', play:'დემოს გახსნა', prev:'წინა შაბლონი', next:'შემდეგი შაბლონი', styles:'იგივე ძრავა, სხვა სტილი'},
-  hero:{lines:['აქციეთ ყოველი','მომენტი','შთაბეჭდილებად'], linesNarrow:['აქციეთ','ყოველი','მომენტი','შთაბეჭდილებად'],
-    h1:'აქციეთ ყოველი მომენტი შთაბეჭდილებად', ring:'განცდა · დადასტურდა · განცდა · დადასტურდა · ', yes:'კი',
-    lead:'ციფრული გამოცდილებები ბიზნესისთვის: მოსაწვევები, სწავლება, ახალი თანამშრომლის პირველი დღე და კამპანიები. ერთი ძრავა, თქვენი ბრენდი, ნებისმიერ ტელეფონზე, აპლიკაციის გარეშე.',
-    cta:'სცადეთ დემო', cta2:'ფასები'},
-  belt:{label:'კოლექცია · 11 გამოცდილება', hint:'შეეხეთ ნებისმიერს და გაიარეთ ბოლომდე', original:'ორიგინალი'},
-  xp:{label:'გამოცდილებები', h:'ერთი ძრავა, ოთხი სახის გამოცდილება', sub:'ყველა იხსნება ტელეფონზე, თქვენი ბრენდით, და ბოლოს გაზომვად შედეგს იძლევა.', pilot:'პილოტის მოთხოვნა',
-    items:[['calcheck','მოსაწვევები','რესტორნები, ღონისძიებები, კერძო პირები','მაგიდის ჯავშანი მოსაწვევად იქცევა: თანხმობა, არჩევანი მენიუდან და ბილეთი.','99 ₾/თვიდან','მზადაა','','omakase','დემოს ნახვა'],
-           ['bulb','სწავლება','რესტორნები, კომპანიები, სკოლები','მოკლე თამაში-გაკვეთილები მყისიერი პასუხით, ქულებით და სერტიფიკატით.','149 ₾/თვიდან','ახალი','','academy','დემოს ნახვა'],
-           ['briefcase','ახალი თანამშრომელი','HR გუნდები','გასაუბრებაზე მოწვევიდან პირველ სამუშაო დღემდე, ერთ გამოცდილებაში.','საპილოტე პროექტი','პილოტი','pilot','interview','დემოს ნახვა'],
-           ['gift','კამპანიები და ლოიალობა','ბრენდები, რესტორნები','დაბადების დღის საჩუქრები, სეზონური თამაშები და გათამაშებები, რომლებსაც ბოლომდე გადიან.','საპილოტე პროექტი','პილოტი','pilot','','']]},
-  story:{label:'როგორ მუშაობს მოსაწვევი', h:'სტუმარი ჯავშნის მაგიდას ორზე და ბმულს უგზავნის მას, ვისაც ეპატიჟება. აი, რას ხედავს ის.',
-    sub:'ბმული მოდის ჯავშნის დადასტურებასთან ერთად, SMS-ით ან WhatsApp-ით. ჯავშნის სისტემის შეცვლა არ გჭირდებათ.',
-    marks:['ა','ბ','გ','დ','ე'], gain:'რესტორნისთვის:',
-    steps:[['ფარდა იხსნება','პირველი, რასაც ის ხედავს, თქვენი სახელი, ფერები და ლოგოა. თქვენთან ჯერ არც კი ყოფილა.','რეკლამა ყოველ მოსაწვევში'],
-           ['კი თუ არა?','კითხვას უსვამს ის, ვინც დაპატიჟა, და არა რესტორანი. „არა“ გარბის. ეს ეკრანი გაზიარებისთვისაა შექმნილი.','სტუმრები თავად აზიარებენ'],
-           ['მენიუ','ირჩევს კერძებს თქვენი ნამდვილი მენიუდან. სამზარეულო არჩევანს წინასწარ ხედავს, ოფიციანტმა კი იცის, რა შესთავაზოს.','წინასწარი შეკვეთა და დამატებითი გაყიდვა'],
-           ['სიურპრიზი','ომიკუჯი, სადღეგრძელო ან მონეტა, თქვენს სტილში. აქვე შეგიძლიათ შესთავაზოთ პაემნის პაკეტი: მისასალმებელი სასმელი და დესერტი ორზე.','პაემნის პაკეტი, 15–30 ₾'],
-           ['ბილეთი','ბილეთს თავად ადასტურებს და ვახშმამდე დარჩენილი დრო იწყებს თვლას. ვინც თავად დაადასტურა, ნაკლებად აცდენს.','ნაკლები გაცდენა']]},
-  cus:{label:'ინდივიდუალური', h:'როცა შაბლონი არ კმარა, ვხატავთ ნულიდან.',
-    sub:'ერთჯერადი მოსაწვევი კონკრეტული ადამიანისთვის ან ღონისძიებისთვის, ან ექსკლუზიური სტილი თქვენი რესტორნისთვის.',
-    occ:[['პაემანი','თქვენი ადგილი, თქვენი ხუმრობები, თქვენი ფოტოები','49 ₾-დან','custom-personal','person','omakase'],
-         ['ხელის თხოვნა','„არა“ გარბის, ბეჭედი რჩება','49 ₾-დან','custom-personal','person','proposal'],
-         ['დაბადების დღე','სიურპრიზი, რომელიც არ გაჟონავს','49 ₾-დან','custom-personal','person','birthday'],
-         ['რესტორნის სტილი','ექსკლუზიური შაბლონი, რომელიც სხვას არ მიეცემა','600 ₾-დან','custom-venue','restaurant',''],
-         ['გასაუბრება','კანდიდატი პირველივე წერილიდან გაიგებს, ვინ ხართ','შეთანხმებით','business','company','interview'],
-         ['კორპორატივი','საშვი, მენიუ და ტრანსფერი ერთ ბმულში','შეთანხმებით','business','company','corporate'],
-         ['სწავლება','გაკვეთილი, ქვიზი ან სიმულაცია თქვენს თემაზე','1 500 ₾-დან','learning','company','academy']],
-    proc:['ბრიფი, 15 წუთი','ესკიზი 3 დღეში','აწყობა და ტესტი','ბმული'], procNote:'ერთი რაუნდი შესწორება ფასში შედის.'},
-  pr:{label:'ფასები ლარში', title:'მენიუ', sub:'რესტორნებისთვის. ყოველთვიური გამოწერა, კონტრაქტის გარეშე.',
-    monthly:'თვიურად', yearly:'წლიურად, 2 თვე საჩუქრად', mo:'თვეში', yr:'თვეში · {x} ₾ წელიწადში', chef:'შეფის რჩევა', pick:'აირჩიეთ',
+  nav:{rest:'რესტორნები', teams:'გუნდები', demos:'დემოები', pricing:'ფასები', request:'მოთხოვნა'},
+  beat:['გახსნა','არჩევანი','სიურპრიზი','შენახვა'],
+  ui:{theme:'თემის შეცვლა', menu:'მენიუ', close:'დახურვა', play:'დემოს ნახვა', prev:'წინა', next:'შემდეგი', sticky:'დამფუძნებელი პარტნიორი · პირველი თვე უფასოდ'},
+  hero:{kick:'ციფრული გამოცდილებები ბიზნესისთვის', h1:'ნუ გაგზავნით შეტყობინებას. გაგზავნეთ <em>განცდა</em>.',
+    sub:'მომენტები, რომლებსაც ხსნიან, ირჩევენ და ინახავენ. მოსაწვევი, გაკვეთილი ან პირველი სამუშაო დღე, თქვენი ბრენდით, ნებისმიერ ტელეფონზე.',
+    cta:'გახდით დამფუძნებელი პარტნიორი', ctaS:'პირველი თვე უფასოდ', cta2:'ნახეთ ათი სტილი', choose:'სცადეთ:',
+    pick:[['omakase','მოსაწვევი'],['academy','გაკვეთილი'],['interview','პირველი დღე']],
+    route:[['store','რესტორანი მაქვს','მოსაწვევები და გუნდის სწავლება','#restaurants','restaurant'],['briefcase','ვასწავლი ან ვიღებ ხალხს','სწავლება, ახალი თანამშრომელი, კამპანიები','#teams','team'],['ring','პირადი შემთხვევა','პაემანი, ხელის თხოვნა, დაბადების დღე','#personal','personal']]},
+  beats:{h:'ყოველი განცდა ოთხი ნაბიჯია',
+    list:[['რაღაც იხსნება','ფარდა, კონვერტი ან ყუთი. პირველივე წამიდან ეს თქვენი ბრენდია.','მოსაწვევში ფარდა, გაკვეთილში კურსის ყდა'],
+          ['ადამიანი ირჩევს','თანხმდება, ირჩევს კერძს, პასუხობს კითხვას. ის თავად მოქმედებს.','მენიუ, პასუხის ვარიანტები, დრო'],
+          ['სიურპრიზი','მოულოდნელი მომენტი, რომლის გაზიარებაც მოგინდება.','ომიკუჯი, სადღეგრძელო, სწორი პასუხის ჯილდო'],
+          ['რაღაც რჩება','ბილეთი, ბეჯი ან სერტიფიკატი. თქვენ კი შედეგს იღებთ.','დადასტურება, არჩეული კერძები, ქულა']]},
+  rest:{label:'რესტორნებისთვის', h:'ორზე დაჯავშნილი მაგიდა მოსაწვევად იქცევა.',
+    sub:'სტუმარი ბმულს უგზავნის მას, ვისაც ეპატიჟება. ის ხსნის, ეთანხმება, თქვენი მენიუდან ირჩევს კერძებს და ბილეთს ინახავს. ჯავშნის სისტემის შეცვლა არ გჭირდებათ.',
+    outs:[['megaphone','რეკლამა ყოველ მოსაწვევში','თქვენი ლოგო და ფერები ხვდება ადამიანს, რომელიც თქვენთან ჯერ არ ყოფილა.'],
+          ['chef','არჩევანი ვიზიტამდე','სამზარეულომ იცის, რა მოამზადოს, ოფიციანტმა კი იცის, რა შესთავაზოს.'],
+          ['calcheck','ნაკლები გაცდენა','ვიზიტს მეორე სტუმარი თავად ადასტურებს, ბილეთზე კი ვახშმამდე დარჩენილი დრო ითვლება.'],
+          ['coins','პაემნის პაკეტი','გაყიდეთ 15–30 ₾-ად: მოსაწვევი, მისასალმებელი სასმელი და დესერტი ორზე.']],
+    case:'ქეისი: როგორ მუშაობს მოსაწვევი',
+    addH:'მენიუს აკადემია: გუნდის სწავლება', addP:'ახალი ოფიციანტი მენიუს თამაშით სწავლობს: ინგრედიენტები, ალერგენები, რა რას უხდება. იმავე მენიუდან, რომელიც მოსაწვევებისთვის უკვე გაქვთ.', addPr:'+149 ₾ / თვე'},
+  story:{marks:['1','2','3','4','5'], gain:'რესტორნისთვის:',
+    steps:[['ფარდა იხსნება','პირველი, რასაც ის ხედავს, თქვენი სახელი, ფერები და ლოგოა.','რეკლამა ყოველ მოსაწვევში'],
+           ['კი თუ არა?','კითხვას სვამს ის, ვინც დაპატიჟა. „არა“ გარბის. ეს ეკრანი გაზიარებისთვისაა.','სტუმრები თავად აზიარებენ'],
+           ['მენიუ','ირჩევს კერძებს თქვენი ნამდვილი მენიუდან. სამზარეულო არჩევანს წინასწარ ხედავს.','წინასწარი შეკვეთა და დამატებითი გაყიდვა'],
+           ['სიურპრიზი','ომიკუჯი, სადღეგრძელო ან მონეტა, თქვენს სტილში. აქვე ჯდება პაემნის პაკეტი.','პაემნის პაკეტი, 15–30 ₾'],
+           ['ბილეთი','ბილეთს თავად ადასტურებს და ვახშმამდე დარჩენილი დრო იწყებს თვლას.','ნაკლები გაცდენა']]},
+  teams:{label:'გუნდებისთვის', h:'გაკვეთილი, პირველი დღე, კამპანია. იგივე ძრავა, თქვენი თემა.',
+    sub:'საპილოტე პროექტები კომპანიებისთვის, სკოლებისთვის და ბრენდებისთვის. ფარგლებს და შედეგს ერთ ზარზე ვთანხმდებით.',
+    cards:[['bulb','სწავლება','პროცედურა, პროდუქტი ან უსაფრთხოება მოკლე თამაშად: კითხვები მყისიერი პასუხით, ქულები და სერტიფიკატი.','პილოტი 1 500 ₾-დან','ახალი','academy'],
+           ['briefcase','ახალი თანამშრომელი','გასაუბრებაზე მოწვევიდან პირველ დღემდე: გუნდის გაცნობა, ღირებულებები და პირველი დღის საშვი.','პილოტი','პილოტი','interview'],
+           ['gift','კამპანიები და ლოიალობა','დაბადების დღის საჩუქრები, სეზონური თამაშები და გათამაშებები, რომლებსაც ბოლომდე გადიან.','პილოტი','პილოტი','birthday']],
+    cta:'დაჯავშნეთ 20-წუთიანი ზარი'},
+  pers:{h:'პირადი შემთხვევა', p:'პაემანი, ხელის თხოვნა, იუბილე ან დაბადების დღე. თქვენი ფოტოებით, ხუმრობებით და ადგილით.', pr:'49 ₾-დან', demo:'ხელის თხოვნის დემო', order:'შეკვეთა'},
+  sty:{label:'ერთი ისტორია, ათი სტილი', h:'იგივე სიტყვები. სხვა სამყარო.',
+    sub:'ყველა ვერსიაში ერთი ტექსტია: ნინო, პარასკევი, 20:00. იცვლება მხოლოდ სტილი: გახსნის ფორმა, შრიფტი, ფერი, ბილეთი. ასე იმუშავებს ძრავა თქვენს ბრენდზეც.',
+    play:'ამ სტილის სრულად გავლა', all:'ყველა სტილი', to:'ნინო', intro:'პარასკევს, 20:00. შენთვის რაღაც მოვამზადე.',
+    f:{all:'ყველა', restaurant:'რესტორნები', life:'პირადი', work:'ბიზნესი'}},
+  pr:{label:'ფასები ლარში', h:'მარტივი ფასები. კონტრაქტის გარეშე.', sub:'რესტორნების პაკეტები ახლავე იწყება. გუნდებისთვის ყველაფერი პილოტით იწყება და ფასს ერთ ზარზე ვთანხმდებით.',
+    monthly:'თვიურად', yearly:'წლიურად, 2 თვე საჩუქრად', per:'₾ / თვე', yr:'{x} ₾ წელიწადში', mo:'ყოველთვიური გადახდა', rec:'რეკომენდებული', choose:'დაწყება',
     tiers:[
-      {id:'plan-start', rom:'I', name:'აპერიტივი', price:99, for:'ერთი რესტორნისთვის, რომელიც ცდის.', f:['3 შაბლონი კოლექციიდან','თქვენი ლოგო, ფერები და მენიუ, 30 კერძამდე','60 მოსაწვევი თვეში','არჩეული კერძები ელფოსტით','ქართულად და ინგლისურად']},
-      {id:'plan-main', rom:'II', name:'მთავარი კერძი', price:199, rec:true, for:'პაემნის რესტორნებისთვის, სადაც ორზე ჯავშანი ხშირია.', f:['ყველა შაბლონი, სეზონურების ჩათვლით','ულიმიტო მოსაწვევი','არჩეული კერძები სამზარეულოს Telegram-ში','შეხსენება ვიზიტამდე ერთი დღით ადრე','პაემნის პაკეტის გაყიდვა','თვიური ანგარიში: გახსნები, დადასტურებები, გაცდენები']},
-      {id:'plan-chef', rom:'III', name:'შეფის მენიუ', price:299, for:'რესტორნებისთვის, რომლებსაც საკუთარი სტილი სურთ.', f:['ყველაფერი „მთავარი კერძიდან“','ექსკლუზიური შაბლონი ყოველ კვარტალში','3 ფილიალამდე','ცვლილებები 24 საათში','მოსაწვევის ღილაკი თქვენს საიტზე']}],
-    alcH:'ა ლა კარტი',
-    alc:[['ექსკლუზიური შაბლონი რესტორნისთვის','600 ₾-დან'],['პირადი მოსაწვევი შაბლონიდან','49 ₾'],['პირადი მოსაწვევი ნულიდან','250 ₾-დან'],['დამატებითი მოსაწვევი „აპერიტივზე“','2 ₾'],['ბიზნეს ღონისძიება ან HR მოსაწვევი','შეთანხმებით'],['პაემნის პაკეტი სტუმრისთვის, რეკომენდებული ფასი','15–30 ₾'],['მენიუს სწავლება გუნდისთვის','149 ₾ / თვე'],['სასწავლო გამოცდილება კომპანიისთვის, პილოტი','1 500 ₾-დან']],
-    sealRing:'დამფუძნებელი პარტნიორები · პირველი ხუთი · ', sealC:'1 თვე\nუფასოდ',
-    foot:'დამფუძნებელი პარტნიორები: პირველ 5 რესტორანს პირველი თვე უფასოა და ფასი 12 თვით ფიქსირდება.'},
-  faq:{label:'კითხვები', h:'რას გვეკითხებიან რესტორნები',
-    list:[['ჯავშნის სისტემის შეცვლა მოგვიწევს?','არა. მოსაწვევის ბმული ემატება დადასტურებას, რომელსაც უკვე აგზავნით SMS-ით, WhatsApp-ით ან ელფოსტით. ჯავშნის პლატფორმებთან ავტომატური კავშირი შემდეგ ეტაპზეა.'],
-          ['რამდენ ხანში ჩავეშვებით?','შაბლონით 3–5 სამუშაო დღეში. გვჭირდება ლოგო, ფერები და მენიუ.'],
-          ['სტუმარს აპლიკაციის ჩამოტვირთვა სჭირდება?','არა. მოსაწვევი ჩვეულებრივი ბმულია და იხსნება ნებისმიერ ტელეფონზე.'],
-          ['ვინ ხედავს არჩეულ კერძებს?','მხოლოდ რესტორანი და ის, ვინც მოსაწვევი გააგზავნა. ეს წინასწარი სურვილია და არა გადახდილი შეკვეთა.'],
-          ['მენიუს შეცვლა შეიძლება?','დიახ. „მთავარ კერძსა“ და „შეფის მენიუში“ ცვლილებებს 24–48 საათში ვაკეთებთ.'],
-          ['რესტორნების გარდა მუშაობთ?','დიახ: სწავლება, ახალი თანამშრომლის პირველი დღე, დაბადების დღეები, ხელის თხოვნა და კორპორატიული ღონისძიებები. ყველა ერთ ძრავაზეა აწყობილი.']]},
-  req:{label:'მოთხოვნა', h:'მოგვწერეთ. დემოს თქვენსავე მენიუზე ავაწყობთ.', email:'ელფოსტა', based:'ქალაქი', city:'თბილისი',
-    note:'ვპასუხობთ ერთ სამუშაო დღეში. შაბლონით ჩაშვებას 3–5 დღე სჭირდება.', stub:'მოთხოვნა',
-    sendRing:'განცდა · მოთხოვნა · განცდა · მოთხოვნა · '},
-  f:{who:'ვინ ხართ', whoOpts:[['restaurant','რესტორანი'],['person','კერძო პირი'],['company','კომპანია']],
-    type:'რა გჭირდებათ', types:[['plan-start','გამოწერა: აპერიტივი'],['plan-main','გამოწერა: მთავარი კერძი'],['plan-chef','გამოწერა: შეფის მენიუ'],['custom-venue','ექსკლუზიური შაბლონი რესტორნისთვის'],['custom-personal','პირადი მოსაწვევი'],['business','ბიზნეს ღონისძიება ან HR'],['learning','სწავლება'],['onboarding','ახალი თანამშრომლის პირველი დღე'],['campaign','კამპანია ან ლოიალობა'],['other','სხვა']],
-    tpl:'შაბლონი', tplNone:'ჯერ არ ვიცი', name:'სახელი', org:'რესტორანი ან კომპანია', opt:'(არასავალდებულო)', contact:'ტელეფონი ან ელფოსტა', date:'თარიღი',
-    budget:'ბიუჯეტი', budgets:[['b0','ჯერ არ ვიცი'],['b1','100 ₾-მდე'],['b2','100–300 ₾'],['b3','300–1000 ₾'],['b4','1000 ₾-ზე მეტი']],
-    msg:'დეტალები', msgPh:'მაგ.: სუშის პაემანი, ორაგული უყვარს, მაგიდა ხუთშაბათს 21:00-ზე', note:'დააჭირეთ ბეჭედს და მოთხოვნა გაიგზავნება.', send:'გაგზავნა',
-    eName:'მიუთითეთ სახელი', eContact:'დაგვიტოვეთ ტელეფონი ან ელფოსტა, რომ გიპასუხოთ',
-    okH:'მიღებულია', ok:'ერთ სამუშაო დღეში დაგიკავშირდებით.', okC:'მიღებულია',
+      {id:'plan-start', name:'სტარტი', price:99, for:'ერთი რესტორნისთვის, რომელიც ცდის.', f:['3 სტილი კოლექციიდან','თქვენი ლოგო, ფერები და მენიუ, 30 კერძამდე','60 მოსაწვევი თვეში','არჩეული კერძები ელფოსტით']},
+      {id:'plan-grow', name:'ზრდა', price:199, rec:true, for:'პაემნის რესტორნებისთვის, სადაც ორზე ჯავშანი ხშირია.', f:['ყველა სტილი, სეზონურების ჩათვლით','ულიმიტო მოსაწვევი','არჩეული კერძები სამზარეულოს Telegram-ში','შეხსენება ვიზიტამდე ერთი დღით ადრე','პაემნის პაკეტის გაყიდვა']},
+      {id:'plan-studio', name:'სტუდია', price:299, for:'მათთვის, ვისაც საკუთარი სტილი სურს.', f:['ყველაფერი „ზრდიდან“','ექსკლუზიური სტილი ყოველ კვარტალში','3 ფილიალამდე','ცვლილებები 24 საათში']}],
+    found:'დამფუძნებელი პარტნიორები', foundL:'{n} ადგილი 5-დან თავისუფალია', foundP:'პირველ 5 რესტორანს პირველი თვე უფასოა და ფასი 12 თვით ფიქსირდება.', foundB:'ადგილის დაკავება',
+    moreH:'დამატებით და სხვებისთვის',
+    more:[['გუნდის სწავლება რესტორნისთვის','+149 ₾ / თვე'],['ექსკლუზიური სტილი თქვენი ბრენდისთვის','600 ₾-დან'],['პილოტი კომპანიისთვის ან სკოლისთვის','1 500 ₾-დან'],['პირადი მოსაწვევი','49 ₾-დან'],['დამატებითი მოსაწვევი სტარტზე','2 ₾']],
+    trustH:'რისკის გარეშე',
+    trust:['პირველი თვე უფასოა','ფასი 12 თვით ფიქსირდება','გააუქმეთ ნებისმიერ თვეს','ყოველ სიტყვას თქვენ ამოწმებთ, სანამ გამოქვეყნდება','ყოველთვიური ანგარიში: გახსნები, დასრულება, არჩეული კერძები, დადასტურებები']},
+  faq:{label:'კითხვები', h:'რას გვეკითხებიან',
+    tabs:{rest:'რესტორნები', teams:'გუნდები', pers:'პირადი'},
+    rest:[['ჯავშნის სისტემის შეცვლა მოგვიწევს?','არა. ბმული ემატება დადასტურებას, რომელსაც უკვე აგზავნით SMS-ით, WhatsApp-ით ან ელფოსტით.'],
+          ['რამდენ ხანში ჩავეშვებით?','3–5 სამუშაო დღეში. გვჭირდება ლოგო, ფერები და მენიუ.'],
+          ['სტუმარს აპლიკაცია სჭირდება?','არა. ეს ჩვეულებრივი ბმულია და იხსნება ნებისმიერ ტელეფონზე.'],
+          ['ვინ ხედავს არჩეულ კერძებს?','მხოლოდ რესტორანი და ის, ვინც მოსაწვევი გააგზავნა. ეს სურვილია და არა გადახდილი შეკვეთა.']],
+    teams:[['როგორ იწყება პილოტი?','20-წუთიან ზარზე ვთანხმდებით თემას, აუდიტორიას და შედეგს, რომელსაც ვზომავთ. პირველი ვერსია ორ კვირაში მზადაა.'],
+           ['ვინ წერს შინაარსს?','მასალას თქვენ გვაწვდით: დოკუმენტს, პრეზენტაციას ან წესებს. Claude მისგან აწყობს კითხვებს და ტექსტს, ჩვენ ვასწორებთ, თქვენ ამტკიცებთ.'],
+           ['შედეგებს როგორ ვნახავთ?','პილოტში ბმულით მუშაობს და შედეგებს ცხრილად გიგზავნით: ვინ დაასრულა, რა ქულით. სასწავლო პლატფორმებთან კავშირი შემდეგ ეტაპზეა.']],
+    pers:[['რამდენ ხანში მზადდება?','სტილიდან 1–2 დღეში, ნულიდან დაახლოებით ერთ კვირაში.'],
+          ['ვინ ხედავს მოსაწვევს?','მხოლოდ ის, ვისაც ბმულს გაუგზავნით. ბმული საძიებო სისტემებში არ ჩანს და ღონისძიების შემდეგ იშლება.']]},
+  req:{label:'მოთხოვნა', h:'მოგვწერეთ. პირველ ვერსიას თქვენი ლოგოთი ავაწყობთ.', email:'ელფოსტა', stub:'მოთხოვნა',
+    next:['ერთ სამუშაო დღეში Telegram-ზე ან ტელეფონით გიპასუხებთ','48 საათში გიგზავნით დრაფტს თქვენი ბრენდით','თქვენ ამოწმებთ და ასწორებთ','ეშვება და შედეგს ყოველთვიურად ხედავთ'],
+    sendRing:'GANCDA · მოთხოვნა · GANCDA · მოთხოვნა · '},
+  f:{who:'ვინ ხართ', whoOpts:[['restaurant','რესტორანი'],['team','გუნდი ან კომპანია'],['personal','პირადი']],
+    name:'სახელი', org:'რესტორანი ან კომპანია', opt:'(არასავალდებულო)', contact:'ტელეფონი ან Telegram', contactPh:'+995 5__ __ __ __ ან @username',
+    msg:'რა გსურთ, რომ სტუმრებმა ან თანამშრომლებმა გააკეთონ?', msgPh:'მაგ.: ორზე ჯავშნები ხშირად აცდენენ, ან ახალ ოფიციანტებს მენიუს სწავლა უჭირთ', note:'დააჭირეთ ბეჭედს და მოთხოვნა დაილუქება.', send:'გაგზავნა',
+    picked:'არჩეული:', clear:'არჩევანის მოხსნა',
+    interest:{'founding':'დამფუძნებელი პარტნიორი','plan-start':'სტარტი · 99 ₾','plan-grow':'ზრდა · 199 ₾','plan-studio':'სტუდია · 299 ₾','learning':'სწავლება','onboarding':'ახალი თანამშრომელი','campaign':'კამპანია','custom-personal':'პირადი მოსაწვევი','addon':'გუნდის სწავლება'},
+    eName:'მიუთითეთ სახელი', eContact:'დაგვიტოვეთ ტელეფონი, Telegram ან ელფოსტა',
+    okH:'მოთხოვნა დაილუქა', ok:'ერთ სამუშაო დღეში მოგწერთ.', okC:'მიღებულია',
     readyH:'მოთხოვნა მზადაა', ready:'ონლაინ გაგზავნა ჯერ არ არის ჩართული. დააკოპირეთ ტექსტი და გამოგვიგზავნეთ: {email}', readyC:'მზადაა',
     failH:'ვერ გაიგზავნა', fail:'სცადეთ თავიდან ან მოგვწერეთ: {email}', failC:'ხელახლა',
-    copy:'ტექსტის კოპირება', copied:'დაკოპირდა', edit:'რედაქტირება', subj:'განცდა: ახალი მოთხოვნა', none:'—', slip:'№'},
-  st:{custom:'რას ცვლით', customList:['ლოგო, ფერები და შრიფტი','მენიუ: კერძები, ფასები, ფოტოები ან იკონები','ტექსტები ქართულად და ინგლისურად','ჯავშნის ველები, ბილეთი და ბეჭედი'],
-    req:'ამ შაბლონის მოთხოვნა', restart:'თავიდან', fict:'დემო რესტორნები და სახელები გამოგონილია.'},
-  foot:{slogan:'აქციეთ ყოველი მომენტი შთაბეჭდილებად.', demo:'საიტზე ნაჩვენები რესტორნები, კომპანიები და სახელები გამოგონილია და მხოლოდ დემოსთვისაა.', copy:'© 2026 განცდა · თბილისი'},
+    copy:'ტექსტის კოპირება', copied:'დაკოპირდა', edit:'რედაქტირება', subj:'Gancda: ახალი მოთხოვნა', none:'—', slip:'№', tpl:'სტილი', type:'ინტერესი', ring:'GANCDA · დაილუქა · GANCDA · დაილუქა · '},
+  st:{custom:'რას ცვლით', customList:['ლოგო, ფერები და შრიფტი','შინაარსი: მენიუ, კითხვები, ტექსტი','ქართული და ინგლისური','ბოლო ეკრანი: ბილეთი, ბეჯი ან სერტიფიკატი'],
+    req:'მინდა ეს ჩემი ლოგოთი', restart:'თავიდან', fict:'დემოში ნაჩვენები რესტორნები და სახელები გამოგონილია.'},
+  foot:{mean:'განცდა: გრძნობა, რომელსაც გადიხარ.', say:'ლათინურად Gancda, ოფიციალური ტრანსლიტერაციით Gantsda.', demo:'საიტზე ნაჩვენები რესტორნები, კომპანიები და სახელები გამოგონილია.', copy:'© 2026 Gancda · თბილისი'},
   days:['კვირა','ორშაბათი','სამშაბათი','ოთხშაბათი','ხუთშაბათი','პარასკევი','შაბათი'],
   months:['იანვარი','თებერვალი','მარტი','აპრილი','მაისი','ივნისი','ივლისი','აგვისტო','სექტემბერი','ოქტომბერი','ნოემბერი','დეკემბერი']
 },
 en:{
-  brand:'Gancda',
-  nav:{xp:'Experiences', templates:'Collection', how:'How it works', custom:'Custom', pricing:'Pricing', faq:'FAQ', request:'Request'},
-  ui:{theme:'Switch theme', menu:'Menu', close:'Close', play:'Play demo', prev:'Previous template', next:'Next template', styles:'Same engine, another style'},
-  hero:{lines:['Make every','moment an','experience'], linesNarrow:['Make every','moment an','experience'],
-    h1:'Make every moment an experience', ring:'GANCDA · CONFIRMED · GANCDA · CONFIRMED · ', yes:'YES',
-    lead:'Digital experiences for business: invites, learning, a new hire’s first day and campaigns. One engine, your brand, on any phone, no app to install.',
-    cta:'Try the demo', cta2:'Pricing'},
-  belt:{label:'The collection · 11 experiences', hint:'Tap any card to play it through', original:'THE ORIGINAL'},
-  xp:{label:'Experiences', h:'One engine, four kinds of experience', sub:'Each one opens on a phone, carries your brand and ends with a result you can measure.', pilot:'Request a pilot',
-    items:[['calcheck','Invites','Restaurants, events, individuals','A table booking becomes an invite: a yes, menu picks and a ticket.','from 99 ₾/month','LIVE','','omakase','Play demo'],
-           ['bulb','Learning','Restaurants, companies, schools','Short game-like lessons with instant feedback, points and a certificate.','from 149 ₾/month','NEW','','academy','Play demo'],
-           ['briefcase','New hires','HR teams','From the interview invite to the first working day, in one experience.','Pilot project','PILOT','pilot','interview','Play demo'],
-           ['gift','Campaigns and loyalty','Brands, restaurants','Birthday rewards, seasonal games and prize draws people actually finish.','Pilot project','PILOT','pilot','','']]},
-  story:{label:'How an invite works', h:'A guest books a table for two and sends the link to their date. This is what their date sees.',
-    sub:'The link comes with the booking confirmation, by SMS or WhatsApp. Your booking system stays the same.',
-    marks:['1','2','3','4','5'], gain:'For the restaurant:',
-    steps:[['The curtain opens','The first thing they see is your name, colors and logo, before they’ve ever been to you.','An ad in every invite'],
-           ['Yes or no?','The question comes from the person who invited them, not from the restaurant. The No button runs away. This is the screen made to be shared.','Guests share it for you'],
-           ['The menu','They pick dishes from your real menu. The kitchen sees the picks in advance, and the waiter knows what to suggest.','Pre-orders and upsell'],
-           ['The surprise','An omikuji, a toast or a coin toss, in your style. This is also where you can offer a date package: a welcome drink and dessert for two.','Date package, 15–30 ₾'],
-           ['The ticket','They confirm the ticket themselves, and it starts counting down to dinner. A guest who confirmed personally is less likely to skip.','Fewer no-shows']]},
-  cus:{label:'Custom', h:'When a template isn’t enough, we draw it from scratch.',
-    sub:'A one-off invite for one person or one event, or an exclusive style for your restaurant.',
-    occ:[['A date','Your place, your inside jokes, your photos','from 49 ₾','custom-personal','person','omakase'],
-         ['A proposal','The No button runs away. The ring stays.','from 49 ₾','custom-personal','person','proposal'],
-         ['A birthday','A surprise that won’t leak','from 49 ₾','custom-personal','person','birthday'],
-         ['Your venue’s style','An exclusive template no other restaurant gets','from 600 ₾','custom-venue','restaurant',''],
-         ['Job interviews','Candidates know who you are from the first letter','on request','business','company','interview'],
-         ['Company events','Passes, menu choices and shuttles in one link','on request','business','company','corporate'],
-         ['Training','A lesson, quiz or simulation on your topic','from 1,500 ₾','learning','company','academy']],
-    proc:['Brief, 15 minutes','Sketch in 3 days','Build and test','Your link'], procNote:'One round of changes is included in the price.'},
-  pr:{label:'Prices in GEL', title:'The menu', sub:'For restaurants. Monthly plans, no contract.',
-    monthly:'Monthly', yearly:'Yearly, 2 months free', mo:'per month', yr:'per month · {x} ₾ billed yearly', chef:'CHEF’S PICK', pick:'Choose',
+  nav:{rest:'Restaurants', teams:'Teams', demos:'Demos', pricing:'Pricing', request:'Request'},
+  beat:['Open','Choose','Surprise','Keep'],
+  ui:{theme:'Switch theme', menu:'Menu', close:'Close', play:'Play demo', prev:'Previous', next:'Next', sticky:'Founding partner · first month free'},
+  hero:{kick:'Digital experiences for business', h1:'Don’t send a message. Send a <em>moment</em>.',
+    sub:'Moments people open, choose and keep. An invite, a lesson or a first day at work, in your brand, on any phone.',
+    cta:'Become a founding partner', ctaS:'First month free', cta2:'See ten styles', choose:'Try:',
+    pick:[['omakase','Invite'],['academy','Lesson'],['interview','First day']],
+    route:[['store','I run a restaurant','Invites and staff training','#restaurants','restaurant'],['briefcase','I train or hire people','Learning, onboarding, campaigns','#teams','team'],['ring','A personal occasion','A date, a proposal, a birthday','#personal','personal']]},
+  beats:{h:'Every gancda is four beats',
+    list:[['Something opens','A curtain, an envelope or a box. From the first second, it’s your brand.','A curtain in an invite, a cover in a lesson'],
+          ['They choose','They say yes, pick a dish, answer a question. They take part.','A menu, answer options, a time slot'],
+          ['A surprise','An unexpected moment people want to share.','An omikuji, a toast, a reward for a right answer'],
+          ['They keep something','A ticket, a badge or a certificate. And you get a result.','A confirmation, menu picks, a score']]},
+  rest:{label:'For restaurants', h:'A table for two becomes an invitation.',
+    sub:'The guest sends the link to the person they’re bringing. That person opens it, says yes, picks dishes from your menu and keeps a ticket. Your booking system stays the same.',
+    outs:[['megaphone','An ad in every invite','Your logo and colors reach someone who hasn’t been to you yet.'],
+          ['chef','Picks before the visit','The kitchen knows what to prep, and the waiter knows what to suggest.'],
+          ['calcheck','Fewer no-shows','The second guest confirms personally, and the ticket counts down to dinner.'],
+          ['coins','A date package','Sell it for 15–30 ₾: the invite, a welcome drink and a dessert for two.']],
+    case:'Case: how an invite works',
+    addH:'Menu Academy: staff training', addP:'New waiters learn the menu as a game: ingredients, allergens, what pairs with what. Built from the menu you already gave us for invites.', addPr:'+149 ₾ / month'},
+  story:{marks:['1','2','3','4','5'], gain:'For the restaurant:',
+    steps:[['The curtain opens','The first thing they see is your name, colors and logo.','An ad in every invite'],
+           ['Yes or no?','The question comes from the person who invited them. The No button runs away. It’s the screen made to be shared.','Guests share it for you'],
+           ['The menu','They pick dishes from your real menu. The kitchen sees the picks in advance.','Pre-orders and upsell'],
+           ['The surprise','An omikuji, a toast or a coin toss, in your style. This is where a date package fits.','Date package, 15–30 ₾'],
+           ['The ticket','They confirm the ticket themselves, and it starts counting down to dinner.','Fewer no-shows']]},
+  teams:{label:'For teams', h:'A lesson, a first day, a campaign. Same engine, your topic.',
+    sub:'Pilot projects for companies, schools and brands. We agree the scope and the result in one call.',
+    cards:[['bulb','Learning','A procedure, a product or safety rules as a short game: questions with instant feedback, points and a certificate.','Pilot from 1,500 ₾','NEW','academy'],
+           ['briefcase','New hires','From the interview invite to the first day: meet the team, learn the values, get a first-day pass.','Pilot','PILOT','interview'],
+           ['gift','Campaigns and loyalty','Birthday rewards, seasonal games and prize draws people actually finish.','Pilot','PILOT','birthday']],
+    cta:'Book a 20-minute pilot call'},
+  pers:{h:'A personal occasion', p:'A date, a proposal, an anniversary or a birthday, with your photos, inside jokes and place.', pr:'from 49 ₾', demo:'Play the proposal demo', order:'Order one'},
+  sty:{label:'One story, ten styles', h:'Same words. A different world.',
+    sub:'Every version carries the same text: Nino, Friday, 20:00. Only the style changes: how it opens, the type, the colors, the ticket. That’s how the engine will work with your brand too.',
+    play:'Play this style', all:'All styles', to:'Nino', intro:'Friday, 20:00. I prepared something for you.',
+    f:{all:'All', restaurant:'Restaurants', life:'Personal', work:'Business'}},
+  pr:{label:'Prices in GEL', h:'Simple prices. No contract.', sub:'Restaurant plans start today. For teams, everything starts as a pilot and we agree the price in one call.',
+    monthly:'Monthly', yearly:'Yearly, 2 months free', per:'₾ / month', yr:'{x} ₾ billed yearly', mo:'Billed monthly', rec:'Recommended', choose:'Get started',
     tiers:[
-      {id:'plan-start', rom:'I', name:'Aperitif', price:99, for:'For one venue trying it out.', f:['3 templates from the collection','Your logo, colors and menu, up to 30 dishes','60 invites a month','Menu picks sent by email','Georgian and English']},
-      {id:'plan-main', rom:'II', name:'Main Course', price:199, rec:true, for:'For date-night venues with lots of bookings for two.', f:['All templates, including seasonal ones','Unlimited invites','Menu picks sent to the kitchen on Telegram','Reminder one day before the visit','Date package sales','Monthly report: opens, confirmations, no-shows']},
-      {id:'plan-chef', rom:'III', name:'Chef’s Menu', price:299, for:'For venues that want a look of their own.', f:['Everything in Main Course','An exclusive template every quarter','Up to 3 locations','Changes within 24 hours','An invite button for your own website']}],
-    alcH:'À la carte',
-    alc:[['Exclusive template for a restaurant','from 600 ₾'],['Personal invite from a template','49 ₾'],['Fully custom personal invite','from 250 ₾'],['Extra invite on Aperitif','2 ₾'],['Business event or HR invites','on request'],['Date package for guests, suggested price','15–30 ₾'],['Menu training for your team','149 ₾ / month'],['Learning experience for a company, pilot','from 1,500 ₾']],
-    sealRing:'FOUNDING PARTNERS · FIRST FIVE · ', sealC:'1 month\nfree',
-    foot:'Founding partners: for the first 5 restaurants the first month is free and the price is locked for 12 months.'},
-  faq:{label:'FAQ', h:'What restaurants ask us',
-    list:[['Do we need to change our booking system?','No. The invite link is added to the confirmation you already send by SMS, WhatsApp or email. Direct connections to booking platforms come later.'],
-          ['How fast can we launch?','With a template, in 3–5 working days. We need your logo, colors and menu.'],
-          ['Does the guest need to download an app?','No. The invite is a regular link and opens on any phone.'],
-          ['Who sees the menu picks?','Only the restaurant and the person who sent the invite. Picks are a wish list, not a paid order.'],
-          ['Can we update the menu?','Yes. On Main Course and Chef’s Menu we apply changes within 24–48 hours.'],
-          ['Do you work outside restaurants?','Yes: learning, a new hire’s first day, birthdays, proposals and company events. They all run on the same engine.']]},
-  req:{label:'Request', h:'Write to us. We’ll build the demo on your own menu.', email:'Email', based:'Based in', city:'Tbilisi, Georgia',
-    note:'We reply within one working day. Launching with a template takes 3–5 days.', stub:'Request',
+      {id:'plan-start', name:'Start', price:99, for:'For one venue trying it out.', f:['3 styles from the collection','Your logo, colors and menu, up to 30 dishes','60 invites a month','Menu picks sent by email']},
+      {id:'plan-grow', name:'Grow', price:199, rec:true, for:'For date-night venues with lots of bookings for two.', f:['All styles, including seasonal ones','Unlimited invites','Menu picks sent to the kitchen on Telegram','Reminder one day before the visit','Date package sales']},
+      {id:'plan-studio', name:'Studio', price:299, for:'For venues that want a style of their own.', f:['Everything in Grow','An exclusive style every quarter','Up to 3 locations','Changes within 24 hours']}],
+    found:'Founding partners', foundL:'{n} of 5 spots open', foundP:'For the first 5 restaurants the first month is free and the price is locked for 12 months.', foundB:'Claim a spot',
+    moreH:'Add-ons and other buyers',
+    more:[['Staff training for a restaurant','+149 ₾ / month'],['An exclusive style for your brand','from 600 ₾'],['A pilot for a company or school','from 1,500 ₾'],['A personal invite','from 49 ₾'],['Extra invite on Start','2 ₾']],
+    trustH:'No risk',
+    trust:['The first month is free','Your price is locked for 12 months','Cancel any month','You approve every word before it goes live','A monthly report: opens, completions, menu picks, confirmations']},
+  faq:{label:'FAQ', h:'What people ask us',
+    tabs:{rest:'Restaurants', teams:'Teams', pers:'Personal'},
+    rest:[['Do we need to change our booking system?','No. The link is added to the confirmation you already send by SMS, WhatsApp or email.'],
+          ['How fast can we launch?','In 3–5 working days. We need your logo, colors and menu.'],
+          ['Does the guest need an app?','No. It’s a regular link and opens on any phone.'],
+          ['Who sees the menu picks?','Only the restaurant and the person who sent the invite. Picks are a wish list, not a paid order.']],
+    teams:[['How does a pilot start?','In a 20-minute call we agree the topic, the audience and the result we’ll measure. The first version is ready in two weeks.'],
+           ['Who writes the content?','You give us the material: a document, a deck or the rules. Claude turns it into questions and copy, we edit, you approve.'],
+           ['How do we see results?','In a pilot it runs from a link and we send you results as a spreadsheet: who finished and with what score. Connections to learning platforms come later.']],
+    pers:[['How long does it take?','From a style, 1–2 days. From scratch, about a week.'],
+          ['Who can see the invite?','Only the person you send the link to. It isn’t indexed by search engines and is removed after the event.']]},
+  req:{label:'Request', h:'Write to us. We’ll build the first version with your logo.', email:'Email', stub:'Request',
+    next:['We reply within one working day on Telegram or by phone','Within 48 hours you get a draft in your brand','You review it and ask for changes','It goes live, and you see the results every month'],
     sendRing:'GANCDA · REQUEST · GANCDA · REQUEST · '},
-  f:{who:'You are', whoOpts:[['restaurant','A restaurant'],['person','An individual'],['company','A company']],
-    type:'What you need', types:[['plan-start','Plan: Aperitif'],['plan-main','Plan: Main Course'],['plan-chef','Plan: Chef’s Menu'],['custom-venue','Exclusive template for a restaurant'],['custom-personal','Personal invite'],['business','Business event or HR'],['learning','Learning'],['onboarding','A new hire’s first day'],['campaign','Campaign or loyalty'],['other','Something else']],
-    tpl:'Template', tplNone:'Not sure yet', name:'Name', org:'Restaurant or company', opt:'(optional)', contact:'Phone or email', date:'Date',
-    budget:'Budget', budgets:[['b0','Not sure yet'],['b1','Up to 100 ₾'],['b2','100–300 ₾'],['b3','300–1000 ₾'],['b4','Over 1000 ₾']],
-    msg:'Details', msgPh:'e.g. Sushi date, loves salmon, table booked for Thursday at 21:00', note:'Press the seal to send your request.', send:'Send',
-    eName:'Add your name', eContact:'Add a phone number or email so we can reply',
-    okH:'Received', ok:'We’ll get back to you within one working day.', okC:'RECEIVED',
+  f:{who:'You are', whoOpts:[['restaurant','A restaurant'],['team','A team or company'],['personal','Personal']],
+    name:'Name', org:'Restaurant or company', opt:'(optional)', contact:'Phone or Telegram', contactPh:'+995 5__ __ __ __ or @username',
+    msg:'What do you want guests or staff to do?', msgPh:'e.g. Bookings for two often don’t show up, or new waiters struggle to learn the menu', note:'Press the seal to send your request.', send:'Send',
+    picked:'Picked:', clear:'Clear choice',
+    interest:{'founding':'Founding partner','plan-start':'Start · 99 ₾','plan-grow':'Grow · 199 ₾','plan-studio':'Studio · 299 ₾','learning':'Learning','onboarding':'New hires','campaign':'Campaign','custom-personal':'Personal invite','addon':'Staff training'},
+    eName:'Add your name', eContact:'Add a phone number, Telegram or email so we can reply',
+    okH:'Your request is sealed', ok:'We’ll write to you within one working day.', okC:'RECEIVED',
     readyH:'Your request is ready', ready:'Online sending isn’t switched on yet. Copy the text and send it to {email}', readyC:'READY',
     failH:'Couldn’t send', fail:'Try again or write to {email}', failC:'RETRY',
-    copy:'Copy text', copied:'Copied', edit:'Edit', subj:'Gancda: new request', none:'—', slip:'No.'},
-  st:{custom:'What you customize', customList:['Logo, colors and type','Menu: dishes, prices, photos or icons','Copy in Georgian and English','Booking fields, the ticket and the stamp'],
-    req:'Request this template', restart:'Restart', fict:'Demo venues and names are fictional.'},
-  foot:{slogan:'Make every moment an experience.', demo:'Restaurants, companies and names shown on this site are fictional and for demo purposes only.', copy:'© 2026 Gancda · Tbilisi'},
+    copy:'Copy text', copied:'Copied', edit:'Edit', subj:'Gancda: new request', none:'—', slip:'No.', tpl:'Style', type:'Interest', ring:'GANCDA · SEALED · GANCDA · SEALED · '},
+  st:{custom:'What you customize', customList:['Logo, colors and type','Content: menu, questions, copy','Georgian and English','The final screen: ticket, badge or certificate'],
+    req:'I want this with my logo', restart:'Restart', fict:'Venues and names in the demos are fictional.'},
+  foot:{mean:'Gancda: a feeling you live through.', say:'Say it GAHNTS-dah (officially romanized Gantsda).', demo:'Restaurants, companies and names shown on this site are fictional.', copy:'© 2026 Gancda · Tbilisi'},
   days:['Sunday','Monday','Tuesday','Wednesday','Thursday','Friday','Saturday'],
   months:['January','February','March','April','May','June','July','August','September','October','November','December']
 }};
@@ -1998,8 +2041,9 @@ Object.assign(I, {
   chevD:'<path d="M6 9l6 6 6-6"/>',
   diamond:'<path class="s" d="M12 3.5l4.5 8.5-4.5 8.5-4.5-8.5z"/>'
 });
+if (CONFIG.foundingLeft == null) CONFIG.foundingLeft = 5;
 
-/* rubber stamp: ring text, a center word, and an ink filter that roughens the edges */
+/* rubber seal used for the request "keep" beat */
 let sealN = 0;
 function seal(ring, center){
   const id = 'sl' + (++sealN);
@@ -2007,7 +2051,7 @@ function seal(ring, center){
   const longest = lines.reduce((m, l) => Math.max(m, l.length), 0);
   const fs = lines.length ? Math.min(54, Math.floor(104 / (longest * 0.7)), lines.length > 1 ? 20 : 54) : 0;
   const lh = fs * 1.08, y0 = 100 + fs * 0.36 - (lines.length - 1) * lh / 2;
-  const mid = lines.map((l, i) => '<text x="100" y="'+(y0 + i * lh).toFixed(1)+'" text-anchor="middle" stroke="none" style="font-family:var(--f-disp);font-weight:900;font-size:'+fs+'px">'+esc(l)+'</text>').join('');
+  const mid = lines.map((l, i) => '<text x="100" y="'+(y0 + i * lh).toFixed(1)+'" text-anchor="middle" stroke="none" style="font-family:var(--f-label);font-weight:700;font-size:'+fs+'px">'+esc(l)+'</text>').join('');
   return '<svg class="seal-svg" viewBox="0 0 200 200" aria-hidden="true" focusable="false"><defs>'+
     '<path id="'+id+'p" d="M32,100 a68,68 0 1,1 136,0 a68,68 0 1,1 -136,0"/>'+
     '<filter id="'+id+'f" x="-6%" y="-6%" width="112%" height="112%"><feTurbulence type="fractalNoise" baseFrequency=".8" numOctaves="2" seed="'+(sealN * 7)+'" result="n"/>'+
@@ -2017,108 +2061,17 @@ function seal(ring, center){
     '<g filter="url(#'+id+'f)" fill="currentColor" stroke="currentColor">'+
     '<circle cx="100" cy="100" r="95" fill="none" stroke-width="5"/><circle cx="100" cy="100" r="88.5" fill="none" stroke-width="1.6"/>'+
     '<circle cx="100" cy="100" r="60" fill="none" stroke-width="2.4"/>'+
-    '<text stroke="none" style="font-family:var(--f-body);font-weight:800;font-size:15px;letter-spacing:1px"><textPath href="#'+id+'p" textLength="418" lengthAdjust="spacing">'+esc(ring)+'</textPath></text>'+
+    '<text stroke="none" style="font-family:var(--f-label);font-weight:700;font-size:15px;letter-spacing:1px"><textPath href="#'+id+'p" textLength="418" lengthAdjust="spacing">'+esc(ring)+'</textPath></text>'+
     mid+'</g></svg>';
 }
 
-/* ---------- static strings ---------- */
-function applyStatic(){
-  const D = S[lang];
-  document.documentElement.lang = lang;
-  $$('[data-t]').forEach(el => { const v = path(D, el.dataset.t); if (v != null) el.textContent = el.classList.contains('caps') ? caps(v) : v; });
-  $$('[data-tp]').forEach(el => { const v = path(D, el.dataset.tp); if (v != null) el.placeholder = v; });
-  $$('[data-ic]').forEach(el => { if (!el.firstChild) el.innerHTML = ic(el.dataset.ic); });
-  $('#lang-ka').setAttribute('aria-pressed', lang === 'ka'); $('#lang-en').setAttribute('aria-pressed', lang === 'en');
-  $('#menuBtn').setAttribute('aria-label', D.ui.menu);
-  $('#stClose').setAttribute('aria-label', D.ui.close); $('#stPrev').setAttribute('aria-label', D.ui.prev); $('#stNext').setAttribute('aria-label', D.ui.next);
-  $('#cEmail').textContent = CONFIG.email;
-  document.title = lang === 'ka' ? 'განცდა · Gancda' : 'Gancda · განცდა';
-  themeIcon();
+/* one phone can host an invite or a lesson; swap the instance when the kind changes */
+function mount(el, id, prev){
+  const t = TBY[id], wantLesson = t.cat === 'learn';
+  if (prev && (prev instanceof Lesson) === wantLesson){ prev.set(id); return prev; }
+  if (prev){ prev.clear(); invites.splice(invites.indexOf(prev), 1); const fresh = el.cloneNode(false); el.replaceWith(fresh); el = fresh; }
+  return wantLesson ? new Lesson(el, id) : new Invite(el, id);
 }
-
-/* ---------- hero poster: every line fitted to the column width ---------- */
-const narrowQ = window.matchMedia ? matchMedia('(max-width:600px)') : {matches:false};
-function renderHero(){
-  const H = S[lang].hero, lines = narrowQ.matches ? H.linesNarrow : H.lines;
-  const h = $('#posterH');
-  h.setAttribute('aria-label', H.h1);
-  h.innerHTML = lines.map((l, i) => '<span class="ln'+(i === lines.length - 1 ? ' acc' : '')+'" aria-hidden="true"><span class="lt">'+esc(caps(l))+'</span></span>').join('');
-  $('#heroSeal').innerHTML = seal(caps(H.ring), caps(H.yes));
-  fitPoster();
-}
-function fitPoster(){
-  const h = $('#posterH'), W = h.clientWidth; if (!W) return;
-  const lns = Array.from(h.querySelectorAll('.ln'));
-  const sizes = lns.map(ln => { ln.style.fontSize = '100px'; const w = ln.firstChild.getBoundingClientRect().width; return w ? 100 * W / w : 100; });
-  const min = Math.min.apply(null, sizes);
-  lns.forEach((ln, i) => { ln.style.fontSize = Math.floor(Math.min(sizes[i], min * 2.4, 250) * 0.992) + 'px'; });
-}
-$('#heroSeal').addEventListener('click', e => { const s = e.currentTarget; s.classList.add('again'); void s.offsetWidth; s.classList.remove('again'); });
-
-/* ---------- the conveyor of invites ---------- */
-const ROT = [-2, 1.6, -1, 2.2, -1.6, 1, -2.2, 1.4, -0.8, 1.8];
-const pad2 = n => (n < 10 ? '0' : '') + n;
-function renderBelt(){
-  const D = S[lang];
-  const one = TPL.map((t, i) =>
-    '<figure class="card" style="--r:'+ROT[i % ROT.length]+'deg">'+
-      '<button type="button" class="face" data-demo="'+t.id+'" aria-label="'+esc(D.ui.play+': '+tx(t.name))+'" style="background:'+t.c.bg+'">'+
-        '<div class="pv">'+coverHTML(t)+'</div>'+(t.original ? '<span class="orig">'+esc(caps(D.belt.original))+'</span>' : '')+
-        '<span class="play">'+ic('play')+'</span></button>'+
-      '<figcaption><span class="no">№ '+pad2(i + 1)+'</span><span class="nm">'+esc(tx(t.name))+'</span><span class="kd">'+esc(tx(t.kind))+'</span></figcaption></figure>').join('');
-  $('#beltTrack').innerHTML = '<div class="set">'+one+'</div><div class="set" aria-hidden="true" inert>'+one+'</div>';
-  scaleFaces();
-}
-let faceRO = null;
-function scaleFaces(){
-  const f = $('#beltTrack .face'); if (!f) return;
-  const apply = () => { const k = (f.getBoundingClientRect().width / 300).toFixed(4); $('#beltTrack').style.setProperty('--k', k); };
-  apply();
-  if ('ResizeObserver' in window){ if (faceRO) faceRO.disconnect(); faceRO = new ResizeObserver(apply); faceRO.observe(f); }
-}
-const belt = $('#belt'), track = $('#beltTrack');
-let bPos = 0, bLast = 0, bSet = -1, bHover = false, bFocus = false, bTouchUntil = 0, bVisible = true, bDrag = null, bSuppress = false;
-function beltLoop(ts){
-  const dt = bLast ? Math.min(64, ts - bLast) : 16; bLast = ts;
-  const sets = track.children;
-  if (sets.length === 2){
-    const a = sets[0].offsetLeft, b = sets[1].offsetLeft, W = b - a, cur = belt.scrollLeft;
-    if (bSet >= 0 && Math.abs(cur - bSet) > 1.5) bPos = cur;
-    const moving = !bHover && !bFocus && !bDrag && Date.now() > bTouchUntil && bVisible && !dlg.open && !reduced() && !document.hidden;
-    if (moving) bPos += dt * 0.034;
-    if (W > 0 && bPos >= b) bPos -= W;
-    if (moving || Math.abs(bPos - cur) > 1.5) belt.scrollLeft = bPos;
-    bSet = belt.scrollLeft;
-  }
-  requestAnimationFrame(beltLoop);
-}
-belt.addEventListener('mouseenter', () => { bHover = true; });
-belt.addEventListener('mouseleave', () => { bHover = false; });
-belt.addEventListener('focusin', () => { bFocus = true; });
-belt.addEventListener('focusout', () => { bFocus = false; });
-belt.addEventListener('touchstart', () => { bTouchUntil = Infinity; }, {passive:true});
-belt.addEventListener('touchend', () => { bTouchUntil = Date.now() + 2500; }, {passive:true});
-belt.addEventListener('pointerdown', e => { if (e.pointerType === 'mouse' && e.button === 0) bDrag = {x:e.clientX, s:belt.scrollLeft, moved:false}; });
-window.addEventListener('pointermove', e => {
-  if (!bDrag) return;
-  const dx = e.clientX - bDrag.x;
-  if (!bDrag.moved && Math.abs(dx) > 5){ bDrag.moved = true; belt.classList.add('dragging'); }
-  if (bDrag.moved){ e.preventDefault(); bPos = Math.max(0, bDrag.s - dx); belt.scrollLeft = bPos; bSet = belt.scrollLeft; }
-});
-window.addEventListener('pointerup', () => {
-  if (!bDrag) return;
-  if (bDrag.moved){ bSuppress = true; setTimeout(() => { bSuppress = false; }, 60); }
-  bDrag = null; belt.classList.remove('dragging');
-});
-belt.addEventListener('click', e => {
-  if (bSuppress){ e.preventDefault(); e.stopPropagation(); bSuppress = false; return; }
-  const b = e.target.closest('[data-demo]'); if (b) openDemo(b.dataset.demo);
-}, true);
-belt.addEventListener('dragstart', e => e.preventDefault());
-if ('IntersectionObserver' in window) new IntersectionObserver(es => { bVisible = es[0].isIntersecting; }).observe(belt);
-
-/* ---------- story: the phone stays while the five steps scroll past ---------- */
-const storyInv = new Invite($('#storyPhone'), 'omakase');
 Invite.prototype.show = function(step){
   if (this.s.step === step) return;
   this.clear();
@@ -2126,19 +2079,70 @@ Invite.prototype.show = function(step){
   this.s = {step, picks: step >= 2 ? picks : [], fortune: step >= 4 ? 0 : -1, stamped:false, tries:0};
   this.render();
 };
+
+/* ---------- static strings ---------- */
+function applyStatic(){
+  const D = S[lang];
+  document.documentElement.lang = lang;
+  $$('[data-t]').forEach(el => { const v = path(D, el.dataset.t); if (v != null) el.textContent = el.classList.contains('caps') ? caps(v) : v; });
+  $$('[data-th]').forEach(el => { const v = path(D, el.dataset.th); if (v != null) el.innerHTML = v; });
+  $$('[data-tp]').forEach(el => { const v = path(D, el.dataset.tp); if (v != null) el.placeholder = v; });
+  $$('[data-ic]').forEach(el => { if (!el.firstChild) el.innerHTML = ic(el.dataset.ic); });
+  $('#lang-ka').setAttribute('aria-pressed', lang === 'ka'); $('#lang-en').setAttribute('aria-pressed', lang === 'en');
+  $('#menuBtn').setAttribute('aria-label', D.ui.menu);
+  $('#stClose').setAttribute('aria-label', D.ui.close); $('#stPrev').setAttribute('aria-label', D.ui.prev); $('#stNext').setAttribute('aria-label', D.ui.next);
+  $('#styPrev').setAttribute('aria-label', D.ui.prev); $('#styNext').setAttribute('aria-label', D.ui.next);
+  $('#cEmail').textContent = CONFIG.email;
+  document.title = lang === 'ka' ? 'განცდა · Gancda' : 'Gancda · განცდა';
+  themeIcon();
+}
+
+/* ---------- chapter 01: open ---------- */
+let heroInv = null, heroTouched = false, heroAuto = 0;
+function heroPlay(id, swapped){
+  heroInv = mount($('#heroPhone'), id, heroInv);
+  $$('#chooser [data-pick]').forEach(b => b.setAttribute('aria-pressed', b.dataset.pick === id));
+  clearTimeout(heroAuto);
+  heroAuto = setTimeout(() => {
+    const op = document.querySelector('#heroPhone [data-act="open"]');
+    if (op && (swapped || !heroTouched) && !reduced() && !dlg.open) op.click();
+  }, swapped ? 700 : 2500);
+}
+function renderHero(){
+  const H = S[lang].hero;
+  $('#chooser').innerHTML = '<span>'+esc(H.choose)+'</span>'+H.pick.map(p => '<button type="button" data-pick="'+p[0]+'" aria-pressed="'+(heroInv && heroInv.t.id === p[0])+'">'+esc(p[1])+'</button>').join('');
+  $('#router').innerHTML = H.route.map(r => '<button type="button" data-go="'+r[3]+'" data-who="'+r[4]+'">'+ic(r[0])+'<b>'+esc(r[1])+'</b><small>'+esc(r[2])+'</small>'+ic('arrowR','arr')+'</button>').join('');
+  $('#beats').innerHTML = S[lang].beats.list.map((b, i) => '<li><span class="n">0'+(i + 1)+'</span><h3>'+esc(b[0])+'</h3><p>'+esc(b[1])+'</p><p class="ex">'+esc(b[2])+'</p></li>').join('');
+}
+$('#chooser').addEventListener('click', e => {
+  const b = e.target.closest('[data-pick]'); if (!b) return;
+  heroTouched = true; heroPlay(b.dataset.pick, true);
+});
+document.querySelector('.hstage .phone').addEventListener('pointerdown', () => { heroTouched = true; });
+$('#router').addEventListener('click', e => {
+  const b = e.target.closest('[data-go]'); if (!b) return;
+  const r = document.getElementById('who-' + b.dataset.who); if (r) r.checked = true;
+  document.querySelector(b.dataset.go).scrollIntoView({behavior: reduced() ? 'auto' : 'smooth'});
+});
+
+/* ---------- chapter 02: choose ---------- */
+const storyInv = new Invite($('#storyPhone'), 'omakase');
 let storyIO = null, storyActive = -1;
-function renderStory(){
-  const D = S[lang].story;
+function renderRest(){
+  const R = S[lang].rest, D = S[lang].story;
+  $('#outs').innerHTML = R.outs.map(o => '<li>'+ic(o[0])+'<b>'+esc(o[1])+'</b><p>'+esc(o[2])+'</p></li>').join('');
   $('#steps').innerHTML = D.steps.map((s, i) => '<li data-i="'+i+'"'+(i === storyActive ? ' class="on"' : '')+'><span class="mark" aria-hidden="true">'+esc(D.marks[i])+'</span><h3>'+esc(s[0])+'</h3><p>'+esc(s[1])+'</p><p class="gain"><b>'+esc(D.gain)+'</b>'+esc(s[2])+'</p></li>').join('');
-  $('#storySw').innerHTML = TPL.filter(t => t.cat !== 'learn').map(t => '<button type="button" data-sw="'+t.id+'" aria-pressed="'+(storyInv.t.id === t.id)+'" aria-label="'+esc(tx(t.name))+'" title="'+esc(tx(t.name))+'" style="--a:'+t.c.bg+';--b:'+t.c.acc+'"></button>').join('');
   observeSteps();
+  const T = S[lang].teams;
+  $('#teamCards').innerHTML = T.cards.map(c => '<article class="card3">'+ic(c[0])+'<h3>'+esc(c[1])+'</h3><p>'+esc(c[2])+'</p>'+
+    '<button type="button" class="tlink" data-demo="'+c[5]+'">'+ic('play')+'<span>'+esc(S[lang].ui.play)+'</span></button>'+
+    '<div class="meta"><b style="font-family:var(--f-label)">'+esc(c[3])+'</b><span class="pill'+(c[4] === 'ახალი' || c[4] === 'NEW' ? ' live' : '')+'">'+esc(c[4])+'</span></div></article>').join('');
 }
 function observeSteps(){
   if (storyIO) storyIO.disconnect();
   if (!('IntersectionObserver' in window)) return;
   const narrow = window.matchMedia && matchMedia('(max-width:900px)').matches;
-  storyIO = new IntersectionObserver(es => es.forEach(e => { if (e.isIntersecting) activateStep(+e.target.dataset.i); }),
-    {rootMargin: narrow ? '-74% 0px -25% 0px' : '-50% 0px -49% 0px'});
+  storyIO = new IntersectionObserver(es => es.forEach(e => { if (e.isIntersecting) activateStep(+e.target.dataset.i); }), {rootMargin: narrow ? '-74% 0px -25% 0px' : '-50% 0px -49% 0px'});
   $$('#steps li').forEach(li => storyIO.observe(li));
 }
 function activateStep(i){
@@ -2147,115 +2151,135 @@ function activateStep(i){
   $$('#steps li').forEach(li => li.classList.toggle('on', +li.dataset.i === i));
   storyInv.show(i);
 }
-$('#storySw').addEventListener('click', e => {
-  const b = e.target.closest('[data-sw]'); if (!b) return;
-  storyInv.t = TBY[b.dataset.sw]; storyInv.clear(); storyInv.render();
-  $$('#storySw [data-sw]').forEach(x => x.setAttribute('aria-pressed', x === b));
+
+/* ---------- chapter 03: surprise — one story, ten styles ---------- */
+const STY = () => TPL.filter(t => t.cat !== 'learn');
+let styIdx = 0, styFilter = 'all', styUser = false, styTimer = 0, styVisible = false;
+function styled(t){ const D = S[lang].sty; return Object.assign({}, t, {to:L(D.to), intro:L(D.intro)}); }
+function showStyle(i){
+  const list = STY(); styIdx = (i + list.length) % list.length; const t = list[styIdx];
+  $('#styPhone').innerHTML = coverHTML(styled(t));
+  $('#styNo').textContent = '№ ' + (styIdx < 9 ? '0' : '') + (styIdx + 1) + ' / ' + list.length;
+  $('#styName').textContent = tx(t.name); $('#styKind').textContent = tx(t.kind);
+  $$('#strip .mini').forEach(m => m.setAttribute('aria-pressed', m.dataset.id === t.id));
+}
+function renderStyles(){
+  const D = S[lang].sty, list = STY();
+  $('#filters').innerHTML = ['all','restaurant','life','work'].map(k => '<button type="button" data-f="'+k+'" aria-pressed="'+(styFilter === k)+'">'+esc(D.f[k])+'</button>').join('');
+  $('#strip').innerHTML = list.map(t => '<button type="button" class="mini" data-id="'+t.id+'" data-cat="'+t.cat+'"'+(styFilter !== 'all' && styFilter !== t.cat ? ' hidden' : '')+'>'+
+    '<span class="face" style="background:'+t.c.bg+'"><span class="pv">'+coverHTML(styled(t))+'</span></span><b>'+esc(tx(t.name))+'<small>'+esc(tx(t.kind))+'</small></b></button>').join('');
+  showStyle(styIdx);
+}
+function styTick(){
+  clearInterval(styTimer);
+  styTimer = setInterval(() => { if (!styUser && styVisible && !reduced() && !dlg.open && !document.hidden) showStyle(styIdx + 1); }, 3200);
+}
+$('#styPrev').innerHTML = ic('arrowL'); $('#styNext').innerHTML = ic('arrowR');
+$('#styPrev').addEventListener('click', () => { styUser = true; showStyle(styIdx - 1); });
+$('#styNext').addEventListener('click', () => { styUser = true; showStyle(styIdx + 1); });
+$('#styPlay').addEventListener('click', () => openDemo(STY()[styIdx].id));
+$('#strip').addEventListener('click', e => { const b = e.target.closest('.mini'); if (!b) return; styUser = true; showStyle(STY().findIndex(t => t.id === b.dataset.id)); });
+$('#filters').addEventListener('click', e => {
+  const b = e.target.closest('[data-f]'); if (!b) return;
+  styFilter = b.dataset.f;
+  $$('#filters [data-f]').forEach(x => x.setAttribute('aria-pressed', x === b));
+  $$('#strip .mini').forEach(m => { m.hidden = !(styFilter === 'all' || m.dataset.cat === styFilter); });
 });
+if ('IntersectionObserver' in window) new IntersectionObserver(es => { styVisible = es[0].isIntersecting; }).observe($('#styles'));
 
-/* ---------- occasions ---------- */
-function renderXp(){
-  const X = S[lang].xp;
-  $('#xpGrid').innerHTML = X.items.map(x => '<article class="xp"><span class="xi">'+ic(x[0])+'</span><h3>'+esc(x[1])+'</h3><span class="who">'+esc(x[2])+'</span><p>'+esc(x[3])+'</p>'+
-    (x[7] ? '<button type="button" class="tlink" data-demo="'+x[7]+'">'+ic('play')+'<span>'+esc(x[8])+'</span></button>' : '<button type="button" class="tlink" data-req="campaign" data-who="company"><span>'+esc(X.pilot)+'</span>'+ic('arrowR')+'</button>')+
-    '<div class="meta"><span class="pr">'+esc(x[4])+'</span><span class="stt'+(x[6] ? ' '+x[6] : '')+'">'+esc(x[5])+'</span></div></article>').join('');
-}
-$('#xpGrid').addEventListener('click', e => { const b = e.target.closest('[data-demo]'); if (b) openDemo(b.dataset.demo); });
-function renderCustom(){
-  const C = S[lang].cus;
-  $('#occ').innerHTML = C.occ.map(o => '<li><button type="button" data-req="'+o[3]+'" data-who="'+o[4]+'" data-tpl="'+o[5]+'">'+
-    '<span class="occ-name">'+esc(o[0])+'</span><span class="occ-desc">'+esc(o[1])+'</span><span class="occ-price">'+esc(o[2])+'</span>'+ic('arrowR')+'</button></li>').join('');
-  $('#proc').innerHTML = C.proc.map((p, i) => '<span class="st"><b>'+(i + 1)+'</b>'+esc(p)+'</span>').join('<span class="ar" aria-hidden="true">'+ic('arrowR')+'</span>') +
-    '<span class="pn">'+esc(C.procNote)+'</span>';
-}
-
-/* ---------- the menu card ---------- */
+/* ---------- chapter 04: keep ---------- */
 let billing = store.get('bill') === 'y' ? 'y' : 'm';
-function renderMenu(){
+function renderPricing(){
   const P = S[lang].pr;
   $$('#bill [data-bill]').forEach(b => b.setAttribute('aria-pressed', b.dataset.bill === billing));
-  $('#courses').innerHTML = P.tiers.map(t => {
+  $('#tiers').innerHTML = P.tiers.map(t => {
     const p = billing === 'y' ? Math.round(t.price * 10 / 12) : t.price;
-    return '<li class="course">'+(t.rec ? '<span class="chef">'+esc(caps(P.chef))+'</span>' : '')+
-      '<div class="c-line"><span class="c-rom">'+t.rom+'</span><span class="c-name">'+esc(t.name)+'</span><span class="dots" aria-hidden="true"></span><span class="c-price">'+p+'<small>₾</small></span></div>'+
-      '<div class="c-body"><p class="c-ing">'+t.f.map(esc).join(' · ')+'</p><p class="c-for">'+esc(t.for)+'</p>'+
-      '<div class="c-act"><button type="button" class="c-pick" data-req="'+t.id+'" data-who="restaurant">'+esc(P.pick)+ic('arrowR')+'</button>'+
-      '<span class="c-yr">'+esc(billing === 'y' ? fill(P.yr, {x:(t.price * 10).toLocaleString('en-US')}) : P.mo)+'</span></div></div></li>';
+    return '<div class="tier'+(t.rec ? ' rec' : '')+'">'+(t.rec ? '<span class="pill live rec-b">'+esc(caps(P.rec))+'</span>' : '')+
+      '<h3>'+esc(t.name)+'</h3><p class="for">'+esc(t.for)+'</p><div class="price"><b>'+p+'</b><span>'+esc(P.per)+'</span></div>'+
+      '<p class="yr">'+esc(billing === 'y' ? fill(P.yr, {x:(t.price * 10).toLocaleString('en-US')}) : P.mo)+'</p>'+
+      '<ul>'+t.f.map(f => '<li>'+ic('check')+'<span>'+esc(f)+'</span></li>').join('')+'</ul>'+
+      (t.rec ? '<button type="button" class="btn" data-req="'+t.id+'" data-who="restaurant"><span>'+esc(P.choose)+'</span>'+ic('arrowR')+'</button>'
+             : '<button type="button" class="tlink" data-req="'+t.id+'" data-who="restaurant"><span>'+esc(P.choose)+'</span>'+ic('arrowR')+'</button>')+'</div>';
   }).join('');
-  $('#alc').innerHTML = P.alc.map(a => '<li><span class="nm">'+esc(a[0])+'</span><span class="dots" aria-hidden="true"></span><span class="pr">'+esc(a[1])+'</span></li>').join('');
-  $('#mcSeal').innerHTML = seal(caps(P.sealRing), P.sealC);
+  const left = Math.max(0, Math.min(5, +CONFIG.foundingLeft || 0));
+  $('#founding').innerHTML = '<span class="cnt" aria-hidden="true">'+[0,1,2,3,4].map(i => '<i'+(i >= left ? ' class="f"' : '')+'></i>').join('')+'</span>'+
+    '<b>'+esc(P.found)+' · '+esc(fill(P.foundL, {n:left}))+'</b><p>'+esc(P.foundP)+'</p>'+
+    '<button type="button" class="tlink" data-req="founding" data-who="restaurant"><span>'+esc(P.foundB)+'</span>'+ic('arrowR')+'</button>';
+  $('#more').innerHTML = P.more.map(m => '<li><span class="nm">'+esc(m[0])+'</span><span class="pr">'+esc(m[1])+'</span></li>').join('');
+  $('#trust').innerHTML = P.trust.map(x => '<li>'+ic('check')+'<span>'+esc(x)+'</span></li>').join('');
 }
-$('#bill').addEventListener('click', e => { const b = e.target.closest('[data-bill]'); if (!b) return; billing = b.dataset.bill; store.set('bill', billing); renderMenu(); });
+$('#bill').addEventListener('click', e => { const b = e.target.closest('[data-bill]'); if (!b) return; billing = b.dataset.bill; store.set('bill', billing); renderPricing(); });
 
-/* ---------- faq ---------- */
+let faqTab = 'rest';
 function renderFaq(){
-  $('#qa').innerHTML = S[lang].faq.list.map(q => '<div><dt>'+esc(q[0])+'</dt><dd>'+esc(q[1])+'</dd></div>').join('');
+  const F = S[lang].faq;
+  $('#qtabs').innerHTML = ['rest','teams','pers'].map(k => '<button type="button" data-q="'+k+'" aria-pressed="'+(faqTab === k)+'">'+esc(F.tabs[k])+'</button>').join('');
+  $('#qa').innerHTML = F[faqTab].map(q => '<div><dt>'+esc(q[0])+'</dt><dd>'+esc(q[1])+'</dd></div>').join('');
 }
+$('#qtabs').addEventListener('click', e => { const b = e.target.closest('[data-q]'); if (!b) return; faqTab = b.dataset.q; renderFaq(); });
 
 /* ---------- demo stage ---------- */
 const dlg = $('#dlg');
 let dlgInv = null;
 function fillStage(t){
-  const D = S[lang], i = TPL.indexOf(t), marks = D.story.marks;
-  $('#stNo').textContent = '№ ' + pad2(i + 1) + ' · ' + caps(tx(t.kind));
+  const D = S[lang], i = TPL.indexOf(t), marks = ['1','2','3','4','5'];
+  $('#stNo').textContent = '№ ' + (i < 9 ? '0' : '') + (i + 1) + ' · ' + caps(tx(t.kind));
   $('#stName').textContent = tx(t.name);
-  $('#stKind').hidden = true;
   $('#stDesc').textContent = tx(t.desc);
-  $('#stSteps').innerHTML = (t.steps ? t.steps.map(tx) : [tx(t.hint), tx(t.q), tx(t.pickT), tx(t.sp.title), tx(t.tk.title) || G[lang].tk]).map((x, k) => '<li><b>'+esc(marks[k])+'</b><span>'+esc(x)+'</span></li>').join('');
+  $('#stSteps').innerHTML = (t.steps ? t.steps.map(tx) : [tx(t.hint), tx(t.q), tx(t.pickT), tx(t.sp.title), tx(t.tk.title) || G[lang].tk]).map((x, k) => '<li><b>'+marks[k]+'</b><span>'+esc(x)+'</span></li>').join('');
   $('#stCust').innerHTML = D.st.customList.map(x => '<li>'+ic('check')+'<span>'+esc(x)+'</span></li>').join('');
-  $('#stCount').textContent = pad2(i + 1) + ' / ' + pad2(TPL.length);
+  $('#stCount').textContent = (i < 9 ? '0' : '') + (i + 1) + ' / ' + TPL.length;
 }
 function openDemo(id){
   const t = TBY[id]; if (!t) return;
-  const wantLesson = t.cat === 'learn';
-  if (dlgInv && (dlgInv instanceof Lesson) !== wantLesson){
-    dlgInv.clear(); invites.splice(invites.indexOf(dlgInv), 1);
-    const old = $('#dlgPhone'), fresh = old.cloneNode(false); old.replaceWith(fresh); dlgInv = null;
-  }
-  if (!dlgInv) dlgInv = wantLesson ? new Lesson($('#dlgPhone'), id) : new Invite($('#dlgPhone'), id); else dlgInv.set(id);
+  dlgInv = mount($('#dlgPhone'), id, dlgInv);
   fillStage(t);
   if (!dlg.open){ if (dlg.showModal) dlg.showModal(); else dlg.setAttribute('open', ''); }
+  $('#sticky').classList.add('away');
 }
 function stepDemo(d){ const i = TPL.indexOf(dlgInv.t); openDemo(TPL[(i + d + TPL.length) % TPL.length].id); }
 $('#stClose').innerHTML = ic('close'); $('#stPrev').innerHTML = ic('arrowL'); $('#stNext').innerHTML = ic('arrowR');
 $('#stClose').addEventListener('click', () => dlg.close());
 $('#stPrev').addEventListener('click', () => stepDemo(-1));
 $('#stNext').addEventListener('click', () => stepDemo(1));
-dlg.addEventListener('close', () => { if (dlgInv) dlgInv.clear(); });
-dlg.addEventListener('keydown', e => { if (e.target.closest('input,select,textarea')) return; if (e.key === 'ArrowRight') stepDemo(1); if (e.key === 'ArrowLeft') stepDemo(-1); });
+dlg.addEventListener('close', () => { if (dlgInv) dlgInv.clear(); updateSticky(); });
+dlg.addEventListener('keydown', e => { if (e.target.closest('input,textarea')) return; if (e.key === 'ArrowRight') stepDemo(1); if (e.key === 'ArrowLeft') stepDemo(-1); });
 $('#stRestart').addEventListener('click', () => dlgInv && dlgInv.reset());
 $('#stReq').addEventListener('click', () => {
   const t = dlgInv.t; dlg.close();
-  const map = {restaurant:['plan-main','restaurant'], life:['custom-personal','person'], work:['business','company'], learn:['learning','restaurant']}[t.cat];
+  const map = {restaurant:['plan-grow','restaurant'], life:['custom-personal','personal'], work:[t.id === 'interview' ? 'onboarding' : 'campaign','team'], learn:['learning','team']}[t.cat];
   requestFor(map[0], map[1], t.id);
 });
-
-/* ---------- request shortcuts ---------- */
 document.addEventListener('click', e => {
+  const d = e.target.closest('[data-demo]'); if (d && !d.closest('#dlg')){ openDemo(d.dataset.demo); return; }
   const b = e.target.closest('[data-req]'); if (!b) return;
-  requestFor(b.dataset.req, b.dataset.who, b.dataset.tpl || '');
+  requestFor(b.dataset.req, b.dataset.who, '');
 });
+
+/* ---------- the request: the "keep" beat ---------- */
+const slipNo = String(Math.floor(1000 + Math.random() * 8999));
+const RING = '<svg class="ring" viewBox="0 0 120 44" preserveAspectRatio="none" aria-hidden="true"><path d="M9 25C6 10 56 3 102 8c15 2 13 26-5 30-28 6-78 6-88-5C3 26 12 14 32 9"/></svg>';
+let interest = '', interestTpl = '', lastReq = null;
 function requestFor(type, who, tpl){
   $('#result').hidden = true; $('#reqForm').hidden = false;
-  if (type) $('#fType').value = type;
+  interest = type || ''; interestTpl = tpl || '';
   if (who){ const r = document.getElementById('who-' + who); if (r) r.checked = true; }
-  if (tpl != null) $('#fTpl').value = tpl;
+  renderInterest();
   $('#request').scrollIntoView({behavior: reduced() ? 'auto' : 'smooth', block:'start'});
   setTimeout(() => $('#fName').focus({preventScroll:true}), reduced() ? 0 : 700);
 }
-
-/* ---------- the reservation card form ---------- */
-const slipNo = String(Math.floor(1000 + Math.random() * 8999));
-const RING = '<svg class="ring" viewBox="0 0 120 44" preserveAspectRatio="none" aria-hidden="true"><path d="M9 25C6 10 56 3 102 8c15 2 13 26-5 30-28 6-78 6-88-5C3 26 12 14 32 9"/></svg>';
-let lastReq = null;
+function renderInterest(){
+  const F = S[lang].f, lbl = F.interest[interest];
+  const tname = interestTpl && TBY[interestTpl] ? tx(TBY[interestTpl].name) : '';
+  $('#interestBox').innerHTML = (lbl || tname) ? '<span class="interest">'+esc(F.picked)+' '+esc([lbl, tname].filter(Boolean).join(' · '))+'<button type="button" id="clearInt" aria-label="'+esc(F.clear)+'">'+ic('close')+'</button></span>' : '';
+  const c = $('#clearInt'); if (c) c.addEventListener('click', () => { interest = ''; interestTpl = ''; renderInterest(); });
+}
 function renderForm(){
   const F = S[lang].f;
   const who = (document.querySelector('input[name="who"]:checked') || {}).value || 'restaurant';
   $('#whoSeg').innerHTML = F.whoOpts.map(o => '<label class="circ"><input type="radio" name="who" id="who-'+o[0]+'" value="'+o[0]+'"'+(o[0] === who ? ' checked' : '')+'><span class="t">'+esc(o[1])+'</span>'+RING+'</label>').join('');
-  const keep = (id, opts) => { const el = $(id), v = el.value; el.innerHTML = opts; if (v) el.value = v; };
-  keep('#fType', F.types.map(o => '<option value="'+o[0]+'">'+esc(o[1])+'</option>').join(''));
-  keep('#fTpl', '<option value="">'+esc(F.tplNone)+'</option>' + TPL.map(t => '<option value="'+t.id+'">'+esc(tx(t.name)+' · '+tx(t.kind))+'</option>').join(''));
-  keep('#fBudget', F.budgets.map(o => '<option value="'+o[0]+'">'+esc(o[1])+'</option>').join(''));
+  renderInterest();
+  $('#nextl').innerHTML = S[lang].req.next.map(n => '<li>'+esc(n)+'</li>').join('');
   const d = new Date();
   $('#slipNo').textContent = F.slip + ' ' + slipNo + ' · ' + d.getDate() + ' ' + S[lang].months[d.getMonth()] + ' ' + d.getFullYear();
   $('#sendRing').innerHTML = seal(caps(S[lang].req.sendRing), '');
@@ -2263,29 +2287,23 @@ function renderForm(){
 }
 function readForm(){
   const F = S[lang].f, who = (document.querySelector('input[name="who"]:checked') || {}).value || '';
-  const label = sel => { const o = $(sel).selectedOptions[0]; return o ? o.textContent : ''; };
-  return {
-    who, whoLabel: (F.whoOpts.find(o => o[0] === who) || ['', ''])[1],
-    type: $('#fType').value, typeLabel: label('#fType'), template: $('#fTpl').value, templateLabel: label('#fTpl'),
-    name: $('#fName').value.trim(), org: $('#fOrg').value.trim(), contact: $('#fContact').value.trim(),
-    date: $('#fDate').value, budget: $('#fBudget').value, budgetLabel: label('#fBudget'), message: $('#fMsg').value.trim(), lang
-  };
+  return {who, whoLabel:(F.whoOpts.find(o => o[0] === who) || ['', ''])[1], interest, interestLabel:F.interest[interest] || '',
+    template:interestTpl, templateLabel: interestTpl && TBY[interestTpl] ? tx(TBY[interestTpl].name) : '',
+    name:$('#fName').value.trim(), org:$('#fOrg').value.trim(), contact:$('#fContact').value.trim(), message:$('#fMsg').value.trim(), lang};
 }
 function reqText(r){
   const F = S[lang].f, n = v => v || F.none;
-  return [F.subj + ' (' + F.slip + ' ' + slipNo + ')', '',
-    F.who + ': ' + n(r.whoLabel), F.type + ': ' + n(r.typeLabel), F.tpl + ': ' + n(r.templateLabel),
-    F.name + ': ' + n(r.name), F.org + ': ' + n(r.org), F.contact + ': ' + n(r.contact),
-    F.date + ': ' + n(r.date), F.budget + ': ' + n(r.budgetLabel), F.msg + ': ' + n(r.message)].join('\n');
+  return [F.subj + ' (' + F.slip + ' ' + slipNo + ')', '', F.who + ': ' + n(r.whoLabel), F.type + ': ' + n(r.interestLabel), F.tpl + ': ' + n(r.templateLabel),
+    F.name + ': ' + n(r.name), F.org + ': ' + n(r.org), F.contact + ': ' + n(r.contact), F.msg + ': ' + n(r.message)].join('\n');
 }
 function showResult(mode){
   const F = S[lang].f, box = $('#result');
   const head = mode === 'ok' ? F.okH : mode === 'fail' ? F.failH : F.readyH;
-  const body = mode === 'ok' ? F.ok : fill(mode === 'fail' ? F.fail : F.ready, {email: CONFIG.email});
+  const body = mode === 'ok' ? F.ok : fill(mode === 'fail' ? F.fail : F.ready, {email:CONFIG.email});
   const word = mode === 'ok' ? F.okC : mode === 'fail' ? F.failC : F.readyC;
-  box.innerHTML = '<div class="rs">'+seal(caps(S[lang].hero.ring), caps(word))+'</div><h3>'+esc(head)+'</h3><p>'+esc(body)+'</p>'+
+  box.innerHTML = '<div class="rs">'+seal(caps(F.ring), caps(word))+'</div><h3>'+esc(head)+'</h3><p>'+esc(body)+'</p>'+
     (mode !== 'ok' ? '<pre id="reqText">'+esc(reqText(lastReq))+'</pre>' : '')+
-    '<div class="row">'+(mode !== 'ok' ? '<button type="button" class="tix" id="copyReq"><span>'+esc(F.copy)+'</span><i class="perf"></i>'+ic('copy')+'</button>' : '')+
+    '<div class="row">'+(mode !== 'ok' ? '<button type="button" class="btn" id="copyReq">'+ic('copy')+'<span>'+esc(F.copy)+'</span></button>' : '')+
     '<button type="button" class="tlink" id="editReq">'+esc(F.edit)+'</button></div>';
   box.hidden = false; $('#reqForm').hidden = true;
   const cp = $('#copyReq');
@@ -2297,14 +2315,15 @@ function showResult(mode){
   $('#editReq').addEventListener('click', () => { box.hidden = true; $('#reqForm').hidden = false; $('#fName').focus(); });
 }
 function validate(){
-  const F = S[lang].f; let ok = true;
+  const F = S[lang].f;
   const name = $('#fName').value.trim(), contact = $('#fContact').value.trim();
   const cOk = /@/.test(contact) || contact.replace(/\D/g, '').length >= 9;
   $('#fbName').classList.toggle('bad', !name); $('#eName').textContent = name ? '' : F.eName;
   $('#fbContact').classList.toggle('bad', !cOk); $('#eContact').textContent = cOk ? '' : F.eContact;
   $('#fName').setAttribute('aria-invalid', !name); $('#fContact').setAttribute('aria-invalid', !cOk);
-  if (!name){ $('#fName').focus(); ok = false; } else if (!cOk){ $('#fContact').focus(); ok = false; }
-  return ok;
+  if (!name){ $('#fName').focus(); return false; }
+  if (!cOk){ $('#fContact').focus(); return false; }
+  return true;
 }
 $('#reqForm').addEventListener('submit', e => {
   e.preventDefault();
@@ -2314,7 +2333,7 @@ $('#reqForm').addEventListener('submit', e => {
   setTimeout(() => {
     if (!CONFIG.formEndpoint){ lastReq.mode = 'ready'; showResult('ready'); return; }
     sb.disabled = true;
-    fetch(CONFIG.formEndpoint, {method:'POST', headers:{'Content-Type':'application/json','Accept':'application/json'}, body: JSON.stringify(Object.assign({slip: slipNo, summary: reqText(lastReq)}, lastReq))})
+    fetch(CONFIG.formEndpoint, {method:'POST', headers:{'Content-Type':'application/json','Accept':'application/json'}, body:JSON.stringify(Object.assign({slip:slipNo, summary:reqText(lastReq)}, lastReq))})
       .then(r => { if (!r.ok) throw new Error(r.status); lastReq.mode = 'ok'; showResult('ok'); })
       .catch(() => { lastReq.mode = 'fail'; showResult('fail'); })
       .finally(() => { sb.disabled = false; });
@@ -2322,7 +2341,19 @@ $('#reqForm').addEventListener('submit', e => {
 });
 ['#fName','#fContact'].forEach(id => $(id).addEventListener('input', () => { if ($(id).closest('.field').classList.contains('bad')) validate(); }));
 
-/* ---------- theme ---------- */
+/* ---------- rail and sticky CTA follow the chapter in view ---------- */
+let reqVisible = false;
+function updateSticky(){ $('#sticky').classList.toggle('away', reqVisible || dlg.open); }
+if ('IntersectionObserver' in window){
+  const railIO = new IntersectionObserver(es => es.forEach(e => {
+    if (!e.isIntersecting) return;
+    const ch = e.target.dataset.ch; $$('#rail a').forEach(a => a.classList.toggle('on', a.dataset.ch === ch));
+  }), {rootMargin:'-45% 0px -54% 0px'});
+  $$('main section[data-ch]').forEach(el => railIO.observe(el));
+  new IntersectionObserver(es => { reqVisible = es[0].isIntersecting; updateSticky(); }).observe($('#request'));
+}
+
+/* ---------- theme, language, mobile nav ---------- */
 function effTheme(){
   const a = document.documentElement.getAttribute('data-theme');
   if (a === 'dark' || a === 'light') return a;
@@ -2331,13 +2362,8 @@ function effTheme(){
 function themeIcon(){ const b = $('#themeBtn'); b.innerHTML = ic(effTheme() === 'dark' ? 'sun' : 'moon'); b.setAttribute('aria-label', S[lang].ui.theme); }
 const savedTheme = store.get('theme');
 if (savedTheme === 'dark' || savedTheme === 'light') document.documentElement.setAttribute('data-theme', savedTheme);
-$('#themeBtn').addEventListener('click', () => {
-  const next = effTheme() === 'dark' ? 'light' : 'dark';
-  document.documentElement.setAttribute('data-theme', next); store.set('theme', next); themeIcon();
-});
+$('#themeBtn').addEventListener('click', () => { const next = effTheme() === 'dark' ? 'light' : 'dark'; document.documentElement.setAttribute('data-theme', next); store.set('theme', next); themeIcon(); });
 if (window.matchMedia) matchMedia('(prefers-color-scheme: dark)').addEventListener('change', themeIcon);
-
-/* ---------- language, mobile nav ---------- */
 $$('[data-lang]').forEach(b => b.addEventListener('click', () => { if (lang === b.dataset.lang) return; lang = b.dataset.lang; store.set('lang', lang); renderAll(); }));
 $('#menuBtn').innerHTML = ic('menu');
 function setMenu(open){ $('#mnav').classList.toggle('open', open); $('#menuBtn').setAttribute('aria-expanded', open); $('#menuBtn').innerHTML = ic(open ? 'close' : 'menu'); }
@@ -2346,22 +2372,15 @@ $$('#mnav a').forEach(a => a.addEventListener('click', () => setMenu(false)));
 
 /* ---------- go ---------- */
 function renderAll(){
-  applyStatic(); renderHero(); renderBelt(); renderXp(); renderStory(); renderCustom(); renderMenu(); renderFaq(); renderForm();
+  applyStatic(); renderHero(); renderRest(); renderStyles(); renderPricing(); renderFaq(); renderForm();
   invites.forEach(i => i.render());
   if (dlg.open && dlgInv) fillStage(dlgInv.t);
 }
+heroPlay('omakase');
 renderAll();
-requestAnimationFrame(beltLoop);
-if (document.fonts && document.fonts.ready) document.fonts.ready.then(() => { fitPoster(); scaleFaces(); });
-let rz = 0, wasNarrow = narrowQ.matches, wasStoryNarrow = window.matchMedia && matchMedia('(max-width:900px)').matches;
-window.addEventListener('resize', () => {
-  cancelAnimationFrame(rz);
-  rz = requestAnimationFrame(() => {
-    if (narrowQ.matches !== wasNarrow){ wasNarrow = narrowQ.matches; renderHero(); } else fitPoster();
-    const sn = window.matchMedia && matchMedia('(max-width:900px)').matches;
-    if (sn !== wasStoryNarrow){ wasStoryNarrow = sn; observeSteps(); }
-  });
-});
+styTick();
+let wasStoryNarrow = window.matchMedia && matchMedia('(max-width:900px)').matches;
+window.addEventListener('resize', () => { const sn = window.matchMedia && matchMedia('(max-width:900px)').matches; if (sn !== wasStoryNarrow){ wasStoryNarrow = sn; observeSteps(); } });
 })();
 </script>
 </body>
