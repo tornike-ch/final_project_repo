@@ -1,8 +1,14 @@
 # Gancda (განცდა): digital experiences site
 
-A one-file website for the interactive invite business: portfolio of 10 playable templates,
-custom-invite offer, restaurant pricing, FAQ and a request form. Georgian first, English switch,
-light and dark themes. No emojis: every icon is inline SVG.
+The one-page site for Gancda, a digital experience studio. The page is itself a short experience in
+four steps (goal, play, result, start): the visitor picks what they want people to do (learn, join,
+engage with a brand, show up), plays the experience built for that goal on a live phone, launches a
+demo results report, then sends a request. Demos: a lesson, an onboarding path, a brand campaign
+game and event invitations. Georgian first, English switch, light and dark themes. No emojis: every
+icon is inline SVG. All brands, names and figures on the page are demo data.
+
+A lesson-type template can set `glab` to rename the lesson labels per language (the campaign demo
+uses it to turn the certificate into a coupon).
 
 ## Run it
 

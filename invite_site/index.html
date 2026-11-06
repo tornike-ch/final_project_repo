@@ -5,7 +5,7 @@
 <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
 <title>განცდა · Gancda</title>
 <meta name="claude:viewport-fit-sides" content="cover">
-<meta name="description" content="Gancda · განცდა: აქციეთ ყოველი მომენტი განცდად. ინტერაქტიული მოსაწვევები, გაკვეთილები და პირველი სამუშაო დღე, თქვენი ბრენდით, ნებისმიერ ტელეფონზე.">
+<meta name="description" content="Gancda · განცდა: Gancda: ციფრული გამოცდილებების სტუდია. ვქმნით ინტერაქტიულ სწავლებას, ონბორდინგს, ბრენდის კამპანიებს და ღონისძიებებს, რომლებსაც ტელეფონზე თამაშივით გადიან.">
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Google+Sans:wght@400..700&family=DM+Mono:wght@400;500&family=Playfair+Display:ital,wght@1,700&family=Noto+Sans+Georgian:wdth,wght@62.5..100,400..800&family=Noto+Serif+Georgian:wdth,wght@62.5..100,500..900&family=Shippori+Mincho:wght@800&display=swap">
@@ -268,6 +268,70 @@ dialog.stage::backdrop{background:transparent}
 .poster{max-width:100%;overflow:hidden}
 @media (max-width:520px){.moments{grid-template-columns:repeat(2,minmax(0,1fr));gap:8px}.moment{padding:12px;grid-template-columns:1fr}.moment .ico{grid-row:auto;width:22px;height:22px}.moment b{font-size:17px}.moment small{font-size:12px}}
 @media (max-width:900px){.take .phone,.hero .phone{width:250px}.scene{padding-block:56px}}
+
+/* v7: studio. 1 goal (hero question) */
+.hero-grid{grid-template-columns:minmax(0,1.05fr) minmax(0,.95fr);align-items:end}
+.goal-q{font-family:var(--f-label);font-weight:700;font-size:15px;margin:0 0 14px;color:color-mix(in srgb,var(--ground) 80%,transparent)}
+.goals{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:10px}
+.goal{position:relative;display:grid;align-content:space-between;gap:18px;min-height:168px;padding:18px;border-radius:18px;border:1.5px solid color-mix(in srgb,var(--ground) 22%,transparent);background:color-mix(in srgb,var(--ground) 5%,transparent);color:var(--ground);text-align:left;cursor:pointer;transition:background-color .25s,border-color .25s,transform .2s}
+.goal:hover{transform:translateY(-3px);border-color:var(--seal)}
+.goal[aria-pressed="true"]{background:var(--seal);border-color:var(--seal);color:#fff}
+.goal .ico{width:30px;height:30px;color:var(--seal)}
+.goal[aria-pressed="true"] .ico{color:#fff}
+.goal b{display:block;font-family:var(--f-disp);font-weight:700;font-size:clamp(20px,2vw,26px);line-height:1.15}
+.goal small{display:block;margin-top:4px;font-size:13px;opacity:.72}
+.goal .arr{position:absolute;top:18px;right:18px;width:18px;height:18px;opacity:.6}
+@media (max-width:520px){.goal{min-height:136px;padding:14px;gap:12px}.goal .arr{top:14px;right:14px}}
+
+/* 2 play */
+.seg{display:flex;flex-wrap:wrap;gap:6px;margin:0 0 22px}
+.seg button{display:inline-flex;align-items:center;gap:7px;min-height:40px;padding:8px 14px;border-radius:999px;border:1.5px solid color-mix(in srgb,currentColor 25%,transparent);background:none;cursor:pointer;font-family:var(--f-label);font-weight:700;font-size:13.5px;color:inherit}
+.seg button .ico{width:16px;height:16px}
+.seg button[aria-pressed="true"]{background:var(--tacc,var(--seal));border-color:var(--tacc,var(--seal));color:var(--ton,#fff)}
+.brief{display:grid;gap:14px;margin:22px 0 0;max-width:54ch}
+.brief div{display:grid;grid-template-columns:118px minmax(0,1fr);gap:14px;padding-top:12px;border-top:1px solid color-mix(in srgb,currentColor 18%,transparent)}
+.brief dt{font-family:var(--f-label);font-weight:700;font-size:12.5px;color:var(--tacc,var(--seal));padding-top:3px}
+.brief dd{margin:0;font-size:16px;line-height:1.55}
+@media (max-width:520px){.brief div{grid-template-columns:1fr;gap:2px}}
+.more{margin-top:18px;font-size:14px;display:flex;flex-wrap:wrap;gap:6px 16px;align-items:center;opacity:.9}
+.more button{background:none;border:0;padding:0 0 2px;border-bottom:1px solid currentColor;cursor:pointer;font:inherit;font-weight:600;color:inherit}
+.stage-col .hint{font-family:var(--f-label);font-size:13px;display:flex;align-items:center;gap:8px;opacity:.75}
+.stage-col .hint i{width:7px;height:7px;border-radius:50%;background:var(--tacc,var(--seal));animation:pulse 1.4s infinite}
+
+/* 3 result: a dashboard card */
+.res-grid{display:grid;grid-template-columns:minmax(0,.8fr) minmax(0,1.2fr);gap:clamp(28px,5vw,72px);align-items:center}
+@media (max-width:900px){.res-grid{grid-template-columns:1fr}}
+.dash{background:var(--ink);color:var(--ground);border-radius:22px;padding:clamp(18px,2.6vw,28px);box-shadow:var(--shadow-card)}
+.dash-top{display:flex;flex-wrap:wrap;justify-content:space-between;align-items:center;gap:12px;margin-bottom:18px}
+.dash-top .nm{font-family:var(--f-label);font-weight:700;font-size:15px}
+.dash-top .nm small{display:block;font-weight:400;font-size:12.5px;opacity:.65}
+.dash-top .pill{display:inline-flex;align-items:center;gap:6px;font-family:var(--f-label);font-weight:700;font-size:11.5px;padding:3px 9px;border-radius:999px;box-shadow:inset 0 0 0 1px color-mix(in srgb,var(--ground) 40%,transparent)}
+.dash-top .pill i{width:7px;height:7px;border-radius:50%;background:color-mix(in srgb,var(--ground) 45%,transparent)}
+.dash.on .dash-top .pill i{background:#3ad07a;animation:pulse 1.4s infinite}
+.mets{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:10px}
+.met{padding:16px;border-radius:14px;background:color-mix(in srgb,var(--ground) 7%,transparent);min-width:0}
+.met span{display:block;font-size:13px;opacity:.72}
+.met b{display:inline-block;font-family:var(--f-label);font-weight:700;font-size:clamp(30px,3.4vw,44px);line-height:1.1;font-variant-numeric:tabular-nums;margin-top:6px}
+.met em{font-style:normal;font-family:var(--f-label);font-weight:700;font-size:15px;opacity:.6;margin-left:4px}
+.met .bar{height:5px;border-radius:5px;background:color-mix(in srgb,var(--ground) 12%,transparent);margin-top:10px;overflow:hidden}
+.met .bar i{display:block;height:100%;width:0;background:var(--seal);border-radius:5px;transition:width 1.4s var(--ease)}
+.dash .btn{margin-top:18px}
+
+/* 4 start: how we work */
+.how{display:grid;grid-template-columns:minmax(0,.6fr) minmax(0,2fr);gap:20px 40px;align-items:start;padding-bottom:clamp(44px,6vw,72px);margin-bottom:clamp(44px,6vw,72px);border-bottom:1px solid var(--line)}
+.how-h{font-family:var(--f-disp);font-weight:700;font-size:clamp(24px,2.4vw,32px);margin:0;line-height:1.2}
+.how ol{list-style:none;margin:0;padding:0;display:grid;grid-template-columns:repeat(4,minmax(0,1fr));gap:14px 22px;counter-reset:h}
+.how li{counter-increment:h;display:grid;gap:4px;align-content:start}
+.how li::before{content:counter(h);width:28px;height:28px;border-radius:50%;background:var(--seal);color:#fff;display:grid;place-items:center;font-family:var(--f-label);font-weight:700;font-size:12.5px;margin-bottom:6px}
+.how li b{font-family:var(--f-label);font-weight:700;font-size:16px}
+.how li span{font-size:14.5px;color:var(--ink2);line-height:1.5}
+@media (max-width:900px){.how{grid-template-columns:1fr}.how ol{grid-template-columns:repeat(2,minmax(0,1fr))}}
+.circs{gap:6px 22px}
+@media (max-width:900px){.hero-grid{grid-template-columns:1fr;align-items:start}.goalbox{margin-top:4px}}
+.goal b{overflow-wrap:break-word}
+@media (max-width:520px){.goal b{font-size:18px}.goals{gap:8px}}
+@media (max-width:360px){.goal b{font-size:16px}.goal small{font-size:12px}}
+@media (max-width:420px){.goal b{font-size:16px;letter-spacing:-.01em}}
 
 /* ============ invite engine (inside the phone) ============ */
 .scr{position:absolute;inset:0;background:var(--ibg);color:var(--iink);font-family:var(--fi-sans);overflow:hidden;line-height:1.5;text-align:center}
@@ -694,10 +758,10 @@ dialog.stage::backdrop{background:transparent}
       <b>Gancda</b>
     </a>
     <ol class="prog" id="prog" aria-live="polite">
-      <li data-k="open"><a href="#top"><i>1</i><span data-t="beat.0"></span></a></li>
-      <li data-k="choose"><a href="#choose"><i>2</i><span data-t="beat.1"></span></a></li>
-      <li data-k="reveal"><a href="#reveal"><i>3</i><span data-t="beat.2"></span></a></li>
-      <li data-k="keep"><a href="#keep"><i>4</i><span data-t="beat.3"></span></a></li>
+      <li data-k="goal"><a href="#top"><i>1</i><span data-t="beat.0"></span></a></li>
+      <li data-k="play"><a href="#play"><i>2</i><span data-t="beat.1"></span></a></li>
+      <li data-k="result"><a href="#report"><i>3</i><span data-t="beat.2"></span></a></li>
+      <li data-k="start"><a href="#start"><i>4</i><span data-t="beat.3"></span></a></li>
     </ol>
     <div class="tools">
       <div class="lang" role="group" aria-label="Language">
@@ -710,61 +774,60 @@ dialog.stage::backdrop{background:transparent}
 </header>
 
 <main id="top">
-  <section class="scene hero" id="open">
+  <section class="scene hero" id="goal">
     <div class="wrap hero-grid">
       <div>
-        <p class="task"><b><span>1</span></b><span class="caps" data-t="hero.task"></span></p>
+        <p class="task"><b><span>1</span></b><span class="caps" data-t="hero.tag"></span></p>
         <h1 class="poster" id="poster"></h1>
         <p class="what" data-th="hero.what"></p>
-        <div class="ctas">
-          <button type="button" class="btn" id="heroPlayBtn"><span data-ic="play"></span><span data-t="hero.cta"></span></button>
-          <a class="tlink" href="#choose" style="color:inherit"><span data-t="hero.cta2"></span></a>
-        </div>
       </div>
-      <div class="hstage">
-        <div class="phone"><div class="screen" id="heroPhone"></div></div>
-        <p class="hint"><i></i><span data-t="hero.hint"></span></p>
+      <div class="goalbox">
+        <p class="goal-q" data-t="hero.q"></p>
+        <div class="goals" id="goals" role="group"></div>
       </div>
     </div>
   </section>
 
-  <section class="scene take" id="choose">
+  <section class="scene take" id="play">
     <div class="wrap take-grid">
       <div>
-        <p class="task"><b><span>2</span></b><span class="caps" data-t="ch.task"></span></p>
-        <h2 class="h2" data-t="ch.h"></h2>
-        <div class="moments" id="moments" role="group"></div>
-        <p class="moment-txt" id="momentTxt" aria-live="polite"></p>
+        <p class="task"><b><span>2</span></b><span class="caps" data-t="play.task"></span></p>
+        <div class="seg" id="seg" role="group"></div>
+        <h2 class="h2" id="playH"></h2>
+        <dl class="brief" id="brief"></dl>
         <div class="reveal-ctl">
-          <button type="button" class="btn" id="chPlay"><span data-ic="play"></span><span data-t="ch.play"></span></button>
-          <button type="button" class="tlink" id="chReq"><span data-t="ch.req"></span><span data-ic="arrowR"></span></button>
+          <button type="button" class="btn" id="playBtn"><span data-ic="play"></span><span data-t="play.play"></span></button>
+          <button type="button" class="tlink" id="playReq"><span data-t="play.req"></span><span data-ic="arrowR"></span></button>
         </div>
+        <p class="more" id="more"></p>
       </div>
-      <div class="stage-col"><div class="phone"><div class="screen" id="choosePhone"></div></div></div>
+      <div class="stage-col">
+        <div class="phone"><div class="screen" id="playPhone"></div></div>
+        <p class="hint"><i></i><span data-t="play.hint"></span></p>
+      </div>
     </div>
   </section>
 
-  <section class="scene take" id="reveal">
-    <div class="wrap take-grid">
+  <section class="scene" id="report">
+    <div class="wrap res-grid">
       <div>
-        <p class="task"><b><span>3</span></b><span class="caps" data-t="rv.task"></span></p>
-        <h2 class="h2" data-t="rv.h"></h2>
-        <p class="lede" data-t="rv.sub"></p>
-        <div class="reveal-ctl">
-          <button type="button" class="dice" id="dice"><svg viewBox="0 0 32 32" aria-hidden="true"><rect x="3" y="3" width="26" height="26" rx="6" fill="none" stroke="currentColor" stroke-width="2.2"/><circle cx="10" cy="10" r="2.4" fill="currentColor"/><circle cx="22" cy="10" r="2.4" fill="currentColor"/><circle cx="16" cy="16" r="2.4" fill="currentColor"/><circle cx="10" cy="22" r="2.4" fill="currentColor"/><circle cx="22" cy="22" r="2.4" fill="currentColor"/></svg><span data-t="rv.roll"></span></button>
-          <button type="button" class="tlink" id="rvPlay"><span data-ic="play"></span><span data-t="rv.play"></span></button>
-        </div>
-        <div class="now" aria-live="polite"><span class="no" id="rvNo"></span><b id="rvName"></b><span id="rvKind"></span></div>
+        <p class="task" style="color:var(--seal)"><b><span>3</span></b><span class="caps" data-t="res.task"></span></p>
+        <h2 class="h2" data-t="res.h"></h2>
+        <p class="lede" data-t="res.sub"></p>
       </div>
-      <div class="stage-col"><div class="phone"><div class="screen" id="revealPhone"></div></div></div>
+      <div class="dash" id="dash"></div>
     </div>
   </section>
 
-  <section class="scene" id="keep">
+  <section class="scene" id="start">
     <div class="wrap">
-      <p class="task" style="color:var(--seal)"><b><span>4</span></b><span class="caps" data-t="kp.task"></span></p>
-      <h2 class="h2" data-t="kp.h"></h2>
-      <p class="lede" data-t="kp.sub"></p>
+      <div class="how">
+        <h2 class="how-h" data-t="how.h"></h2>
+        <ol id="how"></ol>
+      </div>
+      <p class="task" style="color:var(--seal)"><b><span>4</span></b><span class="caps" data-t="st.task"></span></p>
+      <h2 class="h2" data-t="st.h"></h2>
+      <p class="lede" data-t="st.sub"></p>
       <div class="keep-grid">
         <div>
           <div class="prices" id="prices"></div>
@@ -842,11 +905,11 @@ dialog.stage::backdrop{background:transparent}
         <button type="button" class="ibtn ring" id="stNext"></button>
         <span id="stCount"></span>
       </div>
-      <p class="st-label caps" data-t="st.custom"></p>
+      <p class="st-label caps" data-t="stage.custom"></p>
       <ul class="st-cust" id="stCust"></ul>
-      <button type="button" class="btn" id="stReq"><span data-t="st.req"></span><span data-ic="arrowR"></span></button>
-      <button type="button" class="tlink" id="stRestart"><span data-ic="restart"></span><span data-t="st.restart"></span></button>
-      <p class="fine" data-t="st.fict"></p>
+      <button type="button" class="btn" id="stReq"><span data-t="stage.req"></span><span data-ic="arrowR"></span></button>
+      <button type="button" class="tlink" id="stRestart"><span data-ic="restart"></span><span data-t="stage.restart"></span></button>
+      <p class="fine" data-t="stage.fict"></p>
     </div>
   </div>
 </dialog>
@@ -1273,76 +1336,120 @@ const G = {
 /* ---------- site copy ---------- */
 const S = {
 ka:{
-  beat:['გახსენით','აირჩიეთ','გაიმხილეთ','შეინახეთ'],
-  ui:{theme:'თემის შეცვლა', close:'დახურვა', prev:'წინა', next:'შემდეგი', done:'ბარათი შევსებულია'},
-  hero:{task:'გახსენით', lines:['აქციეთ ყოველი','მომენტი','განცდად'],
-    what:'<b>Gancda</b> ქმნის ციფრულ გამოცდილებებს, რომლებიც ტელეფონზე თამაშივით გაივლება: მოსაწვევი რესტორანში, გაკვეთილი, ახალი თანამშრომლის პირველი დღე. ადამიანი ხსნის, ირჩევს და იმახსოვრებს. თქვენი ბრენდით.',
-    cta:'ითამაშეთ დემო', cta2:'ან აირჩიეთ თქვენი მომენტი', hint:'ეს ტელეფონი ცოცხალია. შეეხეთ.'},
-  ch:{task:'აირჩიეთ', h:'ვისთვის ქმნით განცდას?', play:'სრულად თამაში', req:'მინდა ასეთი',
-    list:[
-      {id:'omakase', ic:'store', who:'restaurant', req:'plan-rest', t:'რესტორანი', s:'ჯავშანი ორზე', pr:'99 ₾ / თვე', txt:'ჯავშანი ორზე მოსაწვევად იქცევა: სტუმარი ხსნის ფარდას, წინასწარ ირჩევს კერძებს და იღებს ბილეთს. სამზარეულო არჩევანს Telegram-ში ხედავს.'},
-      {id:'academy', ic:'bulb', who:'team', req:'learning', t:'სწავლება', s:'გუნდი, სკოლა, კურსი', pr:'პილოტი', txt:'გაკვეთილი, რომელსაც ბოლომდე გადიან: მოკლე ფაქტები, კითხვები ქულებით და სერტიფიკატი ბოლოს. მენიუ, უსაფრთხოება ან ნებისმიერი თემა.'},
-      {id:'interview', ic:'briefcase', who:'team', req:'onboarding', t:'პირველი დღე', s:'ახალი თანამშრომელი', pr:'პილოტი', txt:'ახალი თანამშრომელი პირველ დღემდე იცნობს გუნდს, ადგილს და წესებს. ბოლოს იღებს ბეჯს, რომლითაც კარში შემოდის.'},
-      {id:'proposal', ic:'ring', who:'personal', req:'custom-personal', t:'პირადი', s:'პაემანი, ხელის თხოვნა', pr:'49 ₾-დან', txt:'ერთხელ, ერთი ადამიანისთვის: თქვენი ფოტოებით, ხუმრობებით და ადგილით. ის ხსნის, პასუხობს და პასუხი თქვენამდე მოდის.'}]},
-  rv:{task:'გაიმხილეთ', h:'გააგორეთ კამათელი. ერთი ტექსტი, ათი სამყარო.', sub:'ყველა ვერსიაში ერთი ტექსტია: ნინო, პარასკევი, 20:00. იცვლება გახსნის ფორმა, შრიფტი, ფერი და ბილეთი. ასე მოერგება ძრავა თქვენს ბრენდსაც.',
-    roll:'გააგორეთ', play:'ამ სტილის თამაში', to:'ნინო', intro:'პარასკევს, 20:00. შენთვის რაღაც მოვამზადე.'},
-  kp:{task:'შეინახეთ', h:'მოგეწონათ? ავაწყოთ თქვენი.', sub:'მოგვწერეთ და 48 საათში მიიღებთ პირველ ვერსიას თქვენი ლოგოთი. სანამ რამე გამოქვეყნდება, ყოველ სიტყვას თქვენ ამოწმებთ.',
+  beat:['მიზანი','თამაში','შედეგი','დაწყება'],
+  ui:{theme:'თემის შეცვლა', close:'დახურვა', prev:'წინა', next:'შემდეგი', done:'ოთხივე ნაბიჯი გავლილია'},
+  hero:{tag:'ციფრული გამოცდილებების სტუდია', lines:['აქციეთ ყოველი','მომენტი','განცდად'],
+    what:'<b>Gancda</b> ქმნის ინტერაქტიულ გამოცდილებებს, რომლებსაც ადამიანები ტელეფონზე თამაშივით გადიან და ახსოვთ. თქვენ გვეუბნებით მიზანს, ჩვენ ვწერთ სცენარს, ვხატავთ და ვუშვებთ.',
+    q:'საიდან დავიწყოთ? რა გინდათ, რომ ადამიანებმა გააკეთონ?'},
+  goals:[
+    {k:'learn', id:'academy', ic:'bulb', g:'ისწავლონ', ex:'სწავლება, ტრენინგი, კურსი',
+      h:'გაკვეთილი, რომელსაც ბოლომდე გადიან.',
+      task:'გუნდს ან მოსწავლეებს ახალი ცოდნა სჭირდებათ, PDF-ს და პრეზენტაციას კი არავინ კითხულობს.',
+      exp:'ხუთწუთიანი თამაში: მოკლე ფაქტები, კითხვები მყისიერი პასუხით, ქულები და სერტიფიკატი ბოლოს.',
+      who:'რესტორნები, სკოლები, საწარმოები, HR გუნდები',
+      m:[['done','დაასრულა',42,'/ 50'],['score','საშუალო ქულა',3.4,'/ 4'],['time','საშუალო დრო',4.6,'წთ'],['cert','სერტიფიკატი',42,'']]},
+    {k:'onboard', id:'interview', ic:'briefcase', g:'შემოგიერთდნენ', ex:'ახალი თანამშრომელი, პირველი დღე',
+      h:'პირველი დღე იწყება პირველ დღემდე.',
+      task:'ახალი ადამიანი პირველ დღეს იკარგება: არ იცის ვინ ვინ არის, სად რა არის და რა წესებია.',
+      exp:'გზა პირველ დღემდე: გუნდის გაცნობა, ადგილი, წესები, პატარა ტესტი და ბეჯი, რომლითაც კარში შემოდის.',
+      who:'კომპანიები, მაღაზიების ქსელები, სასტუმროები, სტარტაპები',
+      m:[['ready','მზადაა პირველ დღემდე',9,'/ 10'],['team','გაიცნო გუნდი',100,'%'],['quiz','წესების ტესტი',92,'%'],['badge','ბეჯი',9,'']]},
+    {k:'engage', id:'campaign', ic:'megaphone', g:'ჩაერთონ თქვენს ბრენდში', ex:'კამპანია, გათამაშება, ლოიალობა',
+      h:'რეკლამა, რომელსაც თვითონ თამაშობენ.',
+      task:'რეკლამას გადაახვევენ. გინდათ, რომ ადამიანმა ბრენდთან რამდენიმე წუთი გაატაროს და დაბრუნდეს.',
+      exp:'ბრენდის თამაში: ქვიზი ან არჩევანი, თქვენს პროდუქტზე, ჯილდოთი ბოლოს, რომელიც მაღაზიაში გამოიყენება.',
+      who:'ყავის და კვების ბრენდები, მაღაზიები, ბანკები, ღონისძიებები',
+      m:[['plays','ითამაშა',1240,''],['finish','ბოლომდე მივიდა',71,'%'],['coupon','კუპონი გამოიყენა',318,''],['share','გააზიარა',204,'']]},
+    {k:'attend', id:'corporate', ic:'calcheck', g:'მოვიდნენ', ex:'ღონისძიება, მოსაწვევი, ჯავშანი',
+      h:'მოსაწვევი, რომელზეც პასუხობენ.',
+      task:'შეტყობინებას კითხულობენ და ავიწყდებათ. არ იცით, ვინ მოვა, რას შეჭამს და როდის.',
+      exp:'მოსაწვევი-გამოცდილება: იხსნება, სტუმარი ადასტურებს, ირჩევს მენიუს ან დროს და იღებს პერსონალურ საშვს.',
+      who:'კორპორატივები, რესტორნები, ქორწილები, კონფერენციები',
+      more:[['omakase','რესტორნის ჯავშანი'],['birthday','დაბადების დღე'],['proposal','ხელის თხოვნა']],
+      m:[['open','გახსნა',118,'/ 120'],['yes','დაადასტურა',96,''],['menu','მენიუ წინასწარ',96,''],['ride','ტრანსფერი',31,'']]}],
+  play:{task:'თამაში', taskL:'ამოცანა', expL:'გამოცდილება', whoL:'ვისთვის', play:'სრულად თამაში', req:'მინდა ასეთი', more:'სხვა მაგალითები:', hint:'ტელეფონი ცოცხალია. შეეხეთ.'},
+  res:{task:'შედეგი', h:'გაშვების შემდეგ ხედავთ, რა მოხდა.', sub:'ყოველ გამოცდილებას ახლავს ანგარიში: ვინ გახსნა, ვინ დაასრულა, რა აირჩიეს და სად გაჭედეს.',
+    launch:'გაუშვით', again:'კიდევ ერთხელ', demo:'საჩვენებელი მონაცემები', live:'პირდაპირ'},
+  how:{h:'როგორ ვმუშაობთ', steps:[['მიზანი','ერთ ზარზე ვარკვევთ, რა უნდა გააკეთოს ადამიანმა ბოლოს.'],['სცენარი','ვწერთ გამოცდილებას და ვხატავთ თქვენი ბრენდით.'],['დრაფტი 48 საათში','ამოწმებთ ყოველ სიტყვას და ასწორებთ.'],['გაშვება','ბმული, QR ან Telegram. შედეგს ანგარიშში ხედავთ.']]},
+  st:{task:'დაწყება', h:'მოგვიყევით მიზანი. სცენარს ჩვენ დავწერთ.', sub:'პირველ ვერსიას 48 საათში მიიღებთ. სანამ რამე გამოქვეყნდება, ყოველ სიტყვას თქვენ ამოწმებთ.',
     prices:[
-      {id:'plan-rest', who:'restaurant', hot:true, n:'რესტორნებისთვის', a:'99 ₾-დან / თვე', f:['თქვენი ლოგო, ფერები და მენიუ','არჩეული კერძები სამზარეულოს Telegram-ში','პირველ 5 რესტორანს პირველი თვე უფასოა']},
-      {id:'learning', who:'team', n:'გუნდებისთვის და სკოლებისთვის', a:'პილოტი 1 500 ₾-დან', f:['სწავლება, პირველი დღე ან კამპანია','შედეგების ანგარიში: ვინ დაასრულა და რა ისწავლა']},
-      {id:'custom-personal', who:'personal', n:'პირადი შემთხვევა', a:'49 ₾-დან', f:['ერთი განცდა ერთი ადამიანისთვის, მზადაა 3 დღეში']}],
-    pick:'ეს მინდა', trust:['კონტრაქტის გარეშე','გააუქმეთ ნებისმიერ თვეს','ქართული და ინგლისური']},
+      {id:'pilot', hot:true, n:'პილოტი', a:'1 500 ₾-დან', f:['ერთი გამოცდილება თქვენი მიზნისთვის','სცენარი, დიზაინი და აწყობა','შედეგების ანგარიში']},
+      {id:'format', n:'მზა ფორმატი', a:'99 ₾-დან / თვე', f:['მოსაწვევები და ჯავშნები რესტორნებისთვის და ღონისძიებებისთვის','თქვენი ლოგო, ფერები და მენიუ']},
+      {id:'partner', n:'სტუდია პარტნიორად', a:'შეთანხმებით', f:['ახალი გამოცდილება ყოველ თვე ან კვარტალში','ერთი გუნდი, რომელმაც თქვენი ბრენდი იცის']}],
+    pick:'ეს მინდა', trust:['კონტრაქტის გარეშე','ქართული და ინგლისური','ნებისმიერ ტელეფონზე, აპლიკაციის გარეშე']},
   req:{stub:'მოთხოვნა', sendRing:'GANCDA · მოთხოვნა · GANCDA · მოთხოვნა · '},
-  f:{who:'ვინ ხართ', whoOpts:[['restaurant','რესტორანი'],['team','გუნდი ან სკოლა'],['personal','პირადი']],
+  f:{who:'რა გინდათ, რომ ადამიანებმა გააკეთონ?', whoOpts:[['learn','ისწავლონ'],['onboard','შემოგიერთდნენ'],['engage','ჩაერთონ'],['attend','მოვიდნენ'],['other','სხვა']],
     name:'სახელი', opt:'(არასავალდებულო)', contact:'ტელეფონი ან Telegram', contactPh:'+995 5__ __ __ __ ან @username',
-    msg:'რა განცდა გინდათ?', msgPh:'მაგ.: ორზე ჯავშნები ხშირად აცდენენ, ან ახალ ოფიციანტებს მენიუს სწავლა უჭირთ', note:'დააჭირეთ ბეჭედს და მოთხოვნა დაილუქება.', send:'გაგზავნა',
+    msg:'მოგვიყევით მეტი', msgPh:'მაგ.: 40 ახალი თანამშრომელი გვყავს წელიწადში, ან გვინდა ყავის ახალი სერიის გაშვება', note:'დააჭირეთ ბეჭედს და მოთხოვნა დაილუქება.', send:'გაგზავნა',
     picked:'არჩეული:', clear:'არჩევანის მოხსნა',
-    interest:{'plan-rest':'რესტორანი · 99 ₾-დან','learning':'სწავლება','onboarding':'პირველი დღე','custom-personal':'პირადი'},
+    interest:{'pilot':'პილოტი · 1 500 ₾-დან','format':'მზა ფორმატი · 99 ₾-დან','partner':'სტუდია პარტნიორად','demo':'დემოს მსგავსი'},
     eName:'მიუთითეთ სახელი', eContact:'დაგვიტოვეთ ტელეფონი, Telegram ან ელფოსტა',
-    okH:'მოთხოვნა დაილუქა', ok:'ერთ სამუშაო დღეში მოგწერთ. ოთხივე ნაბიჯი გაიარეთ.', okC:'მიღებულია',
+    okH:'მოთხოვნა დაილუქა', ok:'ერთ სამუშაო დღეში მოგწერთ.', okC:'მიღებულია',
     readyH:'მოთხოვნა მზადაა', ready:'ონლაინ გაგზავნა ჯერ არ არის ჩართული. დააკოპირეთ ტექსტი და გამოგვიგზავნეთ: {email}', readyC:'მზადაა',
     failH:'ვერ გაიგზავნა', fail:'სცადეთ თავიდან ან მოგვწერეთ: {email}', failC:'ხელახლა',
-    copy:'ტექსტის კოპირება', copied:'დაკოპირდა', edit:'რედაქტირება', subj:'Gancda: ახალი მოთხოვნა', none:'—', slip:'№', tpl:'სტილი', type:'ინტერესი', ring:'GANCDA · დაილუქა · GANCDA · დაილუქა · '},
-  st:{custom:'რას ცვლით', customList:['ლოგო, ფერები და შრიფტი','შინაარსი: მენიუ, კითხვები, ტექსტი','ქართული და ინგლისური','ბოლო ეკრანი: ბილეთი, ბეჯი ან სერტიფიკატი'],
-    req:'მინდა ეს ჩემი ლოგოთი', restart:'თავიდან', fict:'დემოში ნაჩვენები რესტორნები და სახელები გამოგონილია.'},
-  foot:{mean:'განცდა: გრძნობა, რომელსაც გადიხარ.', say:'ლათინურად Gancda.', demo:'საიტზე ნაჩვენები რესტორნები, კომპანიები და სახელები გამოგონილია.', copy:'© 2026 Gancda · თბილისი'},
+    copy:'ტექსტის კოპირება', copied:'დაკოპირდა', edit:'რედაქტირება', subj:'Gancda: ახალი მოთხოვნა', none:'—', slip:'№', tpl:'მაგალითი', type:'ინტერესი', goal:'მიზანი', ring:'GANCDA · დაილუქა · GANCDA · დაილუქა · '},
+  stage:{custom:'რას ვაწყობთ თქვენთვის', customList:['სცენარი თქვენი მიზნით','ლოგო, ფერები და შრიფტი','შინაარსი: კითხვები, მენიუ, ტექსტი','ბოლო ეკრანი: სერტიფიკატი, ბეჯი, კუპონი ან საშვი'],
+    req:'მინდა ასეთი ჩემთვის', restart:'თავიდან', fict:'დემოში ნაჩვენები ბრენდები და სახელები გამოგონილია.'},
+  foot:{mean:'განცდა: გრძნობა, რომელსაც გადიხარ.', say:'ციფრული გამოცდილებების სტუდია · თბილისი', demo:'საიტზე ნაჩვენები ბრენდები, კომპანიები, სახელები და მონაცემები საჩვენებელია.', copy:'© 2026 Gancda'},
   days:['კვირა','ორშაბათი','სამშაბათი','ოთხშაბათი','ხუთშაბათი','პარასკევი','შაბათი'],
   months:['იანვარი','თებერვალი','მარტი','აპრილი','მაისი','ივნისი','ივლისი','აგვისტო','სექტემბერი','ოქტომბერი','ნოემბერი','დეკემბერი']
 },
 en:{
-  beat:['Open','Choose','Reveal','Keep'],
-  ui:{theme:'Switch theme', close:'Close', prev:'Previous', next:'Next', done:'Card complete'},
-  hero:{task:'Open', lines:['Make every','moment','an experience'],
-    what:'<b>Gancda</b> builds digital experiences people play through on their phone: a restaurant invitation, a lesson, a new hire’s first day. People open it, choose, and remember it. In your brand.',
-    cta:'Play a demo', cta2:'or choose your moment', hint:'This phone is live. Tap it.'},
-  ch:{task:'Choose', h:'Who is the moment for?', play:'Play it fully', req:'I want one',
-    list:[
-      {id:'omakase', ic:'store', who:'restaurant', req:'plan-rest', t:'Restaurant', s:'A booking for two', pr:'99 ₾ / month', txt:'A booking for two becomes an invitation: the guest opens a curtain, picks dishes ahead and gets a ticket. The kitchen sees the picks on Telegram.'},
-      {id:'academy', ic:'bulb', who:'team', req:'learning', t:'Learning', s:'Team, school, course', pr:'Pilot', txt:'A lesson people actually finish: short facts, a scored quiz and a certificate at the end. The menu, safety, or any topic.'},
-      {id:'interview', ic:'briefcase', who:'team', req:'onboarding', t:'First day', s:'A new hire', pr:'Pilot', txt:'A new hire meets the team, the place and the rules before day one, and ends with the badge they walk in with.'},
-      {id:'proposal', ic:'ring', who:'personal', req:'custom-personal', t:'Personal', s:'A date, a proposal', pr:'from 49 ₾', txt:'Once, for one person: with your photos, inside jokes and place. They open it, answer, and the answer comes to you.'}]},
-  rv:{task:'Reveal', h:'Roll the die. One text, ten worlds.', sub:'Every version carries the same text: Nino, Friday, 20:00. What changes is how it opens, the type, the colors and the ticket. That’s how the engine fits your brand too.',
-    roll:'Roll', play:'Play this style', to:'Nino', intro:'Friday, 20:00. I prepared something for you.'},
-  kp:{task:'Keep', h:'Liked it? Let’s build yours.', sub:'Write to us and within 48 hours you get a first version with your logo. You approve every word before anything goes live.',
+  beat:['Goal','Play','Result','Start'],
+  ui:{theme:'Switch theme', close:'Close', prev:'Previous', next:'Next', done:'All four steps done'},
+  hero:{tag:'A digital experience studio', lines:['Make every','moment','an experience'],
+    what:'<b>Gancda</b> designs interactive experiences people play through on their phone and remember. You tell us the goal; we write the script, design it and launch it.',
+    q:'Where do we start? What do you want people to do?'},
+  goals:[
+    {k:'learn', id:'academy', ic:'bulb', g:'Learn', ex:'Training, courses, lessons',
+      h:'A lesson people actually finish.',
+      task:'Your team or students need new knowledge, and nobody reads the PDF or the slides.',
+      exp:'A five-minute game: short facts, questions with instant feedback, points and a certificate at the end.',
+      who:'Restaurants, schools, factories, HR teams',
+      m:[['done','Completed',42,'/ 50'],['score','Average score',3.4,'/ 4'],['time','Average time',4.6,'min'],['cert','Certificates',42,'']]},
+    {k:'onboard', id:'interview', ic:'briefcase', g:'Join you', ex:'New hires, the first day',
+      h:'Day one starts before day one.',
+      task:'New people get lost on day one: who is who, where things are, what the rules are.',
+      exp:'A path to day one: meet the team, the place and the rules, take a short check, and get the badge they walk in with.',
+      who:'Companies, retail chains, hotels, startups',
+      m:[['ready','Ready before day one',9,'/ 10'],['team','Met the team',100,'%'],['quiz','Rules check',92,'%'],['badge','Badges',9,'']]},
+    {k:'engage', id:'campaign', ic:'megaphone', g:'Engage with your brand', ex:'Campaigns, giveaways, loyalty',
+      h:'Advertising people choose to play.',
+      task:'People scroll past ads. You want them to spend a few minutes with your brand and come back.',
+      exp:'A brand game: a quiz or a choice about your product, with a reward at the end they redeem in store.',
+      who:'Coffee and food brands, retailers, banks, events',
+      m:[['plays','Played',1240,''],['finish','Reached the end',71,'%'],['coupon','Coupons redeemed',318,''],['share','Shared',204,'']]},
+    {k:'attend', id:'corporate', ic:'calcheck', g:'Show up', ex:'Events, invitations, bookings',
+      h:'An invitation people answer.',
+      task:'People read a message and forget it. You don’t know who is coming, what they’ll eat or when.',
+      exp:'An invitation as an experience: it opens, the guest confirms, picks a menu or a time, and gets a personal pass.',
+      who:'Company events, restaurants, weddings, conferences',
+      more:[['omakase','A restaurant booking'],['birthday','A birthday'],['proposal','A proposal']],
+      m:[['open','Opened',118,'/ 120'],['yes','Confirmed',96,''],['menu','Menu picked ahead',96,''],['ride','Transfer booked',31,'']]}],
+  play:{task:'Play', taskL:'The problem', expL:'The experience', whoL:'Who it’s for', play:'Play it fully', req:'I want one', more:'More examples:', hint:'This phone is live. Tap it.'},
+  res:{task:'Result', h:'After launch, you see what happened.', sub:'Every experience comes with a report: who opened it, who finished, what they chose and where they got stuck.',
+    launch:'Launch it', again:'Once more', demo:'Demo data', live:'Live'},
+  how:{h:'How we work', steps:[['Goal','In one call we pin down what people should do at the end.'],['Script','We write the experience and design it in your brand.'],['Draft in 48 hours','You check every word and ask for changes.'],['Launch','A link, a QR code or Telegram. You see the results in a report.']]},
+  st:{task:'Start', h:'Tell us the goal. We’ll write the script.', sub:'You get a first version within 48 hours. You approve every word before anything goes live.',
     prices:[
-      {id:'plan-rest', who:'restaurant', hot:true, n:'For restaurants', a:'from 99 ₾ / month', f:['Your logo, colors and menu','Menu picks sent to the kitchen on Telegram','The first 5 restaurants get the first month free']},
-      {id:'learning', who:'team', n:'For teams and schools', a:'pilot from 1,500 ₾', f:['Learning, a first day or a campaign','A results report: who finished and what they learned']},
-      {id:'custom-personal', who:'personal', n:'A personal occasion', a:'from 49 ₾', f:['One experience for one person, ready in 3 days']}],
-    pick:'I want this', trust:['No contract','Cancel any month','Georgian and English']},
+      {id:'pilot', hot:true, n:'Pilot', a:'from 1,500 ₾', f:['One experience built for your goal','Script, design and build','A results report']},
+      {id:'format', n:'Ready format', a:'from 99 ₾ / month', f:['Invitations and bookings for restaurants and events','Your logo, colors and menu']},
+      {id:'partner', n:'Studio partner', a:'by agreement', f:['A new experience every month or quarter','One team that knows your brand']}],
+    pick:'I want this', trust:['No contract','Georgian and English','Any phone, no app']},
   req:{stub:'Request', sendRing:'GANCDA · REQUEST · GANCDA · REQUEST · '},
-  f:{who:'You are', whoOpts:[['restaurant','A restaurant'],['team','A team or school'],['personal','Personal']],
+  f:{who:'What do you want people to do?', whoOpts:[['learn','Learn'],['onboard','Join you'],['engage','Engage'],['attend','Show up'],['other','Other']],
     name:'Name', opt:'(optional)', contact:'Phone or Telegram', contactPh:'+995 5__ __ __ __ or @username',
-    msg:'What moment do you want?', msgPh:'e.g. Bookings for two often don’t show up, or new waiters struggle to learn the menu', note:'Press the seal to send your request.', send:'Send',
+    msg:'Tell us more', msgPh:'e.g. We hire 40 people a year, or we want to launch a new coffee range', note:'Press the seal to send your request.', send:'Send',
     picked:'Picked:', clear:'Clear choice',
-    interest:{'plan-rest':'Restaurant · from 99 ₾','learning':'Learning','onboarding':'First day','custom-personal':'Personal'},
+    interest:{'pilot':'Pilot · from 1,500 ₾','format':'Ready format · from 99 ₾','partner':'Studio partner','demo':'Like the demo'},
     eName:'Add your name', eContact:'Add a phone number, Telegram or email so we can reply',
-    okH:'Your request is sealed', ok:'We’ll write to you within one working day. You played all four steps.', okC:'RECEIVED',
+    okH:'Your request is sealed', ok:'We’ll write to you within one working day.', okC:'RECEIVED',
     readyH:'Your request is ready', ready:'Online sending isn’t switched on yet. Copy the text and send it to {email}', readyC:'READY',
     failH:'Couldn’t send', fail:'Try again or write to {email}', failC:'RETRY',
-    copy:'Copy text', copied:'Copied', edit:'Edit', subj:'Gancda: new request', none:'—', slip:'No.', tpl:'Style', type:'Interest', ring:'GANCDA · SEALED · GANCDA · SEALED · '},
-  st:{custom:'What you customize', customList:['Logo, colors and type','Content: menu, questions, copy','Georgian and English','The final screen: ticket, badge or certificate'],
-    req:'I want this with my logo', restart:'Restart', fict:'Venues and names in the demos are fictional.'},
-  foot:{mean:'Gancda: a feeling you live through.', say:'Say it GAHNTS-dah.', demo:'Restaurants, companies and names shown on this site are fictional.', copy:'© 2026 Gancda · Tbilisi'},
+    copy:'Copy text', copied:'Copied', edit:'Edit', subj:'Gancda: new request', none:'—', slip:'No.', tpl:'Example', type:'Interest', goal:'Goal', ring:'GANCDA · SEALED · GANCDA · SEALED · '},
+  stage:{custom:'What we build for you', customList:['A script built around your goal','Logo, colors and type','Content: questions, menu, copy','The final screen: certificate, badge, coupon or pass'],
+    req:'I want one like this', restart:'Restart', fict:'Brands and names in the demos are fictional.'},
+  foot:{mean:'Gancda: a feeling you live through.', say:'A digital experience studio · Tbilisi', demo:'Brands, companies, names and figures shown on this site are for demonstration.', copy:'© 2026 Gancda'},
   days:['Sunday','Monday','Tuesday','Wednesday','Thursday','Friday','Saturday'],
   months:['January','February','March','April','May','June','July','August','September','October','November','December']
 }};
@@ -1781,7 +1888,46 @@ function takeOn(sec, t){
   sec.style.setProperty('--tacc', c.acc); sec.style.setProperty('--ton', c.on || '#fff');
 }
 
-/* ---------- the stamp card: the site is played in four steps ---------- */
+
+/* ---------- a brand campaign demo, built on the lesson engine ---------- */
+TPL.push({ id:'campaign', cat:'learn',
+  name:L('ცისკრის ყავის თამაში','Tsiskari Coffee game'), kind:L('კამპანია · ბრენდის თამაში','Campaign · Brand game'),
+  desc:L('ყავის ბრენდის ახალი სერიის გაშვება: სამი კითხვა ყავაზე, ქულები და კუპონი ბოლოს, რომელიც კაფეში გამოიყენება.','A coffee brand launching a new range: three questions about coffee, points, and a coupon at the end to redeem in the café.'),
+  c:{bg:'#0e3b2c',s:'#144634',s2:'#1a523d',ink:'#f2f7e9',mut:'#a9c2b3',acc:'#c8f04a',on:'#0e3b2c',acc2:'#f3c75b',paper:'#f6f3e6',pink:'#0e3b2c',line:'#2a5e4a',flap:'#c8f04a',flapInk:'#0e3b2c',box:'#c8f04a',accp:'#9fc22c',out:'#c8f04a'},
+  pat:'confetti', po:.08, fx:'rect', fxc:['#c8f04a','#f3c75b','#f2f7e9'],
+  ui:{align:'left', head:'geo', body:'geo', h1:40, kick:'sticker', btn:'hard', card:'hard', rad:14, brad:12, glow:0},
+  op:{type:'box', v:'gift', label:L('%'), inside:'coffee'},
+  kick:L('ახალი სერია','NEW RANGE'), to:L('ყავის მოყვარულო','Coffee lover'), from:L('ცისკარი','Tsiskari Coffee'),
+  intro:L('სამი კითხვა, ერთი წუთი. სწორ პასუხებზე ყავა ჩვენზეა.','Three questions, one minute. Get them right and the coffee is on us.'),
+  hint:L('გახსენი საჩუქარი','Open the gift'),
+  learn:{title:L('როგორ ვთამაშობთ','How it works'),
+    facts:[['coffee',L('სამი კითხვა ყავაზე და ჩვენს ახალ სერიაზე.','Three questions about coffee and our new range.')],
+           ['star',L('ყოველი სწორი პასუხი 10 ქულაა.','Each right answer is 10 points.')],
+           ['gift',L('ბოლოს იღებ კუპონს, რომელიც ნებისმიერ ჩვენს კაფეში მუშაობს.','At the end you get a coupon for any of our cafés.')]],
+    cta:L('დავიწყოთ','Let’s play')},
+  quiz:[
+    {ic:'coffee', q:L('რომელ ყავაშია ყველაზე მეტი რძე?','Which coffee has the most milk?'), o:[L('ესპრესო','Espresso'), L('ლატე','Latte'), L('რისტრეტო','Ristretto')], a:1,
+     why:L('ლატე ძირითადად რძეა, ერთი ან ორი ესპრესოთი.','A latte is mostly milk with one or two shots of espresso.')},
+    {ic:'leaf', q:L('საიდან მოდის ჩვენი ახალი სერიის მარცვალი?','Where are the beans in our new range from?'), o:[L('ეთიოპია','Ethiopia'), L('ისლანდია','Iceland'), L('ნორვეგია','Norway')], a:0,
+     why:L('ეთიოპია ყავის სამშობლოა. ახალი სერია იქიდანაა.','Ethiopia is where coffee comes from, and so does the new range.')},
+    {ic:'clock', q:L('რამდენ ხანს უნდა გაიაროს წყალმა ესპრესოში?','How long should water run through an espresso?'), o:[L('5 წამი','5 seconds'), L('25–30 წამი','25–30 seconds'), L('2 წუთი','2 minutes')], a:1,
+     why:L('25–30 წამი: ასე იხსნება გემო სიმწარის გარეშე.','25–30 seconds brings out the flavor without bitterness.')}],
+  cert:{venue:L('ცისკარი','TSISKARI'), course:L('უფასო ყავა · ახალი სერია','Free coffee · New range'), stamp:L('-100%'), lvl:L('ყავის მცოდნე','Coffee expert')},
+  glab:{ka:{lcert:'კუპონი', lcourse:'საჩუქარი', lres:'ჯილდოს ნახვა', lagain:'კიდევ ითამაშე'}, en:{lcert:'Coupon', lcourse:'Reward', lres:'See my reward', lagain:'Play again'}},
+  steps:[L('საჩუქარი იხსნება','The gift opens'), L('თამაშის წესები','How to play'), L('სამი კითხვა ყავაზე','Three questions about coffee'), L('ქულა და კუპონი','Points and a coupon')],
+  sign:L('გელოდებით კაფეში!','See you at the café!')
+});
+TBY.campaign = TPL[TPL.length - 1];
+/* lesson labels a template can override (a coupon instead of a certificate) */
+const _lessonRender = Lesson.prototype.render;
+Lesson.prototype.render = function(){
+  const o = this.t.glab && this.t.glab[lang], g = G[lang];
+  if (!o) return _lessonRender.call(this);
+  const keep = {}; Object.keys(o).forEach(k => { keep[k] = g[k]; g[k] = o[k]; });
+  try { _lessonRender.call(this); } finally { Object.assign(g, keep); }
+};
+
+/* ---------- the four steps of the site ---------- */
 const done = new Set();
 function stamp(k){
   if (done.has(k)) return;
@@ -1792,8 +1938,7 @@ function stamp(k){
 function renderProg(){
   const B = S[lang].beat;
   $$('#prog li').forEach((li, i) => {
-    const a = li.querySelector('a');
-    a.setAttribute('aria-label', (i + 1) + '. ' + B[i] + (li.classList.contains('done') ? ' ✓' : ''));
+    li.querySelector('a').setAttribute('aria-label', (i + 1) + '. ' + B[i] + (li.classList.contains('done') ? ' ✓' : ''));
     li.querySelector('i').innerHTML = li.classList.contains('done') ? ic('check') : String(i + 1);
   });
   $('#prog').title = done.size === 4 ? S[lang].ui.done : '';
@@ -1814,79 +1959,91 @@ function applyStatic(){
   themeIcon(); renderProg();
 }
 
-/* ---------- 1 open: the poster and a live phone ---------- */
+/* ---------- 1 goal: the poster and the opening question ---------- */
 function renderPoster(){
   const L3 = S[lang].hero.lines;
   $('#poster').innerHTML = L3.map((l, i) => '<span class="ln'+(i === L3.length - 1 ? ' acc' : '')+'"><span class="lt">'+esc(l)+'</span></span>').join('');
   fitPoster();
 }
-/* each line is sized on its own to fill the column, so the poster reads as one block */
 function fitPoster(){
   const box = $('#poster'), w = box.clientWidth; if (!w) return;
-  const max = Math.min(156, window.innerWidth * 0.26);
+  const max = Math.min(150, window.innerWidth * 0.26);
   $$('#poster .ln').forEach(ln => {
     ln.style.fontSize = '100px';
     const lw = ln.querySelector('.lt').getBoundingClientRect().width || 1;
     ln.style.fontSize = Math.max(30, Math.min(max, Math.floor(100 * w / lw * 0.98))) + 'px';
   });
 }
-let heroInv = null, heroTouched = false, heroAuto = 0;
-function heroStart(){
-  heroInv = mount($('#heroPhone'), 'omakase', heroInv);
-  clearTimeout(heroAuto);
-  heroAuto = setTimeout(() => {
-    const op = document.querySelector('#heroPhone [data-act="open"]');
-    if (op && !heroTouched && !reduced() && !dlg.open) op.click();
-  }, 2600);
+let goalK = 'learn', goalPicked = false;
+const GO = () => S[lang].goals.find(g => g.k === goalK);
+function renderGoals(){
+  $('#goals').innerHTML = S[lang].goals.map(g => '<button type="button" class="goal" data-g="'+g.k+'" aria-pressed="'+(goalPicked && g.k === goalK)+'">'+ic(g.ic)+ic('arrowR','arr')+
+    '<span><b>'+esc(g.g)+'</b><small>'+esc(g.ex)+'</small></span></button>').join('');
+  $('#seg').innerHTML = S[lang].goals.map(g => '<button type="button" data-g="'+g.k+'" aria-pressed="'+(g.k === goalK)+'">'+ic(g.ic)+'<span>'+esc(g.g)+'</span></button>').join('');
 }
-document.querySelector('.hstage .phone').addEventListener('pointerdown', () => { heroTouched = true; stamp('open'); });
-$('#heroPlayBtn').addEventListener('click', () => openDemo(heroInv ? heroInv.t.id : 'omakase'));
-
-/* ---------- 2 choose: four moments, equal weight ---------- */
-let chId = 'academy', chInv = null;
-function renderMoments(){
-  const C = S[lang].ch;
-  $('#moments').innerHTML = C.list.map(m => '<button type="button" class="moment" data-m="'+m.id+'" aria-pressed="'+(m.id === chId)+'">'+ic(m.ic)+
-    '<b>'+esc(m.t)+'</b><small>'+esc(m.s)+'</small><span class="mt"><span>'+esc(m.pr)+'</span></span></button>').join('');
-  const m = C.list.find(x => x.id === chId);
-  $('#momentTxt').textContent = m.txt;
-}
-function choose(id, user){
-  chId = id;
-  chInv = mount($('#choosePhone'), id, chInv);
-  takeOn($('#choose'), TBY[id]);
-  renderMoments();
-  if (user) stamp('choose');
-}
-$('#moments').addEventListener('click', e => { const b = e.target.closest('[data-m]'); if (b) choose(b.dataset.m, true); });
-$('#chPlay').addEventListener('click', () => { stamp('choose'); openDemo(chId); });
-$('#chReq').addEventListener('click', () => { const m = S[lang].ch.list.find(x => x.id === chId); requestFor(m.req, m.who, chId); });
-
-/* ---------- 3 reveal: roll the die, one text in ten styles ---------- */
-const STY = () => TPL.filter(t => t.cat !== 'learn');
-let rvIdx = 5;
-function styled(t){ const D = S[lang].rv; return Object.assign({}, t, {to:L(D.to), intro:L(D.intro)}); }
-function showStyle(i){
-  const list = STY(); rvIdx = (i + list.length) % list.length; const t = list[rvIdx];
-  $('#revealPhone').innerHTML = coverHTML(styled(t));
-  takeOn($('#reveal'), t);
-  $('#rvNo').textContent = '№ ' + (rvIdx < 9 ? '0' : '') + (rvIdx + 1) + ' / ' + list.length;
-  $('#rvName').textContent = tx(t.name); $('#rvKind').textContent = tx(t.kind);
-}
-$('#dice').addEventListener('click', () => {
-  const n = STY().length, d = $('#dice');
-  let j = rvIdx; while (j === rvIdx) j = Math.floor(Math.random() * n);
-  d.classList.remove('roll'); void d.offsetWidth; d.classList.add('roll');
-  showStyle(j); stamp('reveal');
+$('#goals').addEventListener('click', e => {
+  const b = e.target.closest('[data-g]'); if (!b) return;
+  goalPicked = true; pickGoal(b.dataset.g); stamp('goal');
+  $('#play').scrollIntoView({behavior: reduced() ? 'auto' : 'smooth', block:'start'});
 });
-$('#rvPlay').addEventListener('click', () => { stamp('reveal'); openDemo(STY()[rvIdx].id); });
+$('#seg').addEventListener('click', e => { const b = e.target.closest('[data-g]'); if (!b) return; goalPicked = true; pickGoal(b.dataset.g); stamp('goal'); });
 
-/* ---------- 4 keep: prices and the request ---------- */
-function renderPrices(){
-  const K = S[lang].kp;
+/* ---------- 2 play: the experience built for that goal ---------- */
+let playInv = null, demoId = 'academy';
+function pickGoal(k, keepDemo){
+  goalK = k; const g = GO();
+  if (!keepDemo) demoId = g.id;
+  playInv = mount($('#playPhone'), demoId, playInv);
+  takeOn($('#play'), TBY[demoId]);
+  renderGoals(); renderBrief(); renderDash(false);
+}
+function renderBrief(){
+  const g = GO(), P = S[lang].play;
+  $('#playH').textContent = g.h;
+  $('#brief').innerHTML = [[P.taskL, g.task], [P.expL, g.exp], [P.whoL, g.who]].map(r => '<div><dt>'+esc(r[0])+'</dt><dd>'+esc(r[1])+'</dd></div>').join('');
+  $('#more').innerHTML = g.more ? '<span>'+esc(P.more)+'</span>'+g.more.map(m => '<button type="button" data-ex="'+m[0]+'" aria-pressed="'+(demoId === m[0])+'">'+esc(m[1])+'</button>').join('') : '';
+}
+$('#more').addEventListener('click', e => {
+  const b = e.target.closest('[data-ex]'); if (!b) return;
+  demoId = b.dataset.ex; pickGoal(goalK, true); stamp('play');
+});
+$('#playPhone').parentElement.addEventListener('click', e => { if (e.isTrusted && e.target.closest('[data-act]')) stamp('play'); });
+$('#playBtn').addEventListener('click', () => openDemo(demoId));
+$('#playReq').addEventListener('click', () => requestFor('demo', goalK, demoId));
+
+/* ---------- 3 result: launch it and watch the report fill ---------- */
+let launched = false, countT = [];
+function fmtN(v, ref){ const dec = String(ref).includes('.') ? 1 : 0; return dec ? v.toFixed(1) : Math.round(v).toLocaleString('en-US'); }
+function renderDash(run){
+  const g = GO(), R = S[lang].res, t = TBY[demoId];
+  countT.forEach(cancelAnimationFrame); countT = [];
+  $('#dash').className = 'dash' + (run ? ' on' : '');
+  $('#dash').innerHTML = '<div class="dash-top"><span class="nm">'+esc(tx(t.name))+'<small>'+esc(tx(t.kind))+'</small></span><span class="pill"><i></i>'+esc(run ? R.live : R.demo)+'</span></div>'+
+    '<div class="mets">'+g.m.map((m, i) => {
+      const den = parseFloat(String(m[3]).replace(/[^\d.]/g, '')) || (m[3] === '%' ? 100 : 0);
+      const pct = den ? Math.min(100, m[2] / den * 100) : 70 + i * 7;
+      return '<div class="met"><span>'+esc(m[1])+'</span><b data-v="'+m[2]+'">'+(run ? '0' : fmtN(m[2], m[2]))+'</b><em>'+esc(m[3])+'</em><div class="bar"><i data-w="'+pct.toFixed(0)+'"'+(run ? '' : ' style="width:'+pct.toFixed(0)+'%"')+'></i></div></div>';
+    }).join('')+'</div>'+
+    '<button type="button" class="btn" id="launch">'+ic(run || launched ? 'restart' : 'rocket')+'<span>'+esc(run || launched ? R.again : R.launch)+'</span></button>';
+  $('#launch').addEventListener('click', () => { launched = true; stamp('result'); renderDash(true); });
+  if (run){
+    const dur = reduced() ? 1 : 1400, t0 = performance.now();
+    requestAnimationFrame(() => $$('#dash .bar i').forEach(b => { b.style.width = b.dataset.w + '%'; }));
+    $$('#dash .met b').forEach(b => {
+      const v = +b.dataset.v;
+      const step = now => { const p = Math.min(1, (now - t0) / dur), e = 1 - Math.pow(1 - p, 3); b.textContent = fmtN(v * e, b.dataset.v); if (p < 1) countT.push(requestAnimationFrame(step)); };
+      countT.push(requestAnimationFrame(step));
+    });
+  }
+}
+
+/* ---------- 4 start: how we work, prices ---------- */
+function renderStart(){
+  $('#how').innerHTML = S[lang].how.steps.map(s => '<li><b>'+esc(s[0])+'</b><span>'+esc(s[1])+'</span></li>').join('');
+  const K = S[lang].st;
   $('#prices').innerHTML = K.prices.map(p => '<div class="price'+(p.hot ? ' hot' : '')+'"><h3>'+esc(p.n)+'</h3><span class="amt">'+esc(p.a)+'</span>'+
     '<ul>'+p.f.map(f => '<li>'+ic('check')+'<span>'+esc(f)+'</span></li>').join('')+'</ul>'+
-    '<button type="button" class="tlink" data-req="'+p.id+'" data-who="'+p.who+'"><span>'+esc(K.pick)+'</span>'+ic('arrowR')+'</button></div>').join('');
+    '<button type="button" class="tlink" data-req="'+p.id+'" data-who=""><span>'+esc(K.pick)+'</span>'+ic('arrowR')+'</button></div>').join('');
   $('#trust').innerHTML = K.trust.map(x => '<span>'+ic('check')+esc(x)+'</span>').join('');
 }
 
@@ -1899,7 +2056,7 @@ function fillStage(t){
   $('#stName').textContent = tx(t.name);
   $('#stDesc').textContent = tx(t.desc);
   $('#stSteps').innerHTML = (t.steps ? t.steps.map(tx) : [tx(t.hint), tx(t.q), tx(t.pickT), tx(t.sp.title), tx(t.tk.title) || G[lang].tk]).map((x, k) => '<li><b>'+marks[k]+'</b><span>'+esc(x)+'</span></li>').join('');
-  $('#stCust').innerHTML = D.st.customList.map(x => '<li>'+ic('check')+'<span>'+esc(x)+'</span></li>').join('');
+  $('#stCust').innerHTML = D.stage.customList.map(x => '<li>'+ic('check')+'<span>'+esc(x)+'</span></li>').join('');
   $('#stCount').textContent = (i < 9 ? '0' : '') + (i + 1) + ' / ' + TPL.length;
 }
 function openDemo(id){
@@ -1907,7 +2064,7 @@ function openDemo(id){
   dlgInv = mount($('#dlgPhone'), id, dlgInv);
   fillStage(t);
   if (!dlg.open){ if (dlg.showModal) dlg.showModal(); else dlg.setAttribute('open', ''); }
-  stamp('open');
+  stamp('play');
 }
 function stepDemo(d){ const i = TPL.indexOf(dlgInv.t); openDemo(TPL[(i + d + TPL.length) % TPL.length].id); }
 $('#stClose').innerHTML = ic('close'); $('#stPrev').innerHTML = ic('arrowL'); $('#stNext').innerHTML = ic('arrowR');
@@ -1919,12 +2076,12 @@ dlg.addEventListener('keydown', e => { if (e.target.closest('input,textarea')) r
 $('#stRestart').addEventListener('click', () => dlgInv && dlgInv.reset());
 $('#stReq').addEventListener('click', () => {
   const t = dlgInv.t; dlg.close();
-  const map = {restaurant:['plan-rest','restaurant'], life:['custom-personal','personal'], work:[t.id === 'interview' ? 'onboarding' : 'learning','team'], learn:['learning','team']}[t.cat];
-  requestFor(map[0], map[1], t.id);
+  const k = {academy:'learn', interview:'onboard', campaign:'engage'}[t.id] || 'attend';
+  requestFor('demo', k, t.id);
 });
 document.addEventListener('click', e => {
   const b = e.target.closest('[data-req]'); if (!b) return;
-  requestFor(b.dataset.req, b.dataset.who, '');
+  requestFor(b.dataset.req, b.dataset.who || goalK, '');
 });
 
 /* ---------- the request ---------- */
@@ -1947,7 +2104,7 @@ function renderInterest(){
 }
 function renderForm(){
   const F = S[lang].f;
-  const who = (document.querySelector('input[name="who"]:checked') || {}).value || 'restaurant';
+  const who = (document.querySelector('input[name="who"]:checked') || {}).value || 'learn';
   $('#whoSeg').innerHTML = F.whoOpts.map(o => '<label class="circ"><input type="radio" name="who" id="who-'+o[0]+'" value="'+o[0]+'"'+(o[0] === who ? ' checked' : '')+'><span class="t">'+esc(o[1])+'</span>'+RING+'</label>').join('');
   renderInterest();
   const d = new Date();
@@ -1963,7 +2120,7 @@ function readForm(){
 }
 function reqText(r){
   const F = S[lang].f, n = v => v || F.none;
-  return [F.subj + ' (' + F.slip + ' ' + slipNo + ')', '', F.who + ': ' + n(r.whoLabel), F.type + ': ' + n(r.interestLabel), F.tpl + ': ' + n(r.templateLabel),
+  return [F.subj + ' (' + F.slip + ' ' + slipNo + ')', '', F.goal + ': ' + n(r.whoLabel) + '\n' + F.type + ': ' + n(r.interestLabel), F.tpl + ': ' + n(r.templateLabel),
     F.name + ': ' + n(r.name), F.contact + ': ' + n(r.contact), F.msg + ': ' + n(r.message)].join('\n');
 }
 function showResult(mode){
@@ -2002,7 +2159,7 @@ $('#reqForm').addEventListener('submit', e => {
   lastReq = readForm();
   const sb = $('#sendBtn'); sb.classList.remove('thump'); void sb.offsetWidth; sb.classList.add('thump');
   setTimeout(() => {
-    stamp('keep');
+    stamp('start');
     if (!CONFIG.formEndpoint){ lastReq.mode = 'ready'; showResult('ready'); return; }
     sb.disabled = true;
     fetch(CONFIG.formEndpoint, {method:'POST', headers:{'Content-Type':'application/json','Accept':'application/json'}, body:JSON.stringify(Object.assign({slip:slipNo, summary:reqText(lastReq)}, lastReq))})
@@ -2012,9 +2169,6 @@ $('#reqForm').addEventListener('submit', e => {
   }, reduced() ? 0 : 420);
 });
 ['#fName','#fContact'].forEach(id => $(id).addEventListener('input', () => { if ($(id).closest('.field').classList.contains('bad')) validate(); }));
-
-/* opening the hero invite by hand counts as step 1 */
-$('#heroPhone').parentElement.addEventListener('click', e => { if (e.isTrusted && e.target.closest('[data-act]')) stamp('open'); });
 
 /* ---------- theme, language ---------- */
 function effTheme(){
@@ -2031,12 +2185,11 @@ $$('[data-lang]').forEach(b => b.addEventListener('click', () => { if (lang === 
 
 /* ---------- go ---------- */
 function renderAll(){
-  applyStatic(); renderPoster(); renderMoments(); showStyle(rvIdx); renderPrices(); renderForm();
+  applyStatic(); renderPoster(); renderGoals(); renderBrief(); renderDash(false); renderStart(); renderForm();
   invites.forEach(i => i.render());
   if (dlg.open && dlgInv) fillStage(dlgInv.t);
 }
-heroStart();
-choose('academy', false);
+pickGoal('learn');
 renderAll();
 let fitT = 0;
 window.addEventListener('resize', () => { clearTimeout(fitT); fitT = setTimeout(fitPoster, 80); });
