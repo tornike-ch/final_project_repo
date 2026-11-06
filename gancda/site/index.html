@@ -5,6 +5,7 @@
   <meta name="viewport" content="width=device-width,initial-scale=1">
   <meta name="description" content="Gancda is a Tbilisi interactive experiences studio. Play lessons, onboarding, brand games and invitations in Georgian and English.">
   <meta name="theme-color" content="#1A0B2E">
+  <meta name="color-scheme" content="light dark">
   <title>gancda — Interactive Experiences Studio</title>
   <link rel="icon" href="assets/favicon.svg" type="image/svg+xml">
   <link rel="icon" href="assets/favicon.ico" sizes="32x32">
@@ -49,6 +50,7 @@
         <div class="languages" role="group" aria-label="Language">
           <button type="button" lang="en" data-lang="en" aria-label="English" aria-pressed="false">EN</button><span aria-hidden="true">/</span><button type="button" lang="ka" data-lang="ka" aria-label="ქართული" aria-pressed="true">ქა</button>
         </div>
+        <button type="button" id="themeToggle" class="icon-button" aria-label="მუქ თემაზე გადასვლა"><svg aria-hidden="true"><use href="#moon"/></svg></button>
         <a class="navcta" href="#request"><span data-i18n="navStart">პროექტის დაწყება</span><svg aria-hidden="true"><use href="#diagonal"/></svg></a>
         <button id="menuToggle" class="icon-button" aria-expanded="false" aria-controls="mainNav" aria-label="მენიუ"><svg aria-hidden="true"><use href="#menuIcon"/></svg></button>
       </div>
@@ -69,15 +71,11 @@
         <figure class="hero-art">
           <div class="art-frame">
             <svg viewBox="0 0 560 448" aria-hidden="true" focusable="false">
-              <defs><filter id="heroGlow" x="-60%" y="-60%" width="220%" height="220%"><feGaussianBlur stdDeviation="34"/></filter></defs>
-              <rect width="560" height="448" fill="#26143A"/>
-              <g fill="none" stroke="#C7B3FF" stroke-width="3" opacity=".5"><path d="M-10 64c30-16 60 16 90 0s60 16 90 0 60 16 90 0"/><path d="M-10 86c30-16 60 16 90 0s60 16 90 0 60 16 90 0"/><path d="M-10 108c30-16 60 16 90 0s60 16 90 0 60 16 90 0"/><path d="M-10 130c30-16 60 16 90 0s60 16 90 0 60 16 90 0"/></g>
-              <path d="M-60 330C40 170 170 470 290 300S500 210 620 330V470H-60Z" fill="#C7B3FF"/>
-              <circle cx="388" cy="205" r="150" fill="#D7FF52" opacity=".38" filter="url(#heroGlow)"/>
+                            <rect width="560" height="448" fill="#26143A"/>
+              <g fill="none" stroke="#C7B3FF" stroke-width="2.5" opacity=".28"><path d="M-10 64c30-16 60 16 90 0s60 16 90 0 60 16 90 0"/><path d="M-10 86c30-16 60 16 90 0s60 16 90 0 60 16 90 0"/><path d="M-10 108c30-16 60 16 90 0s60 16 90 0 60 16 90 0"/><path d="M-10 130c30-16 60 16 90 0s60 16 90 0 60 16 90 0"/></g>
+              <path d="M-60 360C40 230 170 470 290 340S500 270 620 370V470H-60Z" fill="#C7B3FF" opacity=".16"/>
               <g class="hero-mark"><use href="#star" x="218" y="35" width="340" height="340" style="color:#D7FF52"/></g>
-              <use href="#star" x="96" y="160" width="86" height="86" style="color:#F8F4EB"/>
-              <use href="#star" x="484" y="364" width="46" height="46" style="color:#C7B3FF"/>
-              <g transform="translate(446 22) rotate(12)"><path d="M37 4 13 37h17l-5 23 26-35H35z" fill="none" stroke="#fff" stroke-width="9" stroke-linejoin="round"/><path d="M37 4 13 37h17l-5 23 26-35H35z" fill="#C7B3FF" stroke="#1A0B2E" stroke-width="2.6" stroke-linejoin="round"/></g>
+              <use href="#star" x="96" y="160" width="70" height="70" style="color:#F8F4EB" opacity=".9"/>
             </svg>
             <span class="frame-marks" aria-hidden="true"><i></i><i></i><i></i><i></i></span>
             <button id="heroPlay" class="art-play" type="button"><span class="play-disc"><svg aria-hidden="true"><use href="#playicon"/></svg></span><span data-i18n="tryDemo">სცადეთ თამაში</span></button>

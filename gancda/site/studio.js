@@ -1,4 +1,4 @@
-/* gancda studio: language, mobile menu and the hero's play button. The site is dark-only, per the brand kit. */
+/* gancda studio: language, light/dark theme, mobile menu and the hero's play button. */
 (() => {
   'use strict';
   const words = {
@@ -9,7 +9,7 @@
       explore: 'ნახეთ მაგალითები', how: 'როგორ ვმუშაობთ', tryDemo: 'სცადეთ თამაში',
       meaning: 'განცდა — ის, რასაც თავად განიცდი.', studioCity: 'ინტერაქტიული გამოცდილებების სტუდია · თბილისი',
       demoNotice: 'მაგალითებში წარმოდგენილი ბრენდები, სახელები და მონაცემები საჩვენებელია.', back: 'თავში დაბრუნება ↑',
-      menu: 'მენიუ', closeMenu: 'მენიუს დახურვა'
+      toDark: 'მუქ თემაზე გადასვლა', toLight: 'ღია თემაზე გადასვლა', menu: 'მენიუ', closeMenu: 'მენიუს დახურვა'
     },
     en: {
       skip: 'Skip to main content', navPlay: 'Experiences', navResults: 'Results', navProcess: 'Process', navStart: 'Start a project',
@@ -18,7 +18,7 @@
       explore: 'See the examples', how: 'How we work', tryDemo: 'Try a game',
       meaning: 'Gancda — the feeling you live through yourself.', studioCity: 'Interactive experiences studio · Tbilisi',
       demoNotice: 'Brands, names and figures in the examples are for demonstration.', back: 'Back to top ↑',
-      menu: 'Menu', closeMenu: 'Close menu'
+      toDark: 'Switch to dark theme', toLight: 'Switch to light theme', menu: 'Menu', closeMenu: 'Close menu'
     }
   };
   const store = {
@@ -28,6 +28,17 @@
   const root = document.documentElement;
   let lang = store.get('lang') === 'en' ? 'en' : 'ka';
 
+  function effectiveTheme(){
+    const set = root.getAttribute('data-theme');
+    if (set === 'dark' || set === 'light') return set;
+    return window.matchMedia && matchMedia('(prefers-color-scheme: dark)').matches ? 'dark' : 'light';
+  }
+  function paintThemeButton(){
+    const b = document.getElementById('themeToggle'); if (!b) return;
+    const dark = effectiveTheme() === 'dark';
+    b.querySelector('use').setAttribute('href', dark ? '#sun' : '#moon');
+    b.setAttribute('aria-label', words[lang][dark ? 'toLight' : 'toDark']);
+  }
   function paintMenuButton(){
     const b = document.getElementById('menuToggle'); if (!b) return;
     const open = b.getAttribute('aria-expanded') === 'true';
@@ -41,7 +52,7 @@
     store.set('lang', lang);
     document.querySelectorAll('[data-i18n]').forEach(el => { const v = words[lang][el.dataset.i18n]; if (v != null) el.textContent = v; });
     document.querySelectorAll('[data-lang]').forEach(b => b.setAttribute('aria-pressed', String(b.dataset.lang === lang)));
-    paintMenuButton();
+    paintThemeButton(); paintMenuButton();
     window.GancdaDemos?.setLanguage(lang);
     window.GancdaExperiences?.setLanguage(lang);
     window.GancdaProject?.setLanguage(lang);
@@ -49,6 +60,13 @@
   }
 
   function init(){
+    const saved = store.get('theme');
+    if (saved === 'dark' || saved === 'light') root.setAttribute('data-theme', saved);
+    document.getElementById('themeToggle')?.addEventListener('click', () => {
+      const next = effectiveTheme() === 'dark' ? 'light' : 'dark';
+      root.setAttribute('data-theme', next); store.set('theme', next); paintThemeButton();
+    });
+    window.matchMedia?.('(prefers-color-scheme: dark)').addEventListener('change', paintThemeButton);
     document.querySelectorAll('[data-lang]').forEach(b => b.addEventListener('click', () => { if (b.dataset.lang !== lang) setLanguage(b.dataset.lang); }));
     const menu = document.getElementById('menuToggle'), nav = document.getElementById('mainNav');
     const closeMenu = () => { if (!nav) return; nav.classList.remove('open'); menu?.setAttribute('aria-expanded', 'false'); paintMenuButton(); };
