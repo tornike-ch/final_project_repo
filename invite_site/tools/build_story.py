@@ -20,6 +20,7 @@ HTML = '''<!--story:html-->
     <div class="st-pin">
       <div class="st-sky" aria-hidden="true"><i class="d"></i><i class="n"></i></div>
       <svg class="st-world" id="stWorld" aria-hidden="true" focusable="false"></svg>
+      <div class="st-grain" aria-hidden="true"></div>
       <button type="button" class="st-orb" id="stOrb"></button>
       <p class="st-orb-tip" aria-hidden="true"></p>
       <div class="st-cards" id="stCards" aria-live="polite"></div>

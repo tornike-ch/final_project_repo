@@ -110,7 +110,7 @@ function tree(x, s = 1){
     '<circle cx="0" cy="-170" r="62" fill="var(--tr)"/><circle cx="-44" cy="-130" r="42" fill="var(--tr)"/><circle cx="44" cy="-132" r="44" fill="var(--tr2)"/><circle cx="12" cy="-200" r="40" fill="var(--tr2)"/></g>';
 }
 function lamp(x){
-  return '<g><ellipse class="glow" cx="'+x+'" cy="'+(G - 236)+'" rx="70" ry="70" fill="url(#stWg)"/>'+
+  return '<g class="ink"><ellipse class="glow" cx="'+x+'" cy="'+(G - 236)+'" rx="70" ry="70" fill="url(#stWg)"/>'+
     '<rect x="'+(x - 4)+'" y="'+(G - 230)+'" width="8" height="230" rx="4" fill="var(--ink)"/>'+
     '<path d="M'+(x - 18)+' '+(G - 226)+'h36l-8 -22h-20z" fill="var(--ink)"/><circle cx="'+x+'" cy="'+(G - 222)+'" r="8" fill="var(--win)"/></g>';
 }
@@ -143,7 +143,7 @@ function sign(x, y, w, key, cls){
 /* ---------- the layers ---------- */
 function farLayer(){
   seed = 11;
-  let s = '<path d="M-50 720 L-50 470 Q120 380 300 430 Q420 330 560 400 Q700 300 860 410 Q1000 360 1150 420 Q1320 330 1500 400 Q1680 340 1850 420 Q2050 350 2250 410 Q2450 330 2650 420 Q2850 360 3100 430 L3100 720Z" fill="var(--m1)"/>';
+  let s = '<path d="M-50 720 L-50 470 Q120 380 300 430 Q420 330 560 400 Q700 300 860 410 Q1000 360 1150 420 Q1320 330 1500 400 Q1680 340 1850 420 Q2050 350 2250 410 Q2450 330 2650 420 Q2850 360 3100 430 L3100 720Z" fill="var(--m1)" class="far-ink"/>';
   // a TV tower on the far hill, its light blinks at night
   s += '<g><path d="M700 304 L690 404 M700 304 L710 404 M693 360 h14 M690 330 h20" stroke="var(--m2)" stroke-width="5" fill="none"/><rect x="697" y="254" width="6" height="52" fill="var(--m2)"/>'+
     '<circle class="dn-n tw" cx="700" cy="252" r="5" fill="#ff5b5b"/></g>';
@@ -154,7 +154,9 @@ function farLayer(){
   s += '<g class="dn-n">'+st+'<path d="M2100 80 l40 22" stroke="#fff" stroke-width="2" stroke-linecap="round" opacity=".7"/></g>';
   let cl = '';
   for (let i = 0; i < 9; i++){ const x = i * 360 + R() * 120, y = (i % 3 ? 90 : -260) + R() * 160, k = .7 + R() * .6;
-    cl += '<g transform="translate('+f1(x)+' '+f1(y)+') scale('+f1(k)+')"><ellipse cx="0" cy="0" rx="70" ry="26" fill="var(--cloud)"/><circle cx="-24" cy="-16" r="28" fill="var(--cloud)"/><circle cx="18" cy="-24" r="34" fill="var(--cloud)"/></g>'; }
+    const puff = st => '<ellipse cx="0" cy="0" rx="70" ry="26"'+st+'/><circle cx="-24" cy="-16" r="28"'+st+'/><circle cx="18" cy="-24" r="34"'+st+'/>';
+    // outline pass underneath, fill on top: one outline around the whole cloud
+    cl += '<g transform="translate('+f1(x)+' '+f1(y)+') scale('+f1(k)+')">'+puff(' fill="var(--line)" stroke="var(--line)" stroke-width="5"')+puff(' fill="var(--cloud)"')+'</g>'; }
   s += '<g class="dn-d"><g class="drift">'+cl+'</g></g>';
   return s;
 }
@@ -183,7 +185,7 @@ function mainLayer(){
   [1000, 2000, 3000, 4000].forEach(x => { s += lamp(x); });
 
   /* prologue: Nini's house with a carved wooden balcony */
-  s += '<g data-sc="0">'+house(60, 230, 330, 'var(--hB)', {cols:2, rows:3, rh:60})+
+  s += '<g data-sc="0" class="ink">'+house(60, 230, 330, 'var(--hB)', {cols:2, rows:3, rh:60})+
     house(360, 420, 430, 'var(--hA)', {cols:3, rows:3, rh:96, ww:46, wh:58, door:true, dark:.15})+
     peep(575, G - 262, {b:'standing/Dancer', h:'LongHair', f:'BigSmile', tp:'var(--p3)', pa:'var(--p2)', cls:'nini'})+
     // balcony
@@ -200,7 +202,7 @@ function mainLayer(){
     lights(330, G - 336, 810, G - 336, 34, 12, 'dn-n')+tree(930, .9)+'</g>';
 
   /* chapter 1: school by day, library by night */
-  s += '<g data-sc="1">'+house(1170, 600, 420, 'var(--hD)', {roof:'flat', cols:3, rows:2, ww:96, wh:96, wtop:70, gy:60, door:true, dark:.6, frame:'var(--rf2)'})+
+  s += '<g data-sc="1" class="ink">'+house(1170, 600, 420, 'var(--hD)', {roof:'flat', cols:3, rows:2, ww:96, wh:96, wtop:70, gy:60, door:true, dark:.6, frame:'var(--rf2)'})+
     '<path d="M1150 '+(G - 436)+'L1470 '+(G - 540)+'L1790 '+(G - 436)+'Z" fill="var(--rf2)"/>'+
     '<circle cx="1470" cy="'+(G - 470)+'" r="26" fill="var(--sign)" stroke="var(--ink)" stroke-width="3"/><path d="M1470 '+(G - 488)+'v18l12 8" stroke="var(--ink)" stroke-width="3.5" fill="none" stroke-linecap="round"/>'+
     sign(1470, G - 404, 230, 'school', 'dn-d')+sign(1470, G - 404, 270, 'library', 'dn-n')+
@@ -218,7 +220,7 @@ function mainLayer(){
     tree(1880, 1)+'<g class="dn-n" transform="translate(1900 '+(G - 222)+')"><ellipse cx="0" cy="0" rx="18" ry="24" fill="var(--wd)"/><circle cx="-7" cy="-6" r="6" fill="#fff3c0"/><circle cx="7" cy="-6" r="6" fill="#fff3c0"/><circle cx="-7" cy="-6" r="2.5" fill="#1a1320"/><circle cx="7" cy="-6" r="2.5" fill="#1a1320"/><path d="M-3 2l3 5 3 -5z" fill="var(--hF)"/></g></g>';
 
   /* chapter 2: a studio's first day by day, a bakery's night shift by night */
-  s += '<g data-sc="2">'+house(2150, 540, 360, 'var(--hE)', {roof:'flat', cols:3, rows:2, ww:80, wh:80, wtop:70, gy:50, door:true, chimney:true, dark:.2})+
+  s += '<g data-sc="2" class="ink">'+house(2150, 540, 360, 'var(--hE)', {roof:'flat', cols:3, rows:2, ww:80, wh:80, wtop:70, gy:50, door:true, chimney:true, dark:.2})+
     sign(2420, G - 404, 230, 'studio', 'dn-d')+sign(2420, G - 404, 230, 'bakery', 'dn-n')+
     '<g class="dn-n"><ellipse class="steam" cx="2554" cy="'+(G - 470)+'" rx="18" ry="14" fill="#c9c3e0" opacity=".5"/><ellipse class="steam" style="animation-delay:-1.4s" cx="2560" cy="'+(G - 470)+'" rx="14" ry="12" fill="#c9c3e0" opacity=".5"/>'+
       '<ellipse cx="2240" cy="'+(G - 110)+'" rx="90" ry="70" fill="url(#stWo)"/></g>'+
@@ -235,7 +237,7 @@ function mainLayer(){
     tree(2820, .95)+'</g>';
 
   /* chapter 3: a café brand game by day, a night market by night */
-  s += '<g data-sc="3">'+house(3100, 440, 320, 'var(--hB)', {roof:'flat', cols:2, rows:1, ww:110, wh:90, wtop:40, door:true, dark:.1})+
+  s += '<g data-sc="3" class="ink">'+house(3100, 440, 320, 'var(--hB)', {roof:'flat', cols:2, rows:1, ww:110, wh:90, wtop:40, door:true, dark:.1})+
     sign(3320, G - 360, 180, 'cafe')+
     // striped awning
     '<g>'+Array.from({length:10}, (_, i) => '<path d="M'+(3090 + i * 46)+' '+(G - 214)+'h46v40a23 23 0 0 1 -46 0z" fill="'+(i % 2 ? 'var(--awn2)' : 'var(--awn1)')+'"/>').join('')+'</g>'+
@@ -257,7 +259,7 @@ function mainLayer(){
     lights(3110, G - 240, 3990, G - 240, 60, 16, 'dn-n')+'</g>';
 
   /* chapter 4: the long table, by day in a garden, by night under fireworks */
-  s += '<g data-sc="4">'+tree(4080, 1.05)+tree(4930, 1.1)+
+  s += '<g data-sc="4" class="ink">'+tree(4080, 1.05)+tree(4930, 1.1)+
     '<path d="M4170 '+G+'V'+(G - 360)+'M4830 '+G+'V'+(G - 360)+'" stroke="var(--wd)" stroke-width="12" stroke-linecap="round"/>'+
     bunting(4170, G - 350, 4830, G - 350, 70, 14, 'dn-d')+lights(4170, G - 350, 4830, G - 350, 70, 16, 'dn-n')+
     balloons(4130, G - 260, 'dn-d')+balloons(4870, G - 270, 'dn-d')+
@@ -300,8 +302,8 @@ svg.setAttribute('viewBox', '0 0 1000 1000');
 svg.setAttribute('preserveAspectRatio', 'xMidYMid slice');
 svg.innerHTML = '<defs><radialGradient id="stWg"><stop offset="0" stop-color="#ffcf6b" stop-opacity=".85"/><stop offset="1" stop-color="#ffcf6b" stop-opacity="0"/></radialGradient>'+
   peepDefs()+'<radialGradient id="stWo"><stop offset="0" stop-color="#ff8a3d" stop-opacity=".9"/><stop offset="1" stop-color="#ff8a3d" stop-opacity="0"/></radialGradient></defs>'+
-  '<g id="stFar">'+farLayer()+'</g><g id="stMid">'+midLayer()+'</g><g id="stMain">'+mainLayer()+
-  '<path d="'+flightPath()+'" fill="none" stroke="var(--paper)" stroke-width="3" stroke-dasharray="2 14" stroke-linecap="round" opacity=".7"/>'+PLANE+'<g id="stFx"></g></g><g id="stNear">'+nearLayer()+'</g>';
+  '<g id="stFar">'+farLayer()+'</g><g id="stMid" class="ink thin">'+midLayer()+'</g><g id="stMain">'+mainLayer()+
+  '<path d="'+flightPath()+'" fill="none" stroke="var(--paper)" stroke-width="3" stroke-dasharray="2 14" stroke-linecap="round" opacity=".7"/>'+PLANE+'<g id="stFx"></g></g><g id="stNear" class="ink thin">'+nearLayer()+'</g>';
 const L = {far:svg.querySelector('#stFar'), mid:svg.querySelector('#stMid'), near:svg.querySelector('#stNear')};
 const plane = svg.querySelector('#stPlane'), fx = svg.querySelector('#stFx');
 const DEPTH = {far:.18, mid:.45, near:1.25};
