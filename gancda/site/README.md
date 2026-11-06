@@ -9,6 +9,7 @@ Your layout (`index.html`, `experiences.*`, `project.*`) in the dark-first gancd
 | `experiences.css` / `experiences.js` | The goal gallery with a live preview of each demo, the results report, and the player dialog. |
 | `demos.css` / `demos.js` | The eight demos. `GancdaDemos.mount(element, id)` runs one inside any `.xp-screen` element. |
 | `project.css` / `project.js` | How we work, the individual-offer block (no public prices) and the request form. |
+| `preview.html` | The same page without its document head, used to publish the claude.ai preview. Not needed on the live site. |
 | `assets/` | Logo, symbol, favicons, app icons, social image and graphics from the brand kit. |
 
 Demos by goal:
