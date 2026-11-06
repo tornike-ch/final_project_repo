@@ -1,0 +1,293 @@
+{
+  "name": "gancda · Monday digest",
+  "nodes": [
+    {
+      "id": "6f1c1d0e-0001-4a10-9a01-000000000001",
+      "name": "Setup notes",
+      "type": "n8n-nodes-base.stickyNote",
+      "typeVersion": 1,
+      "position": [
+        -460,
+        -260
+      ],
+      "parameters": {
+        "width": 420,
+        "height": 400,
+        "content": "## gancda · Monday digest\nEvery Monday at 09:00 (Tbilisi time) this emails the founder new leads by score, drafts waiting for approval, response times and meetings booked.\n\n**Before activating**\n1. **Settings**: set `founder_email`, and `hubspot_portal_id` for links into HubSpot. Set `a_reply_sla_hours` from the Sales Workflow.\n2. **HubSpot leads**: credential *Header Auth*, Name `Authorization`, Value `Bearer <HubSpot private-app token>` (scope: crm.objects.contacts.read).\n3. **Calendly me / events**: credential *Header Auth*, Name `Authorization`, Value `Bearer <Calendly personal access token>`. If you skip Calendly, disable both nodes. The digest still sends.\n4. **Send to founder**: connect Gmail.\n5. Click **Execute workflow** once to test, then toggle **Active**.\n\nThe HubSpot properties this reads are listed in gancda/README.md."
+      }
+    },
+    {
+      "id": "6f1c1d0e-0001-4a10-9a01-000000000002",
+      "name": "Monday 09:00",
+      "type": "n8n-nodes-base.scheduleTrigger",
+      "typeVersion": 1.2,
+      "position": [
+        0,
+        0
+      ],
+      "parameters": {
+        "rule": {
+          "interval": [
+            {
+              "field": "cronExpression",
+              "expression": "0 9 * * 1"
+            }
+          ]
+        }
+      }
+    },
+    {
+      "id": "6f1c1d0e-0001-4a10-9a01-000000000003",
+      "name": "Settings",
+      "type": "n8n-nodes-base.set",
+      "typeVersion": 3.4,
+      "position": [
+        220,
+        0
+      ],
+      "parameters": {
+        "mode": "manual",
+        "assignments": {
+          "assignments": [
+            {
+              "id": "s1",
+              "name": "founder_email",
+              "value": "REPLACE_ME@example.com",
+              "type": "string"
+            },
+            {
+              "id": "s2",
+              "name": "timezone",
+              "value": "Asia/Tbilisi",
+              "type": "string"
+            },
+            {
+              "id": "s3",
+              "name": "hubspot_portal_id",
+              "value": "",
+              "type": "string"
+            },
+            {
+              "id": "s4",
+              "name": "hubspot_app_url",
+              "value": "https://app.hubspot.com",
+              "type": "string"
+            },
+            {
+              "id": "s5",
+              "name": "ack_sla_minutes",
+              "value": 5,
+              "type": "number"
+            },
+            {
+              "id": "s6",
+              "name": "a_reply_sla_hours",
+              "value": 24,
+              "type": "number"
+            },
+            {
+              "id": "s7",
+              "name": "mark_png_url",
+              "value": "https://gancda.com/brand/asterisk-seal-120.png",
+              "type": "string"
+            }
+          ]
+        },
+        "options": {}
+      }
+    },
+    {
+      "id": "6f1c1d0e-0001-4a10-9a01-000000000004",
+      "name": "HubSpot leads",
+      "type": "n8n-nodes-base.httpRequest",
+      "typeVersion": 4.2,
+      "position": [
+        440,
+        0
+      ],
+      "parameters": {
+        "method": "POST",
+        "url": "https://api.hubapi.com/crm/v3/objects/contacts/search",
+        "authentication": "genericCredentialType",
+        "genericAuthType": "httpHeaderAuth",
+        "sendBody": true,
+        "specifyBody": "json",
+        "jsonBody": "={{ JSON.stringify({\n  filterGroups: [\n    { filters: [{ propertyName: 'gancda_received_at', operator: 'GTE', value: String($now.minus({ days: 7 }).toMillis()) }] },\n    { filters: [{ propertyName: 'gancda_approval_status', operator: 'EQ', value: 'pending' }] }\n  ],\n  properties: ['email', 'firstname', 'lastname', 'company', 'gancda_lead_score', 'gancda_source', 'gancda_language',\n    'gancda_received_at', 'gancda_ack_sent_at', 'gancda_first_reply_at', 'gancda_approval_status', 'gancda_summary'],\n  sorts: [{ propertyName: 'gancda_received_at', direction: 'DESCENDING' }],\n  limit: 100\n}) }}",
+        "options": {
+          "timeout": 30000
+        }
+      },
+      "onError": "continueRegularOutput"
+    },
+    {
+      "id": "6f1c1d0e-0001-4a10-9a01-000000000005",
+      "name": "Calendly me",
+      "type": "n8n-nodes-base.httpRequest",
+      "typeVersion": 4.2,
+      "position": [
+        660,
+        0
+      ],
+      "parameters": {
+        "url": "https://api.calendly.com/users/me",
+        "authentication": "genericCredentialType",
+        "genericAuthType": "httpHeaderAuth",
+        "options": {
+          "timeout": 30000
+        }
+      },
+      "onError": "continueRegularOutput"
+    },
+    {
+      "id": "6f1c1d0e-0001-4a10-9a01-000000000006",
+      "name": "Calendly events",
+      "type": "n8n-nodes-base.httpRequest",
+      "typeVersion": 4.2,
+      "position": [
+        880,
+        0
+      ],
+      "parameters": {
+        "url": "https://api.calendly.com/scheduled_events",
+        "authentication": "genericCredentialType",
+        "genericAuthType": "httpHeaderAuth",
+        "sendQuery": true,
+        "queryParameters": {
+          "parameters": [
+            {
+              "name": "user",
+              "value": "={{ $json.resource?.uri ?? '' }}"
+            },
+            {
+              "name": "min_start_time",
+              "value": "={{ $now.minus({ days: 7 }).toUTC().toISO() }}"
+            },
+            {
+              "name": "status",
+              "value": "active"
+            },
+            {
+              "name": "sort",
+              "value": "start_time:asc"
+            },
+            {
+              "name": "count",
+              "value": "100"
+            }
+          ]
+        },
+        "options": {
+          "timeout": 30000
+        }
+      },
+      "onError": "continueRegularOutput"
+    },
+    {
+      "id": "6f1c1d0e-0001-4a10-9a01-000000000007",
+      "name": "Build digest",
+      "type": "n8n-nodes-base.code",
+      "typeVersion": 2,
+      "position": [
+        1100,
+        0
+      ],
+      "parameters": {
+        "jsCode": "// gancda · Build digest\n// n8n Code node, mode \"Run Once for All Items\". The Monday digest workflow embeds this file\n// (gancda/build.mjs copies it into n8n/monday-digest.json).\n//\n// Reads: Settings, HubSpot leads (contacts received in the last 7 days OR waiting for approval),\n//        Calendly events (optional).\n// Writes one item: { to, subject, html } for the Gmail node.\n\nconst S = $('Settings').first().json;\nconst TZ = S.timezone || 'Asia/Tbilisi';\nconst ACK_SLA_MIN = Number(S.ack_sla_minutes) || 5;\nconst A_REPLY_SLA_H = Number(S.a_reply_sla_hours) || 24;\nconst DAY = 864e5;\nconst now = new Date();\nconst since = new Date(now.getTime() - 7 * DAY);\nconst errors = [];\n\nconst C = { ground: '#F1EEE8', card: '#FBFAF7', ink: '#111111', muted: '#5E5A54', rule: '#DDD7CC', red: '#D4202B' };\n\nfunction nodeJson(name) {\n  try {\n    return $(name).first().json;\n  } catch (err) {\n    errors.push(`${name} did not run.`);\n    return null;\n  }\n}\nconst errText = (err) =>\n  typeof err === 'string' ? err : String((err && (err.message || err.description)) || JSON.stringify(err)).slice(0, 240);\nconst toDate = (v) => {\n  if (v === null || v === undefined || v === '') return null;\n  const d = /^\\d+$/.test(String(v)) ? new Date(Number(v)) : new Date(v);\n  return isNaN(d.getTime()) ? null : d;\n};\nconst esc = (s) =>\n  String(s === null || s === undefined ? '' : s).replace(/[&<>\"']/g, (ch) => ({ '&': '&amp;', '<': '&lt;', '>': '&gt;', '\"': '&quot;', \"'\": '&#39;' })[ch]);\nconst fmt = (d, opts) => new Intl.DateTimeFormat('en-GB', { timeZone: TZ, ...opts }).format(d);\nconst day = (d) => fmt(d, { day: 'numeric', month: 'short' });\nconst when = (d) => fmt(d, { weekday: 'short', day: 'numeric', month: 'short', hour: '2-digit', minute: '2-digit', hourCycle: 'h23' });\nconst dur = (mins) => {\n  if (mins < 60) return `${Math.max(0, Math.round(mins))} min`;\n  const h = mins / 60;\n  return h < 48 ? `${Math.round(h * 10) / 10} h` : `${Math.round(h / 24)} d`;\n};\nconst median = (xs) => {\n  if (!xs.length) return null;\n  const s = [...xs].sort((a, b) => a - b);\n  const mid = Math.floor(s.length / 2);\n  return s.length % 2 ? s[mid] : (s[mid - 1] + s[mid]) / 2;\n};\n\n// ---- HubSpot ----\nconst hs = nodeJson('HubSpot leads');\nlet contacts = [];\nif (hs) {\n  if (hs.error) errors.push('HubSpot: ' + errText(hs.error));\n  else {\n    contacts = Array.isArray(hs.results) ? hs.results : [];\n    if (hs.paging && hs.paging.next) errors.push('HubSpot matched more than 100 contacts. Only the first 100 are counted.');\n  }\n}\nconst rows = contacts.map((c) => {\n  const p = c.properties || {};\n  const link = S.hubspot_portal_id\n    ? `${String(S.hubspot_app_url || 'https://app.hubspot.com').replace(/\\/$/, '')}/contacts/${S.hubspot_portal_id}/record/0-1/${c.id}`\n    : null;\n  return {\n    name: [p.firstname, p.lastname].filter(Boolean).join(' ') || p.email || '(no name)',\n    company: p.company || '',\n    score: String(p.gancda_lead_score || '').toUpperCase(),\n    source: p.gancda_source || 'email',\n    summary: p.gancda_summary || '',\n    received: toDate(p.gancda_received_at),\n    acked: toDate(p.gancda_ack_sent_at),\n    replied: toDate(p.gancda_first_reply_at),\n    approval: String(p.gancda_approval_status || '').toLowerCase(),\n    link,\n  };\n});\nconst week = rows.filter((r) => r.received && r.received >= since);\nconst pending = rows.filter((r) => r.approval === 'pending').sort((a, b) => (a.received || now) - (b.received || now));\nconst by = (s) => week.filter((r) => r.score === s);\nconst A = by('A');\nconst B = by('B');\nconst Cs = by('C');\nconst unscored = week.filter((r) => !['A', 'B', 'C'].includes(r.score));\n\n// Acknowledgment times (C is excluded: junk never gets an acknowledgment).\nconst ackable = week.filter((r) => r.score !== 'C');\nconst ackMins = ackable.filter((r) => r.acked).map((r) => (r.acked - r.received) / 6e4);\nconst ackMedian = median(ackMins);\nconst ackOver = ackMins.filter((m) => m > ACK_SLA_MIN).length;\nconst ackMissing = ackable.filter((r) => !r.acked).length;\n\n// Founder reply times for A leads.\nconst aStatus = (r) => {\n  if (r.replied) {\n    const h = (r.replied - r.received) / 36e5;\n    return { text: `Replied in ${dur(h * 60)}`, late: h > A_REPLY_SLA_H };\n  }\n  const h = (now - r.received) / 36e5;\n  return { text: `No reply yet, ${dur(h * 60)} since it arrived`, late: h > A_REPLY_SLA_H };\n};\nconst aLate = A.filter((r) => aStatus(r).late).length;\n\n// ---- Calendly (optional) ----\nconst cal = nodeJson('Calendly events');\nlet events = null;\nif (cal) {\n  if (Array.isArray(cal.collection)) events = cal.collection;\n  else if (cal.error) errors.push('Calendly: ' + errText(cal.error) + '. If you don’t use the Calendly API, disable the two Calendly nodes.');\n}\nconst booked = events ? events.filter((ev) => (toDate(ev.created_at) || 0) >= since) : [];\nconst upcoming = events\n  ? events\n      .filter((ev) => {\n        const t = toDate(ev.start_time);\n        return t && t >= now && t - now <= 7 * DAY;\n      })\n      .sort((a, b) => toDate(a.start_time) - toDate(b.start_time))\n  : [];\n\n// ---- HTML ----\nconst font = \"font-family:-apple-system,BlinkMacSystemFont,'Segoe UI',Helvetica,Arial,sans-serif;\";\nconst tile = (label, value, sub, alert) => `\n  <td width=\"50%\" style=\"padding:6px;vertical-align:top;\">\n    <div style=\"background:${C.card};border:1px solid ${alert ? C.red : C.rule};border-radius:10px;padding:14px 16px;\">\n      <div style=\"font-size:12px;color:${C.muted};\">${esc(label)}</div>\n      <div style=\"font-size:28px;font-weight:700;line-height:1.2;color:${alert ? C.red : C.ink};\">${esc(value)}</div>\n      <div style=\"font-size:12px;color:${C.muted};\">${esc(sub)}</div>\n    </div>\n  </td>`;\nconst section = (title, inner) => `\n  <tr><td style=\"padding:22px 6px 6px;\">\n    <div style=\"font-size:12px;letter-spacing:.1em;text-transform:uppercase;color:${C.muted};border-bottom:1px solid ${C.rule};padding-bottom:6px;\">${esc(title)}</div>\n    ${inner}\n  </td></tr>`;\nconst nameHtml = (r) =>\n  (r.link ? `<a href=\"${esc(r.link)}\" style=\"color:${C.ink};font-weight:600;\">${esc(r.name)}</a>` : `<b>${esc(r.name)}</b>`) +\n  (r.company ? ` <span style=\"color:${C.muted};\">· ${esc(r.company)}</span>` : '');\nconst leadRow = (r, extra) => `\n  <div style=\"padding:10px 0;border-bottom:1px solid ${C.rule};\">\n    <div>${nameHtml(r)}</div>\n    ${r.summary ? `<div style=\"font-size:14px;margin-top:2px;\">${esc(r.summary)}</div>` : ''}\n    ${extra || ''}\n  </div>`;\nconst none = (text) => `<div style=\"padding:10px 0;color:${C.muted};font-size:14px;\">${esc(text)}</div>`;\n\nconst aHtml = A.length\n  ? A.map((r) => {\n      const st = aStatus(r);\n      return leadRow(r, `<div style=\"font-size:13px;margin-top:4px;color:${st.late ? C.red : C.muted};\">${esc(st.text)}${st.late ? ` (target: ${A_REPLY_SLA_H} h)` : ''}</div>`);\n    }).join('')\n  : none('No A leads this week.');\n\nconst pendingHtml = pending.length\n  ? pending\n      .map((r) =>\n        leadRow(\n          r,\n          `<div style=\"font-size:13px;margin-top:4px;color:${C.muted};\">${esc(r.score || 'unscored')} · waiting ${r.received ? dur((now - r.received) / 6e4) : '?'}</div>`\n        )\n      )\n      .join('')\n  : none('Nothing is waiting for your approval.');\n\nconst bHtml = B.length ? B.map((r) => leadRow(r)).join('') : none('No B leads this week.');\n\nconst timesHtml = `\n  <div style=\"font-size:14px;padding:10px 0;line-height:1.6;\">\n    Acknowledgments: ${ackMins.length ? `median ${esc(dur(ackMedian))}, slowest ${esc(dur(Math.max(...ackMins)))}` : 'none sent'}${\n      ackOver ? `, <span style=\"color:${C.red};\">${ackOver} over ${ACK_SLA_MIN} min</span>` : ''\n    }${ackMissing ? `, <span style=\"color:${C.red};\">${ackMissing} lead${ackMissing > 1 ? 's' : ''} never acknowledged</span>` : ''}.<br>\n    Your replies to A leads: ${A.length ? `${A.length - aLate} of ${A.length} within ${A_REPLY_SLA_H} h` : 'no A leads'}.\n  </div>`;\n\nconst meetingsHtml =\n  events === null\n    ? none('Calendly is not connected.')\n    : (booked.length ? '' : none('No meetings booked this week.')) +\n      (upcoming.length\n        ? `<div style=\"font-size:13px;color:${C.muted};padding-top:10px;\">Coming up</div>` +\n          upcoming\n            .map((ev) => `<div style=\"font-size:14px;padding:4px 0;\">${esc(when(toDate(ev.start_time)))} · ${esc(ev.name || 'Meeting')}</div>`)\n            .join('')\n        : '');\n\nconst errorsHtml = errors.length\n  ? `<tr><td style=\"padding:18px 6px 0;\"><div style=\"border:1px solid ${C.red};border-radius:10px;padding:12px 14px;font-size:13px;\">\n       <b style=\"color:${C.red};\">Some data is missing</b><br>${errors.map(esc).join('<br>')}</div></td></tr>`\n  : '';\n\nconst range = `${day(since)} – ${day(now)}`;\nconst total = week.length;\nconst html = `<!doctype html>\n<html><head><meta charset=\"utf-8\"><meta name=\"viewport\" content=\"width=device-width,initial-scale=1\"></head>\n<body style=\"margin:0;padding:0;background:${C.ground};\">\n<table role=\"presentation\" width=\"100%\" cellpadding=\"0\" cellspacing=\"0\" style=\"background:${C.ground};\">\n<tr><td align=\"center\" style=\"padding:24px 10px;\">\n<table role=\"presentation\" width=\"100%\" cellpadding=\"0\" cellspacing=\"0\" style=\"max-width:600px;${font}color:${C.ink};\">\n  <tr><td style=\"padding:0 6px 14px;\">\n    <table role=\"presentation\" cellpadding=\"0\" cellspacing=\"0\"><tr>\n      ${S.mark_png_url ? `<td style=\"vertical-align:middle;padding-right:12px;\"><img src=\"${esc(S.mark_png_url)}\" width=\"40\" height=\"40\" alt=\"*\" style=\"display:block;border:0;\"></td>` : ''}\n      <td style=\"vertical-align:middle;\">\n        <div style=\"font-size:12px;letter-spacing:.12em;text-transform:uppercase;color:${C.muted};\">gancda · Monday digest</div>\n        <div style=\"font-size:22px;font-weight:700;\">${esc(range)}</div>\n      </td>\n    </tr></table>\n  </td></tr>\n  ${errorsHtml}\n  <tr><td style=\"padding-top:8px;\">\n    <table role=\"presentation\" width=\"100%\" cellpadding=\"0\" cellspacing=\"0\">\n      <tr>${tile('New leads', String(total), `${A.length} A · ${B.length} B · ${Cs.length} C${unscored.length ? ` · ${unscored.length} unscored` : ''}`, false)}\n          ${tile('Waiting on you', String(pending.length), pending.length ? 'drafts to approve' : 'all clear', pending.length > 0)}</tr>\n      <tr>${tile('Meetings booked', events === null ? '–' : String(booked.length), events === null ? 'Calendly not connected' : `${upcoming.length} in the next 7 days`, false)}\n          ${tile('Acknowledgment time', ackMedian === null ? '–' : dur(ackMedian), ackMins.length ? (ackOver ? `${ackOver} over ${ACK_SLA_MIN} min` : `all within ${ACK_SLA_MIN} min`) : 'none sent', ackOver > 0 || ackMissing > 0)}</tr>\n    </table>\n  </td></tr>\n  ${section('A leads', aHtml)}\n  ${section('Waiting on you', pendingHtml)}\n  ${section('B leads', bHtml)}\n  ${section('Response times', timesHtml)}\n  ${section('Meetings', meetingsHtml)}\n  <tr><td style=\"padding:26px 6px 0;font-size:12px;color:${C.muted};\">\n    ${Cs.length} C message${Cs.length === 1 ? '' : 's'} logged and archived. Sent by the n8n “gancda · Monday digest” workflow.\n  </td></tr>\n</table>\n</td></tr></table>\n</body></html>`;\n\nconst subject =\n  `gancda weekly · ${A.length} A / ${B.length} B / ${Cs.length} C` +\n  (pending.length ? ` · ${pending.length} waiting on you` : '') +\n  (errors.length ? ' · some data missing' : '');\n\nreturn [{ json: { to: S.founder_email, subject, html } }];\n"
+      }
+    },
+    {
+      "id": "6f1c1d0e-0001-4a10-9a01-000000000008",
+      "name": "Send to founder",
+      "type": "n8n-nodes-base.gmail",
+      "typeVersion": 2.1,
+      "position": [
+        1320,
+        0
+      ],
+      "parameters": {
+        "operation": "send",
+        "sendTo": "={{ $json.to }}",
+        "subject": "={{ $json.subject }}",
+        "emailType": "html",
+        "message": "={{ $json.html }}",
+        "options": {
+          "appendAttribution": false
+        }
+      }
+    }
+  ],
+  "connections": {
+    "Monday 09:00": {
+      "main": [
+        [
+          {
+            "node": "Settings",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Settings": {
+      "main": [
+        [
+          {
+            "node": "HubSpot leads",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "HubSpot leads": {
+      "main": [
+        [
+          {
+            "node": "Calendly me",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Calendly me": {
+      "main": [
+        [
+          {
+            "node": "Calendly events",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Calendly events": {
+      "main": [
+        [
+          {
+            "node": "Build digest",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Build digest": {
+      "main": [
+        [
+          {
+            "node": "Send to founder",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    }
+  },
+  "active": false,
+  "settings": {
+    "executionOrder": "v1",
+    "timezone": "Asia/Tbilisi"
+  },
+  "pinData": {}
+}

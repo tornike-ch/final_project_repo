@@ -1,0 +1,41 @@
+The automatic acknowledgment. This is the ONLY message that goes out without the founder's approval.
+It is fixed text, never written by the AI, so nothing a sender writes can change what goes out.
+Send it as a plain-text reply in the sender's thread. Fill the {{…}} values once, in the n8n "Send acknowledgment" node.
+Add the header  Auto-Submitted: auto-replied  so other autoresponders don't answer it.
+
+Subject: Re: {{original subject}}        (Tally form submissions: "gancda · მივიღეთ / Received")
+
+----------------------------------------------------------------
+გამარჯობა,
+
+მადლობა, რომ მოგვწერეთ. თქვენი წერილი მივიღეთ და დამფუძნებელი პირადად გიპასუხებთ ერთი სამუშაო დღის განმავლობაში.
+
+მანამდე შეგიძლიათ ნახოთ, როგორ ვმუშაობთ:
+• ომაკასე: {{DEMO_OMAKASE_URL}}
+• სუფრა: {{DEMO_SUPRA_URL}}
+
+თუ საუბარი გირჩევნიათ, აირჩიეთ თქვენთვის მოსახერხებელი დრო: {{CALENDLY_URL}}
+
+gancda
+hello@gancda.com · gancda.com
+
+—
+
+Hello,
+
+Thank you for writing. Your message is with us, and the founder will reply to you personally within one working day.
+
+In the meantime, you can see how we work:
+• Omakase: {{DEMO_OMAKASE_URL}}
+• Supra: {{DEMO_SUPRA_URL}}
+
+If you'd rather talk, pick a time that suits you: {{CALENDLY_URL}}
+
+gancda
+hello@gancda.com · gancda.com
+
+ეს ავტომატური დადასტურებაა, ყველა წერილს ადამიანი კითხულობს.
+This is an automatic confirmation. A person reads every message.
+----------------------------------------------------------------
+
+"Within one working day" is a placeholder. Change it in both languages to the founder-reply time in the Sales Workflow SLA table, and keep it equal to a_reply_sla_hours in the Monday digest settings.

@@ -1,0 +1,10 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 100 100" role="img" aria-label="gancda seal">
+  <!-- The asterisk as a stamp: seal red #D4202B (use #EC3640 on dark grounds). -->
+  <circle cx="50" cy="50" r="45" fill="none" stroke="#D4202B" stroke-width="5"/>
+  <g fill="#D4202B">
+    <rect x="45.5" y="17" width="9" height="66"/>
+    <rect x="45.5" y="17" width="9" height="66" transform="rotate(45 50 50)"/>
+    <rect x="45.5" y="17" width="9" height="66" transform="rotate(90 50 50)"/>
+    <rect x="45.5" y="17" width="9" height="66" transform="rotate(135 50 50)"/>
+  </g>
+</svg>

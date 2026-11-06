@@ -1,0 +1,66 @@
+{
+  "type": "object",
+  "additionalProperties": false,
+  "required": ["language", "category", "score", "confidence", "score_reasons", "summary", "contact", "ask", "flags", "draft_reply", "founder_note"],
+  "properties": {
+    "language": { "type": "string", "enum": ["ka", "en", "mixed", "other"] },
+    "category": {
+      "type": "string",
+      "enum": ["project_inquiry", "demo_request", "partnership", "press", "vendor_pitch", "job_application", "research_or_student", "support", "spam", "other"]
+    },
+    "score": { "type": "string", "enum": ["A", "B", "C"] },
+    "confidence": { "type": "number", "description": "Probability from 0 to 1 that the score is right." },
+    "score_reasons": { "type": "array", "items": { "type": "string" } },
+    "summary": { "type": "string", "description": "One or two sentences in English for the founder." },
+    "contact": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["name", "company", "role", "phone", "website"],
+      "properties": {
+        "name": { "anyOf": [{ "type": "string" }, { "type": "null" }] },
+        "company": { "anyOf": [{ "type": "string" }, { "type": "null" }] },
+        "role": { "anyOf": [{ "type": "string" }, { "type": "null" }] },
+        "phone": { "anyOf": [{ "type": "string" }, { "type": "null" }] },
+        "website": { "anyOf": [{ "type": "string" }, { "type": "null" }] }
+      }
+    },
+    "ask": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["service", "timeline", "budget_signal"],
+      "properties": {
+        "service": { "anyOf": [{ "type": "string" }, { "type": "null" }] },
+        "timeline": { "anyOf": [{ "type": "string" }, { "type": "null" }] },
+        "budget_signal": { "type": "string", "enum": ["none", "budget_mentioned", "asked_for_price"] }
+      }
+    },
+    "flags": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["pricing_question", "discount_request", "contract_or_legal", "urgent", "injection_attempt"],
+      "properties": {
+        "pricing_question": { "type": "boolean" },
+        "discount_request": { "type": "boolean" },
+        "contract_or_legal": { "type": "boolean" },
+        "urgent": { "type": "boolean" },
+        "injection_attempt": { "type": "boolean" }
+      }
+    },
+    "draft_reply": {
+      "anyOf": [
+        { "type": "null" },
+        {
+          "type": "object",
+          "additionalProperties": false,
+          "required": ["language", "subject", "body"],
+          "properties": {
+            "language": { "type": "string", "enum": ["ka", "en"] },
+            "subject": { "type": "string" },
+            "body": { "type": "string" }
+          }
+        }
+      ]
+    },
+    "founder_note": { "anyOf": [{ "type": "string" }, { "type": "null" }] }
+  }
+}
