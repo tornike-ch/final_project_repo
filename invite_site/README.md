@@ -10,6 +10,20 @@ icon is inline SVG. All brands, names and figures on the page are demo data.
 A lesson-type template can set `glab` to rename the lesson labels per language (the campaign demo
 uses it to turn the certificate into a coupon).
 
+## The story (top of the page)
+
+The page opens with an illustrated story you scroll through: a paper plane Nini sends from her
+balcony crosses Tbilisi and passes the four things Gancda makes (a lesson, a first day at work, a
+brand game, an event), ending at a long table where everyone it met has come. Light mode tells the
+day story; dark mode is the same town at night with its own story (a library before an exam, a
+bakery night shift, a night market, fireworks on a rooftop), its own props, lit windows, stars and
+fireflies. The sun/moon in the sky switches between them. Tapping people makes them jump; tapping
+the sky throws confetti by day and fireworks by night.
+
+Sources: `src/story.css` and `src/story.js` (the whole town is drawn in code as SVG layers that move
+at different speeds). After editing them run `python3 invite_site/tools/build_story.py`, which
+copies them into `public/index.html` between markers.
+
 ## Layout
 
 ```
@@ -27,6 +41,7 @@ invite_site/
     api/admin/experiences/[grp].js  GET results per person; PATCH on/off; DELETE
     e/[slug].js                GET   /e/:code serves the page, which opens the player
   lib/                     shared helpers: schema, auth, results queries
+  src/story.css, story.js  the illustrated scroll story, inlined by tools/build_story.py
 ```
 
 ## Run it
