@@ -56,7 +56,7 @@ const nodes = [
         setting('s4', 'hubspot_app_url', 'https://app.hubspot.com'),
         setting('s5', 'ack_sla_minutes', 5, 'number'),
         setting('s6', 'a_reply_sla_hours', 24, 'number'),
-        setting('s7', 'mark_png_url', 'https://gancda.com/brand/asterisk-seal-120.png'),
+        setting('s7', 'mark_png_url', 'https://gancda.com/brand/gancda-mark-120.png'),
       ],
     },
     options: {},

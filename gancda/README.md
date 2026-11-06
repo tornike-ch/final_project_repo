@@ -6,7 +6,7 @@ Two pieces for hello@gancda.com, built for **n8n**: its workflows import as a fi
 |---|---|---|
 | **1. Monday 09:00 digest** | `n8n/monday-digest.json` (import this) | Ready. Needs credentials and four settings. |
 | **2. LLM prompt bundle** for the email flow | `prompts/` + `n8n/snippets/` | Ready to wire in. Four slots wait for Brand Bible / Sales Workflow text. |
-| Brand mark | `brand/asterisk.svg`, `brand/asterisk-seal.svg`, `brand/asterisk-seal-120.png` | The eight-spoke asterisk, flat and as a seal-red stamp. |
+| Brand mark | `brand/asterisk.svg`, `brand/asterisk-seal.svg`, `brand/gancda-mark-120.png` | The eight-spoke asterisk, flat and as a seal-red stamp. |
 
 The code was tested against mock Gmail, Tally, Claude, HubSpot and Calendly data. It has not run inside n8n or against the live APIs, so do the test runs below before switching anything on.
 
@@ -22,7 +22,7 @@ Every Monday at 09:00 Tbilisi time, the founder gets one email with four headlin
 3. **HubSpot leads**: new *Header Auth* credential, Name `Authorization`, Value `Bearer <private-app token>`. Read scope `crm.objects.contacts.read` is enough here. The email flow also needs `.write`.
 4. **Calendly me** and **Calendly events**: *Header Auth*, Name `Authorization`, Value `Bearer <Calendly personal access token>`. Not using Calendly's API? Disable both nodes and the digest still sends, with the meetings tile showing "–".
 5. **Send to founder**: connect Gmail.
-6. Upload `brand/asterisk-seal-120.png` to `gancda.com/brand/` (or change `mark_png_url`). Gmail doesn't display images embedded as data URIs, so the mark must be hosted.
+6. Upload `brand/gancda-mark-120.png` to `gancda.com/brand/` (or change `mark_png_url`). Gmail doesn't display images embedded as data URIs, so the mark must be hosted.
 7. *Execute workflow* once, check the email, then toggle *Active*.
 
 If HubSpot or Calendly fails, the digest still arrives. A red "Some data is missing" box says what broke, and the subject line says so too, so a broken connection can't go unnoticed.
