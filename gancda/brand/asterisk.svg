@@ -1,9 +1,0 @@
-<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 100 100" role="img" aria-label="gancda asterisk">
-  <!-- Eight-spoke asterisk: four flat-ended bars crossing at the centre. Inherits text colour when inlined. -->
-  <g fill="currentColor">
-    <rect x="43.5" y="4" width="13" height="92"/>
-    <rect x="43.5" y="4" width="13" height="92" transform="rotate(45 50 50)"/>
-    <rect x="43.5" y="4" width="13" height="92" transform="rotate(90 50 50)"/>
-    <rect x="43.5" y="4" width="13" height="92" transform="rotate(135 50 50)"/>
-  </g>
-</svg>
