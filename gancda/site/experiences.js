@@ -32,8 +32,8 @@
     build: p('UMI აკადემია: პირველი ცვლის გაკვეთილი მზადაა.', 'UMI Academy: your first-shift lesson is ready.'),
     spot: p('სასტუმრო ლილა: ოთახი 214 სტუმრის მოსვლამდე უნდა მოამზადო.', 'Hotel Lila: room 214 needs you before the guest arrives.'),
     swipe: p('სახლი · სამზარეულო: 45 წამი, 6 სიტუაცია. მზად ხარ?', 'Sakhli Kitchen: 45 seconds, six situations. Ready?'),
-    buddy: p('ნინო, Orbita: გამარჯობა, გიორგი! 👋', 'Nino, Orbita: Hi Giorgi! 👋'),
-    map: p('ბაზარი: ორშაბათს იწყებ. გაიარე მაღაზია ახლავე.', 'Bazari: you start on Monday. Take the store tour now.'),
+    ask: p('Orbita: მოგესალმებით გუნდში! ვის რა ჰკითხო?', 'Orbita: welcome to the team! Who do you ask what?'),
+    shift: p('ბაზარი: ორშაბათს იწყებ. დაგეგმე პირველი ცვლა.', 'Bazari: you start on Monday. Plan your first shift.'),
     scratch: p('ცისკარი: ფხეკის ბარათი გელოდება ☕', 'Tsiskari: a scratch card is waiting for you ☕'),
     seats: p('Meridian: 1 მოსაწვევი', 'Meridian: 1 invitation'),
     omakase: p('ლუკა: შენთვის რაღაც პატარა დავჯავშნე.', 'Luka: I booked a little something for you.'),
@@ -53,7 +53,7 @@
       audience: p('ახალი თანამშრომლები','New hires'), outcome: p('პირველი დღისთვის მზადყოფნა','First-day readiness'),
       report: p('პირველ შეხვედრამდე გაიგეთ, ვინ გაიცნო გუნდი და ვის სჭირდება დამატებითი დახმარება.', 'See who has met the team and checked the essentials before they arrive.'),
       metrics: [[p('მზადაა პირველი დღისთვის','Ready before day one'),'9','/ 10'],[p('გაიცნო გუნდი','Met the team'),'100','%'],[p('წესების ცოდნა','Rules check score'),'92','%'],[p('მიღებული სამკერდე ნიშანი','Badges earned'),'9','']],
-      demos: ['buddy', 'map'],
+      demos: ['ask', 'shift'],
     },
     engage: {
       label: p('კამპანია','Campaigns'),
@@ -77,8 +77,8 @@
     build: p('გადაიტანე ინგრედიენტები და ააწყე შეკვეთა', 'Drag ingredients to build each order'),
     spot: p('იპოვე შეცდომები ოთახში დროზე', 'Find the mistakes in a room against the clock'),
     swipe: p('გადაწიე ბარათები მარჯვნივ ან მარცხნივ', 'Swipe cards right or left'),
-    buddy: p('ჩატი ბადისთან და თამაში „ვინ ვინაა“', 'A chat with your buddy and a memory game'),
-    map: p('გახსენი ოთახები მაღაზიის რუკაზე', 'Open rooms on the store map'),
+    ask: p('გაავლე ხაზი პრობლემიდან სწორ ადამიანამდე', 'Draw a line from each problem to the right person'),
+    shift: p('დაალაგე პირველი ცვლა სწორი თანმიმდევრობით', 'Tap your first shift into the right order'),
     scratch: p('გაფხეკე, შეაგროვე ბეჭდები, მიიღე კუპონი', 'Scratch, collect stamps, get a coupon'),
     seats: p('აირჩიე ადგილი დარბაზის გეგმაზე', 'Pick your seat on the floor plan'),
     omakase: p('გახსენი ფარდა და მიიღე ბილეთი', 'Open the curtain and get your ticket'),
@@ -101,7 +101,7 @@
 
   let lang = document.documentElement.lang === 'en' ? 'en' : 'ka';
   let active = 'learn';
-  const pick = { learn: 'build', onboard: 'buddy', engage: 'scratch', attend: 'seats' };
+  const pick = { learn: 'build', onboard: 'ask', engage: 'scratch', attend: 'seats' };
   let modal, sourceFocus, preview = null, player = null;
   const t = text => typeof text === 'object' ? text[lang] : text;
   const keys = Object.keys(cases);

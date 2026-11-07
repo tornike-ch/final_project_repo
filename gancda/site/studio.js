@@ -31,7 +31,7 @@
   function effectiveTheme(){
     const set = root.getAttribute('data-theme');
     if (set === 'dark' || set === 'light') return set;
-    return window.matchMedia && matchMedia('(prefers-color-scheme: dark)').matches ? 'dark' : 'light';
+    return 'light';
   }
   function paintThemeButton(){
     const dark = effectiveTheme() === 'dark';
@@ -39,6 +39,15 @@
       b.querySelector('use').setAttribute('href', dark ? '#sun' : '#moon');
       b.setAttribute('aria-label', words[lang][dark ? 'toLight' : 'toDark']);
     });
+  }
+  /* the Georgian lockup in Georgian, the kit's Latin logo in English; aubergine on light, cream and lime on dark */
+  function paintLogo(){
+    const dark = effectiveTheme() === 'dark';
+    document.querySelectorAll('img.logo').forEach(img => {
+      img.src = 'assets/' + (lang === 'ka' ? (dark ? 'gancda-lockup-ka.png' : 'gancda-lockup-ka-light.png') : (dark ? 'gancda-primary-dark.svg' : 'gancda-primary-light.svg'));
+      img.alt = lang === 'ka' ? 'განცდა' : 'gancda';
+    });
+    const tc = document.querySelector('meta[name="theme-color"]'); if (tc) tc.content = dark ? '#1A0B2E' : '#F8F4EB';
   }
   function paintMenuButton(){
     const b = document.getElementById('menuToggle'); if (!b) return;
@@ -55,7 +64,7 @@
     document.querySelectorAll('[data-lang]').forEach(b => b.setAttribute('aria-pressed', String(b.dataset.lang === lang)));
     paintThemeButton(); paintMenuButton();
     /* the Georgian lockup in Georgian, the kit's Latin logo in English */
-    document.querySelectorAll('img.logo').forEach(img => { img.src = lang === 'ka' ? 'assets/gancda-lockup-ka.png' : 'assets/gancda-primary-dark.svg'; img.alt = lang === 'ka' ? 'განცდა' : 'gancda'; });
+    paintLogo();
     window.GancdaDemos?.setLanguage(lang);
     window.GancdaExperiences?.setLanguage(lang);
     window.GancdaProject?.setLanguage(lang);
@@ -67,9 +76,8 @@
     if (saved === 'dark' || saved === 'light') root.setAttribute('data-theme', saved);
     document.querySelectorAll('#themeToggle,[data-theme-toggle]').forEach(b => b.addEventListener('click', () => {
       const next = effectiveTheme() === 'dark' ? 'light' : 'dark';
-      root.setAttribute('data-theme', next); store.set('theme', next); paintThemeButton();
+      root.setAttribute('data-theme', next); store.set('theme', next); paintThemeButton(); paintLogo();
     }));
-    window.matchMedia?.('(prefers-color-scheme: dark)').addEventListener('change', paintThemeButton);
     document.querySelectorAll('[data-lang]').forEach(b => b.addEventListener('click', () => { if (b.dataset.lang !== lang) setLanguage(b.dataset.lang); }));
     const menu = document.getElementById('menuToggle'), nav = document.getElementById('mainNav');
     const closeMenu = () => { if (!nav) return; nav.classList.remove('open'); menu?.setAttribute('aria-expanded', 'false'); paintMenuButton(); };

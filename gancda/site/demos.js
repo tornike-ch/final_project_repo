@@ -876,179 +876,153 @@ class Build extends Demo {
   }
 }
 
-/* ---------- 4 · a buddy chat with a memory game inside; the team photo assembles as you match ---------- */
-const CH = {
-  ka:{online:'ონლაინ', typing:'წერს', msg:'შეტყობინება', voiceT:'„ყველა ელოდება შენს გაცნობას. ორშაბათს ტორტი გვექნება.“', memH:'ვინ ვინაა?', memP:'გადააბრუნე ორი ბარათი: სახე და სახელი.', moves:'{n} სვლა', card:'ბარათი {n}',
-      pass:'პირველი დღე', role:'პროდუქტის დიზაინერი', day:'დაწყება', dayV:'ორშაბათი, 9:30', coffee:'ყავა ნინოსთან', desk:'მაგიდა', floor:'სართული', again:'ჩატის თავიდან დაწყება', play:'ხმოვანის მოსმენა',
-      wallet:'საფულეში დამატება', inWallet:'საფულეშია', photo:'გუნდის ფოტო'},
-  en:{online:'online', typing:'typing', msg:'Message', voiceT:'“Everyone can’t wait to meet you. There’ll be cake on Monday.”', memH:'Who’s who?', memP:'Flip two cards: a face and a name.', moves:'{n} moves', card:'Card {n}',
-      pass:'Day one', role:'Product Designer', day:'Starts', dayV:'Monday, 9:30', coffee:'Coffee with Nino', desk:'Desk', floor:'Floor', again:'Restart the chat', play:'Play the voice note',
-      wallet:'Add to Wallet', inWallet:'In your wallet', photo:'Team photo'}
+/* ---------- 4 · who do you ask? Draw a line from each first-day problem to the person who helps; they answer ---------- */
+const LK = {
+  ka:{how:'გაავლე ხაზი პრობლემიდან იმ ადამიანამდე, ვინც დაგეხმარება. შეგიძლია ორივეს შეეხო.', wrong:'{p} ამაში ვერ დაგეხმარება. სცადე სხვა.', people:'შენი ხალხი', first:'პირველივე ცდით: {n} / {m}',
+      save:'კონტაქტების შენახვა', saved:'კონტაქტებში შენახულია', board:'პრობლემები და ადამიანები', ask:'ვის ჰკითხავ?'},
+  en:{how:'Draw a line from each problem to the person who can help. Or tap one, then the other.', wrong:'{p} can’t help with that one. Try someone else.', people:'Your people', first:'Right first time: {n} of {m}',
+      save:'Save contacts', saved:'Saved to contacts', board:'Problems and people', ask:'Who do you ask?'}
 };
-const MAPART = '<svg viewBox="0 0 200 84" aria-hidden="true"><rect width="200" height="84" fill="#E3EAF3"/><path d="M0 58H200M70 0V84M142 0V84M0 22 200 38" stroke="#FFFFFF" stroke-width="8"/>'+
-  '<rect x="82" y="44" width="46" height="12" rx="3" fill="#CFE3D4"/><path d="M106 12a10 10 0 0 1 10 10c0 8-10 18-10 18s-10-10-10-18a10 10 0 0 1 10-10z" fill="#2F5BD3"/><circle cx="106" cy="22" r="3.5" fill="#fff"/></svg>';
-const WAVE = [6,10,16,9,13,18,8,12,17,11,7,14,10,16,9,6,12,8].map((h, i) => '<i style="--h:'+h+'px;--d:'+(i * .05).toFixed(2)+'s"></i>').join('');
-const REACT = ['❤️', '👍', '😄', '🙌', '✨'];
-class Chat extends Demo {
-  init(){ const sc = this.t.script; this.shown = 0; return {log:[{w:'b', k:'text', v:sc.hello[0]}, {w:'b', k:'text', v:sc.hello[1]}], ch:'nerv', typing:false, coffee:'', desk:'', mem:null, playing:false, heard:false, wallet:false, rNew:-1}; }
-  say(list, next){
-    const s = this.s; s.ch = null; let k = 0;
-    const step = () => {
-      if (k >= list.length){ s.typing = false; s.ch = next; this.render(); return; }
-      s.typing = true; this.render();
-      this.later(() => { s.typing = false; s.log.push(list[k++]); sfx('pop'); this.render(); if (list[k - 1].k === 'pass'){ this.later(() => sfx('ding'), reduced() ? 0 : 500); this.won(); } this.later(step, reduced() ? 0 : 320); }, reduced() ? 0 : 750);
+class Link extends Demo {
+  init(){ const n = this.t.pairs.length; return {got:[], sel:-1, tries:Array(n).fill(0), bad:null, done:false, just:-1, say:-1, right:shuffle([...Array(n).keys()]), saved:false, all:false}; }
+  bind(){
+    let d = null;
+    const board = () => this.q('.lk-board');
+    const pt = e => { const r = board().getBoundingClientRect(); return {x:e.clientX - r.left, y:e.clientY - r.top}; };
+    this.el.addEventListener('pointerdown', e => {
+      const q = e.target.closest('.lk-q'); if (!q || this.s.done || q.classList.contains('got')) return;
+      d = {q:+q.dataset.q, pid:e.pointerId, x:e.clientX, y:e.clientY, moved:false};
+      try { q.setPointerCapture(e.pointerId); } catch (err) {}
+    });
+    this.el.addEventListener('pointermove', e => {
+      if (!d || e.pointerId !== d.pid) return;
+      if (!d.moved && Math.hypot(e.clientX - d.x, e.clientY - d.y) < 8) return;
+      d.moved = true;
+      const svg = this.q('.lk-lines'), a = this.dot('.lk-q[data-q="'+d.q+'"] .dot'), b = pt(e); if (!svg || !a) return;
+      let l = svg.querySelector('.drag'); if (!l){ svg.insertAdjacentHTML('beforeend', '<path class="drag"/>'); l = svg.lastElementChild; }
+      l.setAttribute('d', this.curve(a, b));
+      this.el.querySelectorAll('.lk-p.hover').forEach(x => x.classList.remove('hover'));
+      const over = document.elementFromPoint(e.clientX, e.clientY), p = over && over.closest && over.closest('.lk-p'); if (p) p.classList.add('hover');
+    });
+    const end = e => {
+      if (!d || e.pointerId !== d.pid) return;
+      const x = d; d = null; const l = this.q('.lk-lines .drag'); if (l) l.remove();
+      if (!x.moved || e.type === 'pointercancel') return;
+      this.skip = Date.now();
+      const over = document.elementFromPoint(e.clientX, e.clientY), p = over && over.closest && over.closest('.lk-p');
+      if (p) this.connect(x.q, +p.dataset.p); else this.render();
     };
-    this.later(step, 250);
+    this.el.addEventListener('pointerup', end); this.el.addEventListener('pointercancel', end);
+    window.addEventListener('resize', () => { if (this.el.isConnected && !this.s.done) this.lines(); });
   }
-  newMem(){ const c = []; this.t.team.forEach((p, i) => { c.push({p:i, f:'face'}); c.push({p:i, f:'name'}); }); return {cards:shuffle(c), open:[], got:[], moves:0, lock:false, done:false, just:-1}; }
-  voice(){
-    const s = this.s; if (s.playing) return; s.playing = true; this.render();
-    let ended = false; const stop = () => { if (ended) return; ended = true; s.playing = false; s.heard = true; this.render(); };
-    /* the note speaks, where the browser has a voice for the language; otherwise it plays as a waveform */
-    try {
-      const ss = window.speechSynthesis, want = lang === 'ka' ? 'ka' : 'en';
-      const v = ss && ss.getVoices().find(x => x.lang && x.lang.toLowerCase().startsWith(want));
-      if (ss && v && soundOn){ const u = new SpeechSynthesisUtterance(CH[lang].voiceT.replace(/[“”„"]/g, '')); u.voice = v; u.lang = v.lang; u.rate = 1.04; u.pitch = 1.1; u.onend = stop; ss.cancel(); ss.speak(u); this.later(stop, 6000); return; }
-    } catch (e) {}
-    this.later(stop, reduced() ? 0 : 2600);
-  }
+  dot(sel){ const b = this.q('.lk-board'), el = this.q(sel); if (!b || !el) return null; const r = b.getBoundingClientRect(), o = el.getBoundingClientRect(); return {x:o.left + o.width / 2 - r.left, y:o.top + o.height / 2 - r.top}; }
+  curve(a, b){ const m = (a.x + b.x) / 2; return 'M'+a.x.toFixed(1)+' '+a.y.toFixed(1)+'C'+m.toFixed(1)+' '+a.y.toFixed(1)+' '+m.toFixed(1)+' '+b.y.toFixed(1)+' '+b.x.toFixed(1)+' '+b.y.toFixed(1); }
   act(a, b){
-    const s = this.s, sc = this.t.script;
-    if (a === 'voice') return this.voice();
-    if (a === 'flip') return this.flip(+b.dataset.c);
-    if (a === 'wallet'){ if (s.wallet) return; s.wallet = true; sfx('ding'); buzz([10, 40, 10]); this.render(); return; }
-    if (a !== 'opt' || !s.ch) return;
-    const i = +b.dataset.i, B = (v, k) => ({w:'b', k:k || 'text', v}), U = v => s.log.push({w:'u', k:'text', v});
-    /* the buddy reacts to your answer with an emoji on her last message */
-    if (s.ch !== 'end'){ for (let k = s.log.length - 1; k >= 0; k--) if (s.log[k].w === 'b' && s.log[k].k === 'text'){ s.log[k].r = REACT[s.log.length % REACT.length]; s.rNew = k; break; } sfx('tap'); this.step(1); }
-    if (s.ch === 'nerv'){ U(sc.nerv[i][0]); this.say([B(sc.nerv[i][1]), B(sc.coffeeQ)], 'coffee'); }
-    else if (s.ch === 'coffee'){ s.coffee = sc.coffeeA[i]; U(sc.coffeeA[i]); this.say([B(sc.coffeeR), B(null, 'loc'), B(sc.deskQ)], 'desk'); }
-    else if (s.ch === 'desk'){ s.desk = sc.deskA[i][1]; U(sc.deskA[i][0]); this.say([B(sc.deskR), B(sc.team), B(null, 'team'), B(null, 'voice'), B(sc.gameQ)], 'game'); }
-    else if (s.ch === 'game'){ U(sc.gameA); s.ch = null; this.step(2); this.later(() => { s.mem = this.newMem(); sfx('whoosh'); this.render(); }, reduced() ? 0 : 450); }
-    else if (s.ch === 'end') return this.reset();
-    this.render();
+    const s = this.s;
+    if (a === 'again') return this.reset();
+    if (a === 'save'){ if (s.saved) return; s.saved = true; sfx('ding'); buzz([10, 40, 10]); b.setAttribute('aria-pressed', 'true'); b.innerHTML = ic('check')+esc(LK[lang].saved); return; }
+    if (s.done || (this.skip && Date.now() - this.skip < 400)) return;
+    if (a === 'q'){ const q = +b.dataset.q; if (s.got.includes(q)) return; s.sel = s.sel === q ? -1 : q; sfx('tap'); this.render(); }
+    else if (a === 'p'){ if (s.sel < 0){ sfx('tap'); return; } this.connect(s.sel, +b.dataset.p); }
   }
-  flip(c){
-    const m = this.s.mem; if (!m || m.lock || m.done) return;
-    const card = m.cards[c]; if (m.got.includes(card.p) || m.open.includes(c)) return;
-    m.open.push(c); sfx('flip');
-    if (m.open.length < 2) return this.render();
-    m.moves++;
-    const [x, y] = m.open.map(i => m.cards[i]);
-    if (x.p === y.p){
-      m.got.push(x.p); m.just = x.p; m.open = []; this.render(); m.just = -1; this.good(); this.burst(8);
-      if (m.got.length === this.t.team.length){
-        m.done = true; const sc = this.t.script;
-        this.later(() => { const ph = this.q('.ch-photo'); if (ph) ph.classList.add('snap'); sfx('shutter'); }, reduced() ? 0 : 450);
-        this.later(() => { this.render(); this.burst(30); this.say([{w:'b', k:'text', v:sc.won}, {w:'b', k:'text', v:sc.bye}, {w:'b', k:'pass'}], 'end'); }, reduced() ? 0 : 1300);
+  connect(q, p){
+    const s = this.s, t = this.t; if (s.got.includes(q)) return;
+    this.step(1); s.sel = -1;
+    if (q === p){
+      s.got.push(q); s.just = q; s.say = p; s.bad = null; this.good(); this.render(); this.step(2);
+      if (s.got.length === t.pairs.length){
+        s.all = true; this.later(() => { const bd = this.q('.lk-board'); if (bd) bd.classList.add('all'); sfx('win'); }, reduced() ? 0 : 900);
+        this.later(() => this.finish(), reduced() ? 300 : 2300);
       }
-      return;
+    } else {
+      s.tries[q]++; s.bad = {q, p}; s.say = -1; this.bad(); this.render();
+      this.later(() => { if (s.bad && s.bad.q === q){ s.bad = null; this.lines(); } }, 700);
     }
-    m.lock = true; this.render(); buzz(20);
-    this.later(() => { m.open = []; m.lock = false; this.render(); }, 850);
+  }
+  finish(){ const s = this.s; if (s.done) return; s.done = true; this.render(); this.thud(500); this.later(() => this.burst(36), reduced() ? 0 : 700); this.won(); }
+  lines(){
+    const s = this.s, svg = this.q('.lk-lines'); if (!svg) return;
+    let h = '';
+    s.got.forEach((q, k) => { const a = this.dot('.lk-q[data-q="'+q+'"] .dot'), b = this.dot('.lk-p[data-p="'+q+'"] .dot'); if (a && b) h += '<path class="ok'+(s.just === q ? ' just' : '')+'" pathLength="1" style="--k:'+k+'" d="'+this.curve(a, b)+'"/>'; });
+    if (s.bad){ const a = this.dot('.lk-q[data-q="'+s.bad.q+'"] .dot'), b = this.dot('.lk-p[data-p="'+s.bad.p+'"] .dot'); if (a && b) h += '<path class="no" d="'+this.curve(a, b)+'"/>'; }
+    svg.innerHTML = h;
   }
   render(){
-    const t = this.t, s = this.s, g = CH[lang], sc = t.script;
-    const vars = {to:tx(t.to), time:s.coffee || '10:00', desk:s.desk, moves:s.mem ? s.mem.moves : 0};
-    const T = v => esc(fill(tx(v), vars)), seen = this.shown || 0;
-    const msg = (m, i) => {
-      const nw = i >= seen ? ' new' : '', r = m.r ? '<span class="ch-r'+(s.rNew === i ? ' pop' : '')+'">'+m.r+'</span>' : '';
-      if (m.k === 'text') return '<div class="ch-m '+m.w+nw+'"><p>'+T(m.v)+'</p>'+r+'</div>';
-      if (m.k === 'loc') return '<div class="ch-m b card'+nw+'"><div class="ch-map">'+MAPART+'</div><p><b>'+T(sc.loc.t)+'</b><small>'+T(sc.loc.d)+'</small></p></div>';
-      if (m.k === 'team') return '<div class="ch-m b card'+nw+'"><div class="ch-team">'+t.team.map(p => '<span>'+face(p)+'<small>'+esc(tx(p.n))+'</small></span>').join('')+'</div></div>';
-      if (m.k === 'voice') return '<div class="ch-m b'+nw+'"><button type="button" class="ch-voice'+(s.playing ? ' on' : '')+'" data-act="voice" aria-label="'+esc(g.play)+'">'+ic('play')+'<span class="wave">'+WAVE+'</span><small>0:04</small></button>'+(s.heard ? '<p class="ch-tr">'+esc(g.voiceT)+'</p>' : '')+'</div>';
-      return '<div class="ch-passw'+nw+(s.wallet ? ' saved' : '')+'"><div class="ch-pass"><div class="ch-pass-band"><span>'+esc(tx(t.co))+'</span><span>'+esc(g.pass)+'</span></div><div class="ch-pass-in">'+face(t.me)+
-        '<div><b>'+esc(tx(t.to))+'</b><small>'+esc(g.role)+'</small></div><dl><div><dt>'+esc(g.day)+'</dt><dd>'+esc(g.dayV)+'</dd></div><div><dt>'+esc(g.coffee)+'</dt><dd>'+esc(vars.time)+'</dd></div>'+
-        '<div><dt>'+esc(g.desk)+'</dt><dd>'+esc(s.desk)+'</dd></div><div><dt>'+esc(g.floor)+'</dt><dd>5</dd></div></dl></div><i class="ch-holo" aria-hidden="true"></i></div>'+
-        '<button type="button" class="ch-wallet" data-act="wallet"'+(s.wallet ? ' aria-pressed="true"' : '')+'>'+ic(s.wallet ? 'check' : 'plus')+esc(s.wallet ? g.inWallet : g.wallet)+'</button></div>';
-    };
-    const opts = s.ch === 'nerv' ? sc.nerv.map(o => o[0]) : s.ch === 'coffee' ? sc.coffeeA : s.ch === 'desk' ? sc.deskA.map(o => o[0]) : s.ch === 'game' ? [sc.gameA] : s.ch === 'end' ? [g.again] : [];
-    let mem = '';
-    if (s.mem && !s.mem.done){
-      const m = s.mem;
-      mem = '<div class="ch-mem"><div class="ch-sheet" role="dialog" aria-label="'+esc(g.memH)+'"><h3>'+esc(g.memH)+'</h3><p>'+esc(g.memP)+'</p>'+
-        '<div class="ch-photo" aria-label="'+esc(g.photo)+'">'+t.team.map((p, i) => '<span class="'+(m.got.includes(i) ? 'in' : '')+(m.just === i ? ' just' : '')+'">'+(m.got.includes(i) ? face(p) : '')+'</span>').join('')+'</div>'+
-        '<div class="ch-grid">'+
-        m.cards.map((cd, i) => { const p = t.team[cd.p], st = m.got.includes(cd.p) ? ' got' : (m.open.includes(i) ? ' open' : '');
-          return '<button type="button" class="ch-card'+st+'" data-act="flip" data-c="'+i+'" aria-label="'+esc(fill(g.card, {n:i + 1}))+'"><span class="fc"><span class="bk"><i></i></span><span class="fr">'+
-            (cd.f === 'face' ? face(p) : '<b>'+esc(tx(p.n))+'</b><small>'+esc(tx(p.r))+'</small>')+'</span></span></button>'; }).join('')+
-        '</div><p class="ch-moves">'+esc(fill(g.moves, {n:m.moves}))+'</p></div></div>';
-    }
-    this.paint('<div class="ch-head">'+face(t.team[0])+'<div><b>'+esc(tx(t.team[0].n))+'</b><small>'+esc(s.typing ? g.typing+'…' : g.online)+'</small></div><span class="co">'+esc(tx(t.co))+'</span></div>'+
-      '<div class="ch-body" aria-live="polite">'+s.log.map(msg).join('')+(s.typing ? '<div class="ch-typing" aria-label="'+esc(g.typing)+'"><i></i><i></i><i></i></div>' : '')+'</div>'+
-      '<div class="ch-foot">'+(opts.length ? '<div class="ch-opts">'+opts.map((o, i) => '<button type="button" class="ch-opt" data-act="opt" data-i="'+i+'">'+esc(fill(tx(o), vars))+'</button>').join('')+'</div>' : '')+
-      '<div class="ch-input"><span>'+esc(g.msg)+'</span>'+ic('send2')+'</div></div>'+mem);
-    this.shown = s.log.length; s.rNew = -1;
-    const body = this.q('.ch-body'); if (body) body.scrollTop = body.scrollHeight;
+    const t = this.t, s = this.s, g = LK[lang], P = t.pairs;
+    if (s.done) return this.paint(this.result());
+    const qs = P.map((x, i) => '<button type="button" class="lk-q'+(s.got.includes(i) ? ' got' : '')+(s.sel === i ? ' sel' : '')+(s.bad && s.bad.q === i ? ' no' : '')+'" data-act="q" data-q="'+i+'" aria-pressed="'+(s.sel === i)+'">'+
+      '<span class="ic">'+ic(x.ic)+'</span><span class="tx">'+esc(tx(x.q))+'</span><i class="dot"></i></button>').join('');
+    const ps = s.right.map(i => { const w = P[i].who;
+      return '<button type="button" class="lk-p'+(s.got.includes(i) ? ' got' : '')+(s.just === i ? ' just' : '')+(s.bad && s.bad.p === i ? ' no' : '')+'" data-act="p" data-p="'+i+'"><i class="dot"></i>'+face(w)+'<span><b>'+esc(tx(w.n))+'</b><small>'+esc(tx(w.r))+'</small></span>'+
+        (s.say === i ? '<span class="lk-say">'+esc(tx(P[i].reply))+'</span>' : '')+'</button>'; }).join('');
+    const fb = s.bad ? '<p class="lk-fb bad" aria-live="polite">'+esc(fill(g.wrong, {p:tx(P[s.bad.p].who.n)}))+'</p>' : '<p class="lk-fb" aria-live="polite">'+esc(g.how)+'</p>';
+    this.paint('<div class="dm-in lk-in"><div class="lk-top"><b>'+esc(tx(t.co))+'</b><span>'+s.got.length+' / '+P.length+'</span></div><h2 class="lk-h">'+esc(g.ask)+'</h2>'+
+      '<div class="lk-board'+(s.all ? ' all' : '')+'" role="group" aria-label="'+esc(g.board)+'"><svg class="lk-lines" aria-hidden="true"></svg><div class="lk-col">'+qs+'</div><div class="lk-col r">'+ps+'</div></div>'+fb+'</div>');
+    this.lines(); s.just = -1;
+  }
+  result(){
+    const t = this.t, s = this.s, g = LK[lang], first = s.tries.filter(n => !n).length;
+    return '<div class="dm-in lk-in lk-res"><div class="lk-card"><div class="lk-band"><span>'+esc(tx(t.co))+'</span><span class="lk-stamp">✓</span></div><h3>'+esc(g.people)+'</h3>'+
+      '<ul>'+t.pairs.map((x, k) => '<li style="--k:'+k+'">'+face(x.who)+'<span><b>'+esc(tx(x.who.n))+' · '+esc(tx(x.who.r))+'</b><small>'+esc(tx(x.q))+'</small></span><em>'+esc(x.who.ch)+'</em></li>').join('')+'</ul>'+
+      '<p class="lk-first">'+esc(fill(g.first, {n:first, m:t.pairs.length}))+'</p></div>'+
+      '<button type="button" class="lk-save" data-act="save"'+(s.saved ? ' aria-pressed="true"' : '')+'>'+ic(s.saved ? 'check' : 'user')+esc(s.saved ? g.saved : g.save)+'</button>'+
+      '<button type="button" class="lk-again" data-act="again">'+ic('restart')+esc(dg().again)+'</button></div>';
   }
 }
 
-/* ---------- 5 · the store map: the blueprint draws itself, rooms light up, the alarm is real ---------- */
-const MP = {
-  ka:{prog:'{n} / {m}', tap:'შეეხე ნომრებს რუკაზე და გაიცანი მაღაზია.', got:'გასაგებია', alarm:'განგაში! შეეხე რუკაზე იქ, სადაც უნდა წახვიდე.', wrong:'არა იქ. გარეთ, პარკინგზე, ბოძთან A.', ready:'მზადაა',
-      learned:'რა ისწავლე', till:'სალარო', from:'პირველი დღე', fromV:'ორშაბათი, 9:00', locker:'კარადა', code:'კარის კოდი', drill:'განგაშის დროს: პარკინგი, ბოძი A', plan:'მაღაზიის გეგმა', park:'პარკინგი', out:'სწორია. ასე გადიხარ.'},
-  en:{prog:'{n} of {m}', tap:'Tap the numbers on the map to get to know the store.', got:'Got it', alarm:'Alarm! Tap the map where you go.', wrong:'Not there. Outside, in the car park, at post A.', ready:'READY',
-      learned:'What you learned', till:'Till', from:'First day', fromV:'Monday, 9:00', locker:'Locker', code:'Door code', drill:'If the alarm rings: car park, post A', plan:'Store floor plan', park:'CAR PARK', out:'Right. This is your way out.'}
+/* ---------- 5 · first shift: tap the day into order; the sky moves from morning to evening as it fills ---------- */
+const OD = {
+  ka:{how:'შეეხე იმას, რაც ახლა უნდა მოხდეს.', not:'ჯერ არა. რა ხდება მანამდე?', next:'შემდეგი', plan:'შენი პირველი ცვლა', done:'ცვლა დაგეგმილია', miss:'არასწორი შეხება: {n}', miss1:'არასწორი შეხება: 1', clean:'ერთი შეცდომაც არა!', ready:'მზადაა', sky:'დღე მაღაზიაში'},
+  en:{how:'Tap what happens next.', not:'Not yet. What comes before that?', next:'Next', plan:'Your first shift', done:'Your shift is planned', miss:'{n} wrong taps', miss1:'1 wrong tap', clean:'Not a single wrong tap!', ready:'READY', sky:'A day at the store'}
 };
-const PLAN = '<path class="wall" pathLength="1" d="M14 14H266V100M266 118V264H240M200 264H14V170M14 150V14"/>'+
-  '<path class="wall" pathLength="1" d="M118 14V100H100M40 100H14M172 14V84H198M224 84H266M228 84V134H266"/>'+
-  '<g class="thin">'+[44, 80, 116, 152].map(x => '<rect x="'+x+'" y="122" width="14" height="70"/>').join('')+'<rect x="190" y="160" width="56" height="14"/><rect x="190" y="184" width="56" height="14"/>'+
-  '<rect x="34" y="220" width="40" height="24"/><rect x="84" y="220" width="40" height="24"/><rect x="134" y="220" width="40" height="24"/>'+
-  '<path d="M220 300V272M214 278l6-6 6 6"/><path d="M14 286H266"/>'+[30, 62, 94, 190, 222, 254].map(x => '<path d="M'+x+' 292V322"/>').join('')+'</g>'+
-  '<g class="mp-exit"><rect x="18" y="134" width="20" height="10" fill="#2BB673"/><text class="exit" x="28" y="141.5">EXIT</text></g>'+
-  '<g class="mp-post"><circle cx="142" cy="306" r="9"/><text x="142" y="309.5">A</text></g>';
-const ROUTE = 'M104 206H28V160H4V300H130';
-class MapHunt extends Demo {
-  init(){ return {seen:[], open:-1, phase:'explore', wrong:null, intro:true, just:-1}; }
-  act(a, b, e){
-    const s = this.s, t = this.t;
+const SKYC = [[0, [255, 214, 170]], [.35, [150, 205, 240]], [.7, [140, 195, 235]], [.9, [246, 166, 92]], [1, [44, 48, 108]]];
+function skyAt(p){
+  for (let i = 1; i < SKYC.length; i++) if (p <= SKYC[i][0]){ const [p0, a] = SKYC[i - 1], [p1, b] = SKYC[i], k = (p - p0) / (p1 - p0 || 1); return 'rgb('+a.map((v, j) => Math.round(v + (b[j] - v) * k)).join(',')+')'; }
+  return 'rgb(44,48,108)';
+}
+class Order extends Demo {
+  init(){ return {pool:shuffle(this.t.events.map((e, i) => i)), placed:0, miss:0, bad:-1, done:false, p0:0}; }
+  act(a, b){
+    const s = this.s, n = this.t.events.length;
     if (a === 'again') return this.reset();
-    if (s.phase === 'walk') return;
-    if (a === 'pin'){ s.open = +b.dataset.i; sfx('pop'); this.render(); const g = this.q('.mp-got'); if (g) g.focus({preventScroll:true}); }
-    else if (a === 'got'){
-      if (!s.seen.includes(s.open)){ s.seen.push(s.open); s.just = s.open; }
-      s.open = -1; sfx('ok'); this.step(1);
-      if (s.seen.length === t.rooms.length){ s.phase = 'alarm'; this.render(); this.alarm(); return; }
-      this.render();
-    } else if (a === 'where'){
-      const svg = this.q('.mp-plan svg'); if (!svg || !e || e.clientX == null) return;
-      const p = this.svgPt(e, svg, 280, 330);
-      if (Math.hypot(p.x - 142, p.y - 306) < 30){
-        if (reduced()){ s.phase = 'done'; this.render(); this.thud(300); this.won(); return; }
-        /* you walk the route out: path draws, the dot follows it, then the badge */
-        s.phase = 'walk'; s.wrong = null; this.good(); this.render();
-        this.later(() => { s.phase = 'done'; this.render(); this.thud(420); this.later(() => { sfx('win'); this.burst(40); }, 700); this.won(); }, 2700);
-      }
-      else { s.wrong = p; this.bad(); this.render(); }
-    }
+    if (a !== 'pick' || s.done || s.placed === n) return;
+    const i = +b.dataset.i; if (i < s.placed) return;
+    this.step(1);
+    if (i === s.placed){
+      s.p0 = s.placed / n; s.placed++; s.bad = -1; this.good(); this.render(); if (s.placed >= 3) this.step(2);
+      if (s.placed === n){ this.later(() => { s.done = true; sfx('ding'); this.render(); this.thud(600); this.later(() => { sfx('win'); this.burst(36); }, reduced() ? 0 : 900); this.won(); }, reduced() ? 300 : 1300); }
+    } else { s.miss++; s.bad = i; this.bad(); this.render(); }
   }
-  alarm(){ this.step(2); sfx('siren'); buzz([200, 100, 200, 100, 200]); }
+  sky(p, p0, end){
+    /* the sun rises and crosses as the shift fills up; at the end the street lamps and shop windows light up */
+    const sun = q => [30 + q * 240, 100 - Math.sin(q * Math.PI) * 72];
+    const [x, y] = sun(Math.min(p, .96)), [x0, y0] = sun(Math.min(p0, .96));
+    return '<svg class="od-sky'+(end ? ' night' : '')+'" viewBox="0 0 300 130" role="img" aria-label="'+esc(OD[lang].sky)+'"><rect class="bg" width="300" height="130" style="fill:'+skyAt(p)+';--from:'+skyAt(p0)+'"/>'+
+      (end ? '<g class="stars">'+[[40,20],[90,34],[150,14],[210,28],[262,18],[120,46]].map(([a, c]) => '<circle cx="'+a+'" cy="'+c+'" r="1.3"/>').join('')+'</g><circle class="moon" cx="240" cy="32" r="11"/>' :
+        '<circle class="sun" r="13" cx="'+x.toFixed(1)+'" cy="'+y.toFixed(1)+'" style="--dx:'+(x0 - x).toFixed(1)+'px;--dy:'+(y0 - y).toFixed(1)+'px"/>')+
+      '<path class="hill" d="M0 112c50-12 90-10 150-2s110 4 150-6v26H0z"/>'+
+      '<g class="shop"><rect x="92" y="62" width="116" height="56" rx="3"/><rect class="sign" x="112" y="54" width="76" height="16" rx="3"/><text x="150" y="65.5">'+esc(tx(this.t.co))+'</text>'+
+      [104, 140, 176].map(a => '<rect class="win" x="'+a+'" y="80" width="22" height="20" rx="2"/>').join('')+'<rect class="door" x="143" y="102" width="14" height="16"/></g></svg>';
+  }
   render(){
-    const t = this.t, s = this.s, g = MP[lang], R = t.rooms;
-    if (s.phase === 'done') return this.paint(this.result());
-    const lab = (x, y, v) => '<text class="lab" x="'+x+'" y="'+y+'">'+esc(v)+'</text>';
-    const pins = s.phase === 'explore' ? R.map((r, i) => { const seen = s.seen.includes(i);
-      return '<g class="mp-pin'+(seen ? ' seen' : '')+'" data-act="pin" data-i="'+i+'" transform="translate('+r.px+' '+r.py+')" role="button" tabindex="0" aria-label="'+(i + 1)+'. '+esc(tx(r.n))+'"><circle r="9.5"/>'+
-        (seen ? '<path d="M-4 0l3 3 5-6" fill="none" stroke="#1638B8" stroke-width="2.4"/>' : '<text y="3.6">'+(i + 1)+'</text>')+'</g>'; }).join('') :
-      s.phase === 'walk' ? '<path class="mp-route" pathLength="1" d="'+ROUTE+'"/><g class="mp-me"><circle r="8"/><circle r="3" fill="#fff"/><animateMotion begin="indefinite" dur="2.2s" fill="freeze" path="'+ROUTE+'" calcMode="linear"/></g>' :
-      '<rect class="mp-where" data-act="where" width="280" height="330"/>'+(s.wrong ? '<g class="mp-wrong" transform="translate('+s.wrong.x.toFixed(1)+' '+s.wrong.y.toFixed(1)+')"><path d="M-6-6 6 6M6-6-6 6"/></g>' : '');
-    const svg = '<svg viewBox="0 0 280 330" role="img" aria-label="'+esc(g.plan)+'"'+(s.intro ? ' class="draw"' : '')+'>'+R.map((r, i) => '<rect class="mp-room'+(s.seen.includes(i) ? ' seen' : '')+(s.just === i ? ' just' : '')+'" x="'+r.r[0]+'" y="'+r.r[1]+'" width="'+r.r[2]+'" height="'+r.r[3]+'"/>').join('')+PLAN+
-      lab(20, 26, tx(R[2].lab))+lab(178, 26, tx(R[1].lab))+lab(196, 150, tx(R[0].lab))+lab(34, 212, tx(R[3].lab))+lab(18, 186, tx(R[4].lab))+lab(196, 282, g.park)+pins+'</svg>';
-    const room = s.open >= 0 ? R[s.open] : null, alarm = s.phase !== 'explore';
-    this.paint('<div class="dm-in mp-in"><div class="mp-top"><b>'+esc(tx(t.co))+'</b><span>'+esc(fill(g.prog, {n:s.seen.length, m:R.length}))+'</span></div>'+
-      (alarm ? '<p class="mp-alarm" aria-live="assertive">'+esc(s.phase === 'walk' ? g.out : g.alarm)+'</p>' : '<p class="mp-q">'+esc(g.tap)+'</p>')+
-      '<div class="mp-plan">'+svg+'</div><p class="mp-fb" aria-live="polite">'+(s.wrong ? esc(g.wrong) : '')+'</p></div>'+
-      (room ? '<div class="mp-sheet" role="dialog" aria-label="'+esc(tx(room.n))+'"><span class="no">'+(s.open + 1)+' / '+R.length+'</span><h3>'+esc(tx(room.n))+'</h3><p>'+esc(tx(room.txt))+'</p><button type="button" class="mp-got" data-act="got">'+esc(g.got)+'</button></div>' : ''));
-    if (alarm && s.phase === 'alarm' && !reduced()){ const r = this.q('.dm'); if (r) r.classList.add('alarm-on'); }
-    if (s.phase === 'walk'){ const am = this.q('animateMotion'); try { if (am && am.beginElement) am.beginElement(); } catch (e) {} }
-    s.intro = false; s.just = -1;
+    const t = this.t, s = this.s, g = OD[lang], E = t.events, n = E.length, end = s.placed === n;
+    if (s.done) return this.paint(this.result());
+    const clock = s.placed ? E[s.placed - 1].time : E[0].time.replace(/\d\d$/, m => String(Math.max(0, +m - 15)).padStart(2, '0'));
+    const slots = E.map((e, i) => i < s.placed ? '<li class="on'+(i === s.placed - 1 ? ' just' : '')+'"><time>'+esc(e.time)+'</time><span>'+ic(e.ic)+esc(tx(e.n))+'</span></li>' :
+      '<li class="'+(i === s.placed ? 'next' : '')+'"><time>··:··</time><span>'+(i === s.placed ? esc(g.next)+'…' : '')+'</span></li>').join('');
+    const pool = s.pool.filter(i => i >= s.placed).map(i => '<button type="button" class="od-ev'+(s.bad === i ? ' no' : '')+'" data-act="pick" data-i="'+i+'">'+ic(E[i].ic)+'<span>'+esc(tx(E[i].n))+'</span></button>').join('');
+    this.paint('<div class="dm-in od-in"><div class="od-top"><b>'+esc(tx(t.co))+'</b><span>'+esc(tx(t.to))+' · '+esc(tx(t.role))+'</span></div>'+
+      '<div class="od-skyw">'+this.sky(s.placed / n, s.p0, end)+'<span class="od-clock">'+esc(clock)+'</span></div>'+
+      '<ol class="od-line">'+slots+'</ol>'+
+      (end ? '' : '<p class="od-fb'+(s.bad >= 0 ? ' bad' : '')+'" aria-live="polite">'+esc(s.bad >= 0 ? g.not : g.how)+'</p><div class="od-pool">'+pool+'</div>')+'</div>');
   }
   result(){
-    const t = this.t, g = MP[lang];
-    return '<div class="dm-in mp-in mp-res"><div class="mp-badge"><div class="band">'+esc(tx(t.co))+'</div>'+face(t.me)+'<b>'+esc(tx(t.to))+'</b><small>'+esc(tx(t.role))+'</small><span class="mp-stamp">'+esc(g.ready)+'</span>'+
-      '<dl><div><dt>'+esc(g.till)+'</dt><dd>№ 3</dd></div><div><dt>'+esc(g.from)+'</dt><dd>'+esc(g.fromV)+'</dd></div><div><dt>'+esc(g.locker)+'</dt><dd>№ 14</dd></div><div><dt>'+esc(g.code)+'</dt><dd>2207</dd></div></dl><div class="mp-bar"></div></div>'+
-      '<p class="mp-lbl">'+esc(g.learned)+'</p><ul class="mp-learn">'+t.rooms.map(r => '<li>'+ic('check')+esc(tx(r.n))+'</li>').join('')+'<li>'+ic('check')+esc(g.drill)+'</li></ul>'+
-      '<button type="button" class="mp-again" data-act="again">'+ic('restart')+esc(dg().again)+'</button></div>';
+    const t = this.t, s = this.s, g = OD[lang];
+    return '<div class="dm-in od-in od-res"><div class="od-skyw">'+this.sky(1, 1, true)+'</div><div class="od-card"><div class="od-band">'+esc(tx(t.co))+'</div>'+
+      '<div class="od-who">'+face(t.me)+'<span><b>'+esc(tx(t.to))+'</b><small>'+esc(tx(t.role))+' · '+esc(g.plan)+'</small></span><span class="od-stamp">'+esc(g.ready)+'</span></div>'+
+      '<ol>'+t.events.map(e => '<li><time>'+esc(e.time)+'</time><span>'+esc(tx(e.n))+'</span></li>').join('')+'</ol>'+
+      '<p class="od-miss">'+esc(s.miss === 1 ? g.miss1 : s.miss ? fill(g.miss, {n:s.miss}) : g.clean)+'</p></div>'+
+      '<button type="button" class="od-again" data-act="again">'+ic('restart')+esc(dg().again)+'</button></div>';
   }
 }
 
@@ -1273,7 +1247,7 @@ class Seats extends Demo {
   }
 }
 
-const MECH = {invite:Invite, swipe:Swipe, spot:Spot, build:Build, chat:Chat, map:MapHunt, scratch:Scratch, seats:Seats};
+const MECH = {invite:Invite, swipe:Swipe, spot:Spot, build:Build, link:Link, order:Order, scratch:Scratch, seats:Seats};
 
 /* ---------- the demo line-up: eight demos, eight ways to play ---------- */
 TBY.omakase.mech = 'invite'; TBY.omakase.goal = 'attend';
@@ -1313,42 +1287,33 @@ TBY.omakase.steps = [L('ფარდა და კითხვა','The curtain 
   orders:[{t:L('მაგიდა 4','Table 4'), d:L('ფილადელფია როლი','Philadelphia roll'), note:null, need:['nori','rice','salmon','cheese','avocado']},
           {t:L('მაგიდა 7','Table 7'), d:L('კაპა მაკი','Kappa maki'), note:L('ვეგეტარიანელი სტუმარი','Vegetarian guest'), need:['nori','rice','cucumber','sesame']},
           {t:L('მაგიდა 2','Table 2'), d:L('ფილადელფია როლი','Philadelphia roll'), note:L('ალერგია ავოკადოზე','Avocado allergy'), allergy:'avocado', need:['nori','rice','salmon','cheese']}]},
-{ id:'buddy', mech:'chat', goal:'onboard',
-  name:L('შენი ბადი','Your buddy'), kind:L('ადაპტაცია · პროდუქტის გუნდი','Onboarding · Product team'), tag:L('ჩატი ბადისთან და გუნდის გაცნობა','A chat with your buddy'), co:L('ORBITA'),
-  desc:L('ახალ თანამშრომელს პირველ დღემდე ბადი წერს: პასუხობ, ირჩევ ყავის დროს და მაგიდას, ხვდები გუნდს და თამაშობ „ვინ ვინაა“.','A buddy messages the new hire before day one: you answer, pick a coffee time and a desk, meet the team and play “who’s who”.'),
-  steps:[L('ბადი პირველი წერს','Your buddy writes first'), L('შენი პასუხები ცვლის საუბარს','Your answers change the chat'), L('თამაში „ვინ ვინაა“','A “who’s who” game'), L('საშვი ორშაბათისთვის','A pass for Monday')],
-  c:{acc:'#2F5BD3', acc2:'#2BB673', paper:'#FFFFFF'}, fx:'rect', fxc:['#2F5BD3','#FFD23F','#F7A9BE'],
-  to:L('გიორგი','Giorgi'), me:{hair:'#2A1C14', skin:'#E2AC86', bg:'#9FB8F4', style:1, shirt:'#2F5BD3'},
-  team:[{n:L('ნინო','Nino'), r:L('დიზაინი','Design'), hair:'#2B1B12', skin:'#EDBB98', bg:'#FFD23F', style:0},
-        {n:L('დათო','Dato'), r:L('ფრონტენდი','Frontend'), hair:'#151515', skin:'#D9A47E', bg:'#7FC8A9', style:1, glasses:true},
-        {n:L('ანა','Ana'), r:L('პროდუქტი','Product'), hair:'#8A3B1E', skin:'#F1C6A8', bg:'#F7A9BE', style:2},
-        {n:L('ლევანი','Levan'), r:L('მონაცემები','Data'), hair:'#3A2A1A', skin:'#C99272', bg:'#C9B8F0', style:3, beard:true}],
-  script:{
-    hello:[L('გამარჯობა, {to}! მე ნინო ვარ, შენი ბადი Orbita-ში. ორშაბათამდე ყველაფერს აქ გეტყვი.','Hi {to}! I’m Nino, your buddy at Orbita. I’ll walk you through everything here before Monday.'), L('ცოტა ნერვიულობ?','A little nervous?')],
-    nerv:[[L('ცოტა, კი','A little, yes'), L('ნორმალურია. პირველ დღეს ყველა ასეა, მეც ასე ვიყავი.','That’s normal. Everyone is on day one. I was too.')],
-          [L('საერთოდ არა','Not at all'), L('მომწონს! მაშინ პირდაპირ საქმეზე.','Love it. Straight to business, then.')]],
-    coffeeQ:L('ორშაბათს ერთად დავლიოთ ყავა. როდის გირჩევნია?','Let’s have coffee together on Monday. When suits you?'), coffeeA:['10:00', '15:00'],
-    coffeeR:L('ჩავწერე. {time}-ზე ქვემოთ, კაფეში შეგხვდები.','Booked. I’ll meet you downstairs in the café at {time}.'),
-    loc:{t:L('ვაკე, ჭავჭავაძის 37','37 Chavchavadze Ave, Vake'), d:L('მე-5 სართული · მიმღებში უთხარი შენი სახელი','5th floor · give your name at reception')},
-    deskQ:L('მაგიდა: მშვიდ ზონაში თუ გუნდთან ახლოს?','Your desk: the quiet zone, or next to the team?'),
-    deskA:[[L('მშვიდ ზონაში','Quiet zone'), 'A-12'], [L('გუნდთან','Next to the team'), 'B-04']],
-    deskR:L('{desk} შენია. ლეპტოპი უკვე მაგიდაზე დაგხვდება.','{desk} is yours. Your laptop will be waiting on the desk.'),
-    team:L('ეს ჩვენი გუნდია. ხმოვანიც ჩაგიწერეს:','This is the team. They recorded you a voice note:'),
-    gameQ:L('პატარა თამაში: ორშაბათამდე დაიმახსოვრებ, ვინ ვინაა?','Quick game: can you learn who’s who before Monday?'), gameA:L('ვითამაშოთ','Let’s play'),
-    won:L('{moves} სვლაში! ორშაბათს ყველას სახელით მიესალმები.','{moves} moves! You’ll greet everyone by name on Monday.'),
-    bye:L('აი, შენი საშვი. ორშაბათს გნახავ!','Here’s your pass. See you Monday!')}},
-{ id:'map', mech:'map', goal:'onboard',
-  name:L('მაღაზიის რუკა','The store map'), kind:L('ადაპტაცია · მაღაზიების ქსელი','Onboarding · Retail chain'), tag:L('მაღაზია: რუკა პირველ დღემდე','Store: a map before day one'), co:L('BAZARI'),
-  desc:L('ახალი მოლარე მაღაზიას პირველ დღემდე ეცნობა: ხსნის ოთახებს რუკაზე და ამოწმებს, სად წავა განგაშის დროს.','A new cashier gets to know the store before day one: open the rooms on the map, then show where to go if the alarm rings.'),
-  steps:[L('მაღაზიის გეგმა','The store plan'), L('ხუთი ოთახი, ხუთი წესი','Five rooms, five rules'), L('განგაშის შემოწმება','An alarm drill'), L('ბეჯი პირველი დღისთვის','A badge for day one')],
-  c:{acc:'#FFB13B', acc2:'#FFFFFF', paper:'#1638B8'}, fx:'rect', fxc:['#FFB13B','#FFFFFF','#FF7A1A'],
+{ id:'ask', mech:'link', goal:'onboard',
+  name:L('ვის ჰკითხო?','Who do you ask?'), kind:L('ადაპტაცია · პროდუქტის გუნდი','Onboarding · Product team'), tag:L('ოფისი: ვის ჰკითხო','Office: who do you ask?'), co:L('ORBITA'),
+  desc:L('ახალი თანამშრომელი ოთხ ჩვეულებრივ პრობლემას ხაზით აკავშირებს იმ ადამიანთან, ვინც დაეხმარება. ყველა პასუხობს და ბოლოს კონტაქტები ინახება.','A new hire draws a line from four everyday problems to the person who can help. Each one answers, and the contacts are saved at the end.'),
+  steps:[L('ოთხი პირველი დღის კითხვა','Four first-day questions'), L('ხაზი სწორ ადამიანამდე','A line to the right person'), L('ისინი გპასუხობენ','They answer you'), L('შენი ხალხი, კონტაქტებში','Your people, saved')],
+  c:{acc:'#2F5BD3', acc2:'#2BB673', paper:'#FFFFFF'}, fx:'rect', fxc:['#2F5BD3','#FFD23F','#2BB673'],
+  pairs:[
+    {ic:'phone', q:L('ლეპტოპი არ ირთვება','Your laptop won’t turn on'), reply:L('მომიტანე, ორ წუთში გავასწორებ.','Bring it over, I’ll fix it in two minutes.'),
+     who:{n:L('დათო','Dato'), r:L('IT','IT'), ch:'#it-help', hair:'#151515', skin:'#D9A47E', bg:'#7FC8A9', style:1, glasses:true}},
+    {ic:'calendar', q:L('დასვენების დღე გინდა','You want a day off'), reply:L('HR პორტალში მოითხოვე, იმავე დღეს დაგიდასტურებ.','Ask in the HR portal, I approve it the same day.'),
+     who:{n:L('ქეთი','Keti'), r:L('HR','People'), ch:'hr.orbita.ge', hair:'#5A2A16', skin:'#F1C6A8', bg:'#F7A9BE', style:0}},
+    {ic:'briefcase', q:L('არ იცი, რით დაიწყო','Not sure which task comes first'), reply:L('10-ზე დაფას ერთად გადავხედოთ.','Let’s look at the board together at 10.'),
+     who:{n:L('ანა','Ana'), r:L('გუნდის ლიდი','Team lead'), ch:'@ana', hair:'#8A3B1E', skin:'#F1C6A8', bg:'#C9B8F0', style:2}},
+    {ic:'coffee', q:L('სად არის კარგი ყავა?','Where’s the good coffee?'), reply:L('მესამე სართულზე, ფანჯარასთან. გაჩვენებ!','Third floor, by the window. I’ll show you!'),
+     who:{n:L('ნინო','Nino'), r:L('შენი ბადი','Your buddy'), ch:'@nino', hair:'#2B1B12', skin:'#EDBB98', bg:'#FFD23F', style:0}}]},
+{ id:'shift', mech:'order', goal:'onboard',
+  name:L('პირველი ცვლა','First shift'), kind:L('ადაპტაცია · მაღაზიების ქსელი','Onboarding · Retail chain'), tag:L('მაღაზია: პირველი ცვლა','Store: your first shift'), co:L('BAZARI'),
+  desc:L('ახალი მოლარე პირველ ცვლას თვითონ ალაგებს: შეეხება მოვლენებს სწორი თანმიმდევრობით, ცა კი დილიდან საღამომდე იცვლება.','A new cashier puts their first shift in order: tap the events in sequence while the sky moves from morning to evening.'),
+  steps:[L('ცვლის მოვლენები, არეული','The shift’s events, shuffled'), L('დაალაგე სწორად','Put them in order'), L('დღე გადის','The day goes by'), L('ცვლის გეგმა და ბეჯი','A shift plan and a badge')],
+  c:{acc:'#1638B8', acc2:'#FFB13B', paper:'#FFFFFF'}, fx:'rect', fxc:['#FFB13B','#1638B8','#FF7A1A'],
   to:L('მარიამი','Mariam'), role:L('მოლარე','Cashier'), me:{hair:'#4A2A1A', skin:'#F0C4A4', bg:'#FFE1B0', style:2, shirt:'#FF7A1A'},
-  rooms:[
-    {lab:L('შესასვლელი','STAFF DOOR'), n:L('სამსახურებრივი შესასვლელი','Staff entrance'), px:247, py:109, r:[228, 84, 38, 50], txt:L('შემოდი უკანა კარიდან 8:45-ზე. კარის კოდია 2207.','Come in through the back door at 8:45. The door code is 2207.')},
-    {lab:L('გასახდელი','STAFF ROOM'), n:L('გასახდელი','Staff room'), px:205, py:52, r:[172, 14, 94, 70], txt:L('შენი კარადაა №14. შესვენება აქ გაქვს, 13:00–13:30.','Your locker is No. 14. Your break is here, 13:00–13:30.')},
-    {lab:L('საწყობი','STOCKROOM'), n:L('საწყობი','Stockroom'), px:66, py:60, r:[14, 14, 104, 86], txt:L('მარაგი აქ ინახება. 15 კგ-ზე მძიმე ყუთს ორი ადამიანი წევს.','Stock lives here. Boxes over 15 kg take two people to lift.')},
-    {lab:L('სალაროები','TILLS'), n:L('სალაროები','The tills'), px:104, py:232, r:[30, 214, 150, 36], txt:L('შენი სალარო №3-ია. პირველ კვირას ქეთი გვერდით დაგიდგება.','Your till is No. 3. Keti works beside you for the first week.')},
-    {lab:L('გასასვლელი','FIRE EXIT'), n:L('საევაკუაციო გასასვლელი','Fire exit'), px:30, py:160, r:[14, 145, 30, 30], txt:L('განგაშის დროს გადი აქედან და დადექი პარკინგზე, ბოძთან A.','If the alarm rings, leave this way and wait in the car park at post A.')}]},
+  events:[
+    {time:'08:45', ic:'store', n:L('შემოდი უკანა კარიდან, კოდი 2207','Come in by the back door, code 2207')},
+    {time:'08:50', ic:'user', n:L('ჩაიცვი ფორმა და ბეჯი','Put on your uniform and badge')},
+    {time:'09:00', ic:'clock', n:L('დაფიქსირდი ტერმინალზე','Clock in at the staff terminal')},
+    {time:'09:10', ic:'chat', n:L('დილის შეხვედრა ქეთისთან','Morning huddle with Keti')},
+    {time:'13:00', ic:'coffee', n:L('შესვენება, 30 წუთი','Break, 30 minutes')},
+    {time:'17:00', ic:'coins', n:L('დაითვალე სალარო და დაასრულე','Count your till and clock out')}]},
 { id:'scratch', mech:'scratch', goal:'engage', have:6, of:10,
   name:L('ცისკრის ყავა','Tsiskari Coffee'), kind:L('კამპანია · ყავის ბრენდი','Campaign · Coffee brand'), tag:L('ყავა: გაფხეკე და შეაგროვე','Coffee: scratch and collect'), brand:L('ცისკარი','TSISKARI'), kind2:L('ყავა','COFFEE'),
   desc:L('ჭიქის სახელურზე QR, ტელეფონში ფხეკის ბარათი: გაფხეკე, მოიგე და შეაგროვე ბეჭდები. მეათე ყავა საჩუქარია.','A QR code on the cup sleeve opens a scratch card: scratch, win and collect stamps. The tenth coffee is on the house.'),
@@ -1372,7 +1337,7 @@ TBY.omakase.steps = [L('ფარდა და კითხვა','The curtain 
           {ic:'leaf', n:L('სოკოს რიზოტო','Mushroom risotto'), d:L('ვეგეტარიანული','Vegetarian')}]}
 ].forEach(t => { TBY[t.id] = t; });
 TPL.length = 0;
-['spot', 'swipe', 'build', 'buddy', 'map', 'scratch', 'seats', 'omakase'].forEach(id => TPL.push(TBY[id]));
+['spot', 'swipe', 'build', 'ask', 'shift', 'scratch', 'seats', 'omakase'].forEach(id => TPL.push(TBY[id]));
 
 
 /* ---------- public API ---------- */
