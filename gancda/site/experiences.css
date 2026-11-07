@@ -258,3 +258,8 @@ html.xs-open { overflow: hidden; }
   .xp-details dd { margin: 0; }
 }
 html[lang="ka"] .xp-heading h2 { font-size: clamp(30px, 3.6vw, 52px); }
+.xs-top, .xs-brand > div { min-width: 0; }
+@media (max-width: 600px) {
+  .xp-stage.outro .xs-metrics, .xp-stage.outro .xs-note2 { display: none; }
+  .xp-stage.outro .xp-screen .dm-in, .xp-stage.outro .xp-screen .scr-in { padding-bottom: 200px; }
+}

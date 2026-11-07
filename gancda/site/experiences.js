@@ -34,7 +34,7 @@
     swipe: p('სახლი · სამზარეულო: 45 წამი, 6 სიტუაცია. მზად ხარ?', 'Sakhli Kitchen: 45 seconds, six situations. Ready?'),
     ask: p('Orbita: მოგესალმებით გუნდში! ვის რა ჰკითხო?', 'Orbita: welcome to the team! Who do you ask what?'),
     shift: p('ბაზარი: ორშაბათს იწყებ. დაგეგმე პირველი ცვლა.', 'Bazari: you start on Monday. Plan your first shift.'),
-    pour: p('ცისკარი: ჩაასხი შენი ყავა და მოიგე ☕', 'Tsiskari: pour your own coffee and win ☕'),
+    pour: p('ცისკარი: ჩაასხი შენი ყავა და მოიგე.', 'Tsiskari: pour your own coffee and win.'),
     seats: p('Meridian: 1 მოსაწვევი', 'Meridian: 1 invitation'),
     omakase: p('ლუკა: შენთვის რაღაც პატარა დავჯავშნე.', 'Luka: I booked a little something for you.'),
   };
@@ -214,7 +214,7 @@
       '<header class="xs-top"><div class="xs-brand"></div><div class="xs-dots" aria-hidden="true"></div><div class="xs-tools"><button type="button" class="xs-icon" data-xp-action="sound"></button><button type="button" class="xs-icon xp-close" data-xp-action="done">' + icon('close') + '</button></div></header>' +
       '<aside class="xs-rail"></aside>' +
       '<div class="xs-center"><div class="xs-tilt"><div class="xp-phone"><div class="xp-screen" data-xp-stage></div>' +
-        '<div class="xs-lock"><span class="xs-time"></span><span class="xs-date"></span><button type="button" class="xs-note" data-xp-action="unlock"></button><span class="xs-hint"></span></div>' +
+        '<div class="xs-lock" data-xp-action="unlock"><span class="xs-time"></span><span class="xs-date"></span><button type="button" class="xs-note" data-xp-action="unlock"></button><span class="xs-hint"></span></div>' +
       '</div></div></div>' +
       '<section class="xs-outro" hidden></section>';
     paintChrome();
@@ -275,12 +275,12 @@
     modal.addEventListener('gancda:step', e => {
       if (!e.detail) return;
       if (e.detail.n === 0 && stageStep > 0 && !stageDone) return;
-      stageStep = e.detail.n; if (e.detail.n === 0) stageDone = false; paintSteps();
+      stageStep = e.detail.n; if (e.detail.n === 0) { stageDone = false; hideOutro(); modal.classList.remove('won'); } paintSteps();
       const bg = modal.querySelector('.xs-bg'); if (bg && e.detail.n > 0) { bg.classList.remove('pulse'); void bg.offsetWidth; bg.classList.add('pulse'); }
     });
     modal.addEventListener('gancda:done', () => {
       stageDone = true; paintSteps(); modal.classList.add('won');
-      clearTimeout(outroTimer); outroTimer = setTimeout(showOutro, 2600);
+      clearTimeout(outroTimer); outroTimer = setTimeout(showOutro, matchMedia('(max-width: 600px)').matches ? 4500 : 2600);
     });
     /* the phone leans towards the pointer, a little */
     modal.addEventListener('pointermove', e => {

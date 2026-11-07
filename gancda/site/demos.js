@@ -572,8 +572,8 @@ Demo.prototype.burst = Invite.prototype.burst;
 
 /* ---------- 1 · swipe: safe or not? ---------- */
 const SW = {
-  ka:{yes:'უსაფრთხოა', no:'არ არის', right:'სწორია.', wrong:'არა.', hint:'გადაწიე ბარათი: მარჯვნივ, თუ უსაფრთხოა, მარცხნივ, თუ არა.', pass:'სამზარეულოსთვის მზად', fail:'კიდევ ერთი ცდა', used:'წამი', streak:'საუკეთესო სერია', review:'გაიმეორე:', clean:'ერთი შეცდომაც არ დაგიშვია.', grade:'ჰიგიენის შეფასება', insp:'ინსპექცია', hot:'სერია'},
-  en:{yes:'Safe', no:'Not safe', right:'Right.', wrong:'Not quite.', hint:'Swipe the card: right if it’s safe, left if it isn’t.', pass:'Kitchen ready', fail:'One more try', used:'seconds', streak:'best streak', review:'Worth another look:', clean:'Not a single mistake.', grade:'Hygiene grade', insp:'Inspection', hot:'streak'}
+  ka:{yes:'უსაფრთხოა', no:'არ არის', right:'სწორია.', wrong:'არა.', hint:'გადაწიე ბარათი: მარჯვნივ, თუ უსაფრთხოა, მარცხნივ, თუ არა.', pass:'სამზარეულოსთვის მზად', fail:'კიდევ ერთი ცდა', used:'წამი', streak:'საუკეთესო სერია', review:'გაიმეორე:', clean:'ერთი შეცდომაც არ დაგიშვია.', grade:'ჰიგიენის შეფასება', insp:'ინსპექცია', hot:'სერია', late:'დრო ამოიწურა'},
+  en:{yes:'Safe', no:'Not safe', right:'Right.', wrong:'Not quite.', hint:'Swipe the card: right if it’s safe, left if it isn’t.', pass:'Kitchen ready', fail:'One more try', used:'seconds', streak:'best streak', review:'Worth another look:', clean:'Not a single mistake.', grade:'Hygiene grade', insp:'Inspection', hot:'streak', late:'Time’s up'}
 };
 const SWC = ['#FFD23F', '#8FD3F4', '#FF9F7A', '#B9E39B', '#F7A9BE', '#C9B8F0'];
 class Swipe extends Demo {
@@ -604,7 +604,7 @@ class Swipe extends Demo {
     const s = this.s; if (s.run) return; s.run = true; const end = Date.now() + s.left * 1000;
     this.iv = setInterval(() => { s.left = Math.max(0, (end - Date.now()) / 1000); this.hud(); if (!s.left) this.finish(); }, 200);
   }
-  hud(){ const b = this.q('.sw-time i'), n = this.q('.sw-sec'); if (b) b.style.width = (this.s.left / this.t.time * 100) + '%'; if (n) n.textContent = secs(this.s.left); }
+  hud(){ const b = this.q('.sw-time i'), n = this.q('.sw-sec'), w = this.q('.sw-time'); if (b) b.style.width = (this.s.left / this.t.time * 100) + '%'; if (n) n.textContent = secs(this.s.left); if (w) w.classList.toggle('late', this.s.left <= 10); }
   answer(safe, dragged){
     const s = this.s, t = this.t; if (s.done || s.busy) return;
     this.go(); this.step(1);
@@ -621,7 +621,10 @@ class Swipe extends Demo {
     this.later(() => { s.busy = false; s.i++; if (s.i >= t.cards.length) this.finish(); else { this.render(); this.step(2); } }, 520 * slow);
   }
   finish(){
-    const s = this.s; if (s.done) return; s.done = true; this.clear(); this.render();
+    const s = this.s; if (s.done) return; s.done = true; this.clear();
+    /* out of time: the unanswered cards join the review list */
+    if (s.left <= 0 && s.i < this.t.cards.length){ s.late = true; for (let k = s.i; k < this.t.cards.length; k++) s.wrong.push(k); }
+    this.render();
     this.thud(420); this.later(() => { sfx('win'); if (s.score >= this.t.cards.length - 1) this.burst(40); }, reduced() ? 0 : 700);
     this.won();
   }
@@ -644,7 +647,7 @@ class Swipe extends Demo {
   }
   result(){
     const t = this.t, s = this.s, g = SW[lang], n = t.cards.length, pass = s.score >= n - 1, grade = s.score >= n - 1 ? 'A' : s.score >= n - 2 ? 'B' : 'C';
-    return '<div class="dm-in sw-in sw-res"><div class="sw-grade g-'+grade+'"><small>'+esc(tx(t.brand))+' · '+esc(g.insp)+'</small><b>'+grade+'</b><span>'+esc(g.grade)+'</span></div>'+
+    return '<div class="dm-in sw-in sw-res">'+(s.late ? '<p class="sw-late">'+esc(g.late)+'</p>' : '')+'<div class="sw-grade g-'+grade+'"><small>'+esc(tx(t.brand))+' · '+esc(g.insp)+'</small><b>'+grade+'</b><span>'+esc(g.grade)+'</span></div>'+
       '<div class="sw-badge'+(pass ? ' pass' : '')+'"><b>'+s.score+'<small>/'+n+'</small></b><span>'+esc(pass ? g.pass : g.fail)+'</span></div>'+
       '<div class="sw-stats"><div><b>'+Math.round(t.time - s.left)+'</b><span>'+esc(g.used)+'</span></div><div><b>×'+s.best+'</b><span>'+esc(g.streak)+'</span></div></div>'+
       (s.wrong.length ? '<p class="sw-lbl">'+esc(g.review)+'</p><ul class="sw-rev">'+s.wrong.map(i => '<li><b>'+esc(tx(t.cards[i].s))+'</b><span>'+esc(tx(t.cards[i].why))+'</span></li>').join('')+'</ul>'
@@ -748,7 +751,7 @@ class Spot extends Demo {
     const t = this.t, s = this.s, g = SP[lang];
     if (s.done) return this.paint(this.result());
     const P = sp => SPOTS[sp.id], just = fresh && s.last >= 0 ? t.spots[s.last].id : null;
-    const marks = s.found.map((i, n) => { const p = P(t.spots[i]); return '<g class="sp-mark" transform="translate('+p.x+' '+p.y+')"><ellipse rx="'+(p.r + 5)+'" ry="'+(p.r + 1)+'" transform="rotate(-12)"/><text y="'+(-p.r - 7)+'">'+(n + 1)+'</text></g>'; }).join('');
+    const marks = s.found.map((i, n) => { const p = P(t.spots[i]); return '<g class="sp-mark'+(fresh && i === s.last ? ' just' : '')+'" transform="translate('+p.x+' '+p.y+')"><ellipse rx="'+(p.r + 5)+'" ry="'+(p.r + 1)+'" transform="rotate(-12)"/><text y="'+(-p.r - 7)+'">'+(n + 1)+'</text></g>'; }).join('');
     const hint = s.hint >= 0 ? '<circle class="sp-hint" cx="'+P(t.spots[s.hint]).x+'" cy="'+P(t.spots[s.hint]).y+'" r="'+(P(t.spots[s.hint]).r + 10)+'"/>' : '';
     const hits = t.spots.map((sp, i) => s.found.includes(i) ? '' : '<circle class="sp-hit" data-act="spot" data-i="'+i+'" cx="'+P(sp).x+'" cy="'+P(sp).y+'" r="'+(P(sp).r + 8)+'"/>').join('');
     const last = s.last >= 0 ? t.spots[s.last] : null, late = s.left <= 15 ? ' late' : '';
@@ -762,7 +765,7 @@ class Spot extends Demo {
   }
   result(){
     const t = this.t, s = this.s, g = SP[lang], all = s.found.length === t.spots.length, stars = this.stars();
-    return '<div class="dm-in sp-in sp-res"><div class="sp-after'+(all ? ' warm' : '')+'"><svg viewBox="0 0 300 330" aria-hidden="true">'+roomSVG(t, s.found, null)+'</svg>'+
+    return '<div class="dm-in sp-in sp-res"><div class="sp-after'+(all ? ' warm' : '')+'"><svg viewBox="0 0 300 330" aria-hidden="true">'+roomSVG(t, s.found, null)+(all ? '' : t.spots.map((sp, i) => s.found.includes(i) ? '' : '<circle class="sp-missed" cx="'+SPOTS[sp.id].x+'" cy="'+SPOTS[sp.id].y+'" r="'+(SPOTS[sp.id].r + 6)+'"/>').join(''))+'</svg>'+
         (all ? '<div class="sp-review"><span class="sp-rs">'+'<i>★</i>'.repeat(5)+'</span><p>'+esc(g.review)+'</p><small>'+esc(g.guest)+'</small></div>' : '')+'</div>'+
       '<p class="sp-kick">'+esc(tx(t.brand))+'</p><h2>'+esc(all ? g.done : g.late)+'</h2>'+
       '<div class="sp-stars">'+[0, 1, 2].map(k => '<span class="'+(k < stars ? 'on' : '')+'" style="--k:'+k+'">'+ic('star')+'</span>').join('')+'</div>'+
@@ -855,14 +858,14 @@ class Build extends Demo {
     const t = this.t, s = this.s, g = BD[lang];
     if (s.done) return this.paint(this.result());
     const o = t.orders[s.o], ING = id => t.ings.find(x => x.id === id), nm = id => esc(tx(ING(id).n));
-    const plate = s.plate.map(id => '<button type="button" class="bd-chip" data-act="rm" data-id="'+id+'" style="--c:'+ING(id).col+'" aria-label="'+esc(g.rm)+' '+nm(id)+'"><i></i>'+nm(id)+'</button>').join('');
+    const plate = s.plate.map(id => '<button type="button" class="bd-chip'+(id === s.just ? ' just' : '')+'" data-act="rm" data-id="'+id+'" style="--c:'+ING(id).col+'" aria-label="'+esc(g.rm)+' '+nm(id)+'"><i></i>'+nm(id)+'</button>').join('');
     const who = tx(o.t);
     const fb = !s.fb ? '<div class="bd-fb">'+esc(g.how)+'</div>' : s.fb.ok ? '<div class="bd-fb ok"><span class="bd-hanko">OK</span>'+esc(g.okT)+'</div>' :
       '<div class="bd-fb bad" aria-live="polite"><b class="bd-guest">'+esc(fill(s.fb.allergy ? g.allergy : g.back, {t:who}))+'</b>'+(s.fb.miss.length ? '<span><b>'+esc(g.miss)+'</b> '+s.fb.miss.map(nm).join(', ')+'</span>' : '')+(s.fb.extra.length ? '<span><b>'+esc(g.extra)+'</b> '+s.fb.extra.map(nm).join(', ')+'</span>' : '')+'</div>';
     const tray = t.ings.map(x => '<button type="button" class="bd-ing'+(s.plate.includes(x.id) ? ' used' : '')+'" data-act="ing" data-ing="'+x.id+'"><span class="bd-bowl" style="--c:'+x.col+'"></span><span>'+esc(tx(x.n))+'</span></button>').join('');
     const mat = s.phase === 'plate' ? this.dish() : this.sheet()+(s.plate.length ? '' : '<span class="bd-empty">'+esc(g.drop)+'</span>');
     this.paint('<div class="dm-in bd-in"><div class="bd-top"><b>'+esc(tx(t.brand))+'</b><span>'+esc(tx(t.name))+'</span></div>'+
-      '<div class="bd-rail"><div class="bd-tk'+(s.fresh ? ' print' : '')+'"><div class="bd-tk-h"><span>'+esc(who)+'</span><span>'+(s.o + 1)+' / '+t.orders.length+'</span></div><b>'+esc(tx(o.d))+'</b>'+(o.note ? '<em>'+esc(tx(o.note))+'</em>' : '')+'</div></div>'+
+      '<div class="bd-rail"><div class="bd-tk'+(s.fresh ? ' print' : '')+'"><div class="bd-tk-h"><span>'+esc(who)+'</span><span>'+(s.o + 1)+' / '+t.orders.length+'</span></div><b>'+esc(tx(o.d))+'</b>'+(s.o === 0 ? '<small class="bd-rec">'+o.need.map(nm).join(' · ')+'</small>' : '')+(o.note ? '<em>'+esc(tx(o.note))+'</em>' : '')+'</div></div>'+
       '<div class="bd-mat'+(s.phase === 'plate' ? ' plated' : '')+'">'+mat+'</div><div class="bd-plate">'+(s.phase ? '' : plate)+'</div>'+fb+
       '<div class="bd-tray">'+tray+'</div><div class="bd-row"><button type="button" class="bd-clear" data-act="clear">'+esc(g.clear)+'</button>'+
       '<button type="button" class="bd-serve" data-act="serve"'+(s.plate.length && !s.busy ? '' : ' disabled')+'>'+esc(g.serve)+'</button></div></div>');
@@ -913,7 +916,8 @@ class Link extends Demo {
       if (p) this.connect(x.q, +p.dataset.p); else this.render();
     };
     this.el.addEventListener('pointerup', end); this.el.addEventListener('pointercancel', end);
-    window.addEventListener('resize', () => { if (this.el.isConnected && !this.s.done) this.lines(); });
+    this.onResize = () => { if (this.el.isConnected && !this.s.done) this.lines(); };
+    window.addEventListener('resize', this.onResize);
   }
   dot(sel){ const b = this.q('.lk-board'), el = this.q(sel); if (!b || !el) return null; const r = b.getBoundingClientRect(), o = el.getBoundingClientRect(); return {x:o.left + o.width / 2 - r.left, y:o.top + o.height / 2 - r.top}; }
   curve(a, b){ const m = (a.x + b.x) / 2; return 'M'+a.x.toFixed(1)+' '+a.y.toFixed(1)+'C'+m.toFixed(1)+' '+a.y.toFixed(1)+' '+m.toFixed(1)+' '+b.y.toFixed(1)+' '+b.x.toFixed(1)+' '+b.y.toFixed(1); }
@@ -930,6 +934,7 @@ class Link extends Demo {
     this.step(1); s.sel = -1;
     if (q === p){
       s.got.push(q); s.just = q; s.say = p; s.bad = null; this.good(); this.render(); this.step(2);
+      this.later(() => { if (s.say === p){ s.say = -1; const bb = this.q('.lk-say'); if (bb) bb.remove(); } }, 2400);
       if (s.got.length === t.pairs.length){
         s.all = true; this.later(() => { const bd = this.q('.lk-board'); if (bd) bd.classList.add('all'); sfx('win'); }, reduced() ? 0 : 900);
         this.later(() => this.finish(), reduced() ? 300 : 2300);
@@ -939,6 +944,7 @@ class Link extends Demo {
       this.later(() => { if (s.bad && s.bad.q === q){ s.bad = null; this.lines(); } }, 700);
     }
   }
+  clear(){ super.clear(); if (this.onResize && this.el && !this.el.isConnected) window.removeEventListener('resize', this.onResize); }
   finish(){ const s = this.s; if (s.done) return; s.done = true; this.render(); this.thud(500); this.later(() => this.burst(36), reduced() ? 0 : 700); this.won(); }
   lines(){
     const s = this.s, svg = this.q('.lk-lines'); if (!svg) return;
@@ -991,7 +997,7 @@ class Order extends Demo {
     if (i === s.placed){
       s.p0 = s.placed / n; s.placed++; s.bad = -1; this.good(); this.render(); if (s.placed >= 3) this.step(2);
       if (s.placed === n){ this.later(() => { s.done = true; sfx('ding'); this.render(); this.thud(600); this.later(() => { sfx('win'); this.burst(36); }, reduced() ? 0 : 900); this.won(); }, reduced() ? 300 : 1300); }
-    } else { s.miss++; s.bad = i; this.bad(); this.render(); }
+    } else { s.miss++; s.bad = i; this.bad(); this.render(); const ck = this.q('.od-clock'); if (ck) ck.classList.add('bad'); }
   }
   sky(p, p0, end){
     /* the sun rises and crosses as the shift fills up; at the end the street lamps and shop windows light up */
@@ -1014,7 +1020,7 @@ class Order extends Demo {
     this.paint('<div class="dm-in od-in"><div class="od-top"><b>'+esc(tx(t.co))+'</b><span>'+esc(tx(t.to))+' · '+esc(tx(t.role))+'</span></div>'+
       '<div class="od-skyw">'+this.sky(s.placed / n, s.p0, end)+'<span class="od-clock">'+esc(clock)+'</span></div>'+
       '<ol class="od-line">'+slots+'</ol>'+
-      (end ? '' : '<p class="od-fb'+(s.bad >= 0 ? ' bad' : '')+'" aria-live="polite">'+esc(s.bad >= 0 ? g.not : g.how)+'</p><div class="od-pool">'+pool+'</div>')+'</div>');
+      (end ? '' : '<p class="od-fb'+(s.bad >= 0 ? ' bad' : '')+'" aria-live="polite">'+esc(s.bad >= 0 ? g.not : g.how)+'</p><div class="od-pool'+(s.placed || s.miss ? '' : ' first')+'">'+pool+'</div>')+'</div>');
   }
   result(){
     const t = this.t, s = this.s, g = OD[lang];
@@ -1075,7 +1081,7 @@ class Pour extends Demo {
     if (ok) this.good(); else this.bad();
     if (over && s.r === 1) s.m = Math.max(0, 1.02 - s.e);
     s.wait = true; this.render();
-    if (s.r === 0) this.later(() => { s.r = 1; s.wait = false; s.msg = ''; this.render(); }, reduced() ? 300 : 1200);
+    if (s.r === 0) this.later(() => { s.r = 1; if (s.e > .6) s.e = .45; s.wait = false; s.msg = ''; this.render(); }, reduced() ? 300 : 1200);
     else this.later(() => { s.phase = 'art'; this.render(); this.later(() => { if (s.res.every(Boolean)){ sfx('win'); this.burst(24); } else sfx('pop'); }, reduced() ? 0 : 900);
       this.later(() => { s.phase = 'prize'; this.render(); sfx('print'); this.thud(1300); this.later(() => this.burst(30), reduced() ? 0 : 1500); this.won(); }, reduced() ? 600 : 3200); }, reduced() ? 300 : 1300);
   }
@@ -1192,7 +1198,7 @@ class Seats extends Demo {
       this.later(() => { s.step = 'rsvp'; s.opening = false; this.render(); }, reduced() ? 0 : 1500);
     }
     else if (a === 'yes'){ s.step = 'seat'; s.no = false; this.render(); this.burst(18); this.step(1); sfx('ok');
-      if (!reduced()) t.tables.forEach((T, i) => this.later(() => sfx('tap'), 300 + i * 380)); this.later(() => { s.lit = true; }, 1600); }
+      if (!reduced()) t.tables.forEach((T, i) => this.later(() => sfx('tap'), 300 + i * 380)); s.lit = true; }
     else if (a === 'no'){ s.no = true; this.render(); }
     else if (a === 'sit') this.sit(+b.dataset.t, +b.dataset.k);
     else if (a === 'who'){ const p = t.tables[+b.dataset.t].seats[+b.dataset.k]; s.tip = tx(p.n)+' · '+tx(p.r); this.render(); }
@@ -1208,11 +1214,11 @@ class Seats extends Demo {
     return '<svg viewBox="0 0 268 290" role="group" aria-label="'+esc(g.seatH)+'" class="'+(s.lit ? '' : 'lighting')+(me ? ' zoom' : '')+(s.sat ? ' zooming' : '')+'"'+zoom+'>'+t.tables.map((T, ti) =>
       '<g class="se-tg" style="--i:'+ti+'"><circle class="se-glow" cx="'+T.x+'" cy="'+T.y+'" r="60"/><circle class="se-tab" cx="'+T.x+'" cy="'+T.y+'" r="28"/><text class="se-tab-n" x="'+T.x+'" y="'+(T.y + 3)+'">'+esc(fill(g.tableN, {n:ti + 1}))+'</text>'+
       T.seats.map((p, k) => { const [x, y] = seatPos(T, k), mine = me && me.t === ti && me.k === k, wave = me && me.t === ti && nb.includes(k) && p;
-        const c = '<circle cx="'+x.toFixed(1)+'" cy="'+y.toFixed(1)+'" r="11"/>', lt = v => '<text x="'+x.toFixed(1)+'" y="'+(y + 3.2).toFixed(1)+'">'+esc(v.charAt(0))+'</text>';
+        const hit = '<circle class="hit" cx="'+x.toFixed(1)+'" cy="'+y.toFixed(1)+'" r="20"/>', c = '<circle cx="'+x.toFixed(1)+'" cy="'+y.toFixed(1)+'" r="11"/>', lt = v => '<text x="'+x.toFixed(1)+'" y="'+(y + 3.2).toFixed(1)+'">'+esc(v.charAt(0))+'</text>';
         if (mine) return '<g class="se-seat me">'+c+lt(tx(t.to))+'</g>';
         if (p) return '<g class="se-seat taken'+(wave ? ' wave' : '')+'" data-act="who" data-t="'+ti+'" data-k="'+k+'" role="button" tabindex="0" aria-label="'+esc(tx(p.n)+', '+tx(p.r))+'" style="transform-origin:'+x.toFixed(1)+'px '+y.toFixed(1)+'px">'+c+lt(tx(p.n))+
-          (wave ? '<text class="hi" x="'+x.toFixed(1)+'" y="'+(y - 14).toFixed(1)+'">👋</text>' : '')+'</g>';
-        return '<g class="se-seat free" data-act="sit" data-t="'+ti+'" data-k="'+k+'" role="button" tabindex="0" aria-label="'+esc(fill(g.seatN, {t:ti + 1, k:k + 1}))+'">'+c+'</g>'; }).join('')+'</g>').join('')+'</svg>';
+          (wave ? '<svg class="ico hi" x="'+(x - 7).toFixed(1)+'" y="'+(y - 30).toFixed(1)+'" width="14" height="14" viewBox="0 0 24 24">'+I.hands+'</svg>' : '')+'</g>';
+        return '<g class="se-seat free" data-act="sit" data-t="'+ti+'" data-k="'+k+'" role="button" tabindex="0" aria-label="'+esc(fill(g.seatN, {t:ti + 1, k:k + 1}))+'">'+hit+c+'</g>'; }).join('')+'</g>').join('')+'</svg>';
   }
   ics(){
     const t = this.t, d = nextFriday(), p = n => String(n).padStart(2, '0'), f = x => x.getFullYear()+p(x.getMonth() + 1)+p(x.getDate())+'T'+p(x.getHours())+p(x.getMinutes())+'00';
@@ -1321,7 +1327,7 @@ TBY.omakase.steps = [L('ფარდა და კითხვა','The curtain 
   desc:L('ჭიქის ქაღალდის გარსზე QR ხსნის თამაშს: დააჭირე და ჩაასხი ესპრესო, მერე რძე, და გაუშვი ზუსტად ზოლზე. რაც უფრო ზუსტია ჩასხმა, მით უკეთესია ლატე-არტი და პრიზი.','A QR code on the cup sleeve opens a game: hold to pour the espresso, then the milk, and let go right on the line. The better the pour, the better the latte art and the prize.'),
   steps:[L('QR ჭიქაზე','A QR code on the cup'), L('დააჭირე და ჩაასხი ესპრესო','Hold to pour the espresso'), L('რძე: გაჩერდი ზოლზე','Milk: stop on the line'), L('ლატე-არტი და პრიზი','Latte art and a prize')],
   c:{acc:'#0E3B2C', acc2:'#D4202B', paper:'#F3EAD6'}, fx:'rect', fxc:['#0E3B2C','#D4202B','#F3EAD6'],
-  rounds:[{n:L('ესპრესო','Espresso'), lo:.32, hi:.42, col:'#4A2412'}, {n:L('რძე','Milk'), lo:.8, hi:.9, col:'#F4EADB'}],
+  rounds:[{n:L('ესპრესო','Espresso'), lo:.32, hi:.42, col:'#4A2412'}, {n:L('რძე','Milk'), lo:.78, hi:.92, col:'#E2C9A6'}],
   prizes:[{min:2, big:L('უფასო','FREE'), n:L('უფასო ფლეტ უაიტი','A free flat white')}, {min:1, big:L('−50%'), n:L('შემდეგი ყავა ნახევარ ფასად','Half price on your next coffee')}, {min:0, big:L('+1'), n:L('დამატებითი ბეჭედი ცდისთვის','An extra stamp for trying')}]},
 { id:'seats', mech:'seats', goal:'attend',
   name:L('წლის ბოლოს ვახშამი','Year-end dinner'), kind:L('ღონისძიება · კომპანიის ვახშამი','Event · Company dinner'), tag:L('ვახშამი: აირჩიე ადგილი','Dinner: pick your seat'), co:L('MERIDIAN'),
@@ -1344,7 +1350,7 @@ TPL.length = 0;
 /* ---------- public API ---------- */
 window.GancdaDemos = {
   mount(el, id){ const t = TBY[id]; if (!t) return null; const C = MECH[t.mech] || Invite; return new C(el, id); },
-  drop(inst){ if (!inst) return; inst.clear(); const i = invites.indexOf(inst); if (i > -1) invites.splice(i, 1); },
+  drop(inst){ if (!inst) return; inst.clear(); if (inst.onResize) window.removeEventListener('resize', inst.onResize); const i = invites.indexOf(inst); if (i > -1) invites.splice(i, 1); },
   setLanguage(value){ lang = value === 'en' ? 'en' : 'ka'; invites.forEach(i => { if (i.el && i.el.isConnected) i.render(); }); },
   info(id){ const t = TBY[id]; if (!t) return null;
     return {id, goal:t.goal, name:tx(t.name), kind:tx(t.kind), tag:tx(t.tag), desc:tx(t.desc), brand:tx(t.brand || t.co || (t.tk && t.tk.venue) || ''), steps:(t.steps || []).map(tx)}; },

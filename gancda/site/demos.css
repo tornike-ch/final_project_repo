@@ -994,3 +994,32 @@ html[lang="ka"] .sp-top b{font-family:var(--fi-serif);font-style:normal;font-wei
 .pr-blob{fill:#F2E6D3;transform-origin:150px 150px;animation:prheart 1.1s .3s cubic-bezier(.3,1.5,.5,1) both}
 .pr-art{text-align:center;font-weight:900;font-size:1.15em;animation:irise .4s 1s both}
 .pr-score{text-align:center;font-size:.8em;font-weight:700;animation:irise .4s 1.2s both}
+
+/* ================= expert review: polish ================= */
+@keyframes chholo{from{background-position:120% 0}to{background-position:-60% 0}}
+@media (hover:none){.se-tent .foil::after{animation:chholo 2.4s 1.1s ease-in-out 3 both}}
+.se-seat circle.hit{fill:transparent!important;stroke:none!important}
+.se-seat svg.hi{color:#F4F1E8;overflow:visible;animation:sehi 2s ease-out both}
+/* only the newest thing animates; nothing else re-plays on each tap */
+.sp-mark ellipse{stroke-dashoffset:0;animation:none}
+.sp-mark.just ellipse{stroke-dashoffset:200;animation:spdraw .45s ease forwards}
+.dm .bd-chip:not(.just){animation:none}
+.dm .od-pool:not(.first) .od-ev:not(.no){animation:none}
+.bd-tk .bd-rec{display:block;font-size:.8em;opacity:.75;margin-top:.2em;font-family:var(--fi-sans)}
+.od-clock.bad{background:#E5402A;animation:ishake .4s}
+.dm .lk-p.no .ava{animation:ishake .4s}
+.sw-time.late i{background:#E5402A;animation:pulse .5s infinite}
+.sw-late{font-weight:900;font-size:1.3em;color:#E5402A}
+.sp-missed{fill:none;stroke:#E0262F;stroke-width:3;stroke-dasharray:6 4}
+/* nothing important below 12px */
+.sp-sec{font-size:1em}
+.sp-ring{width:3.2em;height:3.2em}
+.sw-sec,.sw-n,.sp-top span,.lk-top,.od-top span,.sc-brand span,.se-kick,.lk-p small,.lk-say,.lk-card em,.sw-grade small,.se-tent .k{font-size:max(12px,.72em)}
+.se-tab-n{font-size:11px}
+.od-sky text{font-size:11px}
+/* tap targets and one "Start over" style everywhere */
+.dm .bd-clear,.dm .sp-hintb,.dm .se-no,.dm .lk-save{min-height:44px}
+.dm .bd-chip{min-height:2.6em}
+.dm :is(.sw-again,.sp-again,.bd-again,.lk-again,.od-again,.sc-again,.se-again){min-height:44px;display:inline-flex;align-items:center;justify-content:center;gap:.4em;padding:.55em 1.2em;border-radius:99px;font-weight:700;font-size:.84em;text-decoration:none}
+.dm :is(.lk-again,.sc-again,.se-again){border:1.5px solid currentColor}
+@media (prefers-reduced-motion:reduce){.sw-time.late i{animation:none}}
