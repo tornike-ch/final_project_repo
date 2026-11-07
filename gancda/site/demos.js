@@ -1026,107 +1026,109 @@ class Order extends Demo {
   }
 }
 
-/* ---------- 6 · scratch, stamp, coupon: foil flakes fly, the cup fills, the coupon prints ---------- */
-const SC = {
-  ka:{title:'გაფხეკე და მოიგე', scratch:'გაფხეკე', how:'გაფხეკე ვერცხლისფერი ფენა თითით.', reveal:'ყველაფრის ჩვენება', won:'მოიგე!', add:'ჩემს ბარათზე დამატება', card:'შენი ბეჭდების ბარათი', left:'უფასო ყავამდე დარჩა {n}', free:'მეათე ყავა საჩუქარია.', coupon:'კუპონის აღება', cpn:'კუპონი', show:'აჩვენე სალაროსთან.', valid:'მოქმედებს {d}-მდე'},
-  en:{title:'Scratch and win', scratch:'SCRATCH', how:'Scratch off the silver with your finger.', reveal:'Reveal it all', won:'You won!', add:'Add to my card', card:'Your stamp card', left:'{n} more to a free coffee', free:'The tenth coffee is on us.', coupon:'Get my coupon', cpn:'COUPON', show:'Show this at the till.', valid:'Valid until {d}'}
+/* ---------- 6 · pour it right: hold to pour, let go on the line; the latte art and the prize depend on your pour ---------- */
+const PR = {
+  ka:{hold:'დააჭირე და გეჭიროს', how1:'დააჭირე და გეჭიროს. გაუშვი, როცა ესპრესო ზოლს მიაღწევს.', how2:'ახლა რძე: გაუშვი, როცა ზოლში მოხვდება.', r1:'ესპრესო', r2:'რძე', round:'{n} / 2',
+      perfect:'ზუსტად!', short:'ცოტა აკლია.', long:'ცოტა მეტია.', over:'გადმოიღვარა!', heart:'იდეალური გული.', blob:'…ეს აბსტრაქტული ხელოვნებაა.', score:'ზუსტი ჩასხმა: {n} / 2', cpn:'კუპონი', show:'აჩვენე სალაროსთან.', valid:'მოქმედებს {d}-მდე', glass:'ჭიქა და ზოლი'},
+  en:{hold:'Hold to pour', how1:'Press and hold. Let go when the espresso reaches the band.', how2:'Now the milk: let go inside the band.', r1:'Espresso', r2:'Milk', round:'{n} of 2',
+      perfect:'Spot on!', short:'A little short.', long:'A touch too much.', over:'Overflow!', heart:'A perfect heart.', blob:'…let’s call it abstract art.', score:'Perfect pours: {n} of 2', cpn:'COUPON', show:'Show this at the till.', valid:'Valid until {d}', glass:'The glass and the target band'}
 };
-const CUP = (lv, lv0) => '<svg class="sc-cupsvg" viewBox="0 0 60 70" aria-hidden="true"><defs><clipPath id="scclip"><path d="M10 14h40l-5 48a4 4 0 0 1-4 4H19a4 4 0 0 1-4-4z"/></clipPath></defs>'+
-  '<g clip-path="url(#scclip)"><rect x="0" y="0" width="60" height="70" fill="#F3EAD6"/><rect class="liq" x="0" y="0" width="60" height="70" fill="#6B3E26" style="--lv:'+lv+';--lv0:'+lv0+'"/><rect class="foam" x="0" y="0" width="60" height="3" fill="#E8C9A0" style="--lv:'+lv+';--lv0:'+lv0+'"/></g>'+
-  '<path d="M10 14h40l-5 48a4 4 0 0 1-4 4H19a4 4 0 0 1-4-4z" fill="none" stroke="#0E3B2C" stroke-width="3"/><path d="M49 24h4a7 7 0 0 1 0 14h-5" fill="none" stroke="#0E3B2C" stroke-width="3"/><rect x="7" y="9" width="46" height="6" rx="2" fill="#0E3B2C"/>'+
-  '<g class="steam" fill="none" stroke="#0E3B2C" stroke-width="2" stroke-linecap="round" opacity=".5"><path d="M22 6c-3-3 3-4 0-7"/><path d="M31 6c-3-3 3-4 0-7"/><path d="M40 6c-3-3 3-4 0-7"/></g></svg>';
-class Scratch extends Demo {
-  init(){ return {step:'card', p:Math.floor(Math.random() * this.t.prizes.length), revealed:false, shown:this.t.have, prev:this.t.have, code:'TSK-'+Math.floor(1000 + Math.random() * 8999), flip:false}; }
+SFX.pour = c => hiss(c, {d:.13, v:.035, lp:1300});
+const LV = v => 250 - 118 * v;
+class Pour extends Demo {
+  init(){ if (this.raf) cancelAnimationFrame(this.raf); return {r:0, e:0, m:0, holding:false, phase:'pour', res:[], wait:false, msg:'', code:'TSK-'+Math.floor(1000 + Math.random() * 8999)}; }
   bind(){
-    this.el.addEventListener('pointerdown', e => {
-      const cv = e.target.closest('.sc-foil'); if (!cv || this.s.revealed) return;
-      e.preventDefault(); if (!this.cv || this.cv.el !== cv || cv.width < 4) this.setup(cv); if (!this.cv) return;
-      this.sp = {id:e.pointerId, last:null}; try { cv.setPointerCapture(e.pointerId); } catch (err) {} this.step(1); this.rub(e);
-    });
-    this.el.addEventListener('pointermove', e => { if (this.sp && e.pointerId === this.sp.id) this.rub(e); });
-    const end = e => { if (this.sp && e.pointerId === this.sp.id){ this.sp = null; this.measure(); } };
-    this.el.addEventListener('pointerup', end); this.el.addEventListener('pointercancel', end);
+    const down = e => { const b = e.target.closest('.pr-hold'); if (!b) return; e.preventDefault(); try { b.setPointerCapture(e.pointerId); } catch (err) {} this.start(); };
+    const up = () => this.stop();
+    this.el.addEventListener('pointerdown', down);
+    this.el.addEventListener('pointerup', up); this.el.addEventListener('pointercancel', up);
+    this.el.addEventListener('keydown', e => { if ((e.key === ' ' || e.key === 'Enter') && e.target.closest && e.target.closest('.pr-hold')){ e.preventDefault(); if (!e.repeat) this.start(); } });
+    this.el.addEventListener('keyup', e => { if ((e.key === ' ' || e.key === 'Enter') && e.target.closest && e.target.closest('.pr-hold')){ e.preventDefault(); this.stop(); } });
   }
-  setup(cv){
-    const r = cv.getBoundingClientRect(); if (r.width < 4){ this.cv = null; return; }
-    const dpr = Math.min(2, window.devicePixelRatio || 1);
-    cv.width = Math.round(r.width * dpr); cv.height = Math.round(r.height * dpr);
-    const c = cv.getContext('2d'), W = cv.width, H = cv.height;
-    const gr = c.createLinearGradient(0, 0, W, H);
-    gr.addColorStop(0, '#A9ACB5'); gr.addColorStop(.45, '#E4E6EA'); gr.addColorStop(.55, '#CDD0D6'); gr.addColorStop(1, '#9EA1AA');
-    c.fillStyle = gr; c.fillRect(0, 0, W, H);
-    c.strokeStyle = 'rgba(255,255,255,.28)'; c.lineWidth = 2 * dpr;
-    for (let x = -H; x < W; x += 9 * dpr){ c.beginPath(); c.moveTo(x, H); c.lineTo(x + H, 0); c.stroke(); }
-    c.fillStyle = '#5E616B'; c.textAlign = 'center'; c.textBaseline = 'middle';
-    c.font = '800 '+Math.round(H * .13)+'px "Google Sans","Noto Sans Georgian",sans-serif';
-    c.fillText(SC[lang].scratch, W / 2, H / 2);
-    c.globalCompositeOperation = 'destination-out'; c.lineCap = 'round'; c.lineJoin = 'round'; c.lineWidth = 34 * dpr;
-    this.cv = {el:cv, c, dpr, n:0, t:0};
+  act(a){ if (a === 'again') this.reset(); }
+  total(){ return this.s.e + this.s.m; }
+  start(){
+    const s = this.s; if (s.holding || s.wait || s.phase !== 'pour') return;
+    s.holding = true; s.msg = ''; this.step(s.r === 0 ? 1 : 2); audio();
+    const dm = this.q('.dm'); if (dm) dm.classList.add('pouring');
+    const fb = this.q('.pr-fb'); if (fb){ fb.className = 'pr-fb'; fb.textContent = tx(this.t.rounds[s.r].n)+'…'; }
+    let last = performance.now(), t0 = last, tick = 0;
+    const rate = s.r === 0 ? .2 : .26;
+    const frame = now => {
+      if (!s.holding) return;
+      const dt = Math.min(.05, (now - last) / 1000), el = (now - t0) / 1000; last = now;
+      const add = rate * dt * (1 + .4 * el);
+      if (s.r === 0) s.e += add; else s.m += add;
+      if (now - tick > 120){ tick = now; sfx('pour'); }
+      this.paintLevel();
+      if (this.total() >= 1.1) return this.stop();
+      this.raf = requestAnimationFrame(frame);
+    };
+    this.raf = requestAnimationFrame(frame);
   }
-  rub(e){
-    const k = this.cv; if (!k) return;
-    const r = k.el.getBoundingClientRect(), x = (e.clientX - r.left) * k.dpr, y = (e.clientY - r.top) * k.dpr, c = k.c;
-    c.beginPath();
-    if (this.sp.last){ c.moveTo(this.sp.last.x, this.sp.last.y); c.lineTo(x, y); c.stroke(); }
-    else { c.arc(x, y, 17 * k.dpr, 0, Math.PI * 2); c.fill(); }
-    this.sp.last = {x, y};
-    /* silver flakes fly off under the finger, with a soft scratch */
-    const now = Date.now();
-    if (now - k.t > 60){ k.t = now; sfx('scratch'); if (!reduced()) this.flakes(e.clientX - r.left, e.clientY - r.top); }
-    if (++k.n % 8 === 0) this.measure();
+  stop(){
+    const s = this.s; if (!s.holding) return;
+    s.holding = false; cancelAnimationFrame(this.raf);
+    const dm = this.q('.dm'); if (dm) dm.classList.remove('pouring');
+    const R = this.t.rounds[s.r], v = this.total(), ok = v >= R.lo && v <= R.hi, over = v > 1;
+    s.res.push(ok); s.msg = ok ? 'perfect' : over ? 'over' : v < R.lo ? 'short' : 'long';
+    if (ok) this.good(); else this.bad();
+    if (over && s.r === 1) s.m = Math.max(0, 1.02 - s.e);
+    s.wait = true; this.render();
+    if (s.r === 0) this.later(() => { s.r = 1; s.wait = false; s.msg = ''; this.render(); }, reduced() ? 300 : 1200);
+    else this.later(() => { s.phase = 'art'; this.render(); this.later(() => { if (s.res.every(Boolean)){ sfx('win'); this.burst(24); } else sfx('pop'); }, reduced() ? 0 : 900);
+      this.later(() => { s.phase = 'prize'; this.render(); sfx('print'); this.thud(1300); this.later(() => this.burst(30), reduced() ? 0 : 1500); this.won(); }, reduced() ? 600 : 3200); }, reduced() ? 300 : 1300);
   }
-  flakes(x, y){
-    const box = this.q('.sc-box'); if (!box) return;
-    for (let i = 0; i < 3; i++){
-      const f = document.createElement('i'); f.className = 'sc-flake';
-      f.style.left = x+'px'; f.style.top = y+'px';
-      f.style.setProperty('--dx', (Math.random() * 60 - 30).toFixed(0)+'px'); f.style.setProperty('--dy', (20 + Math.random() * 50).toFixed(0)+'px'); f.style.setProperty('--r', (Math.random() * 540 - 270).toFixed(0)+'deg');
-      box.appendChild(f); setTimeout(() => f.remove(), 750);
-    }
+  /* during a pour only the liquid moves; nothing else repaints */
+  paintLevel(){
+    const s = this.s, q = n => this.q(n), e = Math.min(s.e, 1.1), tot = Math.min(this.total(), 1.1);
+    const E = q('.lq-e'), M = q('.lq-m'), F = q('.lq-f'), ST = q('.pr-stream');
+    if (E){ E.setAttribute('y', LV(e).toFixed(1)); E.setAttribute('height', (252 - LV(e)).toFixed(1)); }
+    if (M){ M.setAttribute('y', LV(tot).toFixed(1)); M.setAttribute('height', Math.max(0, LV(e) - LV(tot)).toFixed(1)); }
+    if (F){ F.setAttribute('cy', LV(tot).toFixed(1)); F.style.opacity = s.m > .02 ? 1 : .0; }
+    if (ST) ST.setAttribute('height', Math.max(0, LV(tot) - (s.r === 0 ? 64 : 92)).toFixed(1));
+    /* the band lights up while you are inside it: let go now */
+    const B = q('.pr-band'), R = this.t.rounds[s.r]; if (B) B.classList.toggle('in', this.total() >= R.lo && this.total() <= R.hi);
   }
-  measure(){
-    const k = this.cv; if (!k || this.s.revealed) return;
-    const d = k.c.getImageData(0, 0, k.el.width, k.el.height).data; let clear = 0, n = 0;
-    for (let i = 3; i < d.length; i += 96){ n++; if (d[i] < 100) clear++; }
-    if (n && clear / n > .5) this.reveal();
-  }
-  reveal(){ const s = this.s; if (s.revealed) return; s.revealed = true; s.flip = true; this.cv = null; this.sp = null; this.step(1); this.render(); s.flip = false; sfx('win'); buzz([20, 30, 60]); this.burst(36); }
-  act(a){
-    const s = this.s, t = this.t;
-    if (a === 'reveal') return this.reveal();
-    if (a === 'again') return this.reset();
-    if (a === 'stamps'){
-      s.step = 'stamps'; s.shown = t.have; s.prev = t.have; this.render(); this.step(2);
-      const total = t.have + t.prizes[s.p].stamps;
-      /* each stamp thuds in and the cup fills a little more */
-      const add = () => { if (s.step !== 'stamps' || s.shown >= total) return; s.prev = s.shown; s.shown++; this.render(); sfx('stamp'); buzz(18); if (s.shown < total) this.later(add, 600); else this.later(() => sfx('ok'), 300); };
-      this.later(add, reduced() ? 0 : 500);
-    } else if (a === 'coupon'){ s.step = 'coupon'; this.render(); sfx('print'); this.later(() => { this.burst(30); sfx('ding'); }, reduced() ? 0 : 1300); this.won(); }
+  glass(){
+    const s = this.s, t = this.t, R = t.rounds[s.r], e = Math.min(s.e, 1.1), tot = Math.min(this.total(), 1.1), over = this.total() > 1 && !s.holding && s.msg === 'over';
+    const inner = 'M96 130H204L196 240Q194 252 182 252H118Q106 252 104 240Z';
+    return '<svg class="pr-scene" viewBox="0 0 300 300" role="img" aria-label="'+esc(PR[lang].glass)+'"><defs><clipPath id="prclip"><path d="'+inner+'"/></clipPath></defs>'+
+      '<rect class="pr-counter" y="262" width="300" height="38"/><ellipse class="pr-saucer" cx="150" cy="260" rx="78" ry="9"/>'+
+      (s.r === 0 ? '<g class="pr-machine"><rect x="102" y="0" width="96" height="34" rx="6"/><rect x="126" y="34" width="48" height="16" rx="4"/><rect x="138" y="50" width="24" height="14" rx="3"/></g>' :
+        '<g class="pr-jug"><path d="M176 40h50l-6 52h-38l-14-30z"/><path class="lip" d="M162 62l-14 18 16 6"/><path class="hdl" d="M226 50c14 0 14 26 0 26"/></g>')+
+      '<rect class="pr-stream" x="'+(s.r === 0 ? 147 : 147)+'" y="'+(s.r === 0 ? 64 : 88)+'" width="6" height="0" rx="3" style="fill:'+R.col+'"/>'+
+      '<g clip-path="url(#prclip)"><rect class="pr-air" x="90" y="120" width="120" height="140"/>'+
+      '<rect class="lq-e" x="90" width="120" y="'+LV(e).toFixed(1)+'" height="'+(252 - LV(e)).toFixed(1)+'"/>'+
+      '<rect class="lq-m" x="90" width="120" y="'+LV(tot).toFixed(1)+'" height="'+Math.max(0, LV(e) - LV(tot)).toFixed(1)+'"/>'+
+      '<ellipse class="lq-f" cx="150" cy="'+LV(tot).toFixed(1)+'" rx="56" ry="4" style="opacity:'+(s.m > .02 ? 1 : 0)+'"/></g>'+
+      '<g class="pr-band"><rect x="96" y="'+LV(R.hi).toFixed(1)+'" width="108" height="'+(LV(R.lo) - LV(R.hi)).toFixed(1)+'"/><path d="M90 '+LV(R.hi).toFixed(1)+'h120M90 '+LV(R.lo).toFixed(1)+'h120"/></g>'+
+      '<path class="pr-glass" d="'+inner+'"/><path class="pr-shine" d="M108 140l-2 90"/>'+
+      (over ? '<g class="pr-spill"><path d="M98 132c-4 20-6 50-8 90"/><path d="M202 132c4 22 6 52 8 92"/><ellipse cx="150" cy="262" rx="74" ry="6"/></g>' : '')+'</svg>';
   }
   render(){
-    const t = this.t, s = this.s, g = SC[lang], p = t.prizes[s.p];
-    let body = '';
-    if (s.step === 'card'){
-      body = '<h2 class="sc-h">'+esc(g.title)+'</h2><div class="sc-ticket"><div class="sc-box'+(s.flip ? ' flip' : '')+'"><span class="big">'+esc(tx(p.big))+'</span><b>'+esc(tx(p.n))+'</b><small>'+esc(tx(p.d))+'</small>'+
-        (s.revealed ? '' : '<canvas class="sc-foil" aria-hidden="true"></canvas>')+'</div>'+
-        '<div class="sc-how">'+(s.revealed ? '<b>'+esc(g.won)+'</b>' : '<span>'+esc(g.how)+'</span><button type="button" class="sc-link" data-act="reveal">'+esc(g.reveal)+'</button>')+'</div></div>'+
-        (s.revealed ? '<button type="button" class="sc-btn" data-act="stamps">'+esc(g.add)+'</button>' : '');
-    } else if (s.step === 'stamps'){
-      const total = t.have + p.stamps;
-      body = '<div class="sc-card"><div class="sc-cardh"><h3>'+esc(g.card)+'</h3>'+CUP((s.shown / t.of).toFixed(3), (s.prev / t.of).toFixed(3))+'</div><div class="sc-slots">'+Array.from({length:t.of}, (_, i) => {
-          const on = i < s.shown, nw = on && i >= t.have && i === s.shown - 1, gift = i === t.of - 1;
-          return '<span class="sc-slot'+(on ? ' on' : '')+(nw ? ' new' : '')+(gift && !on ? ' gift' : '')+'">'+(on ? ic('coffee') : (gift ? ic('gift') : ''))+'</span>'; }).join('')+'</div>'+
-        '<p class="sc-left">'+esc(fill(g.left, {n:t.of - total}))+'</p><p class="sc-free">'+esc(g.free)+'</p></div>'+
-        '<button type="button" class="sc-btn" data-act="coupon"'+(s.shown < total ? ' disabled' : '')+'>'+esc(g.coupon)+'</button>';
-    } else {
-      const d = new Date(); d.setDate(d.getDate() + 7);
-      body = '<div class="sc-printer"><div class="sc-mouth"></div><div class="sc-paper"><div class="sc-cp"><div class="sc-brand"><b>'+esc(tx(t.brand))+'</b><span>'+esc(g.cpn)+'</span></div><span class="big">'+esc(tx(p.big))+'</span><b>'+esc(tx(p.n))+'</b>'+
-        '<p class="sc-valid">'+esc(fill(g.valid, {d:d.getDate()+' '+S[lang].months[d.getMonth()]}))+'</p><hr><div class="sc-bar"></div><p class="sc-code">'+esc(s.code)+'</p><p class="sc-valid">'+esc(g.show)+'</p></div></div></div>'+
-        '<button type="button" class="sc-again" data-act="again">'+ic('restart')+esc(dg().again)+'</button>';
+    const t = this.t, s = this.s, g = PR[lang];
+    const head = '<div class="sc-check" aria-hidden="true"></div><div class="sc-brand"><b>'+esc(tx(t.brand))+'</b><span>'+esc(tx(t.kind2))+'</span></div>';
+    if (s.phase === 'prize') return this.paint('<div class="dm-in sc-in pr-in">'+head+this.prize()+'</div>');
+    if (s.phase === 'art'){
+      const all = s.res.every(Boolean);
+      return this.paint('<div class="dm-in sc-in pr-in">'+head+'<div class="pr-top"><svg viewBox="0 0 300 300" aria-hidden="true"><circle class="pr-plate" cx="150" cy="150" r="140"/><circle class="pr-cupw" cx="150" cy="150" r="108"/><circle class="pr-crema" cx="150" cy="150" r="92"/>'+
+        (all ? '<path class="pr-heart" d="M150 205C112 178 94 158 94 134c0-18 14-31 30-31 12 0 21 7 26 17 5-10 14-17 26-17 16 0 30 13 30 31 0 24-18 44-56 71z"/>'
+          : '<path class="pr-blob" d="M120 120c20-26 64-14 70 8s30 22 14 46-52 34-74 14-30-42-10-68z"/>')+'</svg></div>'+
+        '<p class="pr-art">'+esc(all ? g.heart : g.blob)+'</p><p class="pr-score">'+esc(fill(g.score, {n:s.res.filter(Boolean).length}))+'</p></div>');
     }
-    this.paint('<div class="dm-in sc-in scs-'+s.step+'"><div class="sc-check" aria-hidden="true"></div><div class="sc-brand"><b>'+esc(tx(t.brand))+'</b><span>'+esc(tx(t.kind2))+'</span></div>'+body+'</div>');
-    if (s.step === 'card' && !s.revealed) requestAnimationFrame(() => { const cv = this.q('.sc-foil'); if (cv) this.setup(cv); });
+    const R = t.rounds[s.r], msg = s.msg ? g[s.msg] : (s.r === 0 ? g.how1 : g.how2);
+    this.paint('<div class="dm-in sc-in pr-in">'+head+'<div class="pr-h"><h2>'+esc(tx(R.n))+'</h2><span>'+esc(fill(g.round, {n:s.r + 1}))+'</span></div>'+
+      '<div class="pr-stage">'+this.glass()+'</div><p class="pr-fb'+(s.msg ? (s.msg === 'perfect' ? ' ok' : ' bad') : '')+'" aria-live="polite">'+esc(msg)+'</p>'+
+      '<button type="button" class="pr-hold"'+(s.wait ? ' disabled' : '')+'><span class="ring"></span>'+esc(g.hold)+'</button></div>');
   }
+  prize(){
+    const t = this.t, s = this.s, g = PR[lang], n = s.res.filter(Boolean).length, p = t.prizes.find(x => n >= x.min), d = new Date(); d.setDate(d.getDate() + 7);
+    return '<div class="sc-printer"><div class="sc-mouth"></div><div class="sc-paper"><div class="sc-cp"><div class="sc-brand"><b>'+esc(tx(t.brand))+'</b><span>'+esc(g.cpn)+'</span></div><span class="big">'+esc(tx(p.big))+'</span><b>'+esc(tx(p.n))+'</b>'+
+      '<p class="sc-valid">'+esc(fill(g.score, {n}))+' · '+esc(fill(g.valid, {d:d.getDate()+' '+S[lang].months[d.getMonth()]}))+'</p><hr><div class="sc-bar"></div><p class="sc-code">'+esc(s.code)+'</p><p class="sc-valid">'+esc(g.show)+'</p></div></div></div>'+
+      '<button type="button" class="sc-again" data-act="again">'+ic('restart')+esc(dg().again)+'</button>';
+  }
+  clear(){ super.clear(); if (this.raf) cancelAnimationFrame(this.raf); if (this.s) this.s.holding = false; }
 }
 
 /* ---------- 7 · pick your seat: break the seal, the hall lights up, the neighbours wave, the place card catches the light ---------- */
@@ -1247,7 +1249,7 @@ class Seats extends Demo {
   }
 }
 
-const MECH = {invite:Invite, swipe:Swipe, spot:Spot, build:Build, link:Link, order:Order, scratch:Scratch, seats:Seats};
+const MECH = {invite:Invite, swipe:Swipe, spot:Spot, build:Build, link:Link, order:Order, pour:Pour, seats:Seats};
 
 /* ---------- the demo line-up: eight demos, eight ways to play ---------- */
 TBY.omakase.mech = 'invite'; TBY.omakase.goal = 'attend';
@@ -1314,14 +1316,13 @@ TBY.omakase.steps = [L('ფარდა და კითხვა','The curtain 
     {time:'09:10', ic:'chat', n:L('დილის შეხვედრა ქეთისთან','Morning huddle with Keti')},
     {time:'13:00', ic:'coffee', n:L('შესვენება, 30 წუთი','Break, 30 minutes')},
     {time:'17:00', ic:'coins', n:L('დაითვალე სალარო და დაასრულე','Count your till and clock out')}]},
-{ id:'scratch', mech:'scratch', goal:'engage', have:6, of:10,
-  name:L('ცისკრის ყავა','Tsiskari Coffee'), kind:L('კამპანია · ყავის ბრენდი','Campaign · Coffee brand'), tag:L('ყავა: გაფხეკე და შეაგროვე','Coffee: scratch and collect'), brand:L('ცისკარი','TSISKARI'), kind2:L('ყავა','COFFEE'),
-  desc:L('ჭიქის სახელურზე QR, ტელეფონში ფხეკის ბარათი: გაფხეკე, მოიგე და შეაგროვე ბეჭდები. მეათე ყავა საჩუქარია.','A QR code on the cup sleeve opens a scratch card: scratch, win and collect stamps. The tenth coffee is on the house.'),
-  steps:[L('QR ჭიქაზე','A QR code on the cup'), L('ფხეკის ბარათი','A scratch card'), L('ბეჭდების ბარათი','A stamp card'), L('კუპონი სალაროსთვის','A coupon for the till')],
+{ id:'pour', mech:'pour', goal:'engage',
+  name:L('ზუსტად ჩაასხი','Pour it right'), kind:L('კამპანია · ყავის ბრენდი','Campaign · Coffee brand'), tag:L('ყავა: ზუსტად ჩაასხი','Coffee: pour it right'), brand:L('ცისკარი','TSISKARI'), kind2:L('ყავა','COFFEE'),
+  desc:L('ჭიქის სახელურზე QR ხსნის თამაშს: დააჭირე და ჩაასხი ესპრესო, მერე რძე, და გაუშვი ზუსტად ზოლზე. რაც უფრო ზუსტია ჩასხმა, მით უკეთესია ლატე-არტი და პრიზი.','A QR code on the cup sleeve opens a game: hold to pour the espresso, then the milk, and let go right on the line. The better the pour, the better the latte art and the prize.'),
+  steps:[L('QR ჭიქაზე','A QR code on the cup'), L('დააჭირე და ჩაასხი ესპრესო','Hold to pour the espresso'), L('რძე: გაჩერდი ზოლზე','Milk: stop on the line'), L('ლატე-არტი და პრიზი','Latte art and a prize')],
   c:{acc:'#0E3B2C', acc2:'#D4202B', paper:'#F3EAD6'}, fx:'rect', fxc:['#0E3B2C','#D4202B','#F3EAD6'],
-  prizes:[{big:L('+2'), n:L('ორმაგი ბეჭედი','Double stamp'), d:L('დღეს ორ ბეჭედს იღებ.','You get two stamps today.'), stamps:2},
-          {big:L('−50%'), n:L('ნახევარ ფასად','Half price'), d:L('შემდეგი ფლეტ უაიტი ნახევარ ფასად.','Your next flat white is half price.'), stamps:1},
-          {big:L('უფასო','FREE'), n:L('უფასო ქრუასანი','A free croissant'), d:L('ქრუასანი ყავასთან ერთად, ჩვენზე.','A croissant with your coffee, on us.'), stamps:1}]},
+  rounds:[{n:L('ესპრესო','Espresso'), lo:.32, hi:.42, col:'#4A2412'}, {n:L('რძე','Milk'), lo:.8, hi:.9, col:'#F4EADB'}],
+  prizes:[{min:2, big:L('უფასო','FREE'), n:L('უფასო ფლეტ უაიტი','A free flat white')}, {min:1, big:L('−50%'), n:L('შემდეგი ყავა ნახევარ ფასად','Half price on your next coffee')}, {min:0, big:L('+1'), n:L('დამატებითი ბეჭედი ცდისთვის','An extra stamp for trying')}]},
 { id:'seats', mech:'seats', goal:'attend',
   name:L('წლის ბოლოს ვახშამი','Year-end dinner'), kind:L('ღონისძიება · კომპანიის ვახშამი','Event · Company dinner'), tag:L('ვახშამი: აირჩიე ადგილი','Dinner: pick your seat'), co:L('MERIDIAN'),
   ask:L('გეპატიჟებით წლის დასასრულის ვახშამზე.','You’re invited to our year-end dinner.'),
@@ -1337,7 +1338,7 @@ TBY.omakase.steps = [L('ფარდა და კითხვა','The curtain 
           {ic:'leaf', n:L('სოკოს რიზოტო','Mushroom risotto'), d:L('ვეგეტარიანული','Vegetarian')}]}
 ].forEach(t => { TBY[t.id] = t; });
 TPL.length = 0;
-['spot', 'swipe', 'build', 'ask', 'shift', 'scratch', 'seats', 'omakase'].forEach(id => TPL.push(TBY[id]));
+['spot', 'swipe', 'build', 'ask', 'shift', 'pour', 'seats', 'omakase'].forEach(id => TPL.push(TBY[id]));
 
 
 /* ---------- public API ---------- */

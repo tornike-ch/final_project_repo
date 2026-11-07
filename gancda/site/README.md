@@ -10,12 +10,12 @@ Your layout (`index.html`, `experiences.*`, `project.*`) in the gancda brand, li
 | `demos.css` / `demos.js` | The eight demos. `GancdaDemos.mount(element, id)` runs one inside any `.xp-screen` element. Demos emit `gancda:step` and `gancda:done` events; sound is synthesised with Web Audio and can be switched off (`GancdaDemos.sound(false)`). |
 | `project.css` / `project.js` | How we work, the individual-offer block (no public prices) and the request form. |
 | `preview.html` | The same page without its document head, used to publish the claude.ai preview. Not needed on the live site. |
-| `assets/` | Logo, symbol, favicons, app icons, social image and graphics from the brand kit. |
+| `assets/` | Logo, symbol, favicons, app icons, social image and graphics from the brand kit; `gancda-lockup-ka*.png` (Georgian lockup, cut from the design-language PDF) and `gancda-symbol.svg` (a smooth redraw of the asterisk). |
 
 Demos by goal:
 - **Learning:** Menu Academy (drag and build), Room 214 (spot the mistakes), Safe or not (swipe).
 - **Onboarding:** Who do you ask? (draw lines from problems to people), First shift (tap the day into order).
-- **Campaigns:** Tsiskari Coffee (scratch card and stamp card).
+- **Campaigns:** Pour it right (hold to pour, let go on the line; the latte art and the prize follow your pour).
 - **Events:** Year-end dinner (pick a seat), Omakase (invitation).
 
-Fonts load from Google Fonts. Check the licences, or self-host the fonts, before launch, as the kit's handoff notes say. The kit's logo paths are traced from a raster and still need a designer's clean-up and a trademark check before final use.
+The slogan's hand-lettered second line uses BPG Mikheil Stefane for Georgian (self-hosted in `assets/fonts/`, from the free BPG collection) and Caveat for English. Other fonts load from Google Fonts. Check the licences, or self-host the fonts, before launch, as the kit's handoff notes say. The kit's logo paths are traced from a raster and still need a designer's clean-up and a trademark check before final use.

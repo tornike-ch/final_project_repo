@@ -34,7 +34,7 @@
     swipe: p('სახლი · სამზარეულო: 45 წამი, 6 სიტუაცია. მზად ხარ?', 'Sakhli Kitchen: 45 seconds, six situations. Ready?'),
     ask: p('Orbita: მოგესალმებით გუნდში! ვის რა ჰკითხო?', 'Orbita: welcome to the team! Who do you ask what?'),
     shift: p('ბაზარი: ორშაბათს იწყებ. დაგეგმე პირველი ცვლა.', 'Bazari: you start on Monday. Plan your first shift.'),
-    scratch: p('ცისკარი: ფხეკის ბარათი გელოდება ☕', 'Tsiskari: a scratch card is waiting for you ☕'),
+    pour: p('ცისკარი: ჩაასხი შენი ყავა და მოიგე ☕', 'Tsiskari: pour your own coffee and win ☕'),
     seats: p('Meridian: 1 მოსაწვევი', 'Meridian: 1 invitation'),
     omakase: p('ლუკა: შენთვის რაღაც პატარა დავჯავშნე.', 'Luka: I booked a little something for you.'),
   };
@@ -61,7 +61,7 @@
       audience: p('კაფის სტუმრები','Café customers'), outcome: p('დაბრუნება და კუპონის გამოყენება','Return visits and redeemed coupons'),
       report: p('ნახეთ, რამდენმა მოთამაშემ გამოიყენა კუპონი ან გაუზიარა ბმული სხვას.', 'Follow the campaign from the first play through to sharing the game and redeeming a coupon in store.'),
       metrics: [[p('ითამაშა','Played the game'),'1,240',''],[p('დაასრულა','Reached the end'),'71','%'],[p('გამოყენებული კუპონი','Coupons redeemed'),'318',''],[p('გააზიარა','Shares'),'204','']],
-      demos: ['scratch'],
+      demos: ['pour'],
     },
     attend: {
       label: p('ღონისძიებები','Events'),
@@ -79,7 +79,7 @@
     swipe: p('გადაწიე ბარათები მარჯვნივ ან მარცხნივ', 'Swipe cards right or left'),
     ask: p('გაავლე ხაზი პრობლემიდან სწორ ადამიანამდე', 'Draw a line from each problem to the right person'),
     shift: p('დაალაგე პირველი ცვლა სწორი თანმიმდევრობით', 'Tap your first shift into the right order'),
-    scratch: p('გაფხეკე, შეაგროვე ბეჭდები, მიიღე კუპონი', 'Scratch, collect stamps, get a coupon'),
+    pour: p('დააჭირე, ჩაასხი და გაუშვი ზუსტად ზოლზე', 'Hold to pour, let go right on the line'),
     seats: p('აირჩიე ადგილი დარბაზის გეგმაზე', 'Pick your seat on the floor plan'),
     omakase: p('გახსენი ფარდა და მიიღე ბილეთი', 'Open the curtain and get your ticket'),
   };
@@ -101,7 +101,7 @@
 
   let lang = document.documentElement.lang === 'en' ? 'en' : 'ka';
   let active = 'learn';
-  const pick = { learn: 'build', onboard: 'ask', engage: 'scratch', attend: 'seats' };
+  const pick = { learn: 'build', onboard: 'ask', engage: 'pour', attend: 'seats' };
   let modal, sourceFocus, preview = null, player = null;
   const t = text => typeof text === 'object' ? text[lang] : text;
   const keys = Object.keys(cases);

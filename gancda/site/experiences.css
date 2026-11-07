@@ -29,7 +29,7 @@
 }
 /* the brand's graphic language behind the live phone: a big soft mark and wavy lines */
 .xp-poster::before { content: ""; position: absolute; width: 78%; aspect-ratio: 1; right: -24%; top: -18%; z-index: -1; opacity: var(--mark-o, .45); background: var(--mark, #C8B6FF);
-  -webkit-mask: url(assets/gancda-symbol-lime.svg) center/contain no-repeat; mask: url(assets/gancda-symbol-lime.svg) center/contain no-repeat; transform: rotate(14deg); }
+  -webkit-mask: url(assets/gancda-symbol.svg) center/contain no-repeat; mask: url(assets/gancda-symbol.svg) center/contain no-repeat; transform: rotate(14deg); }
 .xp-poster::after { content: ""; position: absolute; left: 0; right: 0; bottom: 0; height: 34%; z-index: -1; opacity: .3;
   background: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='120' height='36' viewBox='0 0 120 36'%3E%3Cpath d='M0 9c15 0 15-6 30-6s15 6 30 6 15-6 30-6 15 6 30 6M0 27c15 0 15-6 30-6s15 6 30 6 15-6 30-6 15 6 30 6' fill='none' stroke='%239B8BB8' stroke-width='2'/%3E%3C/svg%3E") 0 0/240px 72px; }
 .xp-live { position: absolute; top: 27px; right: 27px; z-index: 2; display: inline-flex; align-items: center; gap: 7px; padding: 5px 11px; border-radius: 999px; font-size: 12px; font-weight: 700; background: var(--paper); color: var(--ink); border: 1px solid var(--line); }
@@ -73,7 +73,7 @@
 .xp-report h2 { font-size: clamp(31px, 3.6vw, 57px); }
 .xp-reportintro p { padding-top: 16px; }
 .xp-dashboard { position: relative; overflow: hidden; background: var(--surface); border: 1px solid var(--line); color: var(--ink); border-radius: 28px; padding: clamp(22px, 3vw, 40px); }
-.xp-dashboard::after { content: ""; position: absolute; width: 46%; aspect-ratio: 1; right: -16%; bottom: -26%; background: var(--mark, #C8B6FF); opacity: var(--wm-o, .2); -webkit-mask: url(assets/gancda-symbol-lime.svg) center/contain no-repeat; mask: url(assets/gancda-symbol-lime.svg) center/contain no-repeat; pointer-events: none; }
+.xp-dashboard::after { content: ""; position: absolute; width: 46%; aspect-ratio: 1; right: -16%; bottom: -26%; background: var(--mark, #C8B6FF); opacity: var(--wm-o, .2); -webkit-mask: url(assets/gancda-symbol.svg) center/contain no-repeat; mask: url(assets/gancda-symbol.svg) center/contain no-repeat; pointer-events: none; }
 .xp-dashboard header { position: static; background: transparent; display: flex; width: auto; height: auto; flex-wrap: wrap; align-items: center; justify-content: space-between; gap: 12px; border: 0; border-bottom: 1px solid var(--line); padding: 0 0 20px; box-shadow: none; color: inherit; }
 .xp-dashboard-name { display: flex; align-items: center; gap: 10px; }
 .xp-dashboard-name svg { color: var(--accent); }
