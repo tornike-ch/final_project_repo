@@ -1,5 +1,5 @@
-/* Georgian slogan face: DM Davit Guramishvili by David Maisuradze, CC BY-SA 3.0 (https://creativecommons.org/licenses/by-sa/3.0/) */
-@font-face{font-family:"gancda hand";src:url(assets/fonts/dm-davit-guramishvili.woff2) format("woff2"),url(assets/fonts/dm-davit-guramishvili.woff) format("woff");unicode-range:U+10A0-10FF,U+1C90-1CBF,U+2D00-2D2F;font-display:swap}
+/* Georgian slogan face: DM Ivane Nanuashvili, © David Maisuradze, Georgian National Centre of Manuscripts (supplied by the client) */
+@font-face{font-family:"gancda hand";src:url(assets/fonts/dm-ivane-nanuashvili.woff2) format("woff2"),url(assets/fonts/dm-ivane-nanuashvili.woff) format("woff");unicode-range:U+10A0-10FF,U+1C90-1CBF,U+2D00-2D2F;font-display:swap}
 /* gancda studio: tokens, header, hero and footer.
    Light by default everywhere, with a dark theme people can switch to. Lime sits on aubergine (buttons, the hero panel) or as a highlighter behind aubergine text. Brand: #1A0B2E deep purple, #D7FF52 lime, #C8B6FF lavender, #F8F4EB cream. */
 :root{
@@ -79,8 +79,8 @@ html[lang="ka"] .eyebrow{letter-spacing:0;text-transform:none}
 .hero h1{margin:0;font-family:var(--display);font-weight:800;font-size:clamp(2.6rem,6.2vw,6.4rem);line-height:.98;letter-spacing:-.035em;text-wrap:balance}
 html[lang="ka"] .hero h1{font-size:clamp(2.1rem,4.4vw,4.4rem);line-height:1.14;letter-spacing:-.02em}
 .hero h1 span{display:block}
-.hero h1 em{position:relative;z-index:0;display:inline-block;margin-top:.08em;padding:0 .12em .1em;font-style:normal;color:var(--em);font-family:"gancda hand","Caveat",cursive;font-weight:700;font-size:min(1.18em,11vw);white-space:nowrap;line-height:1;letter-spacing:0;-webkit-text-stroke:.012em currentColor}
-html[lang="ka"] .hero h1 em{font-size:min(1.4em,13vw);white-space:nowrap;letter-spacing:.01em;margin-bottom:.3em}
+.hero h1 em{position:relative;z-index:0;display:inline-block;margin-top:.08em;padding:0 .12em .1em;font-style:normal;color:var(--em);font-family:"gancda hand","Caveat",cursive;font-weight:500;font-size:min(1.18em,11vw);white-space:nowrap;line-height:1;letter-spacing:0}
+html[lang="ka"] .hero h1 em{font-size:min(1.3em,11vw);white-space:nowrap;letter-spacing:.01em;margin-top:.34em;margin-bottom:.5em}
 .hero h1 em svg{display:none}
 .hero h1 em::before{content:"";position:absolute;z-index:-1;left:-.05em;right:-.08em;bottom:.08em;height:.42em;background:var(--marker);border-radius:.3em .5em .35em .55em;transform:rotate(-1.6deg) skewX(-8deg);transform-origin:left;animation:marker .7s .35s cubic-bezier(.3,.9,.4,1) both}
 @keyframes marker{from{transform:rotate(-1.6deg) skewX(-8deg) scaleX(0)}}

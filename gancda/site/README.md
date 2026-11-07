@@ -18,4 +18,4 @@ Demos by goal:
 - **Campaigns:** Pour it right (hold to pour, let go on the line; the latte art and the prize follow your pour).
 - **Events:** Year-end dinner (pick a seat), Omakase (invitation).
 
-The slogan's hand-lettered second line uses DM Davit Guramishvili for Georgian (self-hosted in `assets/fonts/`; © David Maisuradze, CC BY-SA 3.0, which requires crediting the author) and Caveat for English. Other fonts load from Google Fonts. Check the licences, or self-host the fonts, before launch, as the kit's handoff notes say. The kit's logo paths are traced from a raster and still need a designer's clean-up and a trademark check before final use.
+The slogan's hand-lettered second line uses DM Ivane Nanuashvili for Georgian (self-hosted in `assets/fonts/`; © David Maisuradze, Georgian National Centre of Manuscripts; supplied by the client, confirm the licence terms before launch) and Caveat for English. Other fonts load from Google Fonts. Check the licences, or self-host the fonts, before launch, as the kit's handoff notes say. The kit's logo paths are traced from a raster and still need a designer's clean-up and a trademark check before final use.
