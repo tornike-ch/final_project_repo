@@ -10,7 +10,9 @@
   <meta property="og:image" content="assets/gancda-og-1200x630.png">
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-  <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Bricolage+Grotesque:opsz,wght@12..96,600..800&family=Inter:wght@400..800&family=Noto+Sans+Georgian:wdth,wght@62.5..100,100..900&family=Noto+Serif+Georgian:wdth,wght@62.5..100,500..900&family=Google+Sans:wght@400..700&family=Zeyada&family=DM+Mono:wght@400;500&family=Playfair+Display:ital,wght@1,700&family=Shippori+Mincho:wght@800&display=swap">
+  <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Bricolage+Grotesque:opsz,wght@12..96,600..800&family=Inter:wght@400..800&family=Noto+Sans+Georgian:wdth,wght@62.5..100,100..900&family=Zeyada&display=swap">
+  <!-- faces used only inside the demos: loaded without blocking the first paint -->
+  <link rel="stylesheet" media="print" onload="this.media='all'" href="https://fonts.googleapis.com/css2?family=Noto+Serif+Georgian:wdth,wght@62.5..100,500..900&family=Google+Sans:wght@400..700&family=DM+Mono:wght@400;500&family=Playfair+Display:ital,wght@1,700&family=Shippori+Mincho:wght@800&display=swap">
   <link rel="stylesheet" href="studio.css">
   <link rel="stylesheet" href="demos.css">
   <link rel="stylesheet" href="experiences.css">
@@ -33,16 +35,16 @@
   <header class="masthead">
     <div class="wrap navrow">
       <a class="brand" href="#top"><img class="logo" src="assets/gancda-lockup-ka-light.png" alt="განცდა" width="176" height="48"></a>
-      <nav class="navlinks" id="mainNav" aria-label="Navigation">
+      <nav class="navlinks" id="mainNav" aria-label="ნავიგაცია" data-i18n-label="lblNav">
         <a href="#play" data-i18n="navPlay">გამოცდილებები</a>
         <a href="#report" data-i18n="navResults">შედეგები</a>
         <a href="#start" data-i18n="navProcess">პროცესი</a>
         <a class="navmenu-cta" href="#request" data-i18n="navStart">პროექტის დაწყება</a>
-        <div class="navlangs" role="group" aria-label="Language"><button type="button" lang="en" data-lang="en" aria-pressed="false">English</button><button type="button" lang="ka" data-lang="ka" aria-pressed="true">ქართული</button></div>
+        <div class="navlangs" role="group" aria-label="ენა" data-i18n-label="lblLang"><button type="button" lang="en" data-lang="en" aria-pressed="false">English</button><button type="button" lang="ka" data-lang="ka" aria-pressed="true">ქართული</button></div>
         <button type="button" class="navtheme" data-theme-toggle><svg aria-hidden="true"><use href="#moon"/></svg><span data-i18n="themeLabel">თემა</span></button>
       </nav>
       <div class="navright">
-        <div class="languages" role="group" aria-label="Language">
+        <div class="languages" role="group" aria-label="ენა" data-i18n-label="lblLang">
           <button type="button" lang="en" data-lang="en" aria-label="English" aria-pressed="false">EN</button><span aria-hidden="true">/</span><button type="button" lang="ka" data-lang="ka" aria-label="ქართული" aria-pressed="true">ქა</button>
         </div>
         <button type="button" id="themeToggle" class="icon-button" aria-label="მუქ თემაზე გადასვლა"><svg aria-hidden="true"><use href="#moon"/></svg></button>
@@ -78,9 +80,9 @@
         </figure>
       </div>
     </section>
-    <section id="play" aria-label="Experiences"></section>
-    <section id="report" aria-label="Example report"></section>
-    <section id="start" aria-label="Process"></section>
+    <section id="play" aria-label="გამოცდილებები" data-i18n-label="lblPlay"></section>
+    <section id="report" aria-label="საჩვენებელი ანგარიში" data-i18n-label="lblReport"></section>
+    <section id="start" aria-label="პროცესი" data-i18n-label="lblStart"></section>
   </main>
   <footer class="sitefooter"><div class="wrap">
     <div class="footer-main"><div><a class="brand" href="#top"><img class="logo" src="assets/gancda-lockup-ka-light.png" alt="განცდა" width="200" height="54"></a><p class="footer-tagline" data-i18n="tagline">გრძნობ, როცა მოქმედებ.</p><p class="footer-meaning" data-i18n="meaning">განცდა — ის, რასაც თავად განიცდი.</p></div><div class="foot-contact"><span data-i18n="studioCity">ინტერაქტიული გამოცდილებების სტუდია · თბილისი</span><a href="mailto:hello@gancda.com">hello@gancda.com <svg aria-hidden="true"><use href="#diagonal"/></svg></a></div></div>

@@ -9,7 +9,7 @@
       explore: 'ნახეთ მაგალითები', how: 'როგორ ვმუშაობთ', tryDemo: 'ითამაშეთ: ოთახი 214', tagline: 'გრძნობ, როცა მოქმედებ.', themeLabel: 'თემა',
       meaning: 'განცდა — ის, რასაც თავად განიცდი.', studioCity: 'ინტერაქტიული გამოცდილებების სტუდია · თბილისი',
       demoNotice: 'მაგალითებში წარმოდგენილი ბრენდები, სახელები და მონაცემები საჩვენებელია.', back: 'თავში დაბრუნება ↑',
-      toDark: 'მუქ თემაზე გადასვლა', toLight: 'ღია თემაზე გადასვლა', menu: 'მენიუ', closeMenu: 'მენიუს დახურვა'
+      lblNav: 'ნავიგაცია', lblLang: 'ენა', lblPlay: 'გამოცდილებები', lblReport: 'საჩვენებელი ანგარიში', lblStart: 'პროცესი', toDark: 'მუქ თემაზე გადასვლა', toLight: 'ღია თემაზე გადასვლა', menu: 'მენიუ', closeMenu: 'მენიუს დახურვა'
     },
     en: {
       skip: 'Skip to main content', navPlay: 'Experiences', navResults: 'Results', navProcess: 'Process', navStart: 'Start a project',
@@ -18,7 +18,7 @@
       explore: 'See the examples', how: 'How we work', tryDemo: 'Play Room 214', tagline: 'Feel it. Make it happen.', themeLabel: 'Theme',
       meaning: 'gancda — the feeling you live through yourself.', studioCity: 'Interactive experiences studio · Tbilisi',
       demoNotice: 'Brands, names and figures in the examples are for demonstration.', back: 'Back to top ↑',
-      toDark: 'Switch to dark theme', toLight: 'Switch to light theme', menu: 'Menu', closeMenu: 'Close menu'
+      lblNav: 'Navigation', lblLang: 'Language', lblPlay: 'Experiences', lblReport: 'Example report', lblStart: 'Process', toDark: 'Switch to dark theme', toLight: 'Switch to light theme', menu: 'Menu', closeMenu: 'Close menu'
     }
   };
   const store = {
@@ -61,6 +61,7 @@
     root.lang = lang;
     store.set('lang', lang);
     document.querySelectorAll('[data-i18n]').forEach(el => { const v = words[lang][el.dataset.i18n]; if (v != null) el.textContent = v; });
+    document.querySelectorAll('[data-i18n-label]').forEach(el => { const v = words[lang][el.dataset.i18nLabel]; if (v != null) el.setAttribute('aria-label', v); });
     document.querySelectorAll('[data-lang]').forEach(b => b.setAttribute('aria-pressed', String(b.dataset.lang === lang)));
     paintThemeButton(); paintMenuButton();
     /* the Georgian lockup in Georgian, the kit's Latin logo in English */
@@ -80,13 +81,21 @@
     }));
     document.querySelectorAll('[data-lang]').forEach(b => b.addEventListener('click', () => { if (b.dataset.lang !== lang) setLanguage(b.dataset.lang); }));
     const menu = document.getElementById('menuToggle'), nav = document.getElementById('mainNav');
-    const closeMenu = () => { if (!nav) return; nav.classList.remove('open'); menu?.setAttribute('aria-expanded', 'false'); paintMenuButton(); };
+    /* the phone menu: focus moves in when it opens, back to the button when it closes; language and theme keep it open */
+    const closeMenu = back => {
+      if (!nav || !nav.classList.contains('open')) return;
+      const inside = nav.contains(document.activeElement);
+      nav.classList.remove('open'); menu?.setAttribute('aria-expanded', 'false'); paintMenuButton();
+      if (back || inside) menu?.focus();
+    };
     menu?.addEventListener('click', () => {
       const open = menu.getAttribute('aria-expanded') !== 'true';
       nav.classList.toggle('open', open); menu.setAttribute('aria-expanded', String(open)); paintMenuButton();
+      if (open) nav.querySelector('a')?.focus();
     });
-    nav?.addEventListener('click', e => { if (e.target.closest('a,[data-lang]')) closeMenu(); });
-    document.addEventListener('keydown', e => { if (e.key === 'Escape') closeMenu(); });
+    nav?.addEventListener('click', e => { if (e.target.closest('a')) closeMenu(); });
+    document.addEventListener('keydown', e => { if (e.key === 'Escape') closeMenu(true); });
+    document.addEventListener('pointerdown', e => { if (!e.target.closest('#mainNav,#menuToggle')) closeMenu(); });
     document.getElementById('heroPlay')?.addEventListener('click', () => window.GancdaExperiences?.open('learn'));
     setLanguage(lang, lang === 'ka');
   }

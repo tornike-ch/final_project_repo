@@ -3,7 +3,7 @@
   color: var(--ink);
   background: var(--paper);
 }
-#start :is(#process, #pricing, #request) { scroll-margin-top: 90px; }
+
 .gp-process { padding-block: clamp(4rem, 7vw, 7rem); }
 .gp-title {
   margin: 0;
@@ -168,3 +168,6 @@ html[lang="ka"] .gp-request-intro .gp-title { max-width: 14ch; }
 /* expert review fixes */
 html[lang="ka"] .gp-process .gp-title, html[lang="ka"] .gp-request .gp-title { font-size: clamp(30px, 3.6vw, 52px); }
 .gp-fields label:has([name=goal]) { grid-column: 1 / -1; }
+.gp-err { margin: 0; font-size: .86rem; font-weight: 600; color: #B42318; }
+:root[data-theme="dark"] .gp-err { color: #FF9B8A; }
+.gp-fields [aria-invalid] { border-color: #B42318; }

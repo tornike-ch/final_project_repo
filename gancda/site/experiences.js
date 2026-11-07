@@ -156,25 +156,26 @@
     snd.innerHTML = soundIcon(); snd.setAttribute('aria-pressed', String(!D() || D().sound())); snd.setAttribute('aria-label', t(ui.sound));
     modal.querySelector('.xp-close').setAttribute('aria-label', t(ui.close));
     modal.querySelector('.xs-rail').innerHTML = '<p class="xs-kicker">' + t(c.label) + ' · ' + esc(String(d.kind).split(' · ').pop()) + '</p><h2>' + esc(d.name) + '</h2><p class="xs-desc">' + esc(d.desc) + '</p>' +
-      '<p class="xs-label">' + t(ui.steps) + '</p><ol class="xs-steps">' + steps + '</ol>' +
+      '<p class="xs-label">' + t(ui.steps) + '</p><ol class="xs-steps">' + steps + '</ol><p class="sr-only" aria-live="polite" id="xs-say"></p>' +
       '<div class="xs-actions"><button class="xs-link" type="button" data-xp-action="restart">' + icon('undo') + t(ui.restart) + '</button><a href="#request" class="xs-link" data-xp-action="request">' + t(ui.request) + icon('open') + '</a></div>';
     modal.querySelector('.xs-dots').innerHTML = d.steps.map((x, i) => '<i class="' + (stageDone || i < stageStep ? 'done' : i === stageStep ? 'now' : '') + '"></i>').join('');
     const lock = modal.querySelector('.xs-lock');
     if (lock) {
       lock.querySelector('.xs-time').textContent = lockTime();
       lock.querySelector('.xs-date').textContent = lockDate();
-      lock.querySelector('.xs-note').innerHTML = '<span class="xs-app">' + esc(d.brand).charAt(0) + '</span><span class="xs-nt"><b>' + esc(d.brand) + '<small>' + t(ui.now) + '</small></b><span>' + esc(t(notes[id] || p('', ''))) + '</span></span>';
+      lock.querySelector('.xs-note').innerHTML = '<span class="xs-app" aria-hidden="true">' + esc(d.brand).charAt(0) + '</span><span class="xs-nt"><b>' + esc(d.brand) + '<small aria-hidden="true">' + t(ui.now) + '</small></b><span>' + esc(t(notes[id] || p('', ''))) + '</span></span>';
       lock.querySelector('.xs-hint').textContent = t(ui.tapOpen);
     }
     const m = c.metrics.slice(0, 2).map(([label, value, unit]) => '<div><dt>' + t(label) + '</dt><dd data-count="' + value + '">' + value + (unit ? '<small>' + t(unit) + '</small>' : '') + '</dd></div>').join('');
-    modal.querySelector('.xs-outro').innerHTML = '<button type="button" class="xs-x" data-xp-action="keep" aria-label="' + t(ui.keep) + '">' + icon('close') + '</button><p class="xs-kicker">' + t(ui.feel) + '</p><h3>' + t(ui.want) + '</h3>' +
+    modal.querySelector('.xs-outro').innerHTML = '<button type="button" class="xs-x" data-xp-action="keep" aria-label="' + t(ui.keep) + '">' + icon('close') + '</button><p class="xs-kicker">' + t(ui.feel) + '</p><h3 id="xs-outro-h" tabindex="-1">' + t(ui.want) + '</h3>' +
       '<dl class="xs-metrics">' + m + '</dl><p class="xs-note2">' + t(ui.illustrative) + '</p>' +
       '<div class="xs-outro-actions"><a href="#request" class="xs-cta" data-xp-action="request">' + t(ui.request) + icon('open') + '</a><button type="button" class="xs-link" data-xp-action="restart">' + icon('undo') + t(ui.restart) + '</button></div>';
   }
 
   function paintSteps() {
     if (!modal) return;
-    modal.querySelectorAll('.xs-steps li').forEach((li, i) => { li.className = stageDone || i < stageStep ? 'done' : i === stageStep ? 'now' : ''; });
+    modal.querySelectorAll('.xs-steps li').forEach((li, i) => { li.className = stageDone || i < stageStep ? 'done' : i === stageStep ? 'now' : ''; if (i === stageStep && !stageDone) li.setAttribute('aria-current', 'step'); else li.removeAttribute('aria-current'); });
+    const say = modal.querySelector('#xs-say'), d = info(pick[active]); if (say) say.textContent = stageDone ? t(ui.feel) : (d.steps[stageStep] || '');
     modal.querySelectorAll('.xs-dots i').forEach((li, i) => { li.className = stageDone || i < stageStep ? 'done' : i === stageStep ? 'now' : ''; });
   }
 
@@ -193,14 +194,15 @@
 
   function showOutro() {
     const o = modal && modal.querySelector('.xs-outro'); if (!o || !modal.open) return;
-    o.hidden = false; modal.classList.add('outro'); countUp(o);
+    o.hidden = false; o.setAttribute('role', 'region'); o.setAttribute('aria-labelledby', 'xs-outro-h'); modal.classList.add('outro'); countUp(o);
+    const h = o.querySelector('h3'); if (h) h.focus({ preventScroll: true });
   }
   function hideOutro() { clearTimeout(outroTimer); const o = modal && modal.querySelector('.xs-outro'); if (o) o.hidden = true; modal && modal.classList.remove('outro'); }
 
   function unlock() {
     const lock = modal && modal.querySelector('.xs-lock'); if (!lock || lock.classList.contains('go')) return;
     if (D() && D().unlock) D().unlock();
-    lock.classList.add('go'); modal.classList.add('live');
+    lock.classList.add('go'); modal.classList.add('live'); modal.querySelector('[data-xp-stage]').inert = false;
     setTimeout(() => { lock.remove(); const f = modal.querySelector('[data-xp-stage] button, [data-xp-stage] [tabindex="0"]'); if (f) f.focus({ preventScroll: true }); }, matchMedia('(prefers-reduced-motion: reduce)').matches ? 0 : 650);
   }
 
@@ -220,6 +222,7 @@
     paintChrome();
     if (player && D()) D().drop(player);
     player = D() ? D().mount(modal.querySelector('[data-xp-stage]'), id) : null;
+    modal.querySelector('[data-xp-stage]').inert = true;
   }
   function choose(key) {
     if (!valid(key)) return;
@@ -297,7 +300,7 @@
       if (action === 'keep') hideOutro();
       if (action === 'sound' && D()) { D().sound(!D().sound()); paintChrome(); }
       if (action === 'restart' && player) { stageDone = false; stageStep = 0; hideOutro(); paintSteps(); player.reset(); }
-      if (action === 'request') { document.dispatchEvent(new CustomEvent('gancda:goal', { detail: active, bubbles: true })); modal.close(); }
+      if (action === 'request') { document.dispatchEvent(new CustomEvent('gancda:goal', { detail: active, bubbles: true })); sourceFocus = document.querySelector('#request select[name=goal]') || sourceFocus; modal.close(); }
     });
     renderGallery();
     renderReport();

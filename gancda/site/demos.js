@@ -248,7 +248,7 @@ function askArt(t){
 }
 function vAsk(t){
   const g = G[lang], u = uiOf(t), big = u.ask === 'bigtype';
-  return '<section class="i-step">'+dots(1)+'<div class="i-kick">'+esc(tx(t.kick2||t.kick))+'</div>'+
+  return '<section class="i-step">'+dots(1)+'<div class="i-kick"'+(t.jp ? ' lang="ja"' : '')+'>'+esc(tx(t.kick2||t.kick))+'</div>'+
     (big ? '<div class="i-bigic" aria-hidden="true">'+ic(t.bigIc || t.sp.ic)+'</div>' : '')+
     '<h2 class="i-h2'+(big ? ' i-big' : '')+'">'+esc(tx(t.q))+'</h2>'+askArt(t)+
     '<div class="i-row"><button type="button" class="i-btn i-yes" data-act="yes">'+esc(tx(t.yes)||g.yes)+'</button>'+
@@ -354,6 +354,15 @@ function coverHTML(t){
   return scrOpen(t)+'<div class="scr-in">'+vCover(t, true)+'</div>'+frameEl(t)+'</div>';
 }
 
+/* after a repaint, put keyboard focus back on the same control, or on the first control if it is gone */
+let viaKeys = false;
+document.addEventListener('keydown', () => { viaKeys = true; }, true);
+document.addEventListener('pointerdown', () => { viaKeys = false; }, true);
+function keepFocus(el){
+  const a = document.activeElement; if (!viaKeys || !a || !el.contains(a) || a === el) return () => {};
+  const key = ['act', 'i', 'q', 'p', 't', 'k', 'ing', 'id', 'c'].filter(k => a.dataset && a.dataset[k] != null).map(k => '[data-'+k+'="'+a.dataset[k]+'"]').join('');
+  return () => { const n = (key && el.querySelector(key)) || el.querySelector('button:not(:disabled),[tabindex="0"],a[href]'); if (n) try { n.focus({preventScroll:true}); } catch (e) {} };
+}
 /* ---------- live invite instance ---------- */
 const invites = [];
 class Invite {
@@ -372,7 +381,9 @@ class Invite {
   render(){
     const t = this.t, s = this.s;
     const views = [() => vCover(t, false), () => vAsk(t), () => vPick(t, s), () => vSurprise(t, s), () => vTicket(t, s)];
+    const f = keepFocus(this.el);
     this.el.innerHTML = scrOpen(t)+'<div class="scr-in">'+views[s.step]()+'</div>'+frameEl(t)+'<div class="i-fx"></div></div>';
+    f();
     this.inner = this.el.querySelector('.scr-in');
     if (s.step === 2) this.tray();
     tick();
@@ -544,7 +555,7 @@ class Demo {
     this.el = el; this.timers = []; this.iv = 0;
     el.addEventListener('click', e => { const b = e.target.closest('[data-act]'); if (b && this.el.contains(b)) this.act(b.dataset.act, b, e); });
     el.addEventListener('keydown', e => {
-      if ((e.key === 'Enter' || e.key === ' ') && e.target.matches && e.target.matches('g[data-act]')){ e.preventDefault(); this.act(e.target.dataset.act, e.target, e); }
+      if ((e.key === 'Enter' || e.key === ' ') && e.target.matches && e.target.matches('[data-act]:not(button):not(a)')){ e.preventDefault(); this.act(e.target.dataset.act, e.target, e); }
     });
     if (this.bind) this.bind();
     invites.push(this);
@@ -554,7 +565,7 @@ class Demo {
   reset(){ this.clear(); this.lastStep = -1; this.s = this.init(); this.render(); this.step(0); }
   clear(){ this.timers.forEach(clearTimeout); this.timers = []; if (this.iv){ clearInterval(this.iv); this.iv = 0; } }
   later(fn, ms){ this.timers.push(setTimeout(fn, ms)); }
-  paint(inner){ this.el.innerHTML = '<div class="dm dm-'+this.t.mech+'">'+inner+'<div class="i-fx"></div></div>'; }
+  paint(inner){ const f = keepFocus(this.el); this.el.innerHTML = '<div class="dm dm-'+this.t.mech+'">'+inner+'<div class="i-fx"></div></div>'; f(); }
   q(s){ return this.el.querySelector(s); }
   svgPt(e, svg, w, h){ const r = svg.getBoundingClientRect(); return {x:(e.clientX - r.left) / r.width * w, y:(e.clientY - r.top) / r.height * h}; }
   /* progress for the player's side rail: n is the index of the step the visitor has reached */
@@ -664,6 +675,8 @@ const SP = {
       lift:'The guest is already in the lift!', review:'“Spotless. It felt like home.”', guest:'Guest, room 214'}
 };
 /* where each mistake sits in the drawing (viewBox 300 × 330) */
+const SPOBJ = {frame:L('სურათი კედელზე','The picture on the wall'), cup:L('ჭიქა ტუმბოზე','The cup on the bedside table'), towel:L('პირსახოცი იატაკზე','The towel on the floor'), bin:L('ნაგვის ურნა','The bin'), slipper:L('ჩუსტი','The slipper')};
+const SPDECOY = [{x:236, y:76, r:28, n:L('ფანჯარა','The window')}, {x:25, y:150, r:14, n:L('ლამპა','The lamp')}, {x:156, y:150, r:18, n:L('ბალიშები','The pillows')}, {x:273, y:168, r:16, n:L('ქოთნის მცენარე','The plant')}];
 const SPOTS = {frame:{x:75, y:62, r:30}, cup:{x:50, y:168, r:12}, towel:{x:165, y:278, r:22}, bin:{x:263, y:256, r:20}, slipper:{x:93, y:300, r:15}};
 const ROOM_BASE = '<rect width="300" height="214" fill="#DCCFEA"/><rect y="214" width="300" height="116" fill="#C8996A"/>'+
   '<g stroke="#B3855A" stroke-width="1"><path d="M0 240H300M0 268H300M0 298H300"/><path d="M60 214V240M180 214V240M120 240V268M240 240V268M40 268V298M200 268V298M100 298V330M260 298V330"/></g>'+
@@ -717,8 +730,8 @@ class Spot extends Demo {
       if (s.found.length === t.spots.length) this.later(() => this.finish(), reduced() ? 300 : 1100);
     } else if (a === 'miss'){
       this.go(); this.penalty(3); sfx('bad'); buzz(30);
-      const svg = this.q('.sp-scene svg'); if (!svg || !e || e.clientX == null) return;
-      const p = this.svgPt(e, svg, 300, 330);
+      const svg = this.q('.sp-scene svg'); if (!svg) return;
+      const p = e && e.clientX && e.detail ? this.svgPt(e, svg, 300, 330) : {x:+(b.getAttribute('cx') || 150), y:+(b.getAttribute('cy') || 165)};
       svg.insertAdjacentHTML('beforeend', '<g class="sp-x" transform="translate('+p.x.toFixed(1)+' '+p.y.toFixed(1)+')"><path d="M-6-6 6 6M6-6-6 6"/><text y="-11">−3</text></g>');
       const x = svg.lastElementChild; setTimeout(() => x && x.remove(), 900);
     } else if (a === 'hint'){
@@ -753,12 +766,14 @@ class Spot extends Demo {
     const P = sp => SPOTS[sp.id], just = fresh && s.last >= 0 ? t.spots[s.last].id : null;
     const marks = s.found.map((i, n) => { const p = P(t.spots[i]); return '<g class="sp-mark'+(fresh && i === s.last ? ' just' : '')+'" transform="translate('+p.x+' '+p.y+')"><ellipse rx="'+(p.r + 5)+'" ry="'+(p.r + 1)+'" transform="rotate(-12)"/><text y="'+(-p.r - 7)+'">'+(n + 1)+'</text></g>'; }).join('');
     const hint = s.hint >= 0 ? '<circle class="sp-hint" cx="'+P(t.spots[s.hint]).x+'" cy="'+P(t.spots[s.hint]).y+'" r="'+(P(t.spots[s.hint]).r + 10)+'"/>' : '';
-    const hits = t.spots.map((sp, i) => s.found.includes(i) ? '' : '<circle class="sp-hit" data-act="spot" data-i="'+i+'" cx="'+P(sp).x+'" cy="'+P(sp).y+'" r="'+(P(sp).r + 8)+'"/>').join('');
+    const hits = t.spots.map((sp, i) => s.found.includes(i) ? null : {y:P(sp).y, h:'<circle class="sp-hit" data-act="spot" data-i="'+i+'" role="button" tabindex="0" aria-label="'+esc(tx(SPOBJ[sp.id]))+'" cx="'+P(sp).x+'" cy="'+P(sp).y+'" r="'+(P(sp).r + 8)+'"/>'})
+      .concat(SPDECOY.map((d, k) => ({y:d.y, h:'<circle class="sp-hit decoy" data-act="miss" data-d="'+k+'" role="button" tabindex="0" aria-label="'+esc(tx(d.n))+'" cx="'+d.x+'" cy="'+d.y+'" r="'+d.r+'"/>'})))
+      .filter(Boolean).sort((a, b) => a.y - b.y).map(x => x.h).join('');
     const last = s.last >= 0 ? t.spots[s.last] : null, late = s.left <= 15 ? ' late' : '';
     this.paint('<div class="dm-in sp-in"><div class="sp-top"><div><b>'+esc(tx(t.brand))+'</b><span>'+esc(tx(t.name))+'</span></div>'+
       '<div class="sp-ring'+late+'"><svg viewBox="0 0 36 36" aria-hidden="true"><circle cx="18" cy="18" r="16"/><circle class="v" cx="18" cy="18" r="16" pathLength="100.5" style="stroke-dashoffset:'+((1 - s.left / t.time) * 100.5).toFixed(2)+'"/></svg><span class="sp-sec">'+Math.ceil(s.left)+'</span></div></div>'+
       '<p class="sp-q">'+esc(fill(g.q, {n:t.spots.length}))+'<b>'+s.found.length+' / '+t.spots.length+'</b></p>'+
-      '<div class="sp-scene'+late+'"><svg viewBox="0 0 300 330" role="img" aria-label="'+esc(g.scene)+'"><g pointer-events="none">'+roomSVG(t, s.found, just)+'</g>'+
+      '<div class="sp-scene'+late+'"><svg viewBox="0 0 300 330" role="group" aria-label="'+esc(g.scene)+'"><g pointer-events="none">'+roomSVG(t, s.found, just)+'</g>'+
       '<rect class="sp-miss" data-act="miss" width="300" height="330"/>'+hits+'<g pointer-events="none">'+hint+marks+'</g></svg></div>'+
       '<div class="sp-fb'+(s.lift && !last ? ' lift' : '')+'" aria-live="polite">'+(last ? '<b>'+esc(tx(last.n))+'.</b> '+esc(tx(last.why)) : esc(s.lift ? g.lift : g.hint0))+'</div>'+
       '<div class="sp-row"><button type="button" class="sp-hintb" data-act="hint">'+ic('bulb')+esc(g.hintB)+'</button></div></div>');

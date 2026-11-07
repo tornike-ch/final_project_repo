@@ -1,6 +1,6 @@
 /* gancda experiences: gallery, live previews, report and the demo player, in the gancda brand. */
 
-#play, #report { scroll-margin-top: 90px; }
+
 #play { color: var(--ink); background: var(--paper); }
 .xp-section { padding-block: clamp(54px, 6vw, 98px); }
 .xp-heading { display: flex; align-items: end; justify-content: space-between; gap: 26px; margin-bottom: 30px; }
@@ -262,4 +262,15 @@ html[lang="ka"] .xp-heading h2 { font-size: clamp(30px, 3.6vw, 52px); }
 @media (max-width: 600px) {
   .xp-stage.outro .xs-metrics, .xp-stage.outro .xs-note2 { display: none; }
   .xp-stage.outro .xp-screen .dm-in, .xp-stage.outro .xp-screen .scr-in { padding-bottom: 200px; }
+}
+/* accessibility review */
+.sr-only { position: absolute; width: 1px; height: 1px; margin: -1px; padding: 0; overflow: hidden; clip: rect(0 0 0 0); white-space: nowrap; border: 0; }
+.xp-stage .xp-phone :focus-visible { outline: 3px solid #1A0B2E; outline-offset: 2px; box-shadow: 0 0 0 2px #fff; }
+.xs-outro h3:focus { outline: none; }
+.xs-nt b small { opacity: .8; }
+/* short screens (zoom, phones in landscape): the demo keeps a readable size and the stage scrolls */
+@media (max-height: 560px) {
+  .xp-stage { overflow-y: auto; }
+  .xp-stage .xp-phone { height: auto; aspect-ratio: 300 / 620; width: min(100vw - 32px, 420px); }
+  .xs-center { place-items: start center; }
 }

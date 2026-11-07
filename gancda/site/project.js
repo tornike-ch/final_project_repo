@@ -26,7 +26,7 @@
       readyHeading: "წერილის ტექსტი მზადაა", readyHint: "გახსენით თქვენი საფოსტო აპი და გამოგვიგზავნეთ წერილი. ტექსტის კოპირებაც შეგიძლიათ.",
       openEmail: "ელფოსტის გახსნა", copyBrief: "ტექსტის კოპირება", brief: "წერილის ტექსტი",
       copied: "ტექსტი დაკოპირებულია.", manual: "ტექსტი მონიშნულია. დასაკოპირებლად გამოიყენეთ კოპირების ბრძანება.",
-      subject: "ახალი პროექტი", greeting: "გამარჯობა, განცდა!"
+      errReq: "შეავსეთ ეს ველი.", errGoal: "აირჩიეთ მიზანი.", subject: "ახალი პროექტი", greeting: "გამარჯობა, განცდა!"
     },
     en: {
       process: "How we work",
@@ -52,7 +52,7 @@
       readyHeading: "Your email draft is ready", readyHint: "Open your email app to send it to the studio, or copy the text into a message.",
       openEmail: "Open email app", copyBrief: "Copy brief", brief: "Your brief",
       copied: "Brief copied.", manual: "The brief is selected. Use your device’s copy command to copy it.",
-      subject: "New project", greeting: "Hello gancda,"
+      errReq: "Please fill this in.", errGoal: "Please choose a goal.", subject: "New project", greeting: "Hello gancda,"
     }
   };
 
@@ -109,7 +109,7 @@
       '<div class="gp-offer-body"><ol class="gp-offer-steps">', offer, '</ol><a class="gp-button gp-offer-cta" href="#request">', t.offerCta, ' ', direction, '</a><p class="gp-terms">', t.terms, '</p></div></div></div>',
       '<div id="request" class="gp-request"><div class="wrap gp-request-layout"><div class="gp-request-intro"><h2 class="gp-title">', t.heading, '</h2><p>', t.intro,
       '</p><div class="gp-direct"><span>', t.direct, '</span><a href="mailto:', studioEmail, '">', studioEmail, ' ', external, '</a></div></div>',
-      '<form class="gp-form"><div class="gp-fields"><label>', t.goal, '<select name="goal" required><option value="" disabled>', t.goalPrompt, '</option>',
+      '<form class="gp-form" novalidate><div class="gp-fields"><label>', t.goal, '<select name="goal" required><option value="" disabled>', t.goalPrompt, '</option>',
       options(Object.entries(t.goals)), '</select></label>',
       '<label>', t.name, '<input name="name" autocomplete="name" required maxlength="80"></label>',
       '<label>', t.contact, '<input name="contact" required maxlength="120" dir="auto"></label>',
@@ -128,11 +128,21 @@
     form.addEventListener("change", () => invalidate(form));
     form.addEventListener("submit", event => {
       event.preventDefault();
-      for (const key of ["name", "contact"]) {
+      /* our own messages, in the page language, that stay until the field is fixed */
+      form.querySelectorAll(".gp-err").forEach(n => n.remove());
+      let first = null;
+      for (const key of ["goal", "name", "contact"]) {
         const field = form.elements[key];
-        field.value = field.value.trim();
-        if (!field.reportValidity()) return;
+        if (key !== "goal") field.value = field.value.trim();
+        const ok = !!field.value;
+        if (ok) field.removeAttribute("aria-invalid"); else field.setAttribute("aria-invalid", "true");
+        if (ok) { field.removeAttribute("aria-describedby"); continue; }
+        const msg = document.createElement("p");
+        msg.className = "gp-err"; msg.id = "err-" + key; msg.textContent = key === "goal" ? t.errGoal : t.errReq;
+        field.insertAdjacentElement("afterend", msg); field.setAttribute("aria-describedby", msg.id);
+        if (!first) first = field;
       }
+      if (first) { first.focus(); return; }
       snapshot();
       draftReady = true;
       renderDraft(form);

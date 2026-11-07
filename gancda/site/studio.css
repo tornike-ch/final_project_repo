@@ -169,3 +169,10 @@ html[lang="ka"] .hero h1 em{font-size:min(1.55em,14vw);white-space:nowrap;letter
 .navmenu-cta{display:none}
 @media (max-width:600px){.navlinks a.navmenu-cta{display:flex;justify-content:center;margin-top:12px;padding:14px 20px;border:0;border-radius:999px;background:var(--hi);color:var(--hi-ink);font-weight:700}}
 html[lang="ka"] .hero h1 em::before{bottom:.22em;height:.38em}
+
+/* accessibility review: focused things never hide under the sticky header; visible rings; 44px targets */
+html{scroll-padding-top:96px}
+.art-play:focus-visible{outline-color:var(--lime)}
+.navlinks a{min-height:44px;display:inline-flex;align-items:center}
+.footer-meta a,.foot-contact a{min-height:44px;display:inline-flex;align-items:center}
+@media (max-width:420px){.hero h1 em{white-space:normal}}

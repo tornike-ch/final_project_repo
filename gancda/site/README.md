@@ -19,3 +19,7 @@ Demos by goal:
 - **Events:** Year-end dinner (pick a seat), Omakase (invitation).
 
 The slogan's hand-lettered second line uses DM Iakobi for Georgian (self-hosted in `assets/fonts/`; © David Maisuradze; supplied by the client, confirm the licence terms before launch) and Zeyada (Google Fonts) for English, picked to match its thin, slanted pen. Other fonts load from Google Fonts. Check the licences, or self-host the fonts, before launch, as the kit's handoff notes say. The kit's logo paths are traced from a raster and still need a designer's clean-up and a trademark check before final use.
+
+## Deploy to Cloudflare Pages
+
+Cloudflare dashboard → Workers & Pages → Create → Pages → Upload assets → drop the zip (or this folder). `index.html` must be at the top level. No build step. `preview.html` and this README are not needed on the live site.

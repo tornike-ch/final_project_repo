@@ -1023,3 +1023,11 @@ html[lang="ka"] .sp-top b{font-family:var(--fi-serif);font-style:normal;font-wei
 .dm :is(.sw-again,.sp-again,.bd-again,.lk-again,.od-again,.sc-again,.se-again){min-height:44px;display:inline-flex;align-items:center;justify-content:center;gap:.4em;padding:.55em 1.2em;border-radius:99px;font-weight:700;font-size:.84em;text-decoration:none}
 .dm :is(.lk-again,.sc-again,.se-again){border:1.5px solid currentColor}
 @media (prefers-reduced-motion:reduce){.sw-time.late i{animation:none}}
+/* accessibility review: text contrast inside the demos */
+.sw-n{opacity:.7}
+.bd-empty{color:#454A29}
+.bd-top b{color:#A3241F}
+.od-line time{opacity:.75}
+.od-line li.next span{color:#8A5300}
+.xp-screen .sp-hit:focus-visible{outline:none;box-shadow:none}
+.sp-hit:focus-visible{fill:rgba(242,179,61,.28);stroke:#1A0B2E;stroke-width:3}
