@@ -13,9 +13,9 @@ Your layout (`index.html`, `experiences.*`, `project.*`) in the gancda brand, li
 | `assets/` | Logo, symbol, favicons, app icons, social image and graphics from the brand kit; `gancda-lockup-ka*.png` (Georgian lockup, cut from the design-language PDF) and `gancda-symbol.svg` (a smooth redraw of the asterisk). |
 
 Demos by goal:
-- **Learning:** Menu Academy (drag and build), Room 214 (spot the mistakes), Safe or not (swipe).
+- **Learning:** Room 214 (spot the mistakes, shown first), Safe or not (swipe), Menu Academy (drag and build).
 - **Onboarding:** Who do you ask? (draw lines from problems to people), First shift (tap the day into order).
 - **Campaigns:** Pour it right (hold to pour, let go on the line; the latte art and the prize follow your pour).
 - **Events:** Year-end dinner (pick a seat), Omakase (invitation).
 
-The slogan's hand-lettered second line uses BPG Mikheil Stefane for Georgian (self-hosted in `assets/fonts/`, from the free BPG collection) and Caveat for English. Other fonts load from Google Fonts. Check the licences, or self-host the fonts, before launch, as the kit's handoff notes say. The kit's logo paths are traced from a raster and still need a designer's clean-up and a trademark check before final use.
+The slogan's hand-lettered second line uses KA Lortkipanidze for Georgian (self-hosted in `assets/fonts/`; confirm its licence before launch) and Caveat for English. Other fonts load from Google Fonts. Check the licences, or self-host the fonts, before launch, as the kit's handoff notes say. The kit's logo paths are traced from a raster and still need a designer's clean-up and a trademark check before final use.

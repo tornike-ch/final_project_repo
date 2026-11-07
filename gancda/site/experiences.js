@@ -45,7 +45,7 @@
       audience: p('რესტორნის, სასტუმროს და სამზარეულოს გუნდები', 'Restaurant, hotel and kitchen teams'), outcome: p('ცოდნის შემოწმება და სერტიფიკატი', 'A knowledge check and a certificate'),
       report: p('ნახეთ, რამდენმა თანამშრომელმა დაასრულა გაკვეთილი და რა ქულა მიიღეს.', 'See how many team members finished the lesson and how they scored.'),
       metrics: [[p('დაასრულა გაკვეთილი', 'Finished the lesson'),'42','/ 50'],[p('საშუალო ქულა','Average score'),'3.4','/ 4'],[p('საშუალო დრო','Average time'),'4.6',p('წთ','min')],[p('სერტიფიკატი','Certificates earned'),'42','']],
-      demos: ['build', 'spot', 'swipe'],
+      demos: ['spot', 'swipe', 'build'],
     },
     onboard: {
       label: p('ადაპტაცია','Onboarding'),
@@ -101,7 +101,7 @@
 
   let lang = document.documentElement.lang === 'en' ? 'en' : 'ka';
   let active = 'learn';
-  const pick = { learn: 'build', onboard: 'ask', engage: 'pour', attend: 'seats' };
+  const pick = { learn: 'spot', onboard: 'ask', engage: 'pour', attend: 'seats' };
   let modal, sourceFocus, preview = null, player = null;
   const t = text => typeof text === 'object' ? text[lang] : text;
   const keys = Object.keys(cases);
