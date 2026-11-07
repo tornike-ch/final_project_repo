@@ -6,7 +6,7 @@
       skip: 'მთავარ ნაწილზე გადასვლა', navPlay: 'გამოცდილებები', navResults: 'შედეგები', navProcess: 'პროცესი', navStart: 'პროექტის დაწყება',
       eyebrow: 'ინტერაქტიული გამოცდილებების სტუდია', first: 'ციფრული გამოცდილებები, რომლებიც', second: 'რეაქციას იწვევს.',
       intro: 'გაკვეთილს, პირველ სამუშაო დღეს თუ მოსაწვევს ვაქცევთ მოკლე ინტერაქტიულ თამაშად. მონაწილეს მხოლოდ ტელეფონი და ბმული სჭირდება.',
-      explore: 'ნახეთ მაგალითები', how: 'როგორ ვმუშაობთ', tryDemo: 'ითამაშეთ მაგალითი', tagline: 'გრძნობ, როცა მოქმედებ.', themeLabel: 'თემა',
+      explore: 'ნახეთ მაგალითები', how: 'როგორ ვმუშაობთ', tryDemo: 'ითამაშეთ: ოთახი 214', tagline: 'გრძნობ, როცა მოქმედებ.', themeLabel: 'თემა',
       meaning: 'განცდა — ის, რასაც თავად განიცდი.', studioCity: 'ინტერაქტიული გამოცდილებების სტუდია · თბილისი',
       demoNotice: 'მაგალითებში წარმოდგენილი ბრენდები, სახელები და მონაცემები საჩვენებელია.', back: 'თავში დაბრუნება ↑',
       toDark: 'მუქ თემაზე გადასვლა', toLight: 'ღია თემაზე გადასვლა', menu: 'მენიუ', closeMenu: 'მენიუს დახურვა'
@@ -15,7 +15,7 @@
       skip: 'Skip to main content', navPlay: 'Experiences', navResults: 'Results', navProcess: 'Process', navStart: 'Start a project',
       eyebrow: 'Interactive experiences studio', first: 'Digital experiences that', second: 'spark a reaction.',
       intro: 'We turn a lesson, a first day at work or an invitation into a short interactive game. All anyone needs is a phone and a link.',
-      explore: 'See the examples', how: 'How we work', tryDemo: 'Play an example', tagline: 'Feel it. Make it happen.', themeLabel: 'Theme',
+      explore: 'See the examples', how: 'How we work', tryDemo: 'Play Room 214', tagline: 'Feel it. Make it happen.', themeLabel: 'Theme',
       meaning: 'gancda — the feeling you live through yourself.', studioCity: 'Interactive experiences studio · Tbilisi',
       demoNotice: 'Brands, names and figures in the examples are for demonstration.', back: 'Back to top ↑',
       toDark: 'Switch to dark theme', toLight: 'Switch to light theme', menu: 'Menu', closeMenu: 'Close menu'

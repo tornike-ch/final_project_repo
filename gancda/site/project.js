@@ -5,13 +5,13 @@
     ka: {
       process: "როგორ ვმუშაობთ",
       steps: [
-        ["ვარჩევთ მიზანს", "ერთ ზარზე ვარკვევთ, ვისთვის ვქმნით გამოცდილებას და რა უნდა გააკეთოს ადამიანმა ბოლოს."],
+        ["ვარკვევთ მიზანს", "ერთ ზარზე ვარკვევთ, ვისთვის ვქმნით გამოცდილებას და რა უნდა გააკეთოს ადამიანმა ბოლოს."],
         ["ვწერთ სცენარს", "ვგეგმავთ თითოეულ ნაბიჯს და ვქმნით დიზაინს თქვენი ბრენდის ფერებითა და ხასიათით."],
-        ["გაჩვენებთ პირველ ვერსიას", "48 საათში თქვენ თვითონ ცდით გამოცდილებას. გაშვებამდე ერთად ვასწორებთ ტექსტსა და დეტალებს."],
+        ["გაჩვენებთ პირველ ვერსიას", "სცენარის დამტკიცებიდან, როგორც წესი, 48 საათში პირველ ვერსიას საკუთარ ტელეფონზე გამოსცდით. გაშვებამდე ტექსტსა და დეტალებს ერთად ვასწორებთ."],
         ["ვუშვებთ", "გააზიარეთ ბმული, გამოიყენეთ QR კოდი ან გაუგზავნეთ მოწვევა მონაწილეებს Telegram-ში. შედეგებს ანგარიშში ნახავთ."]
       ],
       packages: "ყოველი პროექტი ინდივიდუალურად ფასდება",
-      offerLead: "მზა პაკეტები და გამოწერა არ გვაქვს. ფასს თქვენს მიზანსა და მასშტაბზე ვთანხმდებით.",
+      offerLead: "მზა პაკეტები და გამოწერა არ გვაქვს. ფასზე თქვენი მიზნისა და მასშტაბის მიხედვით ვთანხმდებით.",
       offerSteps: ["მოკლე ზარზე ვარკვევთ თქვენს მიზანს, აუდიტორიას და ვადებს.", "შემდეგ გიგზავნით შეთავაზებას ფიქსირებული ფასით.", "გამოწერა და ფარული გადასახადები არ არის."],
       offerCta: "შეთავაზების მოთხოვნა",
       terms: "ყველა გამოცდილება მუშაობს ქართულად და ინგლისურად.",
@@ -19,40 +19,40 @@
       intro: "ვისთვის ქმნით გამოცდილებას და რისი გაკეთება უნდა შეძლონ მონაწილეებმა? რამდენიმე სიტყვაც საკმარისია.",
       direct: "ან პირდაპირ მოგვწერეთ",
       goal: "თქვენი მიზანი",
-      goals: { learn: "სწავლება", onboard: "ახალი თანამშრომლების მიღება", engage: "ბრენდთან ჩართულობა", attend: "ღონისძიება ან ჯავშანი", other: "სხვა მიზანი" },
+      goals: { learn: "სწავლება", onboard: "ადაპტაცია", engage: "კამპანია", attend: "ღონისძიება ან მოსაწვევი", other: "სხვა მიზანი" },
       goalPrompt: "აირჩიეთ მიზანი",
       name: "სახელი", contact: "ტელეფონი ან Telegram", notes: "მოგვიყევით იდეის შესახებ", optional: "არასავალდებულო",
       prepare: "წერილის მომზადება", hint: "აქ მოამზადებთ წერილს და თქვენი ელფოსტიდან გამოგვიგზავნით.",
       readyHeading: "წერილის ტექსტი მზადაა", readyHint: "გახსენით თქვენი საფოსტო აპი და გამოგვიგზავნეთ წერილი. ტექსტის კოპირებაც შეგიძლიათ.",
       openEmail: "ელფოსტის გახსნა", copyBrief: "ტექსტის კოპირება", brief: "წერილის ტექსტი",
       copied: "ტექსტი დაკოპირებულია.", manual: "ტექსტი მონიშნულია. დასაკოპირებლად გამოიყენეთ კოპირების ბრძანება.",
-      subject: "ახალი პროექტი", greeting: "გამარჯობა, Gancda!"
+      subject: "ახალი პროექტი", greeting: "გამარჯობა, განცდა!"
     },
     en: {
       process: "How we work",
       steps: [
         ["Find the goal", "In one call, we work out who it’s for and what you want them to do by the end."],
         ["Write the experience", "We map each choice, write the script and design the screens in your brand’s style."],
-        ["Try it in 48 hours", "Play the first draft on your phone. We refine the words and details with you before launch."],
+        ["Try a first draft fast", "Usually within 48 hours of signing off the script, you play the first draft on your phone. We refine the words and details with you before launch."],
         ["Launch and learn", "Share a link, display a QR code or send it on Telegram. See how people respond in your report."]
       ],
       packages: "Every project is priced individually",
-      offerLead: "We don’t sell packages or subscriptions. We agree the price around your goal and scope.",
+      offerLead: "We don’t sell packages or subscriptions. We agree on a price based on your goal and scope.",
       offerSteps: ["On a short call we pin down your goal, audience and timing.", "Then we send you a proposal with a fixed price.", "No subscriptions and no hidden fees."],
-      offerCta: "Ask for an offer",
+      offerCta: "Request a proposal",
       terms: "Every experience works in Georgian and English.",
       heading: "What do you have in mind?",
       intro: "Tell us who it’s for and what you’d like them to do. A few lines are plenty.",
       direct: "Or write to us directly",
       goal: "Your goal",
-      goals: { learn: "Teach a skill", onboard: "Welcome new people", engage: "Engage an audience", attend: "Invite guests or take bookings", other: "Something else" },
+      goals: { learn: "Learning", onboard: "Onboarding", engage: "Campaign", attend: "Event or invitation", other: "Something else" },
       goalPrompt: "Choose a goal",
       name: "Name", contact: "Phone or Telegram", notes: "Tell us about your idea", optional: "optional",
       prepare: "Prepare email", hint: "Prepare your brief here, then send it from your email app.",
       readyHeading: "Your email draft is ready", readyHint: "Open your email app to send it to the studio, or copy the text into a message.",
       openEmail: "Open email app", copyBrief: "Copy brief", brief: "Your brief",
       copied: "Brief copied.", manual: "The brief is selected. Use your device’s copy command to copy it.",
-      subject: "New project", greeting: "Hello Gancda,"
+      subject: "New project", greeting: "Hello gancda,"
     }
   };
 

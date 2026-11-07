@@ -109,11 +109,11 @@ const it = (ic, ka, en, dka, den, pka, pen, col) => ({ic, n:L(ka,en), d:L(dka,de
 const TPL = [
 { id:'omakase', cat:'restaurant', original:true,
   name:L('ომაკასე','Omakase'), kind:L('სუშის ბარი','Sushi bar'),
-  desc:L('ნორენის ფარდა, სუშის კონვეიერი, ომიკუჯის ყუთი და 確定-ის ბეჭედი. შაბლონი, რომლითაც ყველაფერი დაიწყო.','A noren curtain, a sushi conveyor, an omikuji box and a 確定 stamp. The template the whole idea started with.'),
+  desc:L('პაემნის მოსაწვევი სუშის ბარის სტილში: გადაწიე ნორენის ფარდა, აირჩიე კერძები, ამოიღე ომიკუჯი და მიიღე ბილეთი 確定 ბეჭდით.','A date invitation in sushi-bar style: part the noren curtain, pick your dishes, draw an omikuji and get a ticket with a 確定 stamp.'),
   c:{bg:'#121018',s:'#1c1922',s2:'#25212c',ink:'#f4ecdf',mut:'#a69a8c',acc:'#c8312b',on:'#ffffff',acc2:'#c9a45c',paper:'#f4ecdf',pink:'#121018',line:'#342e3c',flap:'#1f2a4d',flapInk:'#fffaf0'},
   pat:'waves', po:.06, jp:true, fx:'petal', fxc:['#f6c1cc','#fde2e7','#f6c1cc'],
   op:{type:'noren', l:'寿', r:'司', ls:L('სუ','SU'), rs:L('ში','SHI')},
-  kick:L('いらっしゃいませ'), kick2:L('デート の お誘い'),
+  kick:L('いらっしゃいませ'), kick2:L('デートのお誘い'),
   to:L('ანი','Ani'), toGen:L('ანის','Ani’s'), from:L('ლუკა','Luka'),
   intro:L('შენთვის რაღაც პატარა დავჯავშნე. შემოდი.','I booked a little something for you. Come in.'),
   hint:L('შეეხე ფარდას','Tap the curtain'),
@@ -878,7 +878,7 @@ class Build extends Demo {
 
 /* ---------- 4 · who do you ask? Draw a line from each first-day problem to the person who helps; they answer ---------- */
 const LK = {
-  ka:{how:'გაავლე ხაზი პრობლემიდან იმ ადამიანამდე, ვინც დაგეხმარება. შეგიძლია ორივეს შეეხო.', wrong:'{p} ამაში ვერ დაგეხმარება. სცადე სხვა.', people:'შენი ხალხი', first:'პირველივე ცდით: {n} / {m}',
+  ka:{how:'გაავლე ხაზი პრობლემიდან იმ ადამიანამდე, ვინც დაგეხმარება. ან შეეხე ჯერ პრობლემას, მერე ადამიანს.', wrong:'{p} ამაში ვერ დაგეხმარება. სცადე სხვა.', people:'შენი ხალხი', first:'პირველივე ცდით: {n} / {m}',
       save:'კონტაქტების შენახვა', saved:'კონტაქტებში შენახულია', board:'პრობლემები და ადამიანები', ask:'ვის ჰკითხავ?'},
   en:{how:'Draw a line from each problem to the person who can help. Or tap one, then the other.', wrong:'{p} can’t help with that one. Try someone else.', people:'Your people', first:'Right first time: {n} of {m}',
       save:'Save contacts', saved:'Saved to contacts', board:'Problems and people', ask:'Who do you ask?'}
@@ -972,7 +972,7 @@ class Link extends Demo {
 
 /* ---------- 5 · first shift: tap the day into order; the sky moves from morning to evening as it fills ---------- */
 const OD = {
-  ka:{how:'შეეხე იმას, რაც ახლა უნდა მოხდეს.', not:'ჯერ არა. რა ხდება მანამდე?', next:'შემდეგი', plan:'შენი პირველი ცვლა', done:'ცვლა დაგეგმილია', miss:'არასწორი შეხება: {n}', miss1:'არასწორი შეხება: 1', clean:'ერთი შეცდომაც არა!', ready:'მზადაა', sky:'დღე მაღაზიაში'},
+  ka:{how:'შეეხე იმას, რაც ახლა უნდა მოხდეს.', not:'ჯერ არა. რა ხდება მანამდე?', next:'შემდეგი', plan:'შენი პირველი ცვლა', done:'ცვლა დაგეგმილია', miss:'არასწორი შეხება: {n}', miss1:'არასწორი შეხება: 1', clean:'უშეცდომოდ!', ready:'მზადაა', sky:'დღე მაღაზიაში'},
   en:{how:'Tap what happens next.', not:'Not yet. What comes before that?', next:'Next', plan:'Your first shift', done:'Your shift is planned', miss:'{n} wrong taps', miss1:'1 wrong tap', clean:'Not a single wrong tap!', ready:'READY', sky:'A day at the store'}
 };
 const SKYC = [[0, [255, 214, 170]], [.35, [150, 205, 240]], [.7, [140, 195, 235]], [.9, [246, 166, 92]], [1, [44, 48, 108]]];
@@ -1028,7 +1028,7 @@ class Order extends Demo {
 
 /* ---------- 6 · pour it right: hold to pour, let go on the line; the latte art and the prize depend on your pour ---------- */
 const PR = {
-  ka:{hold:'დააჭირე და გეჭიროს', how1:'დააჭირე და გეჭიროს. გაუშვი, როცა ესპრესო ზოლს მიაღწევს.', how2:'ახლა რძე: გაუშვი, როცა ზოლში მოხვდება.', r1:'ესპრესო', r2:'რძე', round:'{n} / 2',
+  ka:{hold:'დააჭირე და ასხი', how1:'დააჭირე და არ აუშვა. ხელი აუშვი, როცა ესპრესო ზოლს მიაღწევს.', how2:'ახლა რძე: ხელი აუშვი, როცა ზოლში მოხვდება.', r1:'ესპრესო', r2:'რძე', round:'{n} / 2',
       perfect:'ზუსტად!', short:'ცოტა აკლია.', long:'ცოტა მეტია.', over:'გადმოიღვარა!', heart:'იდეალური გული.', blob:'…ეს აბსტრაქტული ხელოვნებაა.', score:'ზუსტი ჩასხმა: {n} / 2', cpn:'კუპონი', show:'აჩვენე სალაროსთან.', valid:'მოქმედებს {d}-მდე', glass:'ჭიქა და ზოლი'},
   en:{hold:'Hold to pour', how1:'Press and hold. Let go when the espresso reaches the band.', how2:'Now the milk: let go inside the band.', r1:'Espresso', r2:'Milk', round:'{n} of 2',
       perfect:'Spot on!', short:'A little short.', long:'A touch too much.', over:'Overflow!', heart:'A perfect heart.', blob:'…let’s call it abstract art.', score:'Perfect pours: {n} of 2', cpn:'COUPON', show:'Show this at the till.', valid:'Valid until {d}', glass:'The glass and the target band'}
@@ -1133,7 +1133,7 @@ class Pour extends Demo {
 
 /* ---------- 7 · pick your seat: break the seal, the hall lights up, the neighbours wave, the place card catches the light ---------- */
 const ST = {
-  ka:{dear:'ძვირფასო {to},', when:'პარასკევი, 19:30', where:'შუშის დარბაზი, ვაკე', dress:'დრესკოდი: საღამოს, თავისუფალი', yes:'მოვდივარ', no:'ვერ მოვალ', noMsg:'მოგვენატრები. ოთხშაბათამდე შეგიძლია გადაიფიქრო.',
+  ka:{dear:'ძვირფასო {to},', when:'პარასკევი, 19:30', where:'შუშის დარბაზი, ვაკე', dress:'დრესკოდი: სასაღამოო, თავისუფალი', yes:'მოვდივარ', no:'ვერ მოვალ', noMsg:'მოგვენატრები. ოთხშაბათამდე შეგიძლია გადაიფიქრო.',
       seatH:'აირჩიე შენი ადგილი', seatHint:'გადაიტანე შენი ბარათი თავისუფალ ადგილზე ან შეეხე მას.', next:'შემდეგი: კერძი', dishH:'რას მიირთმევ?', card:'ჩემი ბარათი', table:'მაგიდა {t} · ადგილი {k}', tableN:'მაგიდა {n}',
       seatN:'მაგიდა {t}, ადგილი {k}, თავისუფალი', near:'გვერდით გიზის: {a}.', nearNone:'შენ გვერდით ჯერ თავისუფალია.', see:'პარასკევს გნახავთ.', and:' და ',
       seal:'გატეხე ბეჭედი', env:'შენთვის მოსაწვევია', cal:'კალენდარში დამატება', days:'{n} დღე დარჩა', tilt:'დახარე ბარათი'},
@@ -1263,7 +1263,7 @@ TBY.omakase.steps = [L('ფარდა და კითხვა','The curtain 
   c:{acc:'#6F5590', acc2:'#F2B33D', paper:'#FFFFFF'}, fx:'petal', fxc:['#B9A3D9','#F2B33D','#FFFFFF'],
   spots:[
     {id:'frame', n:L('დახრილი სურათი','A crooked picture'), why:L('სურათები სწორად ეკიდება. შეამოწმე კარიდან.','Pictures hang straight. Check from the doorway.')},
-    {id:'cup', n:L('ნახმარი ჭიქა','A used cup'), why:L('ნახმარი ჭურჭელი ოთახიდან გააქვს და სუფთით ცვლი.','Used cups leave the room and are replaced with clean ones.')},
+    {id:'cup', n:L('ნახმარი ჭიქა','A used cup'), why:L('ნახმარი ჭურჭელი ოთახიდან გაიტანება და სუფთით იცვლება.','Used cups leave the room and are replaced with clean ones.')},
     {id:'towel', n:L('პირსახოცი იატაკზე','A towel on the floor'), why:L('სუფთა პირსახოცები დაკეცილი, საწოლის ბოლოში.','Fresh towels go folded at the foot of the bed.')},
     {id:'bin', n:L('სავსე ურნა','A full bin'), why:L('ურნა ყოველ ჯერზე იცლება, ახალი პარკით.','Empty the bin every time and fit a new liner.')},
     {id:'slipper', n:L('ერთი ჩუსტი','One slipper'), why:L('ჩუსტები წყვილად, საწოლის გვერდით.','Slippers go in pairs, by the bed.')}]},
@@ -1274,8 +1274,8 @@ TBY.omakase.steps = [L('ფარდა და კითხვა','The curtain 
   c:{acc:'#E5402A', acc2:'#1F9D55', paper:'#FFD23F'}, fx:'rect', fxc:['#E5402A','#1F9D55','#FFD23F'],
   cards:[
     {ic:'knife', ok:false, s:L('უმი ქათამი და სალათი ერთსა და იმავე დაფაზე.','Raw chicken and salad on the same cutting board.'), why:L('ცალ-ცალკე დაფები: წითელი ხორცისთვის, მწვანე ბოსტნეულისთვის.','Separate boards: red for raw meat, green for vegetables.')},
-    {ic:'hands', ok:true, s:L('ცვლის დაწყებამდე ხელების დაბანა 20 წამი.','Washing your hands for 20 seconds before a shift.'), why:L('ზუსტად ასე: საპონი, 20 წამი, ერთჯერადი ხელსახოცი.','Exactly: soap, 20 seconds, a paper towel.')},
-    {ic:'thermo', ok:true, s:L('მაცივარი 4 °C-ზე ან უფრო ცივად.','Keeping the fridge at 4 °C or colder.'), why:L('4 °C-ზე ბაქტერიები თითქმის არ მრავლდება.','At 4 °C bacteria barely grow.')},
+    {ic:'hands', ok:true, s:L('ცვლის დაწყებამდე ხელების დაბანა 20 წამის განმავლობაში.','Washing your hands for 20 seconds before a shift.'), why:L('ზუსტად ასე: საპონი, 20 წამი, ერთჯერადი ხელსახოცი.','Exactly: soap, 20 seconds, a paper towel.')},
+    {ic:'thermo', ok:true, s:L('მაცივარი 4 °C-ზე ან უფრო ცივად.','Keeping the fridge at 4 °C or colder.'), why:L('4 °C-ზე და უფრო ცივად ბაქტერიები ძალიან ნელა მრავლდება.','At 4 °C or colder, most bacteria grow very slowly.')},
     {ic:'spoon', ok:false, s:L('სოუსის გასინჯვა ერთი და იმავე კოვზით ორჯერ.','Tasting the sauce twice with the same spoon.'), why:L('ყოველ ჯერზე სუფთა კოვზი.','A clean spoon every time.')},
     {ic:'steak', ok:false, s:L('ხორცის გალღობა მაგიდაზე, ოთახის ტემპერატურაზე.','Thawing meat on the counter at room temperature.'), why:L('ხორცი მაცივარში ლღვება, ღამით.','Meat thaws in the fridge, overnight.')},
     {ic:'tag', ok:true, s:L('გახსნილ ქილაზე გახსნის თარიღის დაწერა.','Writing the opening date on an opened jar.'), why:L('თარიღი გეუბნება, როდის უნდა გადააგდო.','The date tells you when to throw it out.')}]},
@@ -1311,14 +1311,14 @@ TBY.omakase.steps = [L('ფარდა და კითხვა','The curtain 
   to:L('მარიამი','Mariam'), role:L('მოლარე','Cashier'), me:{hair:'#4A2A1A', skin:'#F0C4A4', bg:'#FFE1B0', style:2, shirt:'#FF7A1A'},
   events:[
     {time:'08:45', ic:'store', n:L('შემოდი უკანა კარიდან, კოდი 2207','Come in by the back door, code 2207')},
-    {time:'08:50', ic:'user', n:L('ჩაიცვი ფორმა და ბეჯი','Put on your uniform and badge')},
-    {time:'09:00', ic:'clock', n:L('დაფიქსირდი ტერმინალზე','Clock in at the staff terminal')},
+    {time:'08:50', ic:'user', n:L('ჩაიცვი ფორმა და გაიკეთე ბეჯი','Put on your uniform and badge')},
+    {time:'09:00', ic:'clock', n:L('მოსვლა დააფიქსირე ტერმინალზე','Clock in at the staff terminal')},
     {time:'09:10', ic:'chat', n:L('დილის შეხვედრა ქეთისთან','Morning huddle with Keti')},
     {time:'13:00', ic:'coffee', n:L('შესვენება, 30 წუთი','Break, 30 minutes')},
     {time:'17:00', ic:'coins', n:L('დაითვალე სალარო და დაასრულე','Count your till and clock out')}]},
 { id:'pour', mech:'pour', goal:'engage',
   name:L('ზუსტად ჩაასხი','Pour it right'), kind:L('კამპანია · ყავის ბრენდი','Campaign · Coffee brand'), tag:L('ყავა: ზუსტად ჩაასხი','Coffee: pour it right'), brand:L('ცისკარი','TSISKARI'), kind2:L('ყავა','COFFEE'),
-  desc:L('ჭიქის სახელურზე QR ხსნის თამაშს: დააჭირე და ჩაასხი ესპრესო, მერე რძე, და გაუშვი ზუსტად ზოლზე. რაც უფრო ზუსტია ჩასხმა, მით უკეთესია ლატე-არტი და პრიზი.','A QR code on the cup sleeve opens a game: hold to pour the espresso, then the milk, and let go right on the line. The better the pour, the better the latte art and the prize.'),
+  desc:L('ჭიქის ქაღალდის გარსზე QR ხსნის თამაშს: დააჭირე და ჩაასხი ესპრესო, მერე რძე, და გაუშვი ზუსტად ზოლზე. რაც უფრო ზუსტია ჩასხმა, მით უკეთესია ლატე-არტი და პრიზი.','A QR code on the cup sleeve opens a game: hold to pour the espresso, then the milk, and let go right on the line. The better the pour, the better the latte art and the prize.'),
   steps:[L('QR ჭიქაზე','A QR code on the cup'), L('დააჭირე და ჩაასხი ესპრესო','Hold to pour the espresso'), L('რძე: გაჩერდი ზოლზე','Milk: stop on the line'), L('ლატე-არტი და პრიზი','Latte art and a prize')],
   c:{acc:'#0E3B2C', acc2:'#D4202B', paper:'#F3EAD6'}, fx:'rect', fxc:['#0E3B2C','#D4202B','#F3EAD6'],
   rounds:[{n:L('ესპრესო','Espresso'), lo:.32, hi:.42, col:'#4A2412'}, {n:L('რძე','Milk'), lo:.8, hi:.9, col:'#F4EADB'}],

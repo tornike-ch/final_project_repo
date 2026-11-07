@@ -239,3 +239,22 @@ html.xs-open { overflow: hidden; }
   .xs-lock { transition: none; }
 }
 .xp-stage:not([open]) { display: none; }
+
+/* expert review fixes */
+@media (max-width: 860px) { .xp-stage { grid-template-columns: minmax(0, 1fr); } }
+.xs-center { min-width: 0; }
+.xs-brand { flex: 1 1 auto; }
+.xs-brand > div { min-width: 0; }
+.xs-dots { flex: none; }
+.xs-outro h3 { text-wrap: balance; }
+@media (min-width: 861px) {
+  .xs-outro { left: max(16px, calc((100vw - 380px - clamp(32px, 6vw, 110px) - min(100dvh - 120px, 860px) * 300 / 620) / 2)); top: 50%; bottom: auto; translate: 0 -50%; }
+}
+@media (max-width: 690px) {
+  .xp-live { display: none; }
+  .xp-posterhead b { font-size: 24px; }
+  .xp-details { display: grid; gap: 10px; }
+  .xp-details > div { display: grid; grid-template-columns: 7.5em 1fr; gap: 10px; }
+  .xp-details dd { margin: 0; }
+}
+html[lang="ka"] .xp-heading h2 { font-size: clamp(30px, 3.6vw, 52px); }
